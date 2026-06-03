@@ -48,9 +48,22 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 RotateVector { get; private set; }
 
 
+    void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        
+    }
+
+    void Update()
+    {
+        shootTimer += Time.deltaTime;
+    }
+
+
     void Awake() // Initialize the input actions and get references to specific actions
     {
-        
+
         playerActions = new PlayerActions(); // Create an instance of the generated input actions class
 
         moveAction = playerActions.PlayerInput.Movement;
@@ -245,7 +258,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
 
-        shootTimer += Time.deltaTime;
+        
     }
 
 }
