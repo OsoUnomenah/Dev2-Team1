@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "7fb671f9-89b1-40e0-8cda-07d79d1cb0bf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -188,32 +197,26 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
-                }
-            ]
-        },
-        {
-            "name": "UI",
-            "id": "40f5d324-a7dd-49aa-be8a-d6d974cf3834",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "7f55bb42-2ede-44fa-a584-289a4acfc43a",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "701beddf-d3ec-41fa-9de3-fd2d60b5ae94",
-                    "path": "",
+                    "id": "a97d15ba-4a77-45a8-bc5a-eaad733228ff",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "New action",
+                    "groups": ";Keyboard and Mouse",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a782b1e9-e8c4-469e-897f-fd0b8d6c2a21",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

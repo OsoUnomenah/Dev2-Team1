@@ -17,6 +17,7 @@ public class PlayerInputHandler : MonoBehaviour
     private PlayerActions playerActions; // Reference to the generated input actions class
 
     private InputAction moveAction;
+    private InputAction rotateAction;
 
     private InputAction jumpAction; // Reference to the specific input action for jumping
     private InputAction sprintAction; 
@@ -24,6 +25,7 @@ public class PlayerInputHandler : MonoBehaviour
     public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
     public bool SprintTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
+    public Vector2 RotateVector { get; private set; }
 
 
 
@@ -33,6 +35,7 @@ public class PlayerInputHandler : MonoBehaviour
         playerActions = new PlayerActions(); // Create an instance of the generated input actions class
 
         moveAction = playerActions.PlayerInput.Movement;
+        rotateAction = playerActions.PlayerInput.Rotate;
         
         jumpAction = playerActions.PlayerInput.Jump; // Get the specific input action for jumping from the generated class
         sprintAction = playerActions.PlayerInput.Sprint;
@@ -45,6 +48,9 @@ public class PlayerInputHandler : MonoBehaviour
 
         moveAction.performed += OnMovementPerformed;
         moveAction.canceled += OnMovementCanceled;
+
+        rotateAction.performed += OnRotatePerformed;
+        rotateAction.canceled += OnRotateCanceled;
 
         jumpAction.performed += OnJumpPerformed; // Subscribe to the performed event of the jump action
         jumpAction.canceled += OnJumpCanceled; // Subscribe to the canceled event of the jump action
@@ -59,6 +65,9 @@ public class PlayerInputHandler : MonoBehaviour
 
         moveAction.performed -= OnMovementPerformed;
         moveAction.canceled -= OnMovementCanceled;
+
+        rotateAction.performed += OnRotatePerformed;
+        rotateAction.canceled += OnRotateCanceled;
 
         jumpAction.performed -= OnJumpPerformed; // Unsubscribe from the performed event of the jump action
         jumpAction.canceled -= OnJumpCanceled; // Unsubscribe from the canceled event of the jump action
@@ -86,6 +95,26 @@ public class PlayerInputHandler : MonoBehaviour
         if (turnOnDebug)
         {
             Debug.Log(MovementVector); // Log a message to the console when the move action is performed
+        }
+    }
+
+    private void OnRotatePerformed(InputAction.CallbackContext context)
+    {
+        RotateVector = context.ReadValue<Vector2>();
+
+        if (turnOnDebug)
+        {
+            Debug.Log(RotateVector); // Log a message to the console when the move action is performed
+        }
+    }
+
+    private void OnRotateCanceled(InputAction.CallbackContext context)
+    {
+        RotateVector = Vector2.zero;
+
+        if (turnOnDebug)
+        {
+            Debug.Log(RotateVector); // Log a message to the console when the move action is performed
         }
     }
 

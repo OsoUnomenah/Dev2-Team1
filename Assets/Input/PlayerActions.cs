@@ -118,6 +118,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""7fb671f9-89b1-40e0-8cda-07d79d1cb0bf"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -274,32 +283,26 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                }
-            ]
-        },
-        {
-            ""name"": ""UI"",
-            ""id"": ""40f5d324-a7dd-49aa-be8a-d6d974cf3834"",
-            ""actions"": [
-                {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
-                    ""id"": ""7f55bb42-2ede-44fa-a584-289a4acfc43a"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""701beddf-d3ec-41fa-9de3-fd2d60b5ae94"",
-                    ""path"": """",
+                    ""id"": ""a97d15ba-4a77-45a8-bc5a-eaad733228ff"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
+                    ""groups"": "";Keyboard and Mouse"",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a782b1e9-e8c4-469e-897f-fd0b8d6c2a21"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -341,15 +344,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_PlayerInput_Jump = m_PlayerInput.FindAction("Jump", throwIfNotFound: true);
         m_PlayerInput_Sprint = m_PlayerInput.FindAction("Sprint", throwIfNotFound: true);
         m_PlayerInput_Movement = m_PlayerInput.FindAction("Movement", throwIfNotFound: true);
-        // UI
-        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+        m_PlayerInput_Rotate = m_PlayerInput.FindAction("Rotate", throwIfNotFound: true);
     }
 
     ~@PlayerActions()
     {
         UnityEngine.Debug.Assert(!m_PlayerInput.enabled, "This will cause a leak and performance issues, PlayerActions.PlayerInput.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerActions.UI.Disable() has not been called.");
     }
 
     /// <summary>
@@ -428,6 +428,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerInput_Jump;
     private readonly InputAction m_PlayerInput_Sprint;
     private readonly InputAction m_PlayerInput_Movement;
+    private readonly InputAction m_PlayerInput_Rotate;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerInput".
     /// </summary>
@@ -451,6 +452,10 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerInput/Movement".
         /// </summary>
         public InputAction @Movement => m_Wrapper.m_PlayerInput_Movement;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerInput/Rotate".
+        /// </summary>
+        public InputAction @Rotate => m_Wrapper.m_PlayerInput_Rotate;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -486,6 +491,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
         }
 
         /// <summary>
@@ -506,6 +514,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
         }
 
         /// <summary>
@@ -539,102 +550,6 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerInputActions" /> instance referencing this action map.
     /// </summary>
     public PlayerInputActions @PlayerInput => new PlayerInputActions(this);
-
-    // UI
-    private readonly InputActionMap m_UI;
-    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_Newaction;
-    /// <summary>
-    /// Provides access to input actions defined in input action map "UI".
-    /// </summary>
-    public struct UIActions
-    {
-        private @PlayerActions m_Wrapper;
-
-        /// <summary>
-        /// Construct a new instance of the input action map wrapper class.
-        /// </summary>
-        public UIActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "UI/Newaction".
-        /// </summary>
-        public InputAction @Newaction => m_Wrapper.m_UI_Newaction;
-        /// <summary>
-        /// Provides access to the underlying input action map instance.
-        /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_UI; }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable() { Get().Enable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable() { Get().Disable(); }
-        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
-        public bool enabled => Get().enabled;
-        /// <summary>
-        /// Implicitly converts an <see ref="UIActions" /> to an <see ref="InputActionMap" /> instance.
-        /// </summary>
-        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
-        /// <summary>
-        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <param name="instance">Callback instance.</param>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
-        /// </remarks>
-        /// <seealso cref="UIActions" />
-        public void AddCallbacks(IUIActions instance)
-        {
-            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
-        }
-
-        /// <summary>
-        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
-        /// </summary>
-        /// <remarks>
-        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
-        /// </remarks>
-        /// <seealso cref="UIActions" />
-        private void UnregisterCallbacks(IUIActions instance)
-        {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
-        }
-
-        /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UIActions.UnregisterCallbacks(IUIActions)" />.
-        /// </summary>
-        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
-        public void RemoveCallbacks(IUIActions instance)
-        {
-            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        /// <summary>
-        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
-        /// </remarks>
-        /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-        /// <seealso cref="UIActions.UnregisterCallbacks(IUIActions)" />
-        public void SetCallbacks(IUIActions instance)
-        {
-            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    /// <summary>
-    /// Provides a new <see cref="UIActions" /> instance referencing this action map.
-    /// </summary>
-    public UIActions @UI => new UIActions(this);
     private int m_KeyboardandMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -689,20 +604,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMovement(InputAction.CallbackContext context);
-    }
-    /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
-    /// </summary>
-    /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
-    /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-    public interface IUIActions
-    {
         /// <summary>
-        /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Rotate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }
