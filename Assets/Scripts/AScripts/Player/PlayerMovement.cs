@@ -14,9 +14,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerInputHandler playerInputHandler;  // Reference to playerInputHandler to be exposed in Unity
     [SerializeField] private Camera playerCamera;
 
+
     [Header("Jump Config")]
     [SerializeField] private float jumpForce = 5.0f;  // How high player jumps
     [SerializeField] private float gravityMultiplier = 1.0f;
+    [SerializeField] private int jumpMax = 2;
+    private int jumpCount;
 
     [Header("Movement Config")]
     [SerializeField] private float walkSpeed = 3.0f; // How fast player moves
@@ -78,10 +81,12 @@ public class PlayerMovement : MonoBehaviour
         if (characterController.isGrounded)
         {
             currentMovement.y = -0.5f;
+            jumpCount = 0;
 
-            if (playerInputHandler.JumpTriggered)
+            if (playerInputHandler.JumpTriggered && jumpMax > jumpCount)
             {
                 currentMovement.y = jumpForce;
+                jumpCount++;
             }
         }
         else

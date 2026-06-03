@@ -10,9 +10,24 @@ using UnityEngine.InputSystem;
 //5. create logic for perform and cancelled methods(will need to make methods)
 // extra note if turnondebug is set to true will show debug messages 
 
+
+
 public class PlayerInputHandler : MonoBehaviour
 {
+    [Header("Debug")]
     [SerializeField] bool turnOnDebug;
+
+    [Header("Interact Config")]
+    [SerializeField] public Transform interactorSource;
+    [SerializeField] public float interactRange;
+    [SerializeField] public LayerMask ignoreSource;
+
+    [Header("Combat Settings")]
+    [SerializeField] int shootDamage;
+    [SerializeField] float shootRange;
+    [SerializeField] float shootRate;
+    private float shootTimer;
+
 
     private PlayerActions playerActions; // Reference to the generated input actions class
 
@@ -20,13 +35,17 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction rotateAction;
 
     private InputAction jumpAction; // Reference to the specific input action for jumping
-    private InputAction sprintAction; 
+    private InputAction sprintAction;
+
+    private InputAction interactAction;
+    private InputAction shootAction;
+
+
 
     public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
     public bool SprintTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
-
 
 
     void Awake() // Initialize the input actions and get references to specific actions
@@ -40,6 +59,8 @@ public class PlayerInputHandler : MonoBehaviour
         jumpAction = playerActions.PlayerInput.Jump; // Get the specific input action for jumping from the generated class
         sprintAction = playerActions.PlayerInput.Sprint;
 
+        interactAction = playerActions.PlayerInput.Interact;
+        shootAction = playerActions.PlayerInput.Shoot;
     }
 
     void OnEnable()
@@ -57,7 +78,14 @@ public class PlayerInputHandler : MonoBehaviour
 
         sprintAction.performed += OnSprintPerformed;
         sprintAction.canceled += OnSprintCanceled;
+
+        interactAction.performed += OnInteractPerformed;
+        interactAction.canceled += OnInteractCanceled;
+
+        shootAction.performed += OnShootPerformed;
+        shootAction.canceled += OnShootCanceled;
     }
+
 
     void OnDisable()
     {
@@ -74,6 +102,9 @@ public class PlayerInputHandler : MonoBehaviour
 
         sprintAction.performed -= OnSprintPerformed;
         sprintAction.canceled -= OnSprintCanceled;
+
+        shootAction.performed -= OnShootPerformed;
+        shootAction.canceled -= OnShootCanceled;
 
     }
 
@@ -157,6 +188,64 @@ public class PlayerInputHandler : MonoBehaviour
         {
             Debug.Log("Sprinting Canceled!"); // Log a message to the console when the sprint action is performed
         }
-    }   
+    }
+
+    private void OnInteractCanceled(InputAction.CallbackContext context)
+    {
+
+        if (turnOnDebug)
+        {
+            Debug.Log("Stopped Interacting!"); // Log a message to the console when the interact action is canceled
+        }
+    }
+
+    private void OnInteractPerformed(InputAction.CallbackContext context)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        {
+            Debug.Log(hit.collider.name);
+
+            IInteract iAct = hit.collider.GetComponent<IInteract>();
+            if (iAct != null)
+            {
+                iAct.Interact();
+            }
+        }
+        Debug.DrawRay(interactorSource.position, interactorSource.forward * interactRange, Color.green);
+
+        if (turnOnDebug)
+        {
+            Debug.Log("Interact Started!"); // Log a message to the console when the interact action is performed
+        }
+    }
+
+    private void OnShootPerformed(InputAction.CallbackContext context)
+    {
+        shootTimer = 0;
+
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootRange, ~ignoreSource))
+        {
+            Debug.Log(hit.collider.name);
+
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            if (dmg != null)
+            {
+                dmg.takeDamage(shootDamage);
+
+            }
+        }
+        if(turnOnDebug)
+        {
+            Debug.Log("ShotFired!");
+        }
+    }
+
+    private void OnShootCanceled(InputAction.CallbackContext context)
+    {
+
+        shootTimer += Time.deltaTime;
+    }
 
 }
