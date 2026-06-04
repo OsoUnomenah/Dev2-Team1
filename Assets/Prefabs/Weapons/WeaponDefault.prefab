@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8973378184891927799
+--- !u!1 &4881830232455317032
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,62 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5263766249189539524}
-  - component: {fileID: 1574952953247441829}
-  - component: {fileID: 8707910066341621776}
-  - component: {fileID: 8005595787792079289}
-  - component: {fileID: 2837422524704161676}
+  - component: {fileID: 8632643586795008714}
+  - component: {fileID: 75516625983204791}
+  - component: {fileID: 4607560624013282543}
+  - component: {fileID: 2360835024921214856}
+  - component: {fileID: 6683733107853138010}
   m_Layer: 0
-  m_Name: BaseSObj
+  m_Name: WeaponDefault
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5263766249189539524
+--- !u!4 &8632643586795008714
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973378184891927799}
+  m_GameObject: {fileID: 4881830232455317032}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -11.45699, y: 1.104, z: 1.5959}
+  m_LocalScale: {x: 1, y: 0.120686986, z: 0.48555}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1574952953247441829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973378184891927799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6253db428795e6469a324673736f6db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BaseShootable
-  HP: 1
-  model: {fileID: 8005595787792079289}
---- !u!33 &8707910066341621776
+--- !u!33 &75516625983204791
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973378184891927799}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &8005595787792079289
+  m_GameObject: {fileID: 4881830232455317032}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &4607560624013282543
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973378184891927799}
+  m_GameObject: {fileID: 4881830232455317032}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -106,13 +92,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2837422524704161676
-SphereCollider:
+--- !u!65 &2360835024921214856
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8973378184891927799}
+  m_GameObject: {fileID: 4881830232455317032}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -125,5 +111,25 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6683733107853138010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4881830232455317032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb0901dac1bfb740a40a7f2dc33ad7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPickUp
+  model: {fileID: 4607560624013282543}
+  highLight: {fileID: 2100000, guid: c710cc6be0eb67b4a9cb8cb6d5fd1bfb, type: 2}
+  weaponType: 0
+  damage: 1
+  range: 12
+  rate: 3
+  recoil: 5
+  timer: 6
