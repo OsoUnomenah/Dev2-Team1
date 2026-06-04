@@ -48,7 +48,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        weaponManager = FindFirstObjectByType<PlayerWeaponManager>();
+        weaponManager = FindAnyObjectByType<PlayerWeaponManager>(); //same edit as WeaponPickUp.cs
     }
 
     void Update()
@@ -215,7 +215,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             Debug.Log(hit.collider.name);
 
-            IInteract iAct = hit.collider.GetComponent<IInteract>();
+            IInteract iAct = hit.collider.GetComponentInParent<IInteract>(); //added "GetComponentInParent" to check object as well as parent not just object
             if (iAct != null)
             {
                 iAct.Interact();
