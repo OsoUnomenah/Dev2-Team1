@@ -52,4 +52,12 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     {
         StartCoroutine(flashGreen());
     }
+    public void OnHoverEnter()
+    {
+
+    }
+    public void OnHoverExit()
+    {
+
+    }
 }

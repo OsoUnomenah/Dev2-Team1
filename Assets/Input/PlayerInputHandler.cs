@@ -14,6 +14,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    private PlayerWeaponManager weaponManager;
     [Header("Debug")]
     [SerializeField] bool turnOnDebug;
 
@@ -22,12 +23,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
 
-    [Header("Combat Settings")]
-    [SerializeField] int shootDamage;
-    [SerializeField] float shootRange;
-    [SerializeField] float shootRate;
-    private float shootTimer;
-
+    [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
+    
 
     private PlayerActions playerActions; // Reference to the generated input actions class
 
@@ -40,8 +37,6 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction interactAction;
     private InputAction shootAction;
 
-   
-
 
 
     public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
@@ -49,17 +44,16 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
 
-
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        
+        weaponManager = FindAnyObjectByType<PlayerWeaponManager>(); //same edit as WeaponPickUp.cs
     }
 
     void Update()
     {
-        shootTimer += Time.deltaTime;
+        weaponManager.Timer += Time.deltaTime;
     }
 
 
@@ -221,7 +215,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             Debug.Log(hit.collider.name);
 
-            IInteract iAct = hit.collider.GetComponent<IInteract>();
+            IInteract iAct = hit.collider.GetComponentInParent<IInteract>(); //added "GetComponentInParent" to check object as well as parent not just object
             if (iAct != null)
             {
                 iAct.Interact();
@@ -237,17 +231,17 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
-        shootTimer = 0;
+        weaponManager.Timer = 0;
 
         RaycastHit hit;
-        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreSource))
         {
             Debug.Log(hit.collider.name);
 
             IDamage dmg = hit.collider.GetComponent<IDamage>();
             if (dmg != null)
             {
-                dmg.takeDamage(shootDamage);
+                dmg.takeDamage(weaponManager.Damage);
 
             }
         }
