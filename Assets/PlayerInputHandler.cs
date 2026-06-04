@@ -40,6 +40,8 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction interactAction;
     private InputAction shootAction;
 
+   
+
 
 
     public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
