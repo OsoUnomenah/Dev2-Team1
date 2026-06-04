@@ -40,8 +40,6 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction interactAction;
     private InputAction shootAction;
 
-   
-
 
 
     public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
@@ -240,7 +238,7 @@ public class PlayerInputHandler : MonoBehaviour
         shootTimer = 0;
 
         RaycastHit hit;
-        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootRange, ~ignoreSource))
         {
             Debug.Log(hit.collider.name);
 
