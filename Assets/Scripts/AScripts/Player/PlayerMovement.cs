@@ -29,6 +29,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float mouseSensitivity = 0.1f;
     [SerializeField] private float verticalViewRange = 80f;
 
+    [Header("Inventory Config")]
+    [SerializeField] private string selected;
+
     private Vector3 currentMovement;
     private float verticalRotation;
 
@@ -98,5 +101,11 @@ public class PlayerMovement : MonoBehaviour
     private void ApplyMovement()
     {
         characterController.Move(currentMovement * Time.deltaTime);
+    }
+      
+
+    void playerPickUp ()
+    {
+
     }
 }
