@@ -10,6 +10,10 @@ public class PlayerWeaponManager : MonoBehaviour
     public float Recoil;
     public float Timer;
 
+    [SerializeField] private Transform weaponHolder;
+    private GameObject weaponCurrent;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,7 +25,7 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         
     }
-    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer)
+    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab)
     {
         Type = type;
         Damage = damage;
@@ -29,5 +33,19 @@ public class PlayerWeaponManager : MonoBehaviour
         Rate = rate;
         Recoil = recoil;
         Timer = timer;
+
+        if (weaponCurrent != null)
+        {
+            Destroy(weaponCurrent);
+        }
+
+        weaponCurrent = Instantiate(weaponPrefab, weaponHolder); 
+        //you must place the weapon prefab corrisponding with the weapon pick-up prefab
+        //this allows the player to obtain the weapon in their view
+        //Only working prefab so far is pistol3, but we can absolutely add them all eventually
+
+        weaponCurrent.transform.localPosition = Vector3.zero;
+        weaponCurrent.transform.localRotation = Quaternion.identity;
     }
 }
+
