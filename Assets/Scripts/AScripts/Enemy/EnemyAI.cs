@@ -60,7 +60,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
         }
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        distance = Vector3.Distance(transform.position, player.position);
 
         switch(currentState)
         {
