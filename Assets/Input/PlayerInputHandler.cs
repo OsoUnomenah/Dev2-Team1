@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -14,18 +15,43 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
-    private PlayerWeaponManager weaponManager;//grabs the Player's weapon stats (dmg, recoil, etc)
-
-    [Header("Debug")]
+    [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
+
+    [Header("References")]
+    [SerializeField] private CharacterController characterController; // Reference to characterController to be seen in Unity
+    [SerializeField] private PlayerInputHandler playerInputHandler;  // Reference to playerInputHandler to be exposed in Unity
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private PlayerWeaponManager weaponManager;
+
+    [Header("Movement Config")]
+    [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f; // How fast player moves
+    [Range(2.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
+    private Vector3 currentMovement;
+
+
+    [Header("Rotation Config")]
+    [Range(0.1f,5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
+    [Range(1.0f, 10.0f)][SerializeField] private float gamepadSensitivity = 1.5f;
+    [SerializeField] private float verticalViewRange = 80f;
+    private float verticalRotation;
+
+
+    [Header("Inventory Config")]
+    [SerializeField] private string selected;
+
+
 
     [Header("Interact Config")]
     [SerializeField] public Transform interactorSource;
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
 
-    [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
     
+
+
+    // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
+
 
     private PlayerActions playerActions; // Reference to the generated input actions class
 
@@ -39,11 +65,11 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction shootAction;
 
 
-    public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
+    [Header("GlobalVariables")]
     public bool SprintTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
-
+   
     void Start()
     {
         Cursor.visible = false;
@@ -60,8 +86,12 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         weaponManager.Timer += Time.deltaTime;
+        HandleMovement();
+        HandleRotation();
+        ApplyMovement();
+        HandleJumping();
     }
-
+    
 
     void Awake() // Initialize the input actions and get references to specific actions
     {
@@ -109,8 +139,8 @@ public class PlayerInputHandler : MonoBehaviour
         moveAction.performed -= OnMovementPerformed;
         moveAction.canceled -= OnMovementCanceled;
 
-        rotateAction.performed += OnRotatePerformed;
-        rotateAction.canceled += OnRotateCanceled;
+        rotateAction.performed -= OnRotatePerformed;
+        rotateAction.canceled -= OnRotateCanceled;
 
         jumpAction.performed -= OnJumpPerformed; // Unsubscribe from the performed event of the jump action
         jumpAction.canceled -= OnJumpCanceled; // Unsubscribe from the canceled event of the jump action
@@ -122,6 +152,70 @@ public class PlayerInputHandler : MonoBehaviour
         shootAction.canceled -= OnShootCanceled;
 
     }
+
+    private void HandleRotation()
+    {
+        // Detect current input device and apply appropriate sensitivity
+        float currentSensitivity = GetCurrentSensitivity();
+
+        float mouseXRotation = playerInputHandler.RotateVector.x * currentSensitivity;
+        float mouseYRotation = playerInputHandler.RotateVector.y * currentSensitivity;
+
+        ApplyHorizontalRotation(mouseXRotation);
+        ApplyVerticalRotation(mouseYRotation);
+    }
+
+    private float GetCurrentSensitivity()
+    {
+        // Check which device was last used for the rotate action
+        if (rotateAction.activeControl != null)
+        {
+            var device = rotateAction.activeControl.device;
+
+            // Check if it's a gamepad
+            if (device is Gamepad)
+            {
+                return gamepadSensitivity;
+            }
+        }
+
+        // Default to mouse sensitivity for mouse/keyboard
+        return mouseSensitivity;
+    }
+
+    private void ApplyVerticalRotation(float mouseYRotation)
+    {
+        verticalRotation = Mathf.Clamp(verticalRotation - mouseYRotation, -verticalViewRange, verticalViewRange);
+        playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+    }
+
+    private void ApplyHorizontalRotation(float mouseXRotation)
+    {
+        characterController.transform.Rotate(0, mouseXRotation, 0 );
+    }
+
+    private void HandleMovement()
+    {
+        Vector3 worldDirection = CalculateWorldDirection();
+        float currentSpeed = (walkSpeed * (playerInputHandler.SprintTriggered ? sprintMultiplier : 1.0f)); // If sprint is triggered, multiply walk speed by sprint multiplier 
+        currentMovement.x = worldDirection.x * currentSpeed;
+        currentMovement.z = worldDirection.z * currentSpeed;
+    }
+
+    private Vector3 CalculateWorldDirection()
+    {
+        Vector3 inputDirection = new Vector3(playerInputHandler.MovementVector.x, 0, playerInputHandler.MovementVector.y);
+        Vector3 worldDirection = transform.TransformDirection(inputDirection);
+
+        return worldDirection.normalized;
+    }
+
+
+    private void ApplyMovement()
+    {
+        characterController.Move(currentMovement * Time.deltaTime);
+    }
+
 
 
     private void OnMovementPerformed(InputAction.CallbackContext context)
@@ -144,6 +238,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
+
     private void OnRotatePerformed(InputAction.CallbackContext context)
     {
         RotateVector = context.ReadValue<Vector2>();
@@ -164,15 +259,50 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
+    [Header("Jump Config")]
+    [Range(1.0f, 10.0f)][SerializeField] private float jumpForce = 5.0f;
+    [Range(1.0f, 3.0f)][SerializeField] private float gravityMultiplier = 1.0f;
+    [Range(1, 3)][SerializeField] private int jumpMax;
+    public bool JumpTriggered { get; private set; }
+    public int jumpCount;
+    public bool canJump;
+
+
+    private void HandleJumping()
+    {
+        if (jumpCount >= jumpMax) {
+            canJump = false;
+        }
+
+        if (characterController.isGrounded) {
+            canJump = true;
+            jumpCount = 0;
+        }
+
+        if (JumpTriggered)
+        {
+            currentMovement.y = jumpForce;
+            jumpCount++;
+            JumpTriggered = false;
+        }
+        
+        else
+        {
+            currentMovement.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
+        }
+    }
 
     private void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        JumpTriggered = true;
-
-        if (turnOnDebug)
+        if (canJump)
         {
-            Debug.Log("Jumping!"); // Log a message to the console when the jump action is performed
+            JumpTriggered = true;
+            if (turnOnDebug)
+            {
+                Debug.Log("Jump Performed"); // Log a message to the console when the jump action is performed
+            }
         }
+    
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext context)
@@ -188,6 +318,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnSprintPerformed(InputAction.CallbackContext obj)
     {
         SprintTriggered = true;
+       
 
         if (turnOnDebug)
         {

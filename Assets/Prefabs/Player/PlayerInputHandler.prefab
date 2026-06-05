@@ -45,11 +45,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   turnOnDebug: 1
+  characterController: {fileID: 0}
+  playerInputHandler: {fileID: 0}
+  playerCamera: {fileID: 0}
+  weaponManager: {fileID: 0}
+  walkSpeed: 3
+  sprintMultiplier: 2
+  mouseSensitivity: 0.5
+  gamepadSensitivity: 1.5
+  verticalViewRange: 80
+  selected: 
   interactorSource: {fileID: 0}
   interactRange: 50
   ignoreSource:
     serializedVersion: 2
     m_Bits: 8
-  shootDamage: 1
-  shootRange: 80
-  shootRate: 0.5
+  jumpForce: 5
+  gravityMultiplier: 1
+  jumpMax: 1
+  jumpCount: 0
+  canJump: 0
