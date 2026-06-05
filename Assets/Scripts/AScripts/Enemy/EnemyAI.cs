@@ -29,6 +29,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         Attack,
         Dead
     }
+
     private ZombieState currentState;
 
     Color originalColor;
@@ -51,6 +52,13 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     {
         if (currentState == ZombieState.Dead)
             return;
+
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        switch (currentState)
+        {
+
+        }
 
         float distance = Vector3.Distance(transform.position, player.position);
 
