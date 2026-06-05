@@ -3,7 +3,7 @@ using System.Collections;
 
 public class WarehouseInteract : MonoBehaviour, IInteract
 {
-    [SerializeField] private Transform garageDoor;
+    [SerializeField] private Transform door;
     
     [SerializeField] private float doorSpeed;
     [SerializeField] private float heightFinal;
@@ -32,9 +32,9 @@ public class WarehouseInteract : MonoBehaviour, IInteract
     {
         if (!doorOpen)
         {
-            while (garageDoor.position.y < heightFinal)
+            while (door.position.y < heightFinal)
             {
-                garageDoor.position += Vector3.up * doorSpeed * Time.deltaTime;
+                door.position += Vector3.up * doorSpeed * Time.deltaTime;
 
                 yield return null;
             }
@@ -43,9 +43,9 @@ public class WarehouseInteract : MonoBehaviour, IInteract
         } 
         else if (doorOpen)
         {
-            while (garageDoor.position.y > heightStart)
+            while (door.position.y > heightStart)
             {
-                garageDoor.position -= Vector3.up * doorSpeed * Time.deltaTime;
+                door.position -= Vector3.up * doorSpeed * Time.deltaTime;
 
                 yield return null;
             }
@@ -57,7 +57,7 @@ public class WarehouseInteract : MonoBehaviour, IInteract
     public void OnHoverEnter()
     {
         hoverLight.enabled = true;
-        Debug.Log("Garage Door Opener");
+        Debug.Log("Door Button");
     }
 
     public void OnHoverExit()
