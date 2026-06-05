@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Players
   interactorSource: {fileID: 3176180576933063264}
-  interactRange: 50
+  interactRange: 100
   ignoreSource:
     serializedVersion: 2
     m_Bits: 8
