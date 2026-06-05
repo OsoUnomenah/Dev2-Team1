@@ -1,44 +1,9 @@
 fileFormatVersion: 2
-guid: da562068737975741aa28e0b5fb6c818
+guid: 1692994250d60f74db00b53455cad8ed
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: BMetal Scratched
-    second: {fileID: 2100000, guid: 8b49874aa324b854297ed5bde08348ca, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Brick Floor
-    second: {fileID: 2100000, guid: e30126c0ab18c53498d8f572d7ddd704, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Button green
-    second: {fileID: 2100000, guid: ad94d8fccce963248a13f3163e4fd2d5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Concrete Roof
-    second: {fileID: 2100000, guid: 0ddf40ec053ea8c4bb724ab3bc2c56a2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Garage Door
-    second: {fileID: 2100000, guid: 933bcae579d7df54980932222fd12ed4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Painted Metal
-    second: {fileID: 2100000, guid: a855b9662f849c34c8f4a708c18c3ba2, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Red Brick
-    second: {fileID: 2100000, guid: 81cd2f1cad6fc144db5a852ddb458789, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -70,7 +35,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
@@ -85,7 +50,7 @@ ModelImporter:
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
-    bakeAxisConversion: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
