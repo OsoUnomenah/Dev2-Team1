@@ -568,6 +568,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
   HP: 8
   model: {fileID: 6515721808002073225}
+  _hit: {fileID: 11400000, guid: 18d4ca4ec298ea94b829f44e15a9bedf, type: 2}
+  _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
 --- !u!33 &6986632289804971165
 MeshFilter:
   m_ObjectHideFlags: 0
