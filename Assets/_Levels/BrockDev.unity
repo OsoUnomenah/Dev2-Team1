@@ -400,11 +400,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
---- !u!4 &784535844 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3176180576933063264, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
-  m_PrefabInstance: {fileID: 1797353195}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,46 +506,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7646c876ff4afaf478ebd994b55a31c4, type: 3}
---- !u!1 &1511316025 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2295977534600527836, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
-  m_PrefabInstance: {fileID: 1797353195}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1511316029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1511316025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 577553476bbb29e4694eeab94c35025e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Players
-  interactorSource: {fileID: 784535844}
-  interactRange: 3.02
-  ignoreSource:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &1511316033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1511316025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f067621dcd6d2924e92baa7f43f3757a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponManager
-  Type: 0
-  Damage: 0
-  Range: 0
-  Rate: 0
-  Recoil: 0
-  Timer: 0
 --- !u!1001 &1797353195
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -606,13 +561,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2295977534600527836, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1511316029}
-    - targetCorrespondingSourceObject: {fileID: 2295977534600527836, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1511316033}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
 --- !u!1001 &1811054259
 PrefabInstance:
