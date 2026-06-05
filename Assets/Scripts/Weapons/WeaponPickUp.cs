@@ -37,16 +37,19 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
         weaponManager.Equip(weaponType, damage, range, rate, recoil, timer, weaponPrefab);
 
+        TempUI.OffHover();
         Destroy(gameObject);
     }
 
     public void OnHoverEnter()
     {
         model.material = highLight;
+        TempUI.OnHover(0);
     }
 
     public void OnHoverExit()
     {       
         model.material = materialOrig;
+        TempUI.OffHover();
     }
 }
