@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 6105600929370897446}
   - component: {fileID: 2086887523093147828}
   - component: {fileID: 3253782353914710265}
-  - component: {fileID: 6020193773565884344}
-  - component: {fileID: 7320772487317528322}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -100,41 +98,6 @@ MonoBehaviour:
   Recoil: 0
   Timer: 1
   weaponHolder: {fileID: 6084764340024588261}
---- !u!114 &6020193773565884344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2295977534600527836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 577553476bbb29e4694eeab94c35025e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Players
-  interactorSource: {fileID: 3176180576933063264}
-  interactRange: 3.02
-  ignoreSource:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &7320772487317528322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2295977534600527836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f067621dcd6d2924e92baa7f43f3757a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponManager
-  Type: 0
-  Damage: 0
-  Range: 0
-  Rate: 0
-  Recoil: 0
-  Timer: 0
 --- !u!1 &2554189249460410002
 GameObject:
   m_ObjectHideFlags: 0
