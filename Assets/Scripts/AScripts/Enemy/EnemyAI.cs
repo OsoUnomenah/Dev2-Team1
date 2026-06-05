@@ -1,12 +1,34 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
 public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
     [SerializeField] int HP;
     [SerializeField] Renderer model;
-    //[SerializeField] private TempUI tempUI; //let's it talk to the ui manager
+
+    [SerializeField] private float sightRange = 15f;
+    [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float wanderRadius = 10f;
+    [SerializeField] private float wanderTimer = 5f;
+
+    private Transform player;
+    private NavMeshAgent agent;
+
+    private float nextAttackTime;
+    private float attackCooldown = 1.5f;
+    private float wanderTime;
+
+    private enum ZombieState
+    {
+        Wander,
+        Chase,
+        Attack,
+        Dead
+    }
+
+    private ZombieState currentState;
 
     Color originalColor;
 
@@ -14,11 +36,24 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     void Start()
     {
         originalColor = model.material.color;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        agent = GetComponent<NavMeshAgent>();
+        currentState = ZombieState.Wander;
+        wanderTime = wanderTime;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (currentState == ZombieState.Dead)
+            return;
+
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        switch (currentState)
+        {
+
+        }
 
     }
     IEnumerator PlaySound(BaseSoundSO sound)
@@ -43,7 +78,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         if (HP <= 0)
         {
             StartCoroutine(PlaySound(_dead));
-            TempUI.OffHover();
             Destroy(gameObject);
         }
         else
@@ -73,10 +107,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     }
     public void OnHoverEnter()
     {
-        TempUI.OnHover(1);
+
     }
     public void OnHoverExit()
     {
-        TempUI.OffHover();
+
     }
 }
