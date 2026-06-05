@@ -79,6 +79,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     void Update()
     {
+        if (weaponManager == null)
+        {
+            weaponManager = FindFirstObjectByType<PlayerWeaponManager>();
+            if (weaponManager == null) return;
+        }
+
         weaponManager.Timer += Time.deltaTime;
         HandleMovement();
         HandleRotation();
@@ -341,6 +347,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
+        Debug.Log("InteractorSource: " + interactorSource);
+        Debug.Log("WeaponManager: " + weaponManager);
         RaycastHit hit;
         if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
         {
@@ -370,7 +378,7 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log(hit.collider.name);
 
             IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if (dmg != null)
+            if (dmg != null && weaponManager.Damage != 0)
             {
                 dmg.takeDamage(weaponManager.Damage);
 
