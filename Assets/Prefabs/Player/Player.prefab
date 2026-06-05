@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 6105600929370897446}
   - component: {fileID: 2086887523093147828}
   - component: {fileID: 3253782353914710265}
-  - component: {fileID: 2846366948417838428}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -76,10 +75,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Players
   interactorSource: {fileID: 3176180576933063264}
-  interactRange: 0
+  interactRange: 50
   ignoreSource:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!114 &3253782353914710265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,29 +97,6 @@ MonoBehaviour:
   Rate: 1
   Recoil: 0
   Timer: 1
---- !u!114 &2846366948417838428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2295977534600527836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27660fcf840a8d840bb292e246a3ceaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
-  characterController: {fileID: 6105600929370897446}
-  playerInputHandler: {fileID: 1576129808573392272}
-  playerCamera: {fileID: 1069410342678794788}
-  jumpForce: 5
-  gravityMultiplier: 1
-  jumpMax: 2
-  walkSpeed: 3
-  sprintMultiplier: 3
-  mouseSensitivity: 0.3
-  verticalViewRange: 80
-  selected: 
 --- !u!1 &2554189249460410002
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,9 +377,41 @@ PrefabInstance:
       value: PlayerInputHandler
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: jumpMax
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: walkSpeed
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 1069410342678794788}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: weaponManager
+      value: 
+      objectReference: {fileID: 3253782353914710265}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: interactorSource
       value: 
       objectReference: {fileID: 3176180576933063264}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: mouseSensitivity
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: sprintMultiplier
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: playerInputHandler
+      value: 
+      objectReference: {fileID: 1576129808573392272}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 6105600929370897446}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
