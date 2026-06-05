@@ -36,10 +36,12 @@ public class TempUI : MonoBehaviour
             case 0: //Interactable
                 Instance.Reticle.color = new Color(0f, 0.9803922f, 0.6039216f, 1f);
                 Instance.RetSize.sizeDelta = new Vector2(8, 18);
+               // Debug.LogError("Reticle Green");
                 break;
             case 1: //Enemy
                 Instance.Reticle.color = new Color(1f, 0.2705882f, 0f, 1f);
                 Instance.RetSize.sizeDelta = new Vector2(8, 18);
+               // Debug.LogError("Reticle Red");
                 break;
         }
     }

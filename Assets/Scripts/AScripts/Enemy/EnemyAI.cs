@@ -107,10 +107,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     }
     public void OnHoverEnter()
     {
-
+        TempUI.OnHover(1);
     }
     public void OnHoverExit()
     {
-
+        TempUI.OffHover();
     }
 }
