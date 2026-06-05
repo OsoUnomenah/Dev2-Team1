@@ -1,11 +1,35 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
     [SerializeField] int HP;
     [SerializeField] Renderer model;
+
+    [SerializeField] private float sightRange = 15f;
+    [SerializeField] private float attackRange = 2f;
+
+    [SerializeField] private float wanderRadius = 10f;
+    [SerializeField] private float wanderTimer = 5f;
+
+    private Transform player;
+    private NavMeshAgent agent;
+
+    private float nextAttackTime;
+    private float attackCooldown = 1.5f;
+    private float wanderTime;
+
+    private enum ZombieState
+    {
+        Wander,
+        Chase,
+        Attack,
+        Dead
+    }
+    private ZombieState currentState;
 
     Color originalColor;
 
@@ -13,13 +37,74 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     void Start()
     {
         originalColor = model.material.color;
+
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        agent = GetComponent<NavMeshAgent>();
+
+        currentState = ZombieState.Wander;
+
+        wanderTime = wanderTimer;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        if (currentState == ZombieState.Dead)
+            return;
 
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        switch(currentState)
+        {
+            case ZombieState.Wander:
+                Wander();
+
+                if (distance <= sightRange)
+                {
+                    currentState = ZombieState.Chase;
+                }
+                break;
+
+            case ZombieState.Chase:
+                agent.SetDestination(player.position);
+
+                if(distance <= attackRange)
+                {
+                    currentState = ZombieState.Attack;
+                }
+                break;
+
+            case ZombieState.Attack:
+                agent.SetDestination(transform.position);
+
+                if (distance > attackRange)
+                {
+                    currentState = ZombieState.Chase;
+                }
+                break;
+
+        }
     }
+
+    private void Wander()
+    {
+        wanderTime += Time.deltaTime;
+
+        if(wanderTime >= wanderTimer)
+        {
+            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * wanderRadius;
+
+            randomDirection += transform.position;
+
+            NavMeshHit hit;
+            if(NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
+            {
+                agent.SetDestination(hit.position);
+            }
+            wanderTime = 0;
+        }
+    }
+    
     IEnumerator PlaySound(BaseSoundSO sound)
     {
         if (sound != null)
@@ -41,7 +126,12 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
         if (HP <= 0)
         {
+            currentState = ZombieState.Dead;
+            if (agent != null)
+                agent.isStopped = true;
+
             StartCoroutine(PlaySound(_dead));
+
             Destroy(gameObject);
         }
         else
