@@ -14,7 +14,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
-    private PlayerWeaponManager weaponManager;
+    private PlayerWeaponManager weaponManager;//grabs the Player's weapon stats (dmg, recoil, etc)
+
     [Header("Debug")]
     [SerializeField] bool turnOnDebug;
 
@@ -38,7 +39,6 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction shootAction;
 
 
-
     public bool JumpTriggered { get; private set; } // Property boolean to track if the jump action was triggered
     public bool SprintTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
@@ -53,6 +53,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     void Update()
     {
+        if (weaponManager == null)
+        {
+            weaponManager = FindFirstObjectByType<PlayerWeaponManager>();
+            if (weaponManager == null) return;
+        }
+
         weaponManager.Timer += Time.deltaTime;
     }
 
@@ -210,6 +216,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
+        Debug.Log("InteractorSource: " + interactorSource);
+        Debug.Log("WeaponManager: " + weaponManager);
         RaycastHit hit;
         if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
         {
@@ -239,7 +247,7 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log(hit.collider.name);
 
             IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if (dmg != null)
+            if (dmg != null && weaponManager.Damage != 0)
             {
                 dmg.takeDamage(weaponManager.Damage);
 

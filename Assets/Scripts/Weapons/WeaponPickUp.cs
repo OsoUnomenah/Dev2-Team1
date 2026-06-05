@@ -14,6 +14,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] float rate;
     [SerializeField] float recoil;
     [SerializeField] float timer;
+    [SerializeField] private GameObject weaponPrefab;
 
     private PlayerWeaponManager weaponManager;
 
@@ -21,7 +22,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     void Start()
     {
         materialOrig = model.material;
-        weaponManager = FindAnyObjectByType<PlayerWeaponManager>(); //changed FindFirstObject by type to FindAnyObject by type
+        weaponManager = FindFirstObjectByType<PlayerWeaponManager>();
     }
 
     // Update is called once per frame
@@ -34,7 +35,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     { 
         Debug.Log($"Picked up {objectName}");        
 
-        weaponManager.Equip(weaponType, damage, range, rate, recoil, timer);
+        weaponManager.Equip(weaponType, damage, range, rate, recoil, timer, weaponPrefab);
 
         Destroy(gameObject);
     }
