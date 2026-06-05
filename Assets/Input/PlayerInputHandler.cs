@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.LowLevel;
+using System.Collections;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -69,6 +69,7 @@ public class PlayerInputHandler : MonoBehaviour
     public bool SprintTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
+
    
     void Start()
     {
@@ -291,23 +292,46 @@ public class PlayerInputHandler : MonoBehaviour
             currentMovement.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
         }
     }
+     IEnumerator PlaySound(BaseSoundSO sound)
+    {
+        if (sound != null)
+        {
+            GameObject soundObject = new GameObject("Temp Audio Source");
+            AudioSource audioSource = soundObject.AddComponent<AudioSource>();
+            audioSource.clip = sound.clip;
+            audioSource.Play();
+            yield return new WaitForSeconds(0.3f);
+            Destroy(soundObject);
+        }
+    }
 
-    private void OnJumpPerformed(InputAction.CallbackContext context)
+    [SerializeField] private BaseSoundSO _jump;
+    [SerializeField] private BaseSoundSO _sprint;
+    [SerializeField] private BaseSoundSO _shoot;
+
+
+
+
+    public void OnJumpPerformed(InputAction.CallbackContext context)
     {
         if (canJump)
         {
             JumpTriggered = true;
+            StartCoroutine(PlaySound(_jump));
+
             if (turnOnDebug)
             {
+                
                 Debug.Log("Jump Performed"); // Log a message to the console when the jump action is performed
             }
         }
     
     }
 
-    private void OnJumpCanceled(InputAction.CallbackContext context)
+    public void OnJumpCanceled(InputAction.CallbackContext context)
     {
         JumpTriggered = false;
+        
 
         if (turnOnDebug)
         {
@@ -315,10 +339,12 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
-    private void OnSprintPerformed(InputAction.CallbackContext obj)
+    public void OnSprintPerformed(InputAction.CallbackContext obj)
     {
         SprintTriggered = true;
-       
+        StartCoroutine(PlaySound(_sprint));
+
+
 
         if (turnOnDebug)
         {
@@ -371,6 +397,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
         weaponManager.Timer = 0;
+        StartCoroutine(PlaySound(_shoot));
 
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreSource))
@@ -384,6 +411,7 @@ public class PlayerInputHandler : MonoBehaviour
 
             }
         }
+
         if(turnOnDebug)
         {
             Debug.Log("ShotFired!");

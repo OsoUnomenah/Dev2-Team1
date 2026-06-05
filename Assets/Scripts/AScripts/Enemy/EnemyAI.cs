@@ -20,16 +20,33 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     {
 
     }
+    IEnumerator PlaySound(BaseSoundSO sound)
+    {
+        if (sound != null)
+        {
+            GameObject soundObject = new GameObject("Temp Audio Source");
+            AudioSource audioSource = soundObject.AddComponent<AudioSource>();
+            audioSource.clip = sound.clip;
+            audioSource.Play();
+            yield return new WaitForSeconds(0.3f);
+            Destroy(soundObject);
+        }
+    }
+    [SerializeField] private BaseSoundSO _hit;
+    [SerializeField] private BaseSoundSO _dead;
+
     public void takeDamage(int amount)
     {
         HP -= amount;
 
         if (HP <= 0)
         {
+            StartCoroutine(PlaySound(_dead));
             Destroy(gameObject);
         }
         else
         {
+            StartCoroutine(PlaySound(_hit));
             StartCoroutine(flashRed());
         }
     }
