@@ -6,6 +6,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
     [SerializeField] int HP;
     [SerializeField] Renderer model;
+    //[SerializeField] private TempUI tempUI; //let's it talk to the ui manager
 
     Color originalColor;
 
@@ -26,6 +27,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
         if (HP <= 0)
         {
+            TempUI.OffHover();
             Destroy(gameObject);
         }
         else
@@ -54,10 +56,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     }
     public void OnHoverEnter()
     {
-
+        TempUI.OnHover(1);
     }
     public void OnHoverExit()
     {
-
+        TempUI.OffHover();
     }
 }

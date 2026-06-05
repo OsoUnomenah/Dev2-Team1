@@ -11,13 +11,12 @@ public class PlayerWeaponManager : MonoBehaviour
     public float Timer;
 
     [SerializeField] private Transform weaponHolder;
-    private GameObject weaponCurrent;
-
+    private GameObject weaponCurrent;    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+   
     void Start()
     {
-        
     }
 
     // Update is called once per frame

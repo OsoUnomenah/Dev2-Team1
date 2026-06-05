@@ -30,8 +30,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.45699, y: 1.104, z: 1.5959}
-  m_LocalScale: {x: 1, y: 0.120686986, z: 0.48555}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.43, y: 0.43, z: 0.43}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4881830232455317032}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 346469088309326284, guid: 726e329e1719c8f42949342e6a5b42e3, type: 3}
 --- !u!23 &4607560624013282543
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -128,9 +128,9 @@ MonoBehaviour:
   model: {fileID: 4607560624013282543}
   highLight: {fileID: 2100000, guid: c710cc6be0eb67b4a9cb8cb6d5fd1bfb, type: 2}
   weaponType: 0
-  damage: 1
-  range: 12
-  rate: 3
-  recoil: 5
+  damage: 5
+  range: 57.4
+  rate: 1
+  recoil: 10
   timer: 6
   weaponPrefab: {fileID: 2349204047919672205, guid: ec0300edf2687a34cbc9c15ce896f742, type: 3}

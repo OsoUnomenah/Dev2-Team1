@@ -566,7 +566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29998208158f61842b57546d58664aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
-  HP: 5
+  HP: 8
   model: {fileID: 6515721808002073225}
 --- !u!33 &6986632289804971165
 MeshFilter:
