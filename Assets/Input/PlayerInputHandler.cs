@@ -26,9 +26,11 @@ public class PlayerInputHandler : MonoBehaviour
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f; // How fast player moves
-    [Range(2.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
-    private Vector3 currentMovement;
+    [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
+    [Range(2.0f, 60.0f)][SerializeField] private float acceleration = 35.0f;
 
+    private Vector3 currentMovement;
+    private float currSpeed;
 
     [Header("Rotation Config")]
     [Range(0.1f,5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
@@ -198,9 +200,21 @@ public class PlayerInputHandler : MonoBehaviour
     private void HandleMovement()
     {
         Vector3 worldDirection = CalculateWorldDirection();
-        float currentSpeed = (walkSpeed * (playerInputHandler.SprintTriggered ? sprintMultiplier : 1.0f)); // If sprint is triggered, multiply walk speed by sprint multiplier 
-        currentMovement.x = worldDirection.x * currentSpeed;
-        currentMovement.z = worldDirection.z * currentSpeed;
+
+        float targetSpeed = playerInputHandler.SprintTriggered ? walkSpeed * sprintMultiplier : walkSpeed; // If sprint is triggered, multiply walk speed by sprint multiplier
+
+        if (!characterController.isGrounded)
+        {
+            currSpeed = Mathf.MoveTowards(currSpeed, targetSpeed / 2.5f, acceleration * Time.deltaTime);
+        }
+
+        if (moveAction.IsPressed())
+        {
+            currSpeed = Mathf.MoveTowards(currSpeed, targetSpeed, acceleration * Time.deltaTime);  // gradually builds speed
+        }
+
+        currentMovement.x = worldDirection.x * currSpeed;
+        currentMovement.z = worldDirection.z * currSpeed;
     }
 
     private Vector3 CalculateWorldDirection()
