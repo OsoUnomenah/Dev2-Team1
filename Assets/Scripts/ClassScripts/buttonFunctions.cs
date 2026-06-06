@@ -3,15 +3,21 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
-   public void resume()
-   {
+    public void resume()
+    {
         gameManager.instance.stateUnpause();
-   }
+    }
     public void restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         gameManager.instance.stateUnpause();
     }
+
+    public void settings()
+    {
+        gameManager.instance.settings();
+    }
+
     public void quit()
     {
 #if UNITY_EDITOR
@@ -21,5 +27,9 @@ public class buttonFunctions : MonoBehaviour
 #endif
     }
 
+    public void back()
+    {
+        gameManager.instance.back();
+    }
 
 }

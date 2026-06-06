@@ -9,10 +9,11 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject menuSettings;
 
     public bool isPaused;
     public GameObject player;
-    public PlayerController playerScript;
+    //public PlayerInputHandler playerScript;
 
     float timeScaleOrig;
 
@@ -24,7 +25,7 @@ public class gameManager : MonoBehaviour
         instance = this;
         timeScaleOrig = Time.timeScale;
         player = GameObject.FindGameObjectWithTag("Player");
-        playerScript = player.GetComponent<PlayerController>();
+        //playerScript = player.GetComponent<PlayerInputHandler>();
     }
 
     // Update is called once per frame
@@ -47,7 +48,7 @@ public class gameManager : MonoBehaviour
     public void statePause()
     {
         isPaused = true;
-        Time.timeScale = 0f;
+        Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
 
@@ -79,6 +80,29 @@ public class gameManager : MonoBehaviour
     {
         statePause();
         menuActive = menuLose;
+        menuActive.SetActive(true);
+    }
+
+    public void back()
+    {
+        if (menuActive == menuSettings)
+        {
+            menuSettings.SetActive(false);
+            menuActive = null;
+            menuActive = menuPause;
+            menuActive.SetActive(true);
+        }
+        //else if (menuActive == menuPause)
+        //{
+        //    stateUnpause();
+        //}
+    }
+
+    public void settings()
+    {
+        menuPause.SetActive(false);
+        menuActive = null;
+        menuActive = menuSettings;
         menuActive.SetActive(true);
     }
 }
