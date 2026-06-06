@@ -1,7 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -31,7 +31,7 @@ public class PlayerInputHandler : MonoBehaviour
 
 
     [Header("Rotation Config")]
-    [Range(0.1f,5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
+    [Range(0.1f, 5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
     [Range(1.0f, 10.0f)][SerializeField] private float gamepadSensitivity = 1.5f;
     [SerializeField] private float verticalViewRange = 80f;
     private float verticalRotation;
@@ -47,7 +47,7 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
 
-    
+
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -70,7 +70,7 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
 
-   
+
     void Start()
     {
         Cursor.visible = false;
@@ -92,7 +92,7 @@ public class PlayerInputHandler : MonoBehaviour
         ApplyMovement();
         HandleJumping();
     }
-    
+
 
     void Awake() // Initialize the input actions and get references to specific actions
     {
@@ -101,7 +101,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         moveAction = playerActions.PlayerInput.Movement;
         rotateAction = playerActions.PlayerInput.Rotate;
-        
+
         jumpAction = playerActions.PlayerInput.Jump; // Get the specific input action for jumping from the generated class
         sprintAction = playerActions.PlayerInput.Sprint;
 
@@ -192,7 +192,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void ApplyHorizontalRotation(float mouseXRotation)
     {
-        characterController.transform.Rotate(0, mouseXRotation, 0 );
+        characterController.transform.Rotate(0, mouseXRotation, 0);
     }
 
     private void HandleMovement()
@@ -242,11 +242,14 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnRotatePerformed(InputAction.CallbackContext context)
     {
-        RotateVector = context.ReadValue<Vector2>();
-
-        if (turnOnDebug)
+        if (!gameManager.instance.isPaused)
         {
-            Debug.Log(RotateVector); // Log a message to the console when the move action is performed
+            RotateVector = context.ReadValue<Vector2>();
+
+            if (turnOnDebug)
+            {
+                Debug.Log(RotateVector); // Log a message to the console when the move action is performed
+            }
         }
     }
 
@@ -271,11 +274,13 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void HandleJumping()
     {
-        if (jumpCount >= jumpMax) {
+        if (jumpCount >= jumpMax)
+        {
             canJump = false;
         }
 
-        if (characterController.isGrounded) {
+        if (characterController.isGrounded)
+        {
             canJump = true;
             jumpCount = 0;
         }
@@ -286,13 +291,13 @@ public class PlayerInputHandler : MonoBehaviour
             jumpCount++;
             JumpTriggered = false;
         }
-        
+
         else
         {
             currentMovement.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
         }
     }
-     IEnumerator PlaySound(BaseSoundSO sound)
+    IEnumerator PlaySound(BaseSoundSO sound)
     {
         if (sound != null)
         {
@@ -321,17 +326,17 @@ public class PlayerInputHandler : MonoBehaviour
 
             if (turnOnDebug)
             {
-                
+
                 Debug.Log("Jump Performed"); // Log a message to the console when the jump action is performed
             }
         }
-    
+
     }
 
     public void OnJumpCanceled(InputAction.CallbackContext context)
     {
         JumpTriggered = false;
-        
+
 
         if (turnOnDebug)
         {
@@ -396,32 +401,35 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
-        weaponManager.Timer = 0;
-        StartCoroutine(PlaySound(_shoot));
-
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreSource))
+        if (!gameManager.instance.isPaused)
         {
-            Debug.Log(hit.collider.name);
+            weaponManager.Timer = 0;
+            StartCoroutine(PlaySound(_shoot));
 
-            IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if (dmg != null && weaponManager.Damage != 0)
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreSource))
             {
-                dmg.takeDamage(weaponManager.Damage);
+                Debug.Log(hit.collider.name);
 
+                IDamage dmg = hit.collider.GetComponent<IDamage>();
+                if (dmg != null && weaponManager.Damage != 0)
+                {
+                    dmg.takeDamage(weaponManager.Damage);
+
+                }
             }
-        }
 
-        if(turnOnDebug)
-        {
-            Debug.Log("ShotFired!");
+            if (turnOnDebug)
+            {
+                Debug.Log("ShotFired!");
+            }
         }
     }
 
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
 
-        
+
     }
 
 }
