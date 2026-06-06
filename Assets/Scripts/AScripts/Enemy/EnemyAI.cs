@@ -1,6 +1,5 @@
-using System;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class enemyAI : MonoBehaviour, IDamage, IInteract
@@ -40,6 +39,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         agent = GetComponent<NavMeshAgent>();
         currentState = ZombieState.Wander;
         wanderTime = wanderTime;
+        gameManager.instance.updateGameGoal(1);
     }
 
     // Update is called once per frame
@@ -78,6 +78,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         if (HP <= 0)
         {
             StartCoroutine(PlaySound(_dead));
+            gameManager.instance.updateGameGoal(-1);
             Destroy(gameObject);
         }
         else
