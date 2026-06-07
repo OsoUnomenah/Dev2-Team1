@@ -1412,6 +1412,7 @@ MonoBehaviour:
   attackRange: 2
   wanderRadius: 10
   wanderTimer: 5
+  Modifiers: 
   _hit: {fileID: 11400000, guid: 18d4ca4ec298ea94b829f44e15a9bedf, type: 2}
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
 --- !u!33 &6986632289804971165
@@ -1496,8 +1497,6 @@ CapsuleCollider:
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &-2838318328245437893
 NavMeshAgent:
---- !u!114 &7604649987162195448
-MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1506,11 +1505,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2.5
+  m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1518,6 +1517,14 @@ MonoBehaviour:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &7604649987162195448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7791680660320909169}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 909bddc1b05a2e545aabbf42ddfdcfb7, type: 3}
   m_Name: 
