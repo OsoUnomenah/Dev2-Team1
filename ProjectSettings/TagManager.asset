@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - PauseMenu
   - LoseMenu
+  - Player Controller
+  - Player Stat Handler
   layers:
   - Default
   - TransparentFX
