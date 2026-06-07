@@ -38,8 +38,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         currentState = ZombieState.Wander;
-        wanderTime = wanderTime;
+
         gameManager.instance.updateGameGoal(1);
+        wanderTime = wanderTimer;
     }
 
     // Update is called once per frame
