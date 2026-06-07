@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float wanderTimer = 5f;
+
+    [Header("Don't touch unles debugging")]
+    [SerializeField] List<int> Modifiers;
 
     private Transform player;
     private NavMeshAgent agent;
@@ -38,7 +42,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         currentState = ZombieState.Wander;
-        wanderTime = wanderTime;
+        wanderTime = wanderTimer;
         gameManager.instance.updateGameGoal(1);
     }
 

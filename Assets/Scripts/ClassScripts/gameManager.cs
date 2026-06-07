@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class gameManager : MonoBehaviour
@@ -18,6 +19,9 @@ public class gameManager : MonoBehaviour
     float timeScaleOrig;
 
     int gameGoalCount;
+
+    [Header("Don't touch unles debugging")]
+    [SerializeField] List<int> Modifiers;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
