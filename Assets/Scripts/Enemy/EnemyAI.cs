@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
@@ -13,6 +14,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float wanderTimer = 5f;
+
+    [Header("Don't touch unles debugging")]
+    [SerializeField] List<int> Modifiers;
 
     private Transform player;
     private NavMeshAgent agent;
@@ -43,9 +47,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         agent = GetComponent<NavMeshAgent>();
 
         currentState = ZombieState.Wander;
-        
-        gameManager.instance.updateGameGoal(1);
         wanderTime = wanderTimer;
+        gameManager.instance.updateGameGoal(1);
     }
 
     private void Update()

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponPickUp : MonoBehaviour, IInteract
@@ -15,6 +16,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] float recoil;
     [SerializeField] float timer;
     [SerializeField] private GameObject weaponPrefab;
+
+    [Header("Don't touch unles debugging")]
+    [SerializeField] List<int> Modifiers;
 
     private PlayerWeaponManager weaponManager;
 

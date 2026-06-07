@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour
@@ -11,10 +12,13 @@ public class PlayerWeaponManager : MonoBehaviour
     public float Timer;
 
     [SerializeField] private Transform weaponHolder;
-    private GameObject weaponCurrent;    
+    private GameObject weaponCurrent;
+
+    [Header("Don't touch unles debugging")]
+    [SerializeField] List<int> Modifiers;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-   
+
     void Start()
     {
     }
