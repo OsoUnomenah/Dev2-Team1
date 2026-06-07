@@ -43,13 +43,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         agent = GetComponent<NavMeshAgent>();
 
         currentState = ZombieState.Wander;
-<<<<<<< HEAD
-        wanderTime = wanderTime;
+        
         gameManager.instance.updateGameGoal(1);
-=======
 
         wanderTime = wanderTimer;
->>>>>>> origin/DevDennis
     }
 
     private void Update()
@@ -143,11 +140,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
                 agent.isStopped = true;
 
             StartCoroutine(PlaySound(_dead));
-<<<<<<< HEAD
             gameManager.instance.updateGameGoal(-1);
-=======
-
->>>>>>> origin/DevDennis
             Destroy(gameObject);
         }
         else
