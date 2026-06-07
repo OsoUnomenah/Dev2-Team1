@@ -13,7 +13,7 @@ using System.Collections;
 
 
 
-public class PlayerInputHandler : MonoBehaviour
+public class PlayerInputHandler : MonoBehaviour, IDamage
 {
     [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
@@ -46,6 +46,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] public Transform interactorSource;
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
+
+    [SerializeField] public int HP;
 
     
 
@@ -92,7 +94,14 @@ public class PlayerInputHandler : MonoBehaviour
         ApplyMovement();
         HandleJumping();
     }
-    
+
+    public void takeDamage(int amount)
+    {
+        HP += amount;
+
+        if (HP < 0)
+            Debug.Log("Player Dead");
+    }
 
     void Awake() // Initialize the input actions and get references to specific actions
     {
@@ -424,4 +433,5 @@ public class PlayerInputHandler : MonoBehaviour
         
     }
 
+    
 }
