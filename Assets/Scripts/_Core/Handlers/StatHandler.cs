@@ -29,7 +29,7 @@ public class StatHandler : MonoBehaviour
 
     [Range(10f, 100f)][SerializeField] public float speed;
 
-    [Range(10f, 100f)][SerializeField] public float ;
+    [Range(10f, 100f)][SerializeField] public float jumps;
 
 
 
