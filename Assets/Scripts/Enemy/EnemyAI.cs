@@ -8,7 +8,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
     [SerializeField] int HP;
     [SerializeField] Renderer model;
-
+    [Range(1,1000)][SerializeField] private int giveXP;
     [SerializeField] private float sightRange = 15f;
     [SerializeField] private float attackRange = 2f;
 
@@ -142,6 +142,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
                 agent.isStopped = true;
 
             StartCoroutine(PlaySound(_dead));
+            gameManager.instance.addXp(giveXP);
             gameManager.instance.updateGameGoal(-1);
             Destroy(gameObject);
         }
