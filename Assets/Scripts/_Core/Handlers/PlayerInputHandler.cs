@@ -82,7 +82,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (weaponManager == null)
         {
-            weaponManager = FindFirstObjectByType<PlayerWeaponManager>();
+            weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
             if (weaponManager == null) return;
         }
 

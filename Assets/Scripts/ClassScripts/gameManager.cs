@@ -13,6 +13,7 @@ public class gameManager : MonoBehaviour
 
     public bool isPaused;
     public GameObject player;
+
     //public PlayerInputHandler playerScript;
 
     float timeScaleOrig;
@@ -25,7 +26,7 @@ public class gameManager : MonoBehaviour
         instance = this;
         timeScaleOrig = Time.timeScale;
         player = GameObject.FindGameObjectWithTag("Player");
-        //playerScript = player.GetComponent<PlayerInputHandler>();
+        
     }
 
     // Update is called once per frame
