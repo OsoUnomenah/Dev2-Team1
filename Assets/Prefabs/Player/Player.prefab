@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponManager
   Type: 0
-  Damage: 1
+  Damage: 0
   Range: 50
   Rate: 1
   Recoil: 0
