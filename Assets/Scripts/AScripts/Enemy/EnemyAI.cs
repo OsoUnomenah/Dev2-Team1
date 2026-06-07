@@ -45,7 +45,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         currentState = ZombieState.Wander;
         
         gameManager.instance.updateGameGoal(1);
-
         wanderTime = wanderTimer;
     }
 
