@@ -6,15 +6,20 @@ using UnityEngine.InputSystem.XR.Haptics;
 
 public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
+    [SerializeField] private int attackDamage = 10;
     [SerializeField] int HP;
     [SerializeField] Renderer model;
 
     [SerializeField] private float sightRange = 15f;
     [SerializeField] private float attackRange = 2f;
+    [SerializeField] private float hearingRange = 20f;
+
 
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float wanderTimer = 5f;
 
+    private Vector3 lastHeardPosition;
+    private bool heardNoise;
     private Transform player;
     private NavMeshAgent agent;
 
@@ -35,7 +40,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     Color originalColor;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         originalColor = model.material.color;
 
@@ -53,14 +58,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         if (currentState == ZombieState.Dead)
             return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        switch (currentState)
-        {
-
-        }
-
-        distance = Vector3.Distance(transform.position, player.position);
+        float distance = Vector3.Distance(transform.position, player.position);;
 
         switch(currentState)
         {
@@ -84,6 +82,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
             case ZombieState.Attack:
                 agent.SetDestination(transform.position);
+
+                AttackPlayer();
 
                 if (distance > attackRange)
                 {
@@ -112,7 +112,19 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             wanderTime = 0;
         }
     }
-    
+
+    public void HearNoise(Vector3 noisePosition)
+    {
+        float distance = Vector3.Distance(transform.position, noisePosition);
+
+        if (distance <= hearingRange)
+        {
+            lastHeardPosition = noisePosition;
+            heardNoise = true;
+
+            Debug.Log("Zombie heard noise");
+        }
+    }
     IEnumerator PlaySound(BaseSoundSO sound)
     {
         if (sound != null)
@@ -125,9 +137,26 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             Destroy(soundObject);
         }
     }
+
     [SerializeField] private BaseSoundSO _hit;
     [SerializeField] private BaseSoundSO _dead;
 
+    private void AttackPlayer()
+    {
+        if (Time.time >= nextAttackTime)
+        {
+            nextAttackTime = Time.time + attackCooldown;
+
+            IDamage damageable = player.GetComponent<IDamage>();
+
+            if (damageable != null)
+            {
+                damageable.takeDamage(attackDamage);
+
+                Debug.Log("Zombie attacked player!");
+            }
+        }
+    }
     public void takeDamage(int amount)
     {
         HP -= amount;
@@ -144,6 +173,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         }
         else
         {
+            currentState = ZombieState.Chase;
             StartCoroutine(PlaySound(_hit));
             StartCoroutine(flashRed());
         }
