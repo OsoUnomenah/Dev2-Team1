@@ -46,13 +46,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Inventory Config")]
     [SerializeField] private string selected;
 
-
     [Header("Interact Config")]
     [SerializeField] public Transform interactorSource;
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
-
-    [SerializeField] public int HP;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
@@ -80,7 +77,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
 
     [Header("GlobalVariables")]
-    public bool SprintTriggered { get; private set; }
+  
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
 
@@ -100,6 +97,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
             if (weaponManager == null) return;
         }
+
+        if (playerStatHandler.GetComponent<StatHandler>().currentStamina >= gameManager.instance.sprintCost)
+        {
+            gameManager.instance.canSprint = true;
+        }
+       
 
         timer += Time.deltaTime;
         HandleMovement();
@@ -247,7 +250,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void HandleMovement()
     {
         Vector3 worldDirection = CalculateWorldDirection();
-        float currentSpeed = (walkSpeed * (playerInputHandler.SprintTriggered ? sprintMultiplier : 1.0f)); // If sprint is triggered, multiply walk speed by sprint multiplier 
+        float currentSpeed = (walkSpeed * (gameManager.instance.SprintTriggered ? sprintMultiplier : 1.0f)); // If sprint is triggered, multiply walk speed by sprint multiplier 
         currentMovement.x = worldDirection.x * currentSpeed;
         currentMovement.z = worldDirection.z * currentSpeed;
     }
@@ -376,12 +379,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
+    
     public void OnSprintPerformed(InputAction.CallbackContext obj)
     {
-        SprintTriggered = true;
-
-
-
+        if(gameManager.instance.canSprint)
+        {
+            gameManager.instance.SprintTriggered = true;
+        }  
+       
         if (turnOnDebug)
         {
             Debug.Log("Sprinting!"); // Log a message to the console when the sprint action is performed
@@ -390,7 +395,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnSprintCanceled(InputAction.CallbackContext context)
     {
-        SprintTriggered = false;
+        gameManager.instance.SprintTriggered = false;
+        gameManager.instance.isSprinting = false;
 
         if (turnOnDebug)
         {
@@ -507,7 +513,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             footstepTimer += Time.deltaTime;
 
-            float interval = SprintTriggered ? footstepInterval * 0.5f : footstepInterval;
+            float interval = gameManager.instance.SprintTriggered ? footstepInterval * 0.5f : footstepInterval;
 
             if (footstepTimer >= interval)
             {

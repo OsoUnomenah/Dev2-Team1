@@ -35,6 +35,13 @@ public class gameManager : MonoBehaviour
 
     
     public bool isPaused;
+
+    public bool SprintTriggered;
+    public bool canSprint;
+    public bool isSprinting;
+
+    public int sprintCost;
+
     public GameObject player;
     public GameObject playerController;
     public GameObject playerStatHandler;
@@ -45,6 +52,8 @@ public class gameManager : MonoBehaviour
 
     public float recoil;
     public bool canShoot;
+
+    public int enemyDamageOut;
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -57,6 +66,7 @@ public class gameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         playerInputHandler = GameObject.FindGameObjectWithTag("PlayerInputHandler");
         playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");
+        
     }
 
     // Update is called once per frame
@@ -74,12 +84,10 @@ public class gameManager : MonoBehaviour
         {
             currentXP += xpGain;
         }
-
         if (currentXP >= xpToNextLevel)
         {
             levelUp();
             currentXP = 0;
-
         }
     }
 
@@ -138,6 +146,7 @@ public class gameManager : MonoBehaviour
 
     public void updateGameGoal(int amount)
     {
+        //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
         if (gameGoalCount <= 0)
         {
