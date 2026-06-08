@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Networking;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -416,6 +417,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
+        if (weaponManager == null || weaponManager.Damage <= 0 || weaponManager.Range <= 0) //will not shoot when weapon is not equipped
+            return;
+
+
         recoil = gameManager.instance.recoil;
         if (!gameManager.instance.isPaused && gameManager.instance.canShoot == true)
         {
