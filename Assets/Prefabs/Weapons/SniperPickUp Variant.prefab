@@ -25,6 +25,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: recoil
+      value: 0.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponPrefab
       value: 
       objectReference: {fileID: 759089939085317326, guid: 4a9be8da16743b4498cd534e5ae1c055, type: 3}

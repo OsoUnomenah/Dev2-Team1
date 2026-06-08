@@ -27,7 +27,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
+    [SerializeField] GameObject playerInputHandler;
 
+    
     public bool isPaused;
     public GameObject player;
     public GameObject playerController;
@@ -37,7 +39,10 @@ public class gameManager : MonoBehaviour
 
     int gameGoalCount;
 
-    [Header("Don't touch unless debugging")]
+    public float recoil;
+    public bool canShoot;
+
+    [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,16 +51,7 @@ public class gameManager : MonoBehaviour
         instance = this;
         timeScaleOrig = Time.timeScale;
         player = GameObject.FindGameObjectWithTag("Player");
-        playerController = GameObject.FindGameObjectWithTag("Player Controller");
-        playerStatHandler = GameObject.FindGameObjectWithTag("Player Stat Handler");
-
-      
-    }
-    private void Start()
-    {
-        currentLevel = level;
-        currentXP = xp;
-        //xpBoostText.alpha = 0f;
+        playerInputHandler = GameObject.FindGameObjectWithTag("PlayerInputHandler");
     }
 
     // Update is called once per frame

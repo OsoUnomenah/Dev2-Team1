@@ -479,6 +479,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerInputHandler
       objectReference: {fileID: 0}
+    - target: {fileID: 466818919228167576, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: m_TagString
+      value: PlayerInputHandler
+      objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: _jump
       value: 
