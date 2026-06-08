@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform player;
 
     float cameraRotationX;
+    public float recoil;
 
 
 
@@ -24,10 +25,18 @@ public class CameraController : MonoBehaviour
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity * Time.deltaTime;
 
         cameraRotationX -= mouseY;
+        cameraRotationX -= recoil;
+
+        recoil = Mathf.Lerp(recoil, 0f, Time.deltaTime * 10f);
         cameraRotationX = Mathf.Clamp(cameraRotationX, lockVertMin, lockVertMax);
         transform.localRotation = Quaternion.Euler(cameraRotationX, 0f, 0f);
         
         player.transform.Rotate(Vector3.up * mouseX);
 
+    }
+
+    public void AddRecoil(float amount)
+    {
+        recoil += amount;
     }
 }

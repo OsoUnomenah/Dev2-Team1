@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,11 +36,11 @@ public class PlayerInputHandler : MonoBehaviour
     [Range(1.0f, 10.0f)][SerializeField] private float gamepadSensitivity = 1.5f;
     [SerializeField] private float verticalViewRange = 80f;
     private float verticalRotation;
-
+    float recoil;
+    float timer;
 
     [Header("Inventory Config")]
     [SerializeField] private string selected;
-
 
 
     [Header("Interact Config")]
@@ -76,6 +77,7 @@ public class PlayerInputHandler : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         weaponManager = FindAnyObjectByType<PlayerWeaponManager>(); //same edit as WeaponPickUp.cs
+        
     }
 
     void Update()
@@ -86,17 +88,18 @@ public class PlayerInputHandler : MonoBehaviour
             if (weaponManager == null) return;
         }
 
-        weaponManager.Timer += Time.deltaTime;
+        timer += Time.deltaTime;
         HandleMovement();
         HandleRotation();
         ApplyMovement();
         HandleJumping();
+        ShootTimer();
     }
 
 
     void Awake() // Initialize the input actions and get references to specific actions
     {
-
+    
         playerActions = new PlayerActions(); // Create an instance of the generated input actions class
 
         moveAction = playerActions.PlayerInput.Movement;
@@ -186,8 +189,14 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void ApplyVerticalRotation(float mouseYRotation)
     {
+        if (!gameManager.instance.isPaused)
+        { 
+        recoil = Mathf.Lerp(recoil, 0f, Time.deltaTime * 10f);
         verticalRotation = Mathf.Clamp(verticalRotation - mouseYRotation, -verticalViewRange, verticalViewRange);
         playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+        verticalRotation -= recoil;
+       
+        }
     }
 
     private void ApplyHorizontalRotation(float mouseXRotation)
@@ -401,10 +410,17 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
-        if (!gameManager.instance.isPaused)
+        recoil = gameManager.instance.recoil;
+        if (!gameManager.instance.isPaused && gameManager.instance.canShoot == true)
         {
-            weaponManager.Timer = 0;
+            
+            timer = 0;
+            gameManager.instance.canShoot = false;
+
+
             StartCoroutine(PlaySound(_shoot));
+
+            weaponManager.Ammo--;
 
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreSource))
@@ -430,6 +446,28 @@ public class PlayerInputHandler : MonoBehaviour
     {
 
 
+    }
+
+    private void ShootTimer()
+    {
+        timer += 0.1f;
+        bool reloading = false;
+
+        if (weaponManager.Ammo <= 0)
+        {
+            reloading = true;
+            gameManager.instance.canShoot = false;
+            if (timer >= weaponManager.AmmoTimer)
+            {
+                gameManager.instance.canShoot = true;
+                reloading = false;
+                weaponManager.Ammo = weaponManager.MaxAmmo;
+            }
+        }
+        if (timer >= weaponManager.Timer && reloading == false)
+        {
+            gameManager.instance.canShoot = true;
+        }              
     }
 
 }

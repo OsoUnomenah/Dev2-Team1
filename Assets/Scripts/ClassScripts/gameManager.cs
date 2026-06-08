@@ -11,7 +11,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
+    [SerializeField] GameObject playerInputHandler;
 
+    
     public bool isPaused;
     public GameObject player;
 
@@ -20,6 +22,9 @@ public class gameManager : MonoBehaviour
     float timeScaleOrig;
 
     int gameGoalCount;
+
+    public float recoil;
+    public bool canShoot;
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -30,7 +35,7 @@ public class gameManager : MonoBehaviour
         instance = this;
         timeScaleOrig = Time.timeScale;
         player = GameObject.FindGameObjectWithTag("Player");
-        
+        playerInputHandler = GameObject.FindGameObjectWithTag("PlayerInputHandler");
     }
 
     // Update is called once per frame
