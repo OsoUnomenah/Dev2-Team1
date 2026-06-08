@@ -51,9 +51,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] public int HP;
 
     [Header("Audio")]
-    [SerializeField] public AudioClip footstepClip;
-    [SerializeField] private float footstepInterval;
-
+    [SerializeField] BaseSoundSO _shoot;
+    [SerializeField] BaseSoundSO _footsteps;
+    [Range(.4f, 1f)][SerializeField] private float footstepInterval;
+  
     private float footstepTimer;
 
 
@@ -320,6 +321,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (JumpTriggered)
         {
             currentMovement.y = jumpForce;
+            AudioManager.instance.PlayFootsteps(_footsteps, gameManager.instance.player);
             jumpCount++;
             JumpTriggered = false;
         }
@@ -421,7 +423,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             timer = 0;
             gameManager.instance.canShoot = false;
 
-            // add shoot sound
+            AudioManager.instance.PlaySound(_shoot);
 
             weaponManager.Ammo--;
 
@@ -481,14 +483,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
-        footstepTimer += Time.deltaTime;
-
-        float interval = SprintTriggered ? footstepInterval * 1.25f : footstepInterval;
-
-        if (footstepTimer >= interval)
+        if (characterController.isGrounded)
         {
-            AudioManager.instance.PlaySound(footstepClip);
-            footstepTimer = 0;
+            footstepTimer += Time.deltaTime;
+
+            float interval = SprintTriggered ? footstepInterval * 0.5f : footstepInterval;
+
+            if (footstepTimer >= interval)
+            {
+                AudioManager.instance.PlayFootsteps(_footsteps, gameManager.instance.player);
+                footstepTimer = 0;
+            }
         }
     }
 

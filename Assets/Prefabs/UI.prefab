@@ -2064,8 +2064,12 @@ MonoBehaviour:
   menuWin: {fileID: 966750003016362279}
   menuLose: {fileID: 6380996599590711627}
   menuSettings: {fileID: 2793343119986044052}
+  playerInputHandler: {fileID: 0}
   isPaused: 0
   player: {fileID: 0}
+  recoil: 0
+  canShoot: 0
+  Modifiers: 
 --- !u!1 &5478322237875307354
 GameObject:
   m_ObjectHideFlags: 0
@@ -3219,6 +3223,52 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &6777933194028613026
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6813734617544503439}
+  - component: {fileID: 7978525200649916541}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6813734617544503439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6777933194028613026}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -961.5723, y: -313.63287, z: -10.140295}
+  m_LocalScale: {x: 1.3963636, y: 1.3963636, z: 1.3963636}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8672693041390375596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7978525200649916541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6777933194028613026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51b453867b854dd4b8486b8dfeab0b1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  footstepClip: {fileID: 8300000, guid: 7ab300d9052a3904db1d64df801b780b, type: 3}
+  footstepVolume: 1
 --- !u!1 &6858534205123140154
 GameObject:
   m_ObjectHideFlags: 0
@@ -3963,6 +4013,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6412490409869517656}
+  - {fileID: 6813734617544503439}
   - {fileID: 836910080454016745}
   - {fileID: 4843947575000985521}
   - {fileID: 8531812567311574344}

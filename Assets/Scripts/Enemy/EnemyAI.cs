@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
+using UnityEngine.UIElements;
 
 public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
@@ -17,6 +19,12 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float wanderTimer = 5f;
+
+    [Header("Audio")]
+    [SerializeField] BaseSoundSO _hit;
+    [SerializeField] BaseSoundSO _dead;
+   
+
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -133,21 +141,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             Debug.Log("Zombie heard noise");
         }
     }
-    IEnumerator PlaySound(BaseSoundSO sound)
-    {
-        if (sound != null)
-        {
-            GameObject soundObject = new GameObject("Temp Audio Source");
-            AudioSource audioSource = soundObject.AddComponent<AudioSource>();
-            audioSource.clip = sound.clip;
-            audioSource.Play();
-            yield return new WaitForSeconds(0.3f);
-            Destroy(soundObject);
-        }
-    }
-
-    [SerializeField] private BaseSoundSO _hit;
-    [SerializeField] private BaseSoundSO _dead;
 
     private void AttackPlayer()
     {
@@ -182,14 +175,15 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             if (agent != null)
                 agent.isStopped = true;
 
-            StartCoroutine(PlaySound(_dead));
+            AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
+
             gameManager.instance.updateGameGoal(-1);
             Destroy(gameObject);
         }
         else
         {
             currentState = ZombieState.Chase;
-            StartCoroutine(PlaySound(_hit));
+            AudioManager.instance.PlaySoundAtPosition(_hit, gameObject);
             StartCoroutine(flashRed());
         }
     }
