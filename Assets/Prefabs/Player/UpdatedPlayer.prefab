@@ -371,6 +371,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5026453916610437694}
     m_Modifications:
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: sprintCost
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: sprintGain
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: sprintLoss
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3389285672651231312, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -49.827133

@@ -165,70 +165,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &1034947348133039958
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6934695427777248695}
-  - component: {fileID: 1656568779743491185}
-  m_Layer: 0
-  m_Name: EnemyStatHandler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6934695427777248695
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034947348133039958}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.54225, y: -1.15, z: -11.514529}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8112398099157542644}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1656568779743491185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034947348133039958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 952983688128e5d49a9d20f87bd24744, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StatHandler
-  health: 100
-  currentHealth: 100
-  maxHealth: 0
-  modHealth: 0
-  stamina: 50
-  currentStamina: 0
-  maxStamina: 0
-  modStamina: 0
-  damage: 1
-  currentDamage: 1
-  modDamage: 1
-  defense: 1
-  currentDefense: 1
-  modDefense: 1
-  modSpeed: 10
-  modJumps: 10
-  healthBar: {fileID: 0}
-  healthText: {fileID: 0}
-  staminaBar: {fileID: 0}
-  staminaText: {fileID: 0}
 --- !u!1 &2192956449197224665
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +436,7 @@ GameObject:
   - component: {fileID: 7228718462534511460}
   - component: {fileID: 4089658397702432798}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: EnemyScreenUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -827,7 +763,7 @@ GameObject:
   - component: {fileID: 6023955112333958903}
   - component: {fileID: 4071806678052758362}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: EnemyHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1113,7 +1049,6 @@ Transform:
   - {fileID: 1559942487890406157}
   - {fileID: 4446749787455840186}
   - {fileID: 784604339347957579}
-  - {fileID: 6934695427777248695}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1349357132627058740
@@ -1128,9 +1063,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29998208158f61842b57546d58664aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
+  maxHealth: 100
   attackDamage: 10
-  HP: 8
+  xpGive: 100
   model: {fileID: 6515721808002073225}
+  healthbar: {fileID: 4071806678052758362}
+  healthText: {fileID: 527207266131902223}
+  currentHealth: 0
   sightRange: 15
   attackRange: 2
   hearingRange: 20
@@ -1248,7 +1187,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7791680660320909169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 909bddc1b05a2e545aabbf42ddfdcfb7, type: 3}
   m_Name: 
