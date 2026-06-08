@@ -147,16 +147,23 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         {
             nextAttackTime = Time.time + attackCooldown;
 
-            IDamage damageable = player.GetComponent<IDamage>();
+            Debug.Log("Zombie Attack");
+
+            IDamage damageable = player.GetComponentInChildren<IDamage>();
 
             if (damageable != null)
             {
                 damageable.takeDamage(attackDamage);
 
-                Debug.Log("Zombie attacked player!");
+                Debug.Log("Damage Applied");
+            }
+            else
+            {
+                Debug.Log("No IDamage Found");
             }
         }
     }
+
     public void takeDamage(int amount)
     {
         HP -= amount;

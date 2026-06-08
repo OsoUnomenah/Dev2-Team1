@@ -31,7 +31,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
 
     [Header("Rotation Config")]
-    [Range(0.1f,5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
+    [Range(0.1f, 5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
     [Range(1.0f, 10.0f)][SerializeField] private float gamepadSensitivity = 1.5f;
     [SerializeField] private float verticalViewRange = 80f;
     private float verticalRotation;
@@ -49,7 +49,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [SerializeField] public int HP;
 
-    
+
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -72,7 +72,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
 
-   
+
     void Start()
     {
         Cursor.visible = false;
@@ -97,11 +97,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
-        HP += amount;
+        HP -= amount;
 
-        if (HP < 0)
-            Debug.Log("Player Dead");
+        if (HP <= 0)
+        {
+            HP = 0;
+            Die();
+        }
     }
+
+    private void Die()
+    {
+        Destroy(gameObject, 1.5f);
+    }
+
 
     void Awake() // Initialize the input actions and get references to specific actions
     {
@@ -110,7 +119,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         moveAction = playerActions.PlayerInput.Movement;
         rotateAction = playerActions.PlayerInput.Rotate;
-        
+
         jumpAction = playerActions.PlayerInput.Jump; // Get the specific input action for jumping from the generated class
         sprintAction = playerActions.PlayerInput.Sprint;
 
@@ -201,7 +210,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void ApplyHorizontalRotation(float mouseXRotation)
     {
-        characterController.transform.Rotate(0, mouseXRotation, 0 );
+        characterController.transform.Rotate(0, mouseXRotation, 0);
     }
 
     private void HandleMovement()
@@ -280,11 +289,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void HandleJumping()
     {
-        if (jumpCount >= jumpMax) {
+        if (jumpCount >= jumpMax)
+        {
             canJump = false;
         }
 
-        if (characterController.isGrounded) {
+        if (characterController.isGrounded)
+        {
             canJump = true;
             jumpCount = 0;
         }
@@ -295,13 +306,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             jumpCount++;
             JumpTriggered = false;
         }
-        
+
         else
         {
             currentMovement.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
         }
     }
-     IEnumerator PlaySound(BaseSoundSO sound)
+    IEnumerator PlaySound(BaseSoundSO sound)
     {
         if (sound != null)
         {
@@ -330,17 +341,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             if (turnOnDebug)
             {
-                
+
                 Debug.Log("Jump Performed"); // Log a message to the console when the jump action is performed
             }
         }
-    
+
     }
 
     public void OnJumpCanceled(InputAction.CallbackContext context)
     {
         JumpTriggered = false;
-        
+
 
         if (turnOnDebug)
         {
@@ -421,7 +432,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             }
         }
 
-        if(turnOnDebug)
+        if (turnOnDebug)
         {
             Debug.Log("ShotFired!");
         }
@@ -430,8 +441,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
 
-        
-    }
 
-    
+    }
 }
