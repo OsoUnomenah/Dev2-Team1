@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 
 
 
-public class PlayerInputHandler : MonoBehaviour
+public class PlayerInputHandler : MonoBehaviour, IDamage
 {
     [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
@@ -48,7 +48,14 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
 
+    [SerializeField] public int HP;
 
+    [Header("Audio")]
+    [SerializeField] BaseSoundSO _shoot;
+    [SerializeField] BaseSoundSO _footsteps;
+    [Range(.4f, 1f)][SerializeField] private float footstepInterval;
+  
+    private float footstepTimer;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -92,8 +99,25 @@ public class PlayerInputHandler : MonoBehaviour
         HandleMovement();
         HandleRotation();
         ApplyMovement();
+        HandleFootsteps();
         HandleJumping();
         ShootTimer();
+    }
+
+    public void takeDamage(int amount)
+    {
+        HP -= amount;
+
+        if (HP <= 0)
+        {
+            HP = 0;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject, 1.5f);
     }
 
 
@@ -297,6 +321,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (JumpTriggered)
         {
             currentMovement.y = jumpForce;
+            AudioManager.instance.PlayFootsteps(_footsteps, gameManager.instance.player);
             jumpCount++;
             JumpTriggered = false;
         }
@@ -306,24 +331,6 @@ public class PlayerInputHandler : MonoBehaviour
             currentMovement.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
         }
     }
-    IEnumerator PlaySound(BaseSoundSO sound)
-    {
-        if (sound != null)
-        {
-            GameObject soundObject = new GameObject("Temp Audio Source");
-            AudioSource audioSource = soundObject.AddComponent<AudioSource>();
-            audioSource.clip = sound.clip;
-            audioSource.Play();
-            yield return new WaitForSeconds(0.3f);
-            Destroy(soundObject);
-        }
-    }
-
-    [SerializeField] private BaseSoundSO _jump;
-    [SerializeField] private BaseSoundSO _sprint;
-    [SerializeField] private BaseSoundSO _shoot;
-
-
 
 
     public void OnJumpPerformed(InputAction.CallbackContext context)
@@ -331,8 +338,8 @@ public class PlayerInputHandler : MonoBehaviour
         if (canJump)
         {
             JumpTriggered = true;
-            StartCoroutine(PlaySound(_jump));
 
+            // add jump sound
             if (turnOnDebug)
             {
 
@@ -356,7 +363,6 @@ public class PlayerInputHandler : MonoBehaviour
     public void OnSprintPerformed(InputAction.CallbackContext obj)
     {
         SprintTriggered = true;
-        StartCoroutine(PlaySound(_sprint));
 
 
 
@@ -417,8 +423,7 @@ public class PlayerInputHandler : MonoBehaviour
             timer = 0;
             gameManager.instance.canShoot = false;
 
-
-            StartCoroutine(PlaySound(_shoot));
+            AudioManager.instance.PlaySound(_shoot);
 
             weaponManager.Ammo--;
 
@@ -468,6 +473,28 @@ public class PlayerInputHandler : MonoBehaviour
         {
             gameManager.instance.canShoot = true;
         }              
+    }
+
+    private void HandleFootsteps()
+    {
+        if (!moveAction.IsPressed())
+        {
+            footstepTimer = 0;
+            return;
+        }
+
+        if (characterController.isGrounded)
+        {
+            footstepTimer += Time.deltaTime;
+
+            float interval = SprintTriggered ? footstepInterval * 0.5f : footstepInterval;
+
+            if (footstepTimer >= interval)
+            {
+                AudioManager.instance.PlayFootsteps(_footsteps, gameManager.instance.player);
+                footstepTimer = 0;
+            }
+        }
     }
 
 }
