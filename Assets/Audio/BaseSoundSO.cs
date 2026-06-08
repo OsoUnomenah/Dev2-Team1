@@ -16,5 +16,7 @@ public class BaseSoundSO : ScriptableObject
     [Range(0.1f, 1f)] public float randomPitchRangeMod = .1f;
     [Range(0.1f, 2f)] public float volume = 1f;
     [Range(0.1f, 3f)] public float pitch = 1f;
-    
+    [Range(1f, 100f)] public float fallOffDistMin = 2f;
+    [Range(1f, 100f)] public float fallOffDistMax = 20f;
+   
 }

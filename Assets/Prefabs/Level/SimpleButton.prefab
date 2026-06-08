@@ -378,7 +378,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6348535091700277831}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 3.379, y: 1.3012, z: 70.7379}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
@@ -401,7 +401,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WarehouseInteract
   door: {fileID: 0}
-  doorSpeed: 4
-  heightFinal: 6
+  doorSpeed: 3
+  heightFinal: 5
   heightStart: 2
   hoverLight: {fileID: 1230221771744960719}
+  doorSound: {fileID: 8300000, guid: 3134c3ce037204c4d89bd5e108dfa5bb, type: 3}
