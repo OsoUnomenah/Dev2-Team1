@@ -1406,8 +1406,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29998208158f61842b57546d58664aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
-  HP: 8
+  HP: 20
   model: {fileID: 6515721808002073225}
+  giveXP: 1
   sightRange: 15
   attackRange: 2
   wanderRadius: 10
@@ -1524,7 +1525,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7791680660320909169}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 909bddc1b05a2e545aabbf42ddfdcfb7, type: 3}
   m_Name: 

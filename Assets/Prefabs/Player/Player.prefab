@@ -98,6 +98,9 @@ MonoBehaviour:
   Rate: 1
   Recoil: 0
   Timer: 1
+  Ammo: 0
+  MaxAmmo: 0
+  AmmoTimer: 0
   weaponHolder: {fileID: 6084764340024588261}
   Modifiers: 
 --- !u!1 &2554189249460410002
@@ -371,7 +374,7 @@ GameObject:
   - component: {fileID: 2995426959133987696}
   m_Layer: 0
   m_Name: PlayerStatHandler
-  m_TagString: Untagged
+  m_TagString: Player Stat Handler
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -407,14 +410,10 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   modHealth: 0
-  stamina: 10
+  stamina: 50
   currentStamina: 0
   maxStamina: 0
   modStamina: 0
-  level: 1
-  currentLevel: 1
-  maxLevel: 1
-  xpToNextLevel: 1
   damage: 10
   currentDamage: 10
   modDamage: 10
@@ -481,7 +480,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 466818919228167576, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: m_TagString
-      value: PlayerInputHandler
+      value: Player Controller
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: _jump
