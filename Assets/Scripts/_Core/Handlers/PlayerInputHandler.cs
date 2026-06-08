@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 
 
 
-public class PlayerInputHandler : MonoBehaviour
+public class PlayerInputHandler : MonoBehaviour, IDamage
 {
     [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
@@ -47,6 +47,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] public Transform interactorSource;
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
+
+    [SerializeField] public int HP;
 
 
 
@@ -94,6 +96,22 @@ public class PlayerInputHandler : MonoBehaviour
         ApplyMovement();
         HandleJumping();
         ShootTimer();
+    }
+
+    public void takeDamage(int amount)
+    {
+        HP -= amount;
+
+        if (HP <= 0)
+        {
+            HP = 0;
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject, 1.5f);
     }
 
 
@@ -470,4 +488,5 @@ public class PlayerInputHandler : MonoBehaviour
         }              
     }
 
+    }
 }
