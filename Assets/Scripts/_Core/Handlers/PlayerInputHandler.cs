@@ -50,7 +50,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [SerializeField] public int HP;
 
+    [Header("Audio")]
+    [SerializeField] public AudioClip footstepClip;
+    [SerializeField] private float footstepInterval;
 
+    private float footstepTimer;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -94,6 +98,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleMovement();
         HandleRotation();
         ApplyMovement();
+        HandleFootsteps();
         HandleJumping();
         ShootTimer();
     }
@@ -324,24 +329,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             currentMovement.y += Physics.gravity.y * gravityMultiplier * Time.deltaTime;
         }
     }
-    IEnumerator PlaySound(BaseSoundSO sound)
-    {
-        if (sound != null)
-        {
-            GameObject soundObject = new GameObject("Temp Audio Source");
-            AudioSource audioSource = soundObject.AddComponent<AudioSource>();
-            audioSource.clip = sound.clip;
-            audioSource.Play();
-            yield return new WaitForSeconds(0.3f);
-            Destroy(soundObject);
-        }
-    }
-
-    [SerializeField] private BaseSoundSO _jump;
-    [SerializeField] private BaseSoundSO _sprint;
-    [SerializeField] private BaseSoundSO _shoot;
-
-
 
 
     public void OnJumpPerformed(InputAction.CallbackContext context)
@@ -349,8 +336,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (canJump)
         {
             JumpTriggered = true;
-            StartCoroutine(PlaySound(_jump));
 
+            // add jump sound
             if (turnOnDebug)
             {
 
@@ -374,7 +361,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     public void OnSprintPerformed(InputAction.CallbackContext obj)
     {
         SprintTriggered = true;
-        StartCoroutine(PlaySound(_sprint));
 
 
 
@@ -435,8 +421,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             timer = 0;
             gameManager.instance.canShoot = false;
 
-
-            StartCoroutine(PlaySound(_shoot));
+            // add shoot sound
 
             weaponManager.Ammo--;
 
@@ -487,4 +472,24 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             gameManager.instance.canShoot = true;
         }              
     }
+
+    private void HandleFootsteps()
+    {
+        if (!moveAction.IsPressed())
+        {
+            footstepTimer = 0;
+            return;
+        }
+
+        footstepTimer += Time.deltaTime;
+
+        float interval = SprintTriggered ? footstepInterval * 1.25f : footstepInterval;
+
+        if (footstepTimer >= interval)
+        {
+            AudioManager.instance.PlaySound(footstepClip);
+            footstepTimer = 0;
+        }
+    }
+
 }
