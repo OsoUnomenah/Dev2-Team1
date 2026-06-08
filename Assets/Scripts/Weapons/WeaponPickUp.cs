@@ -30,7 +30,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     void Start()
     {
         materialOrig = model.material;
-        weaponManager = FindFirstObjectByType<PlayerWeaponManager>();
+        weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
     }
 
     // Update is called once per frame

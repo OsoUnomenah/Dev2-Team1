@@ -25,6 +25,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private PlayerInputHandler playerInputHandler;  // Reference to playerInputHandler to be exposed in Unity
     [SerializeField] private Camera playerCamera;
     [SerializeField] private PlayerWeaponManager weaponManager;
+    [SerializeField] private GameObject playerStatHandler;
+
+
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f; // How fast player moves
@@ -73,6 +76,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction interactAction;
     private InputAction shootAction;
 
+    private InputAction pauseAction;
+
 
     [Header("GlobalVariables")]
     public bool SprintTriggered { get; private set; }
@@ -85,7 +90,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         weaponManager = FindAnyObjectByType<PlayerWeaponManager>(); //same edit as WeaponPickUp.cs
-        
+        playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");
     }
 
     void Update()
@@ -107,19 +112,15 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
-        HP -= amount;
+        playerStatHandler.GetComponent<StatHandler>().currentHealth -= amount;
 
-        if (HP <= 0)
+        if (playerStatHandler.GetComponent<StatHandler>().currentHealth <= 0)
         {
-            HP = 0;
-            Die();
+            gameManager.instance.youLose();
+
         }
     }
 
-    private void Die()
-    {
-        Destroy(gameObject, 1.5f);
-    }
 
 
     void Awake() // Initialize the input actions and get references to specific actions
@@ -135,6 +136,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         interactAction = playerActions.PlayerInput.Interact;
         shootAction = playerActions.PlayerInput.Shoot;
+
+        pauseAction = playerActions.PlayerInput.Pause;
     }
 
     void OnEnable()
@@ -158,8 +161,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         shootAction.performed += OnShootPerformed;
         shootAction.canceled += OnShootCanceled;
+
+        pauseAction.performed += OnPausePerformed;
+        pauseAction.canceled += OnPauseCanceled;
     }
 
+    private void OnPauseCanceled(InputAction.CallbackContext context)
+    {
+        // cancel logic for button release if needed
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext context)
+    {
+        gameManager.instance.PauseGame();
+    }
 
     void OnDisable()
     {
