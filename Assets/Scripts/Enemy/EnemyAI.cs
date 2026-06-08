@@ -60,8 +60,13 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     {
         if (currentState == ZombieState.Dead)
             return;
+        if (player == null)
+        {
+            currentState = ZombieState.Wander;
+            return;
+        }
 
-        float distance = Vector3.Distance(transform.position, player.position);;
+        float distance = Vector3.Distance(transform.position, player.position);
 
         switch(currentState)
         {

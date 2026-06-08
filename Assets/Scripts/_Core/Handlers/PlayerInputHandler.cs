@@ -487,6 +487,4 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             gameManager.instance.canShoot = true;
         }              
     }
-
-    }
 }
