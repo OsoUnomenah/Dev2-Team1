@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour
@@ -10,17 +11,24 @@ public class PlayerWeaponManager : MonoBehaviour
     public float Rate;
     public float Recoil;
     public float Timer;
+    public int Ammo;
+    public int MaxAmmo;
+    public float AmmoTimer;
 
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
 
+    //CameraController cameraCon;
+
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
+    //PlayerInputHandler player = gameManager.instance;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
     {
+       // cameraCon = FindAnyObjectByType<CameraController>();
     }
 
     // Update is called once per frame
@@ -28,14 +36,21 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         
     }
-    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab)
+    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer)
     {
         Type = type;
         Damage = damage;
         Range = range;
         Rate = rate;
+        
         Recoil = recoil;
+        gameManager.instance.recoil = recoil;
+
+
         Timer = timer;
+        Ammo = ammo;
+        MaxAmmo = maxAmmo;
+        AmmoTimer = ammoTimer;
 
         if (weaponCurrent != null)
         {

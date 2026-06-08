@@ -15,7 +15,11 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] float rate;
     [SerializeField] float recoil;
     [SerializeField] float timer;
+    [SerializeField] public int ammo;
+    [SerializeField] public int maxAmmo;
+    [SerializeField] float ammoTimer;
     [SerializeField] private GameObject weaponPrefab;
+
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -39,7 +43,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     { 
         Debug.Log($"Picked up {objectName}");        
 
-        weaponManager.Equip(weaponType, damage, range, rate, recoil, timer, weaponPrefab);
+        weaponManager.Equip(weaponType, damage, range, rate, recoil, timer, weaponPrefab, ammo, maxAmmo, ammoTimer);
 
         TempUI.OffHover();
         Destroy(gameObject);

@@ -98,6 +98,7 @@ MonoBehaviour:
   Recoil: 0
   Timer: 1
   weaponHolder: {fileID: 6084764340024588261}
+  Modifiers: 
 --- !u!1 &2554189249460410002
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +408,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 466818919228167576, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: m_Name
+      value: PlayerInputHandler
+      objectReference: {fileID: 0}
+    - target: {fileID: 466818919228167576, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: m_TagString
       value: PlayerInputHandler
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
