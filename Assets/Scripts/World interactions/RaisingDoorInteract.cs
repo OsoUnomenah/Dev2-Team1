@@ -3,15 +3,19 @@ using System.Collections;
 
 public class WarehouseInteract : MonoBehaviour, IInteract
 {
-    [SerializeField] private Transform door;
-    
+    [SerializeField] private GameObject door;
+
     [SerializeField] private float doorSpeed;
     [SerializeField] private float heightFinal;
     [SerializeField] private float heightStart;
 
     [SerializeField] private Light hoverLight;
 
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO _raise;
+
     private bool doorOpen;
+    private bool doorMoving;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,36 +26,38 @@ public class WarehouseInteract : MonoBehaviour, IInteract
 
     public void Interact()
     {
-        
-
         StartCoroutine(OpenOrClose());
-
     }
 
     private IEnumerator OpenOrClose()
     {
-        if (!doorOpen)
+        AudioManager.instance.PlaySoundAtPosition(_raise, door);
+        if (!doorOpen && !doorMoving)
         {
-            while (door.position.y < heightFinal)
+ 
+            while (door.transform.position.y < heightFinal)
             {
-                door.position += Vector3.up * doorSpeed * Time.deltaTime;
-
+                door.transform.position += Vector3.up * doorSpeed * Time.deltaTime;
                 yield return null;
+                doorMoving = true;
             }
 
             doorOpen = true;
-        } 
-        else if (doorOpen)
+        }
+        else if (doorOpen && !doorMoving)
         {
-            while (door.position.y > heightStart)
+ 
+            while (door.transform.position.y > heightStart)
             {
-                door.position -= Vector3.up * doorSpeed * Time.deltaTime;
-
+                door.transform.position -= Vector3.up * doorSpeed * Time.deltaTime;
                 yield return null;
+                doorMoving = true;
             }
 
             doorOpen = false;
         }
+
+        doorMoving = false;
     }
 
     public void OnHoverEnter()

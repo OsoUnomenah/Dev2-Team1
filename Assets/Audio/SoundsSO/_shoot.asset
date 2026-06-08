@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: _shoot
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
-  clip: {fileID: 8300000, guid: 2dfaa1c3ce5ec9040a162207a3c9e960, type: 3}
+  clip: {fileID: 8300000, guid: 2b945f31ecd44454290eb63fb9f47369, type: 3}
   loop: 0
   randomizePitch: 1
   randomPitchRangeMod: 0.1
   volume: 1
   pitch: 1
+  fallOffDist: 80
