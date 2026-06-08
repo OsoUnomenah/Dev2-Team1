@@ -2,26 +2,17 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager instance;
     [SerializeField] private BaseSoundSO _jump;
 
-    private void OnEnable()
+    private void Awake()
     {
-         
+        instance = this;
     }
 
-    private void OnDisable()
-    {
-        
-    }
 
-    public void PlaySound(BaseSoundSO sound)
+    public void PlaySound(AudioClip sound)
     {
-        if (sound != null)
-        {
-            GameObject soundObject = new GameObject("Temp Audio Source");
-            AudioSource audioSource = soundObject.AddComponent<AudioSource>();
-            audioSource.clip = sound.clip;
-            audioSource.Play();
-        }
+        AudioSource.PlayClipAtPoint(sound, Camera.main.transform.position);
     }
 }
