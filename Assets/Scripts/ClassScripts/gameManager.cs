@@ -73,7 +73,7 @@ public class gameManager : MonoBehaviour
     void Update()
     {
         xpText.text = " LVL: " + level;
-        xpBar.value = (float)currentXP / (float)xpToNextLevel;
+        
         xpBoostText.text = (" + " + xpGain + " XP");
         xpBOrig = xpBoostText;
         xpToNextLevel = 10 + (currentLevel * 10);
@@ -89,6 +89,7 @@ public class gameManager : MonoBehaviour
             levelUp();
             currentXP = 0;
         }
+        xpBar.value = (float)currentXP / (float)xpToNextLevel;
     }
 
     public void PauseGame()

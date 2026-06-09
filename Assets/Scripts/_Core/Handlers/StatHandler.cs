@@ -84,7 +84,7 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += -sprintLoss;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
-            if (currentStamina <= 0 )
+            if (currentStamina <= 0)
             {
                 gameManager.instance.SprintTriggered = false;
                 gameManager.instance.isSprinting = false;
