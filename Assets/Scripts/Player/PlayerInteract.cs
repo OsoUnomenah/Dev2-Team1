@@ -40,6 +40,11 @@ public class Players : MonoBehaviour
         if (currentInteractable != null && (Object)currentInteractable == null)
         {
             currentInteractable = null;
+
+            if(interactText != null)
+            {
+                interactText.gameObject.SetActive(false);
+            }
         }
 
         if (newObj != currentInteractable)

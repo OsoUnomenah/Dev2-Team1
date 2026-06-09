@@ -22,17 +22,17 @@ public class StatHandler : MonoBehaviour, IDamage
 
 
 
-    [Range(1, 1000)][SerializeField] public float damage;
-    [Range(1, 1000)][SerializeField] public float modDamage;
+    [Range(0, 1000)][SerializeField] public float damage;
+    [Range(0, 1000)][SerializeField] public float modDamage;
     public float currentDamage;
 
-    [Range(1, 100)][SerializeField] public float defense;
-    [Range(1, 100)][SerializeField] public float currentDefense;
-    [Range(1, 100)][SerializeField] public float modDefense;
+    [Range(0, 100)][SerializeField] public float defense;
+    [Range(0, 100)][SerializeField] public float currentDefense;
+    [Range(0, 100)][SerializeField] public float modDefense;
 
 
-    [Range(10f, 100f)][SerializeField] public float modSpeed;
-    [Range(10f, 100f)][SerializeField] public float modJumps;
+    [Range(0f, 100f)][SerializeField] public float modSpeed;
+    [Range(0f, 100f)][SerializeField] public float modJumps;
 
     public Slider healthBar;
     public TMP_Text healthText;
@@ -61,7 +61,7 @@ public class StatHandler : MonoBehaviour, IDamage
         healthText.text = " HP: "+ currentHealth + " / " + maxHealth;
         healthBar.value = (float)currentHealth / (float)maxHealth;
 
-        staminaText.text = " STM: " + currentStamina + " / " + maxStamina;
+        staminaText.text = " STM: " + Mathf.CeilToInt(currentStamina) + " / " + Mathf.CeilToInt(maxStamina);
         staminaBar.value = (float)currentStamina / (float)maxStamina;
         
         currentDamage = damage + modDamage;
