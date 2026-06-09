@@ -56,6 +56,10 @@ public class gameManager : MonoBehaviour
 
     public int enemyDamageOut;
 
+    [Header("Roguelite Run Config")]
+    public int runZone = 1;
+    
+
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
 
@@ -206,5 +210,11 @@ public class gameManager : MonoBehaviour
         menuActive = null;
         menuActive = menuSettings;
         menuActive.SetActive(true);
+    }
+
+    public void NextZone()
+    {
+        runZone++;
+        Debug.Log("Entered Zone: " + runZone);
     }
 }
