@@ -31,10 +31,10 @@ public class WarehouseInteract : MonoBehaviour, IInteract
 
     private IEnumerator OpenOrClose()
     {
-        AudioManager.instance.PlaySoundAtPosition(_raise, door);
+
         if (!doorOpen && !doorMoving)
         {
- 
+            AudioManager.instance.PlaySoundAtPosition(_raise, door);
             while (door.transform.position.y < heightFinal)
             {
                 door.transform.position += Vector3.up * doorSpeed * Time.deltaTime;
@@ -46,7 +46,7 @@ public class WarehouseInteract : MonoBehaviour, IInteract
         }
         else if (doorOpen && !doorMoving)
         {
- 
+            AudioManager.instance.PlaySoundAtPosition(_raise, door);
             while (door.transform.position.y > heightStart)
             {
                 door.transform.position -= Vector3.up * doorSpeed * Time.deltaTime;

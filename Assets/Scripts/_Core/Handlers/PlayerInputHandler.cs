@@ -31,8 +31,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f; // How fast player moves
-    [Range(2.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
+    [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
+    [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
     private Vector3 currentMovement;
+    private float currentSpeed = 0f;
 
 
     [Header("Rotation Config")]
@@ -43,24 +45,24 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     float recoil;
     float timer;
 
-
     [Header("Inventory Config")]
     [SerializeField] private string selected;
+
 
     [Header("Interact Config")]
     [SerializeField] public Transform interactorSource;
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
 
+    [SerializeField] public int HP;
+
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
-    [Range(.4f, 1f)][SerializeField] private float footstepInterval;
+    [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
+    [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
   
     private float footstepTimer;
-
-    private bool isReloading;
-    private float reloadTimer;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -81,7 +83,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
 
     [Header("GlobalVariables")]
-  
+    public bool SprintTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
 
@@ -102,19 +104,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             if (weaponManager == null) return;
         }
 
-        if (playerStatHandler.GetComponent<StatHandler>().currentStamina >= gameManager.instance.sprintCost)
-        {
-            gameManager.instance.canSprint = true;
-        }
-       
-
         timer += Time.deltaTime;
         HandleMovement();
         HandleRotation();
         ApplyMovement();
         HandleFootsteps();
         HandleJumping();
-        HandleReloadInput();
         ShootTimer();
     }
 
@@ -255,9 +250,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void HandleMovement()
     {
         Vector3 worldDirection = CalculateWorldDirection();
-        float currentSpeed = (walkSpeed * (gameManager.instance.SprintTriggered ? sprintMultiplier : 1.0f)); // If sprint is triggered, multiply walk speed by sprint multiplier 
+
+        float targetSpeed = playerInputHandler.SprintTriggered // change target speed on sprint triggered
+        ? walkSpeed * sprintMultiplier
+        : walkSpeed;
+
+
+        currentSpeed = (Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime));
+
+        
         currentMovement.x = worldDirection.x * currentSpeed;
-        currentMovement.z = worldDirection.z * currentSpeed;
+        currentMovement.z = worldDirection.z * currentSpeed;   
     }
 
     private Vector3 CalculateWorldDirection()
@@ -384,14 +387,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
-    
     public void OnSprintPerformed(InputAction.CallbackContext obj)
     {
-        if(gameManager.instance.canSprint)
-        {
-            gameManager.instance.SprintTriggered = true;
-        }  
-       
+        SprintTriggered = true;
+
+
+
         if (turnOnDebug)
         {
             Debug.Log("Sprinting!"); // Log a message to the console when the sprint action is performed
@@ -400,8 +401,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnSprintCanceled(InputAction.CallbackContext context)
     {
-        gameManager.instance.SprintTriggered = false;
-        gameManager.instance.isSprinting = false;
+        SprintTriggered = false;
 
         if (turnOnDebug)
         {
@@ -446,18 +446,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (weaponManager == null || weaponManager.Damage <= 0 || weaponManager.Range <= 0) //will not shoot when weapon is not equipped
             return;
 
-        if (isReloading)
-        {
-            Debug.Log("Cannot shoot while reloading.");
-            return;
-        }
-
-        if (weaponManager.Ammo <= 0)
-        {
-            StartReload();
-            return;
-        }
-
 
         recoil = gameManager.instance.recoil;
         if (!gameManager.instance.isPaused && gameManager.instance.canShoot == true)
@@ -483,11 +471,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 }
             }
 
-            if (weaponManager.Ammo <= 0)
-            {
-                StartReload();
-            }
-
             if (turnOnDebug)
             {
                 Debug.Log("ShotFired!");
@@ -501,74 +484,27 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     }
 
-    private void ShootTimer() //modification by max, to work with reload
+    private void ShootTimer()
     {
-        if (weaponManager == null)
-        {
-            return;
-        }
+        timer += 0.1f;
+        bool reloading = false;
 
-        if (isReloading)
+        if (weaponManager.Ammo <= 0)
         {
-            reloadTimer += Time.deltaTime;
+            reloading = true;
             gameManager.instance.canShoot = false;
-
-            if (reloadTimer >= weaponManager.AmmoTimer)
+            if (timer >= weaponManager.AmmoTimer)
             {
-                weaponManager.Ammo = weaponManager.MaxAmmo;
-                isReloading = false;
-                reloadTimer = 0;
                 gameManager.instance.canShoot = true;
-
-                Debug.Log("Reload complete!");
+                reloading = false;
+                weaponManager.Ammo = weaponManager.MaxAmmo;
             }
-
-            return;
         }
-
-        timer += Time.deltaTime;
-
-        if (timer >= weaponManager.Timer)
+        if (timer >= weaponManager.Timer && reloading == false)
         {
             gameManager.instance.canShoot = true;
-        }
+        }              
     }
-
-    private void HandleReloadInput()
-    {
-        if (Keyboard.current == null)
-            return;
-
-        if(Keyboard.current.rKey.wasPressedThisFrame)
-        {
-            StartReload();
-
-        }
-            
-    }
-
-    private void StartReload()
-    {
-        if (weaponManager == null)
-            return;
-
-        if (weaponManager.MaxAmmo <= 0)
-            return;
-
-        if(weaponManager.Ammo >= weaponManager.MaxAmmo)
-        {
-            Debug.Log("Ammo Already full.");
-            return;
-        }
-
-        isReloading = true;
-        reloadTimer = 0;
-        gameManager.instance.canShoot = false;
-
-        Debug.Log("Reloading...");
-    }
-
-
 
     private void HandleFootsteps()
     {
@@ -582,7 +518,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             footstepTimer += Time.deltaTime;
 
-            float interval = gameManager.instance.SprintTriggered ? footstepInterval * 0.5f : footstepInterval;
+            float interval = SprintTriggered ? footstepBaseInterval * footstepSprintInterval : footstepBaseInterval;
 
             if (footstepTimer >= interval)
             {

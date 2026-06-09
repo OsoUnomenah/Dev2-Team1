@@ -135,8 +135,10 @@ MonoBehaviour:
   playerInputHandler: {fileID: 0}
   playerCamera: {fileID: 0}
   weaponManager: {fileID: 0}
+  playerStatHandler: {fileID: 0}
   walkSpeed: 3
   sprintMultiplier: 2
+  acceleration: 10
   mouseSensitivity: 0.5
   gamepadSensitivity: 1.5
   verticalViewRange: 80
@@ -149,7 +151,8 @@ MonoBehaviour:
   HP: 0
   _shoot: {fileID: 0}
   _footsteps: {fileID: 0}
-  footstepInterval: 0.4
+  footstepBaseInterval: 0.4
+  footstepSprintInterval: 0.5
   jumpForce: 5
   gravityMultiplier: 1
   jumpMax: 1

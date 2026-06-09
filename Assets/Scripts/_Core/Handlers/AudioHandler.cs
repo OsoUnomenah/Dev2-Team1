@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(BaseSoundSO sound)
     {
-        GameObject soundObject = new GameObject();
+        GameObject soundObject = new GameObject("Temp Audio");
         AudioSource audioSource = soundObject.GetComponent<AudioSource>();
 
         if (soundObject.GetComponent<AudioSource>() == null)
@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
     public void PlaySoundAtPosition(BaseSoundSO sound, GameObject noiseMaker)
     {
         
-        GameObject soundObject = new GameObject();
+        GameObject soundObject = new GameObject("Temp Audio");
         AudioSource audioSource = soundObject.GetComponent<AudioSource>();
 
         soundObject.transform.position = noiseMaker.transform.position;
