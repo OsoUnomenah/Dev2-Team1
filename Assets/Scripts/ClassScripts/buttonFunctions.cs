@@ -5,7 +5,7 @@ public class buttonFunctions : MonoBehaviour
 {
     public void resume()
     {
-        gameManager.instance.stateUnpause();
+        gameManager.instance.PauseGame();
     }
     public void restart()
     {

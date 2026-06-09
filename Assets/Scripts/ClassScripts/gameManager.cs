@@ -34,6 +34,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuSettings;
     [SerializeField] GameObject playerInputHandler;    
     public bool isPaused;
+    public bool isLevelingUp;
 
     [Header("Sprint Config")]
     public bool SprintTriggered;
@@ -104,17 +105,27 @@ public class gameManager : MonoBehaviour
 
     public void PauseGame()
         {
-            if (menuActive == null)
+        if (menuActive == null)
+        {
+            if (LevelUpUI.Instance != null)
             {
-                statePause();
-                menuActive = menuPause;
-                menuActive.SetActive(true);
+                LevelUpUI.Instance.HideForPause();
             }
-            else if (menuActive == menuPause)
+
+            statePause();
+            menuActive = menuPause;
+            menuActive.SetActive(true);
+        }
+        else if (menuActive == menuPause)
+        {
+            stateUnpause();
+
+            if (LevelUpUI.Instance != null)
             {
-                stateUnpause();
+                LevelUpUI.Instance.ShowAfterPause();
             }
         }
+    }
 
     public void addXp(int amount)
     {
@@ -143,8 +154,16 @@ public class gameManager : MonoBehaviour
 
         //level up logic here
 
+        if(!isPaused && LevelUpUI.Instance != null) //only show lvl up choices in active gameplay, prevents lvl up screen from popping up over win/lose/pause menu
+        {
+            LevelUpUI.Instance.ShowLevelUpOptions();
+        }
+
         if (gameDebug)
-        Debug.Log("Gained a Level!");
+        {
+            Debug.Log("Gained a Level!");
+        }
+       
     }
     public void statePause()
     {
