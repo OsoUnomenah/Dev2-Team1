@@ -9,6 +9,7 @@ public class gameManager : MonoBehaviour
 
     [SerializeField] public bool gameDebug;
 
+    [Header ("XP Config")]
     public Slider xpBar;
     public TMP_Text xpText;
     public TMP_Text xpBoostText;
@@ -25,23 +26,23 @@ public class gameManager : MonoBehaviour
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
 
-
+    [Header ("Menu Config")]
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
-    [SerializeField] GameObject playerInputHandler;
-
-    
+    [SerializeField] GameObject playerInputHandler;    
     public bool isPaused;
 
+    [Header("Sprint Config")]
     public bool SprintTriggered;
     public bool canSprint;
     public bool isSprinting;
 
     public int sprintCost;
 
+    [Header("Player Config")]
     public GameObject player;
     public GameObject playerController;
     public GameObject playerStatHandler;
