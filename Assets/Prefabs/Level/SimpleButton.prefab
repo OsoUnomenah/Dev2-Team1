@@ -405,4 +405,4 @@ MonoBehaviour:
   heightFinal: 5
   heightStart: 2
   hoverLight: {fileID: 1230221771744960719}
-  doorSound: {fileID: 8300000, guid: 3134c3ce037204c4d89bd5e108dfa5bb, type: 3}
+  _raise: {fileID: 11400000, guid: 7c2012139fd7d964d98649672ba577eb, type: 2}

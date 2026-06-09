@@ -31,8 +31,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f; // How fast player moves
-    [Range(2.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
+    [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
+    [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
     private Vector3 currentMovement;
+    private float currentSpeed = 0f;
 
 
     [Header("Rotation Config")]
@@ -57,7 +59,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
-    [Range(.4f, 1f)][SerializeField] private float footstepInterval;
+    [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
+    [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
   
     private float footstepTimer;
 
@@ -247,9 +250,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void HandleMovement()
     {
         Vector3 worldDirection = CalculateWorldDirection();
-        float currentSpeed = (walkSpeed * (playerInputHandler.SprintTriggered ? sprintMultiplier : 1.0f)); // If sprint is triggered, multiply walk speed by sprint multiplier 
+
+        float targetSpeed = playerInputHandler.SprintTriggered // change target speed on sprint triggered
+        ? walkSpeed * sprintMultiplier
+        : walkSpeed;
+
+
+        currentSpeed = (Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime));
+
+        
         currentMovement.x = worldDirection.x * currentSpeed;
-        currentMovement.z = worldDirection.z * currentSpeed;
+        currentMovement.z = worldDirection.z * currentSpeed;   
     }
 
     private Vector3 CalculateWorldDirection()
@@ -507,7 +518,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             footstepTimer += Time.deltaTime;
 
-            float interval = SprintTriggered ? footstepInterval * 0.5f : footstepInterval;
+            float interval = SprintTriggered ? footstepBaseInterval * footstepSprintInterval : footstepBaseInterval;
 
             if (footstepTimer >= interval)
             {
