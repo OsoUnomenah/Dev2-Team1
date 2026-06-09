@@ -35,6 +35,7 @@ Transform:
   - {fileID: 5948558907026489535}
   - {fileID: 3176180576933063264}
   - {fileID: 599694477807657269}
+  - {fileID: 4362143968045281912}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &6105600929370897446
@@ -79,6 +80,7 @@ MonoBehaviour:
   ignoreSource:
     serializedVersion: 2
     m_Bits: 8
+  interactText: {fileID: 0}
 --- !u!114 &3253782353914710265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +99,9 @@ MonoBehaviour:
   Rate: 1
   Recoil: 0
   Timer: 1
+  Ammo: 0
+  MaxAmmo: 0
+  AmmoTimer: 0
   weaponHolder: {fileID: 6084764340024588261}
   Modifiers: 
 --- !u!1 &2554189249460410002
@@ -358,6 +363,70 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3176180576933063264}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8966759493043410344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4362143968045281912}
+  - component: {fileID: 3809813434966685060}
+  m_Layer: 0
+  m_Name: PlayerStatHandler
+  m_TagString: PlayerStatHandler
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4362143968045281912
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8966759493043410344}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -49.827133, y: -1.00003, z: -599.5939}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2664052168734341774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3809813434966685060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8966759493043410344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 952983688128e5d49a9d20f87bd24744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatHandler
+  health: 100
+  currentHealth: 0
+  maxHealth: 0
+  modHealth: 0
+  stamina: 50
+  currentStamina: 0
+  maxStamina: 0
+  modStamina: 0
+  damage: 1
+  currentDamage: 1
+  modDamage: 1
+  defense: 1
+  currentDefense: 1
+  modDefense: 1
+  modSpeed: 10
+  modJumps: 10
+  healthBar: {fileID: 0}
+  healthText: {fileID: 0}
+  staminaBar: {fileID: 0}
+  staminaText: {fileID: 0}
 --- !u!1001 &739857307156037654
 PrefabInstance:
   m_ObjectHideFlags: 0

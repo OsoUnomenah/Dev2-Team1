@@ -13,7 +13,7 @@ public class playerControl : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        maxHealth = currentHealth;
+        maxHealth = 100;
         updateHealthBar();
     }
 
@@ -28,4 +28,5 @@ public class playerControl : MonoBehaviour
         healthText.text = currentHealth + " / " + maxHealth;
         healthbar.value = (float)currentHealth / (float)maxHealth;
     }
+
 }

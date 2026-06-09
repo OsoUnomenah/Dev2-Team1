@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 3
   tags:
   - Zombie
+  - Enemy
+  - PlayerInputHandler
+  - PauseMenu
+  - LoseMenu
+  - Chest
+  - Door
+  - PlayerStatHandler
+  - EnemyStatHandler
   layers:
   - Default
   - TransparentFX
