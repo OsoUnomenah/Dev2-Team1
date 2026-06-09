@@ -180,6 +180,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd92edc8dc2535144b152f08f94be7fa, type: 3}
+--- !u!114 &143942854 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1630106041905759099, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+  m_PrefabInstance: {fileID: 766310361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &256227002 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7593707487950258097, guid: 7646c876ff4afaf478ebd994b55a31c4, type: 3}
@@ -344,11 +355,77 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &434391282 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6119068341662670158, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+  m_PrefabInstance: {fileID: 769237381}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &507860268 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8672693041390375596, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
   m_PrefabInstance: {fileID: 766310361}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &557331654
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.988841
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154120341139059585, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3338424081755595646, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: highlight
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7570257588537574356, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      propertyPath: m_Name
+      value: Unlucky chest
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
 --- !u!1001 &624571176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -414,6 +491,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
+--- !u!114 &629676804 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1560217467856022386, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+  m_PrefabInstance: {fileID: 766310361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1001 &766310361
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -422,6 +510,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2631087236901913885, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2631087236901913885, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683827060784120920, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2683827060784120920, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6912265569978775664, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6912265569978775664, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7705203431647878921, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
       propertyPath: m_Name
       value: UI
@@ -570,10 +682,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Weapons chest
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3338424081755595646, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7570257588537574356, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2065814657}
   m_SourcePrefab: {fileID: 100100000, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
 --- !u!1 &832575517
 GameObject:
@@ -935,6 +1051,22 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 256227007}
   m_SourcePrefab: {fileID: 100100000, guid: 7646c876ff4afaf478ebd994b55a31c4, type: 3}
+--- !u!23 &1608028867 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2181333250623445326, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+  m_PrefabInstance: {fileID: 769237381}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1679251968 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3583117401180536256, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+  m_PrefabInstance: {fileID: 766310361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &1811054259
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1162,6 +1294,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3809813434966685060, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
+      propertyPath: healthBar
+      value: 
+      objectReference: {fileID: 2043460871}
+    - target: {fileID: 3809813434966685060, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
+      propertyPath: healthText
+      value: 
+      objectReference: {fileID: 1679251968}
+    - target: {fileID: 3809813434966685060, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
+      propertyPath: staminaBar
+      value: 
+      objectReference: {fileID: 629676804}
+    - target: {fileID: 3809813434966685060, guid: 655fb158d948aee4ebbfa59e88b8fa00, type: 3}
+      propertyPath: staminaText
+      value: 
+      objectReference: {fileID: 143942854}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1228,6 +1376,85 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+--- !u!114 &2043460871 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2332631782299264757, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+  m_PrefabInstance: {fileID: 766310361}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!1 &2065814654 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7570257588537574356, guid: 561ae8d80db7fd44ebf9c49e1c4f77cd, type: 3}
+  m_PrefabInstance: {fileID: 769237381}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2065814657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065814654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a0784ea32c6220478b80ce41a609075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponsChestInteract
+  lidTransform: {fileID: 434391282}
+  openAngle: 80
+  openSpeed: 2
+  weaponRewards:
+  - weaponName: Pistol
+    weaponType: 0
+    damage: 7
+    range: 25
+    rate: 1
+    recoil: 1
+    timer: 0.5
+    ammo: 10
+    maxAmmo: 10
+    ammoTimer: 2
+    weaponPrefab: {fileID: 6418376403914927428, guid: 40509b50e6ed28c42adcbf775c4d3a8b, type: 3}
+  - weaponName: AR
+    weaponType: 0
+    damage: 5
+    range: 50
+    rate: 1
+    recoil: 0.6
+    timer: 0.15
+    ammo: 30
+    maxAmmo: 30
+    ammoTimer: 2.5
+    weaponPrefab: {fileID: 2163901082907539163, guid: ac9ca24722d7f1c4cab6d09e13ffe15a, type: 3}
+  - weaponName: Sniper
+    weaponType: 1
+    damage: 45
+    range: 100
+    rate: 1
+    recoil: 2
+    timer: 1.25
+    ammo: 5
+    maxAmmo: 5
+    ammoTimer: 3
+    weaponPrefab: {fileID: 3824886265503906123, guid: 9aefcc7ecaa49344580758e509515108, type: 3}
+  - weaponName: Shotgun
+    weaponType: 0
+    damage: 30
+    range: 15
+    rate: 1
+    recoil: 2.5
+    timer: 1
+    ammo: 6
+    maxAmmo: 6
+    ammoTimer: 2.75
+    weaponPrefab: {fileID: 8655629924127046308, guid: 3403d90aca528fe42b9d28ea55a28d17, type: 3}
+  canGiveMaxAmmo: 1
+  model: {fileID: 1608028867}
+  highlight: {fileID: 0}
 --- !u!1001 &741165464095044545
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1550,5 +1777,6 @@ SceneRoots:
   - {fileID: 1826459704}
   - {fileID: 769237381}
   - {fileID: 1901321936}
+  - {fileID: 557331654}
   - {fileID: 51155359}
   - {fileID: 741165464095044545}
