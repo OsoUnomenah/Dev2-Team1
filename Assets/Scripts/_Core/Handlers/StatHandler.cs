@@ -16,9 +16,9 @@ public class StatHandler : MonoBehaviour, IDamage
     public float currentStamina;
     public float maxStamina;
     public float modStamina;
-    [Range(0, 10)][SerializeField] public int sprintCost;
-    [Range(0, 1)][SerializeField] public int sprintGain;
-    [Range(0, 1)][SerializeField] public int sprintLoss;
+    [Range(0, 10)][SerializeField] public float sprintCost;
+    [Range(0, 1)][SerializeField] public float sprintGain;
+    [Range(0, 1)][SerializeField] public float sprintLoss;
 
 
 
