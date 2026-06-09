@@ -202,6 +202,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void HandleRotation()
     {
+        if(gameManager.instance.isLevelingUp) //locks player camera from rotating when in level up menu
+        {
+            RotateVector = Vector2.zero;
+            return;
+        }
+
+
         // Detect current input device and apply appropriate sensitivity
         float currentSensitivity = GetCurrentSensitivity();
 

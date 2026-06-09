@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
   maxHealth: 100
   attackDamage: 10
-  xpGive: 100
+  xpGive: 25
   model: {fileID: 6515721808002073225}
   healthbar: {fileID: 4071806678052758362}
   healthText: {fileID: 527207266131902223}

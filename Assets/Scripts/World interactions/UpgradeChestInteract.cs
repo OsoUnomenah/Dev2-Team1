@@ -83,6 +83,7 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
     private IEnumerator OpenChest()
     {
         isMoving = true;
+        bool rewardGiven = false;
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
         {
@@ -92,17 +93,21 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
                 openSpeed * Time.deltaTime
             );
 
+            //Give the upgrade while the chest is opening instead of waiting until it is fully open.
+            if (!rewardGiven && Quaternion.Angle(lidTransform.rotation, closedRotation) > 20f)
+            {
+                GiveUpgradeReward();
+                TrySpawnEnemy();
+                rewardGiven = true;
+            }
+
             yield return null;
         }
 
         lidTransform.rotation = openRotation;
         isMoving = false;
 
-        GiveUpgradeReward();
-        TrySpawnEnemy();
-
         Debug.Log("Upgrade chest opened!");
-
     }
 
     private void GiveUpgradeReward()

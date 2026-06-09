@@ -83,6 +83,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     private IEnumerator OpenChest()
     {
         isMoving = true;
+        bool rewardGiven = false;
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
         {
@@ -92,16 +93,16 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
                 openSpeed * Time.deltaTime
             );
 
+            //Give the reward while the chest is opening instead of waiting until it is fully open.
+            if (!rewardGiven && Quaternion.Angle(lidTransform.rotation, closedRotation) > 20f)
+            {
+                GiveWeaponReward();
+                TrySpawnEnemy();
+                rewardGiven = true;
+            }
+
             yield return null;
         }
-
-        lidTransform.rotation = openRotation;
-        isMoving = false;
-
-        GiveWeaponReward();
-        TrySpawnEnemy();
-
-        Debug.Log("Weapons chest opened!");
     }
 
     private void GiveWeaponReward()
@@ -159,6 +160,11 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             reward.ammoTimer
         );
 
+        if (UpgradeUI.instance != null)
+        {
+            UpgradeUI.instance.ShowUpgradeNotification("Weapon Chest: " + reward.weaponName);
+        }
+
         Debug.Log("Weapon chest gave: " + reward.weaponName);
     }
 
@@ -171,6 +177,11 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         }
 
         weaponManager.Ammo = weaponManager.MaxAmmo;
+
+        if(UpgradeUI.instance != null)
+        {
+            UpgradeUI.instance.ShowUpgradeNotification("Weapon Chest: Max Ammo");
+        }
 
         Debug.Log("Weapon chest gave max ammo!");
     }
