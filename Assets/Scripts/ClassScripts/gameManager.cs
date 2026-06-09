@@ -9,6 +9,7 @@ public class gameManager : MonoBehaviour
 
     [SerializeField] public bool gameDebug;
 
+    [Header ("XP Config")]
     public Slider xpBar;
     public TMP_Text xpText;
     public TMP_Text xpBoostText;
@@ -25,16 +26,23 @@ public class gameManager : MonoBehaviour
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
 
-
+    [Header ("Menu Config")]
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
-    [SerializeField] GameObject playerInputHandler;
-
-    
+    [SerializeField] GameObject playerInputHandler;    
     public bool isPaused;
+
+    [Header("Sprint Config")]
+    public bool SprintTriggered;
+    public bool canSprint;
+    public bool isSprinting;
+
+    public int sprintCost;
+
+    [Header("Player Config")]
     public GameObject player;
     public GameObject playerController;
     public GameObject playerStatHandler;
@@ -45,6 +53,8 @@ public class gameManager : MonoBehaviour
 
     public float recoil;
     public bool canShoot;
+
+    public int enemyDamageOut;
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -57,30 +67,39 @@ public class gameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         playerInputHandler = GameObject.FindGameObjectWithTag("PlayerInputHandler");
         playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        xpText.text = " LVL: " + level;
-        xpBar.value = (float)currentXP / (float)xpToNextLevel;
-        xpBoostText.text = (" + " + xpGain + " XP");
-        xpBOrig = xpBoostText;
-        xpToNextLevel = 10 + (currentLevel * 10);
+        //XP requirement is based on the player's current level
+        xpToNextLevel = 10 + (level * 10);
 
 
 
-        if (!isPaused)
+        //Update XP text only if the text reference exists
+        //XP is no longer gained over time here. XP should come from addXp()
+        //Which is called when enemies die or when another reward gives XP
+        if (xpText != null)
         {
-            currentXP += xpGain;
+            xpText.text = "LVL: " + level + " XP: " + currentXP + " / " + xpToNextLevel;
         }
 
-        if (currentXP >= xpToNextLevel)
-        {
-            levelUp();
-            currentXP = 0;
 
+        //Clear the XP boost text by default
+        if (xpBoostText != null)
+        {
+            xpBoostText.text = "";
         }
+
+        //Update XP bar based on current XP progress toward the next level
+        if (xpBar != null)
+        {
+            xpBar.value = currentXP / xpToNextLevel;
+        }
+
+       
     }
 
     public void PauseGame()
@@ -102,10 +121,20 @@ public class gameManager : MonoBehaviour
         
         currentXP += amount;
 
-        xpBoostText.SetText(" + " + amount);
-        xpBoostText.CrossFadeAlpha(1, 1, false);
-        xpBoostText = xpBOrig;
+        //Show how much XP was just earned
+        if (xpBoostText != null)
+        {
+            xpBoostText.SetText(" + " + amount + " XP");
+        }
 
+        //Handles leveling up when enough XP is gained
+        while (currentXP >= xpToNextLevel)
+        {
+            currentXP -= xpToNextLevel;
+            levelUp();
+
+            xpToNextLevel = 10 + (level * 10);
+        }
 
     }
     public void levelUp()
@@ -138,6 +167,7 @@ public class gameManager : MonoBehaviour
 
     public void updateGameGoal(int amount)
     {
+        //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
         if (gameGoalCount <= 0)
         {

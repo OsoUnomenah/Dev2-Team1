@@ -2077,11 +2077,16 @@ MonoBehaviour:
   menuSettings: {fileID: 2793343119986044052}
   playerInputHandler: {fileID: 0}
   isPaused: 0
+  SprintTriggered: 0
+  canSprint: 0
+  isSprinting: 0
+  sprintCost: 0
   player: {fileID: 0}
   playerController: {fileID: 0}
   playerStatHandler: {fileID: 0}
   recoil: 0
   canShoot: 0
+  enemyDamageOut: 0
   Modifiers: 
 --- !u!1 &5478322237875307354
 GameObject:
@@ -4811,7 +4816,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3427942788074197836, guid: 0bd5654fd0035eb4b8f38fcafb7af8ef, type: 3}
       propertyPath: m_Name
-      value: STMBar
+      value: PlayerSTMBar
       objectReference: {fileID: 0}
     - target: {fileID: 4637182419578545284, guid: 0bd5654fd0035eb4b8f38fcafb7af8ef, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4883,11 +4888,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5963920478518162617, guid: 0bd5654fd0035eb4b8f38fcafb7af8ef, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 355
       objectReference: {fileID: 0}
     - target: {fileID: 5963920478518162617, guid: 0bd5654fd0035eb4b8f38fcafb7af8ef, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 150
+      value: 196
       objectReference: {fileID: 0}
     - target: {fileID: 5963920478518162617, guid: 0bd5654fd0035eb4b8f38fcafb7af8ef, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4929,7 +4934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 587754152994785134, guid: 98c9ba289a4976e4d9769e9a5ba1b86b, type: 3}
       propertyPath: m_Name
-      value: HPBar
+      value: PlayerHPBar
       objectReference: {fileID: 0}
     - target: {fileID: 2088940614375852865, guid: 98c9ba289a4976e4d9769e9a5ba1b86b, type: 3}
       propertyPath: m_Pivot.x
@@ -4993,11 +4998,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2088940614375852865, guid: 98c9ba289a4976e4d9769e9a5ba1b86b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 200
+      value: 354
       objectReference: {fileID: 0}
     - target: {fileID: 2088940614375852865, guid: 98c9ba289a4976e4d9769e9a5ba1b86b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 200
+      value: 232
       objectReference: {fileID: 0}
     - target: {fileID: 2088940614375852865, guid: 98c9ba289a4976e4d9769e9a5ba1b86b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5103,7 +5108,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4256239904801444950, guid: 5b430560e4dacac468a4fa9d41366f89, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -81
+      value: -195
       objectReference: {fileID: 0}
     - target: {fileID: 4256239904801444950, guid: 5b430560e4dacac468a4fa9d41366f89, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5119,7 +5124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7008419755163887778, guid: 5b430560e4dacac468a4fa9d41366f89, type: 3}
       propertyPath: m_Name
-      value: XPBar
+      value: PlayerXPBar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

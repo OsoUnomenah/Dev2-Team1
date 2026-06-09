@@ -52,9 +52,12 @@ MonoBehaviour:
   currentStamina: 0
   maxStamina: 0
   modStamina: 0
+  sprintCost: 0
+  sprintGain: 0
+  sprintLoss: 0
   damage: 1
-  currentDamage: 1
   modDamage: 1
+  currentDamage: 1
   defense: 1
   currentDefense: 1
   modDefense: 1
