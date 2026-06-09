@@ -1,11 +1,31 @@
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
 
-    [SerializeField] private int score;
+    [SerializeField] public bool gameDebug;
+
+    public Slider xpBar;
+    public TMP_Text xpText;
+    public TMP_Text xpBoostText;
+    private TMP_Text xpBOrig;
+
+
+    [Header("Level Config")]
+    [Range(1, 100)][SerializeField] public float level;
+    [Range(1, 1000)][SerializeField] public float maxLevel;
+    [Range(1, 1000)][SerializeField] public float xp;
+    public float currentXP;
+    public float xpSource;
+    [SerializeField] public float xpToNextLevel;
+    [Range(0, 1)][SerializeField] public float xpGain;
+    public float currentLevel;
+
+
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
@@ -15,9 +35,16 @@ public class gameManager : MonoBehaviour
 
     
     public bool isPaused;
-    public GameObject player;
 
-    //public PlayerInputHandler playerScript;
+    public bool SprintTriggered;
+    public bool canSprint;
+    public bool isSprinting;
+
+    public int sprintCost;
+
+    public GameObject player;
+    public GameObject playerController;
+    public GameObject playerStatHandler;
 
     float timeScaleOrig;
 
@@ -25,6 +52,8 @@ public class gameManager : MonoBehaviour
 
     public float recoil;
     public bool canShoot;
+
+    public int enemyDamageOut;
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -36,12 +65,33 @@ public class gameManager : MonoBehaviour
         timeScaleOrig = Time.timeScale;
         player = GameObject.FindGameObjectWithTag("Player");
         playerInputHandler = GameObject.FindGameObjectWithTag("PlayerInputHandler");
+        playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Cancel"))
+        xpText.text = " LVL: " + level;
+        xpBar.value = (float)currentXP / (float)xpToNextLevel;
+        xpBoostText.text = (" + " + xpGain + " XP");
+        xpBOrig = xpBoostText;
+        xpToNextLevel = 10 + (currentLevel * 10);
+
+
+
+        if (!isPaused)
+        {
+            currentXP += xpGain;
+        }
+        if (currentXP >= xpToNextLevel)
+        {
+            levelUp();
+            currentXP = 0;
+        }
+    }
+
+    public void PauseGame()
         {
             if (menuActive == null)
             {
@@ -54,6 +104,26 @@ public class gameManager : MonoBehaviour
                 stateUnpause();
             }
         }
+
+    public void addXp(int amount)
+    {
+        
+        currentXP += amount;
+
+        xpBoostText.SetText(" + " + amount);
+        xpBoostText.CrossFadeAlpha(1, 1, false);
+        xpBoostText = xpBOrig;
+
+
+    }
+    public void levelUp()
+    {
+        ++level;
+
+        //level up logic here
+
+        if (gameDebug)
+        Debug.Log("Gained a Level!");
     }
     public void statePause()
     {
@@ -76,6 +146,7 @@ public class gameManager : MonoBehaviour
 
     public void updateGameGoal(int amount)
     {
+        //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
         if (gameGoalCount <= 0)
         {

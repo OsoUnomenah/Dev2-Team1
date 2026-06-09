@@ -1,60 +1,120 @@
 using System.Xml.XPath;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+using JetBrains.Annotations;
 
-public class StatHandler : MonoBehaviour
+public class StatHandler : MonoBehaviour, IDamage
 {
-    [Range(10f, 500f)][SerializeField] public float health;
+    [Range(10f, 500f)][SerializeField] public float health = 100;
     public float currentHealth;
     public float maxHealth;
-    public float modHealth;
+    public float modHealth = 0;
 
 
-    [Range(10f, 100f)][SerializeField] public float stamina;
+    [Range(50f, 500f)][SerializeField] public float stamina;
     public float currentStamina;
-    public float MaxStamina;
+    public float maxStamina;
     public float modStamina;
-
-    [Range(10f, 100f)][SerializeField] public float level;
-    [Range(10f, 100f)][SerializeField] public float currentLevel;
-    [Range(10f, 100f)][SerializeField] public float maxLevel;
-    [Range(10f, 100f)][SerializeField] public float xpToNextLevel;
-
-    [Range(10f, 100f)][SerializeField] public float damage;
-    [Range(10f, 100f)][SerializeField] public float currentDamage;
-    [Range(10f, 100f)][SerializeField] public float modDamage;
-
-    [Range(10f, 100f)][SerializeField] public float defense;
-    [Range(10f, 100f)][SerializeField] public float currentDefense;
-    [Range(10f, 100f)][SerializeField] public float maxDefense;
-
-    [Range(10f, 100f)][SerializeField] public float speed;
-
-    [Range(10f, 100f)][SerializeField] public float jumps;
+    [Range(0, 10)][SerializeField] public int sprintCost;
+    [Range(0, 1)][SerializeField] public int sprintGain;
+    [Range(0, 1)][SerializeField] public int sprintLoss;
 
 
 
+    [Range(1, 1000)][SerializeField] public float damage;
+    [Range(1, 1000)][SerializeField] public float modDamage;
+    public float currentDamage;
+
+    [Range(1, 100)][SerializeField] public float defense;
+    [Range(1, 100)][SerializeField] public float currentDefense;
+    [Range(1, 100)][SerializeField] public float modDefense;
 
 
+    [Range(10f, 100f)][SerializeField] public float modSpeed;
+    [Range(10f, 100f)][SerializeField] public float modJumps;
 
+    public Slider healthBar;
+    public TMP_Text healthText;
 
-
+    public Slider staminaBar;
+    public TMP_Text staminaText;
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-        
+        maxHealth = health + modHealth;
+        currentHealth = maxHealth;
+
+        maxStamina = stamina + modStamina;
+        currentStamina = maxStamina;
+        sprintCost = gameManager.instance.sprintCost;
+
+        currentDamage = damage + modDamage;
     }
 
     // Update is called once per frame
     void Update()
     {
+        healthText.text = " HP: "+ currentHealth + " / " + maxHealth;
+        healthBar.value = (float)currentHealth / (float)maxHealth;
+
+        staminaText.text = " STM: " + currentStamina + " / " + maxStamina;
+        staminaBar.value = (float)currentStamina / (float)maxStamina;
         
+        currentDamage = damage + modDamage;
         
+        HandleSprint();
+
     }
 
-   
+    public void HandleSprint()
+    {
+
+
+        if (gameManager.instance.SprintTriggered && !gameManager.instance.isSprinting)
+        {
+            currentStamina -= gameManager.instance.sprintCost;
+            gameManager.instance.isSprinting = true;
+        }
+
+        if (gameManager.instance.isSprinting)
+        {
+            currentStamina += -sprintLoss;
+            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            if (currentStamina < gameManager.instance.sprintCost)
+            {
+
+                gameManager.instance.canSprint = false;
+
+            }
+        }
+        else 
+        {
+            currentStamina += sprintGain;
+            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            if (currentStamina >= gameManager.instance.sprintCost)
+            {
+                
+             gameManager.instance.canSprint = true;
+            
+            }
+        }
+    }
+
+
+            public int EnemyAttack()
+    {
+        gameManager.instance.enemyDamageOut = (int)currentDamage;
+        return (int)currentDamage;
+    }
+
+    public void takeDamage(int amount)
+    {
+        currentHealth += amount;
+    }
+
 }
 

@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
+    
+    [SerializeField] private int maxHealth = 100;
     [SerializeField] private int attackDamage = 10;
-    [SerializeField] int HP;
+    [SerializeField] int xpGive = 100;
     [SerializeField] Renderer model;
+    public UnityEngine.UI.Slider healthbar;
+    public TMP_Text healthText;
+    [SerializeField] private int currentHealth;
 
     [SerializeField] private float sightRange = 15f;
     [SerializeField] private float attackRange = 2f;
@@ -53,6 +60,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        currentHealth = maxHealth;
+        
         originalColor = model.material.color;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -66,6 +75,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
     private void Update()
     {
+        updateHealthBar();
         if (currentState == ZombieState.Dead)
             return;
         if (player == null)
@@ -155,7 +165,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             if (damageable != null)
             {
                 damageable.takeDamage(attackDamage);
-
                 Debug.Log("Damage Applied");
             }
             else
@@ -165,11 +174,18 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         }
     }
 
+    public void updateHealthBar()
+    {
+        healthText.text = currentHealth + " / " + maxHealth;
+        healthbar.value = (float)currentHealth / (float)maxHealth;
+    }
+
     public void takeDamage(int amount)
     {
-        HP -= amount;
+        currentHealth -= amount;
 
-        if (HP <= 0)
+
+        if (currentHealth <= 0)
         {
             currentState = ZombieState.Dead;
             if (agent != null)
@@ -178,6 +194,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
 
             gameManager.instance.updateGameGoal(-1);
+            gameManager.instance.addXp(xpGive);
             Destroy(gameObject);
         }
         else
