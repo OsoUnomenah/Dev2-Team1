@@ -28,9 +28,16 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [SerializeField] private WeaponReward[] weaponRewards;
     [SerializeField] private bool canGiveMaxAmmo = true;
 
+    [Header("Enemy Trap Settings")]
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private Transform enemySpawnPoint;
+    [SerializeField] float enemySpawnChance;
+
     [Header("Highlight Settings")]
     [SerializeField] private Renderer model;
     [SerializeField] private Material highlight;
+
+   
 
     private Material materialOg;
     private bool isOpen;
@@ -92,6 +99,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         isMoving = false;
 
         GiveWeaponReward();
+        TrySpawnEnemy();
 
         Debug.Log("Weapons chest opened!");
     }
@@ -165,6 +173,20 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         weaponManager.Ammo = weaponManager.MaxAmmo;
 
         Debug.Log("Weapon chest gave max ammo!");
+    }
+
+    private void TrySpawnEnemy()
+    {
+        if (enemyPrefab == null || enemySpawnPoint == null)
+            return;
+
+        float roll = Random.Range(0f, 100f);
+
+        if(roll <= enemySpawnChance)
+        {
+            Instantiate(enemyPrefab, enemySpawnPoint.position, enemySpawnPoint.rotation);
+            Debug.Log("Unlucky Chest!!! Enemy spawned.");
+        }
     }
 
     public void OnHoverEnter()
