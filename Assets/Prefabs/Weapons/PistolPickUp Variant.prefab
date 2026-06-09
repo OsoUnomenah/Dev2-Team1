@@ -14,27 +14,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: ammo
-      value: 18
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: range
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: timer
-      value: 10.9
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: damage
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: recoil
-      value: 0.1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: maxAmmo
-      value: 18
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: ammoTimer
-      value: 69.8
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.x

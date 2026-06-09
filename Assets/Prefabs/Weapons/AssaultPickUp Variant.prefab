@@ -22,7 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: range
-      value: 135.3
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: timer
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: damage
@@ -30,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: recoil
-      value: 0.48
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: maxAmmo
@@ -38,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: ammoTimer
-      value: 75.19
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponPrefab
