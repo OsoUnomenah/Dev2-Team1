@@ -17,7 +17,7 @@ MonoBehaviour:
   loop: 0
   randomizePitch: 0
   randomPitchRangeMod: 0.1
-  volume: 1.5
+  volume: 2
   pitch: 1
   fallOffDistMin: 4
   fallOffDistMax: 20
