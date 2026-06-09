@@ -73,24 +73,33 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        xpText.text = " LVL: " + level;
-        
-        xpBoostText.text = (" + " + xpGain + " XP");
-        xpBOrig = xpBoostText;
-        xpToNextLevel = 10 + (currentLevel * 10);
+        //XP requirement is based on the player's current level
+        xpToNextLevel = 10 + (level * 10);
 
 
 
-        if (!isPaused)
+        //Update XP text only if the text reference exists
+        //XP is no longer gained over time here. XP should come from addXp()
+        //Which is called when enemies die or when another reward gives XP
+        if (xpText != null)
         {
-            currentXP += xpGain;
+            xpText.text = "LVL: " + level + " XP: " + currentXP + " / " + xpToNextLevel;
         }
-        if (currentXP >= xpToNextLevel)
+
+
+        //Clear the XP boost text by default
+        if (xpBoostText != null)
         {
-            levelUp();
-            currentXP = 0;
+            xpBoostText.text = "";
         }
-        xpBar.value = (float)currentXP / (float)xpToNextLevel;
+
+        //Update XP bar based on current XP progress toward the next level
+        if (xpBar != null)
+        {
+            xpBar.value = currentXP / xpToNextLevel;
+        }
+
+       
     }
 
     public void PauseGame()
@@ -112,10 +121,20 @@ public class gameManager : MonoBehaviour
         
         currentXP += amount;
 
-        xpBoostText.SetText(" + " + amount);
-        xpBoostText.CrossFadeAlpha(1, 1, false);
-        xpBoostText = xpBOrig;
+        //Show how much XP was just earned
+        if (xpBoostText != null)
+        {
+            xpBoostText.SetText(" + " + amount + " XP");
+        }
 
+        //Handles leveling up when enough XP is gained
+        while (currentXP >= xpToNextLevel)
+        {
+            currentXP -= xpToNextLevel;
+            levelUp();
+
+            xpToNextLevel = 10 + (level * 10);
+        }
 
     }
     public void levelUp()
