@@ -97,4 +97,15 @@ public class DoorInteract : MonoBehaviour, IInteract
             model.material = materialOrig;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isOpen && other.CompareTag("Enemy"))
+        {
+            Quaternion targetRotation = openRotation;
+            StartCoroutine(RotateDoor(targetRotation));
+
+            isOpen = true;
+        }
+    }
 }
