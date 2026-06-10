@@ -110,10 +110,15 @@ public class StatHandler : MonoBehaviour, IDamage
         return (int)currentDamage;
     }
 
+
+
     public void takeDamage(int amount)
     {
         currentHealth += amount;
+        
     }
+
+   
 
 }
 
