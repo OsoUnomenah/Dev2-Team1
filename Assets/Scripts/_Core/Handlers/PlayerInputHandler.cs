@@ -61,7 +61,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private float footstepTimer;
 
-    private PlayerActions playerActions;
+
+
+    // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
+
+
+    private PlayerActions playerActions; // Reference to the generated input actions class
 
     private InputAction moveAction;
     private InputAction rotateAction;
@@ -117,6 +122,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleJumping();
         HandleReloadInput();
         ShootTimer();
+        IfReload();
     }
 
     public void takeDamage(int amount)
@@ -453,7 +459,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
-        if (isReloading)
+        if (gameManager.instance.isReloading)
         {
             Debug.Log("Cannot shoot while reloading.");
             return;
@@ -461,11 +467,19 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         if (weaponManager.Ammo <= 0)
         {
+            
             StartReload();
             return;
         }
 
-        recoil = gameManager.instance.recoil;
+        if(gameManager.instance.canShoot == true)
+        { 
+            recoil = gameManager.instance.recoil; 
+        }
+        else
+        {
+            recoil = 0;
+        }
 
         if (!gameManager.instance.isPaused && !gameManager.instance.isLevelingUp && gameManager.instance.canShoot == true)
         {
@@ -532,26 +546,22 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
-        if (isReloading)
-        {
+        if (gameManager.instance.isReloading)
+        {            
             reloadTimer += Time.deltaTime;
             gameManager.instance.canShoot = false;
 
             if (reloadTimer >= weaponManager.AmmoTimer)
             {
                 weaponManager.Ammo = weaponManager.MaxAmmo;
-                isReloading = false;
+                gameManager.instance.isReloading = false;
                 reloadTimer = 0;
                 gameManager.instance.canShoot = true;
 
-                if (UpgradeUI.instance != null)
-                {
-                    UpgradeUI.instance.ShowUpgradeNotification("Reload complete");
-                }
 
                 Debug.Log("Reload complete!");
             }
-
+            
             return;
         }
 
@@ -570,12 +580,23 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
-        if (Keyboard.current.rKey.wasPressedThisFrame)
+        if(Keyboard.current.rKey.wasPressedThisFrame && reloadTimer < weaponManager.AmmoTimer)
         {
+            weaponManager.Ammo = 0;
+            gameManager.instance.isReloading = true;
             StartReload();
         }
     }
 
+    private void IfReload()
+    {
+        if (gameManager.instance.isReloading)
+        {            
+            gameManager.instance.reloadMax = weaponManager.AmmoTimer;
+            gameManager.instance.reloadTime = reloadTimer;
+        }
+        
+    }
     private void StartReload()
     {
         if (weaponManager == null)
@@ -586,18 +607,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (weaponManager.MaxAmmo <= 0)
         {
             return;
-        }
-
-        if (weaponManager.Ammo >= weaponManager.MaxAmmo)
-        {
-            if (UpgradeUI.instance != null)
-            {
-                UpgradeUI.instance.ShowUpgradeNotification("Ammo already full");
-            }
-
-            Debug.Log("Ammo already full.");
-            return;
-        }
+        }        
 
         if (isReloading)
         {
@@ -608,10 +618,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         reloadTimer = 0;
         gameManager.instance.canShoot = false;
 
-        if (UpgradeUI.instance != null)
-        {
-            UpgradeUI.instance.ShowUpgradeNotification("Reloading...");
-        }
+        
 
         Debug.Log("Reloading...");
     }
