@@ -130,7 +130,11 @@ MonoBehaviour:
   weaponType: 0
   damage: 5
   range: 57.4
-  rate: 1
-  recoil: 10
+  rate: 0.2
+  recoil: 1
   timer: 6
+  ammo: 0
+  maxAmmo: 0
+  ammoTimer: 0
   weaponPrefab: {fileID: 2349204047919672205, guid: ec0300edf2687a34cbc9c15ce896f742, type: 3}
+  Modifiers: 
