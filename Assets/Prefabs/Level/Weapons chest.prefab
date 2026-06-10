@@ -348,7 +348,7 @@ MonoBehaviour:
     ammo: 10
     maxAmmo: 10
     ammoTimer: 2
-    weaponPrefab: {fileID: 6418376403914927428, guid: 40509b50e6ed28c42adcbf775c4d3a8b, type: 3}
+    weaponPrefab: {fileID: 2349204047919672205, guid: ec0300edf2687a34cbc9c15ce896f742, type: 3}
   - weaponName: AR
     weaponType: 0
     damage: 5
@@ -370,7 +370,7 @@ MonoBehaviour:
     ammo: 5
     maxAmmo: 5
     ammoTimer: 3
-    weaponPrefab: {fileID: 3824886265503906123, guid: 9aefcc7ecaa49344580758e509515108, type: 3}
+    weaponPrefab: {fileID: 759089939085317326, guid: 4a9be8da16743b4498cd534e5ae1c055, type: 3}
   - weaponName: Shotgun
     weaponType: 0
     damage: 30
@@ -381,7 +381,7 @@ MonoBehaviour:
     ammo: 6
     maxAmmo: 6
     ammoTimer: 2.75
-    weaponPrefab: {fileID: 8655629924127046308, guid: 3403d90aca528fe42b9d28ea55a28d17, type: 3}
+    weaponPrefab: {fileID: 1315392376950004720, guid: 0a23a22b69a5cf441801a0205846b19e, type: 3}
   canGiveMaxAmmo: 1
   enemyPrefab: {fileID: 7791680660320909169, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
   enemySpawnPoint: {fileID: 9034420200080744866}

@@ -11,6 +11,7 @@ public class gameManager : MonoBehaviour
 
     [Header ("XP Config")]
     public Slider xpBar;
+    public Slider reloadBar;
     public TMP_Text xpText;
     public TMP_Text xpBoostText;
     private TMP_Text xpBOrig;
@@ -32,6 +33,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
+    [SerializeField] public GameObject Reload;
+    [SerializeField] public float reloadTime;
+    [SerializeField] public float reloadMax;
     [SerializeField] GameObject playerInputHandler;    
     public bool isPaused;
     public bool isLevelingUp;
@@ -54,7 +58,7 @@ public class gameManager : MonoBehaviour
 
     public float recoil;
     public bool canShoot;
-
+    public bool isReloading;
     public int enemyDamageOut;
 
     [Header("Roguelite Run Config")]
@@ -103,8 +107,16 @@ public class gameManager : MonoBehaviour
         {
             xpBar.value = currentXP / xpToNextLevel;
         }
+        if (isReloading)
+        {
+            Reload.SetActive(true);
+            reloadBar.value = reloadTime / reloadMax;
+        }
+        else
+        {
+            Reload.SetActive(false);
+        }
 
-       
     }
 
     public void PauseGame()
@@ -130,6 +142,8 @@ public class gameManager : MonoBehaviour
             }
         }
     }
+
+    
 
     public void addXp(int amount)
     {
@@ -169,6 +183,8 @@ public class gameManager : MonoBehaviour
         }
        
     }
+
+
     public void statePause()
     {
         isPaused = true;
