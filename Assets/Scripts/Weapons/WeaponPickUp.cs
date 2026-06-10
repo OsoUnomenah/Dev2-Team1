@@ -52,12 +52,14 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     public void OnHoverEnter()
     {
         model.material = highLight;
+        gameManager.instance.interactText.gameObject.SetActive(true);
         TempUI.OnHover(0);
     }
 
     public void OnHoverExit()
     {       
         model.material = materialOrig;
+        gameManager.instance.interactText.gameObject.SetActive(false);
         TempUI.OffHover();
     }
 }

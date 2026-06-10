@@ -32,7 +32,7 @@ public class StatHandler : MonoBehaviour, IDamage
 
 
     [Range(0f, 100f)][SerializeField] public float modSpeed;
-    [Range(0f, 100f)][SerializeField] public float modJumps;
+    [Range(0, 100)][SerializeField] public int modJumps;
 
     public Slider healthBar;
     public TMP_Text healthText;

@@ -36,7 +36,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public GameObject Reload;
     [SerializeField] public float reloadTime;
     [SerializeField] public float reloadMax;
-    [SerializeField] GameObject playerInputHandler;    
+    [SerializeField] GameObject playerInputHandler;
+    [SerializeField] public TextMeshProUGUI interactText;
     public bool isPaused;
     public bool isLevelingUp;
 

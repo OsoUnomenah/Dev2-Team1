@@ -195,6 +195,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
+            TempUI.OffHover();
             Destroy(gameObject);
         }
         else

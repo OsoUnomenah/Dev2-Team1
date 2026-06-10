@@ -247,7 +247,7 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
                 break;
 
             case UpgradeType.Jumps:
-                playerStats.modJumps += amount;
+                playerStats.modJumps += (int)amount;
                 break;
         }
     }
@@ -268,21 +268,23 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
+        //Debug.LogError("Enter");
         if (model != null && highlight != null)
         {
             model.material = highlight;
         }
-
+        gameManager.instance.interactText.gameObject.SetActive(true);
         TempUI.OnHover(0);
     }
 
     public void OnHoverExit()
     {
+        //Debug.LogError("Exit");
         if (model != null && materialOrig != null)
         {
             model.material = materialOrig;
         }
-
+        gameManager.instance.interactText.gameObject.SetActive(false);
         TempUI.OffHover();
     }
 }

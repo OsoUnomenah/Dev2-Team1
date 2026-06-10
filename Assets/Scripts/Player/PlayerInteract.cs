@@ -7,18 +7,22 @@ public class Players : MonoBehaviour
     [SerializeField] private float interactRange;
     [SerializeField] private LayerMask ignoreSource;
     [SerializeField] private TextMeshProUGUI interactText; //"Press E to interact" when hovering over interactable objects
-
+    [SerializeField] private PlayerWeaponManager weaponManager;
+       
     private IInteract currentInteractable;
+
+    RaycastHit hit;
+    IInteract newObj;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(interactText != null)
+        if (interactText != null)
         {
             interactText.gameObject.SetActive(false);
         }
 
-
+        weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
     }
 
     // Update is called once per frame
@@ -32,31 +36,35 @@ public class Players : MonoBehaviour
         RaycastHit hit;
         IInteract newObj = null;
 
-        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, weaponManager.Range, ~ignoreSource))
         {
-            newObj = hit.collider.GetComponentInParent<IInteract>();
+            float distance = hit.distance;
+
+            IInteract interactable = hit.collider.GetComponentInParent<IInteract>();
+            
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                newObj = hit.collider.GetComponentInParent<IInteract>();
+            }
+            else
+            {
+                if (distance <= interactRange)
+                {
+                    newObj = interactable;
+                }
+            }            
         }
 
         if (currentInteractable != null && (Object)currentInteractable == null)
         {
             currentInteractable = null;
-
-            if(interactText != null)
-            {
-                interactText.gameObject.SetActive(false);
-            }
         }
 
         if (newObj != currentInteractable)
         {
             if (currentInteractable != null && (Object)currentInteractable != null)
             {
-                currentInteractable.OnHoverExit();
-
-                if (interactText != null)
-                {
-                    interactText.gameObject.SetActive(false);
-                }
+                currentInteractable.OnHoverExit();          
             }
 
             currentInteractable = newObj;
@@ -65,10 +73,7 @@ public class Players : MonoBehaviour
             {
                 currentInteractable.OnHoverEnter();
 
-                if (interactText != null && currentInteractable is not IDamage) //so interact text will not pop up when hovering enemy
-                {
-                    interactText.gameObject.SetActive(true);
-                }
+                
             }
         }
 

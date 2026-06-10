@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SniperPickUp Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4881830232455317032, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_TagString
+      value: WeaponPickUp
+      objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: ammo
       value: 5
