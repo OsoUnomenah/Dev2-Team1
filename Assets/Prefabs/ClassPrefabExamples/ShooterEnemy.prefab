@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6025136877321835583}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Head Pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,14 +255,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4404578563864338699}
+  - component: {fileID: 4030804520681185625}
+  - component: {fileID: 1218956515950177963}
   - component: {fileID: 3918281209967021050}
   - component: {fileID: 2168005645633339413}
   - component: {fileID: 6455617583321667310}
-  - component: {fileID: 4030804520681185625}
-  - component: {fileID: 1218956515950177963}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: ShooterEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -275,7 +275,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8401963849488766331}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.90230614, z: -0, w: 0.431096}
+  m_LocalRotation: {x: 0, y: -0.90230703, z: 0, w: 0.43109402}
   m_LocalPosition: {x: 6.6316032, y: -2.29998, z: -3.4018042}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -284,6 +284,46 @@ Transform:
   - {fileID: 8018800797147213749}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -128.926, z: 0}
+--- !u!114 &4030804520681185625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8401963849488766331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1b8b83dc4a3334198437a4b00ce11e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::enemyAI
+  model: {fileID: 2168005645633339413}
+  faceTargetSpeed: 10
+  bullet: {fileID: 5054535592068500189, guid: 6b85ccaefa9a00147b4e69aa58f2d13f, type: 3}
+  gunPivot: {fileID: 8018800797147213749}
+  shootPos: {fileID: 2022599661193192832}
+  shootRate: 0.45
+  gunRotateSpeed: 5
+--- !u!135 &1218956515950177963
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8401963849488766331}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 8
+  m_Center: {x: -0.00000047683716, y: 0, z: -0.0000009536743}
 --- !u!33 &3918281209967021050
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -364,47 +404,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4030804520681185625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8401963849488766331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d1b8b83dc4a3334198437a4b00ce11e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::enemyAI
-  model: {fileID: 2168005645633339413}
-  HP: 10
-  faceTargetSpeed: 10
-  bullet: {fileID: 5054535592068500189, guid: 6b85ccaefa9a00147b4e69aa58f2d13f, type: 3}
-  gunPivot: {fileID: 8018800797147213749}
-  shootPos: {fileID: 2022599661193192832}
-  shootRate: 0.1
-  gunRotateSpeed: 5
---- !u!135 &1218956515950177963
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8401963849488766331}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 8
-  m_Center: {x: -0.00000047683716, y: 0, z: -0.0000009536743}
 --- !u!1 &8734153470641069783
 GameObject:
   m_ObjectHideFlags: 0

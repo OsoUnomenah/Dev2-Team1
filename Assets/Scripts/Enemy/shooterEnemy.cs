@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 
-public class shooterEnemy : MonoBehaviour, IDamage
+public class shooterEnemy : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] Renderer model;
@@ -10,7 +10,6 @@ public class shooterEnemy : MonoBehaviour, IDamage
 
 
     [Header("Stats")]
-    [Range(10, 100)][SerializeField] int HP;
     [Range(1, 10)][SerializeField] int faceTargetSpeed;
 
 
@@ -85,25 +84,4 @@ public class shooterEnemy : MonoBehaviour, IDamage
             playerInTrigger = false;
     }
 
-    public void takeDamage(int amount)
-    {
-        HP -= amount;
-
-        if (HP <= 0)
-        {
-            gameManager.instance.updateGameGoal(-1);
-            Destroy(gameObject);
-        }
-        else
-        {
-            StartCoroutine(flashRed());
-        }
-    }
-
-    IEnumerator flashRed()
-    {
-        model.material.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        model.material.color = originalColor;
-    }
 }
