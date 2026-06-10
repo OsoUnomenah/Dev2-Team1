@@ -53,6 +53,7 @@ public class StatHandler : MonoBehaviour, IDamage
         sprintCost = gameManager.instance.sprintCost;
 
         currentDamage = damage + modDamage;
+        modJumps = 1;
     }
 
     // Update is called once per frame
