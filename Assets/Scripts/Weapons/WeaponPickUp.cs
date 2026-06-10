@@ -45,6 +45,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
         weaponManager.Equip(weaponType, damage, range, rate, recoil, timer, weaponPrefab, ammo, maxAmmo, ammoTimer);
 
+        gameManager.instance.interactText.gameObject.SetActive(false);
         TempUI.OffHover();
         Destroy(gameObject);
     }
