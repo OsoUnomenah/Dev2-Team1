@@ -340,21 +340,21 @@ MonoBehaviour:
   weaponRewards:
   - weaponName: Pistol
     weaponType: 0
-    damage: 7
+    damage: 12
     range: 25
     rate: 1
-    recoil: 1
-    timer: 0.5
+    recoil: 0.8
+    timer: 0.3
     ammo: 10
     maxAmmo: 10
     ammoTimer: 2
     weaponPrefab: {fileID: 2349204047919672205, guid: ec0300edf2687a34cbc9c15ce896f742, type: 3}
   - weaponName: AR
     weaponType: 0
-    damage: 5
+    damage: 15
     range: 50
-    rate: 1
-    recoil: 0.6
+    rate: 0.2
+    recoil: 0.25
     timer: 0.15
     ammo: 30
     maxAmmo: 30
@@ -362,10 +362,10 @@ MonoBehaviour:
     weaponPrefab: {fileID: 431479469405402423, guid: 2041460b5348f4346a0dd1900c17850b, type: 3}
   - weaponName: Sniper
     weaponType: 1
-    damage: 45
+    damage: 60
     range: 100
     rate: 1
-    recoil: 2
+    recoil: 1.75
     timer: 1.25
     ammo: 5
     maxAmmo: 5
@@ -373,10 +373,10 @@ MonoBehaviour:
     weaponPrefab: {fileID: 759089939085317326, guid: 4a9be8da16743b4498cd534e5ae1c055, type: 3}
   - weaponName: Shotgun
     weaponType: 0
-    damage: 30
+    damage: 34
     range: 15
-    rate: 1
-    recoil: 2.5
+    rate: 0.2
+    recoil: 0.5
     timer: 1
     ammo: 6
     maxAmmo: 6
