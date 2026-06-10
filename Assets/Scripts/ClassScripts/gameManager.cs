@@ -8,6 +8,7 @@ public class gameManager : MonoBehaviour
     public static gameManager instance;
 
     [SerializeField] public bool gameDebug;
+    public TMP_Text objectiveText;
 
     [Header ("XP Config")]
     public Slider xpBar;
@@ -85,6 +86,10 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Objective text update
+        objectiveText.text = "Objective: Body Count (Enemies Remaining: " + gameGoalCount + " )";
+
+
         //XP requirement is based on the player's current level
         xpToNextLevel = 10 + (level * 10);
 
@@ -236,10 +241,7 @@ public class gameManager : MonoBehaviour
             menuActive = menuPause;
             menuActive.SetActive(true);
         }
-        //else if (menuActive == menuPause)
-        //{
-        //    stateUnpause();
-        //}
+        
     }
 
     public void settings()

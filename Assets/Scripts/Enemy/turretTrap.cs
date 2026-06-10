@@ -105,6 +105,7 @@ public class turretTrap : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
+            model.material.color = Color.mediumVioletRed;
         }
     }
 
@@ -112,6 +113,8 @@ public class turretTrap : MonoBehaviour, IDamage
     {
         if (other.CompareTag("Player"))
             playerInTrigger = false;
+            model.material.color = Color.green;
+
     }
 
     public void takeDamage(int amount)
@@ -130,13 +133,13 @@ public class turretTrap : MonoBehaviour, IDamage
         }
         else
         {
-            StartCoroutine(flashRed());
+            StartCoroutine(flashYellow());
         }
     }
 
-    IEnumerator flashRed()
+    IEnumerator flashYellow()
     {
-        model.material.color = Color.red;
+        model.material.color = Color.yellow;
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
     }

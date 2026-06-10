@@ -21,7 +21,7 @@ public class shooterEnemy : MonoBehaviour
     [Range(1, 10)][SerializeField] int gunRotateSpeed;
 
 
-
+    
     Color originalColor;
     Vector3 playerDir;
     bool playerInTrigger;
@@ -30,8 +30,8 @@ public class shooterEnemy : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gameManager.instance.updateGameGoal(1);
         originalColor = model.material.color;
+        
     }
 
     // Update is called once per frame
@@ -62,6 +62,7 @@ public class shooterEnemy : MonoBehaviour
     {
             shootTimer = 0;
             Instantiate(bullet, shootPos.position, gunPivot.rotation);
+            
     }
     
      private void rotateGun()
@@ -75,6 +76,7 @@ public class shooterEnemy : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
+            model.material.color = Color.red;
         }
     }
 
@@ -82,6 +84,7 @@ public class shooterEnemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
             playerInTrigger = false;
+            model.material.color = originalColor;
     }
 
 }
