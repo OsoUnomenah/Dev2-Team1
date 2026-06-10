@@ -127,10 +127,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
+
         if (playerStatHandler == null)
         {
             return;
         }
+
+        StartCoroutine(FlashDamage());
+
 
         StatHandler stats = playerStatHandler.GetComponent<StatHandler>();
 
@@ -156,6 +160,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             gameManager.instance.youLose();
         }
+
     }
 
     void OnEnable()
@@ -669,5 +674,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 gameManager.instance.isSprinting = false;
             }
         }
+    }
+
+    IEnumerator FlashDamage()
+    {
+        gameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerDamageFlash.SetActive(false);
     }
 }

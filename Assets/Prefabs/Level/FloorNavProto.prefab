@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7632011664457437320}
   - component: {fileID: 2437032905398861535}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FloorNavProto
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -62,5 +62,5 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: ba55c57aeeb8f2a4a94e486a9f9282d4, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: b7479c912aa659740a97199b39732e20, type: 2}
   m_BuildHeightMesh: 0
