@@ -1,15 +1,29 @@
-using UnityEngine;
 using System.Collections;
+using TMPro;
+using UnityEngine;
 
-public class turretTrap : MonoBehaviour
+public class turretTrap : MonoBehaviour, IDamage
 {
     [Header("Components")]
     [SerializeField] Renderer model;
+    public UnityEngine.UI.Slider healthbar;
+    public TMP_Text healthText;
+    public GameObject onScreenDMG;
+    public TMP_Text damageText;
+    [SerializeField] int xpGive = 100;
+
+    [Header("Audio")]
+    [SerializeField] BaseSoundSO _hit;
+    [SerializeField] BaseSoundSO _dead;
+
 
 
 
     [Header("Stats")]
     [Range(10, 100)][SerializeField] int HP;
+    [Range(10, 100)][SerializeField] int maxHP;
+
+
     [Range(1, 10)][SerializeField] int faceTargetSpeed;
 
 
@@ -30,6 +44,7 @@ public class turretTrap : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        HP = maxHP;
         gameManager.instance.updateGameGoal(1);
         originalColor = model.material.color;
     }
@@ -37,7 +52,7 @@ public class turretTrap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        updateHealthBar();
         if (playerInTrigger)
         {
             shootTimer += Time.deltaTime;
@@ -50,6 +65,21 @@ public class turretTrap : MonoBehaviour
                 shoot();
             }
         }
+    }
+
+    public void updateHealthBar()
+    {
+        healthText.text = HP + " / " + maxHP;
+        healthbar.value = (float)HP / (float)maxHP;
+    }
+
+    IEnumerator updateDamageText()
+    {
+        damageText.text = ("DMG: " + gameManager.instance.playerDamageOut.ToString());
+
+        onScreenDMG.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        onScreenDMG.SetActive(false);
     }
 
     private void faceTarget()
@@ -86,10 +116,15 @@ public class turretTrap : MonoBehaviour
 
     public void takeDamage(int amount)
     {
+        gameManager.instance.playerDamageOut += amount;
+
         HP -= amount;
+        //Show the damage text
+        StartCoroutine(updateDamageText());
 
         if (HP <= 0)
         {
+            gameManager.instance.addXp(xpGive);
             gameManager.instance.updateGameGoal(-1);
             Destroy(gameObject);
         }
