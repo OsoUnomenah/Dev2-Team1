@@ -799,6 +799,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1536987708644270929}
     m_Modifications:
+    - target: {fileID: -7798060033457799864, guid: 013712b384581d34498b7ac2962862c5, type: 3}
+      propertyPath: damageAmount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5507442851149104229, guid: 013712b384581d34498b7ac2962862c5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1
@@ -1057,7 +1061,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageHandler
   type: 1
   rb: {fileID: 0}
-  damageAmount: 10
+  player: {fileID: 0}
+  damageAmount: 3
   damageRate: 0.5
   bulletSpeed: 0
   bulletDestroyTime: 0
