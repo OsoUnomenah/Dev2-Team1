@@ -62,6 +62,7 @@ public class gameManager : MonoBehaviour
     public bool canShoot;
     public bool isReloading;
     public int enemyDamageOut;
+    public int playerDamageOut;
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;

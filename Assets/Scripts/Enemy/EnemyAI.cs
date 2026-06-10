@@ -17,6 +17,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     [SerializeField] Renderer model;
     public UnityEngine.UI.Slider healthbar;
     public TMP_Text healthText;
+
+    public GameObject onScreenDMG;
+    public TMP_Text damageText;
     [SerializeField] private int currentHealth;
 
     [SerializeField] private float sightRange = 15f;
@@ -71,6 +74,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         currentState = ZombieState.Wander;
         wanderTime = wanderTimer;
         gameManager.instance.updateGameGoal(1);
+
+
     }
 
     private void Update()
@@ -179,10 +184,28 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         healthText.text = currentHealth + " / " + maxHealth;
         healthbar.value = (float)currentHealth / (float)maxHealth;
     }
+    
+    IEnumerator updateDamageText()
+    {
+        damageText.text = ("DMG: " + gameManager.instance.playerDamageOut.ToString());
+
+        onScreenDMG.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        onScreenDMG.SetActive(false);
+    }
 
     public void takeDamage(int amount)
     {
+        //Set the damage to display on the damage text
+        gameManager.instance.playerDamageOut = amount;
+
+        //Show the damage text
+        StartCoroutine(updateDamageText());
+
         currentHealth -= amount;
+
+        
+        
 
 
         if (currentHealth <= 0)
@@ -220,9 +243,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         model.material.color = originalColor;
     }
 
+
     public void Interact()
     {
-        StartCoroutine(flashGreen());
+        // StartCoroutine(flashGreen()); //this was for testing interaction, can be removed or changed to something else
     }
     public void OnHoverEnter()
     {
