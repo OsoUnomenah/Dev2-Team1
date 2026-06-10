@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 
 public class WeaponsChestInteract : MonoBehaviour, IInteract
 {
@@ -37,7 +39,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [SerializeField] private Renderer model;
     [SerializeField] private Material highlight;
 
-   
+
 
     private Material materialOg;
     private bool isOpen;
@@ -178,7 +180,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         weaponManager.Ammo = weaponManager.MaxAmmo;
 
-        if(UpgradeUI.instance != null)
+        if (UpgradeUI.instance != null)
         {
             UpgradeUI.instance.ShowUpgradeNotification("Weapon Chest: Max Ammo");
         }
@@ -193,7 +195,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         float roll = Random.Range(0f, 100f);
 
-        if(roll <= enemySpawnChance)
+        if (roll <= enemySpawnChance)
         {
             Instantiate(enemyPrefab, enemySpawnPoint.position, enemySpawnPoint.rotation);
             Debug.Log("Unlucky Chest!!! Enemy spawned.");
