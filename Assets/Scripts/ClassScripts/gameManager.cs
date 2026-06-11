@@ -86,14 +86,12 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //Objective text update
         objectiveText.text = "Objective: Body Count (Enemies Remaining: " + gameGoalCount + " )";
 
-
         //XP requirement is based on the player's current level
         xpToNextLevel = 10 + (level * 10);
-
-
 
         //Update XP text only if the text reference exists
         //XP is no longer gained over time here. XP should come from addXp()
@@ -115,6 +113,7 @@ public class gameManager : MonoBehaviour
         {
             xpBar.value = currentXP / xpToNextLevel;
         }
+
         if (isReloading)
         {
             Reload.SetActive(true);
