@@ -1004,7 +1004,7 @@ MonoBehaviour:
   bullet: {fileID: 5054535592068500189, guid: 6b85ccaefa9a00147b4e69aa58f2d13f, type: 3}
   gunPivot: {fileID: 8018800797147213749}
   shootPos: {fileID: 2022599661193192832}
-  shootRate: 0.15
+  shootRate: 0.75
   gunRotateSpeed: 5
 --- !u!114 &6291988370504923860
 MonoBehaviour:

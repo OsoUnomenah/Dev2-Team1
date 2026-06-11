@@ -69,6 +69,14 @@ public class DamageHandler : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.isTrigger) return;
+        if (other.CompareTag("Player"))
+        {
+            IDamage damageable = player.GetComponentInChildren<IDamage>();
+            if (damageable != null && type == damageType.DOT && !isDamaging)
+            {
+                StartCoroutine(damageOther(damageable));
+            }
+        }
 
         IDamage dmg = other.GetComponent<IDamage>();
         if (dmg != null && type == damageType.DOT && !isDamaging)
