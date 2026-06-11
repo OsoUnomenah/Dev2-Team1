@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
 
-public class WarehouseInteract : MonoBehaviour
+public class WarehouseInteract : MonoBehaviour, IOpen
 {
     [SerializeField] private float doorSpeed;
     [SerializeField] private float heightFinal;
@@ -31,7 +31,9 @@ public class WarehouseInteract : MonoBehaviour
     {
         hoverLight.enabled = true;
         hoverLight2.enabled = true;
-        
+
+        AudioManager.instance.PlaySoundAtPosition(_raise, gameObject);
+
         while (transform.position.y < heightFinal)
         {
             transform.position += Vector3.up * doorSpeed * Time.deltaTime;
@@ -44,8 +46,9 @@ public class WarehouseInteract : MonoBehaviour
         hoverLight.enabled = false;
         hoverLight2.enabled = false;
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
+        AudioManager.instance.PlaySoundAtPosition(_raise, gameObject);
         while (transform.position.y > heightStart)
         {
             transform.position -= Vector3.up * doorSpeed * Time.deltaTime;
@@ -65,8 +68,9 @@ public class WarehouseInteract : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        IOpen opener = other.GetComponent<IOpen>();
 
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        if (opener != null)
         {
             numInTrigger++;
             StartCoroutine(Open());
@@ -75,8 +79,9 @@ public class WarehouseInteract : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        IOpen opener = other.GetComponent<IOpen>();
 
-        if ((other.CompareTag("Player") || other.CompareTag("Enemy")))
+        if (opener != null)
         {
             numInTrigger--;
 

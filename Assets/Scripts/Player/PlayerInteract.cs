@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class Players : MonoBehaviour
+public class Players : MonoBehaviour, IOpen
 {
     [SerializeField] private Transform interactorSource;
     [SerializeField] private float interactRange;
