@@ -2,30 +2,31 @@ using UnityEngine;
 
 public class ZombieSpawner : MonoBehaviour
 {
-    public GameObject zombiePrefab;
-    public Transform[] spawnPoints;
+    [SerializeField] private GameObject zombiePrefab;
+    [SerializeField] private Transform[] spawnPoints;
 
-    private bool hasSpawned;
+    [SerializeField] private int baseZombieCount = 3;
+    [SerializeField] private int increasePerTrigger = 2;
 
-    public void SpawnZombies()
+    private int currentZombieCount;
+
+    private void Start()
     {
-        Debug.Log("SpawnZombies CALLED");
-        if (hasSpawned) return;
+        currentZombieCount = baseZombieCount;
+    }
 
-        hasSpawned = true;
+    public void TriggerSpawn()
+    {
+        SpawnZombies(currentZombieCount);
+        currentZombieCount += increasePerTrigger;
+    }
 
-        // Use BOTH level + zone for scaling
-        int difficulty = (int)gameManager.instance.level;
-        int zone = gameManager.instance.runZone;
-
-        int zombieCount = 2 + zone + Mathf.FloorToInt(difficulty / 5);
-
-        Debug.Log("Spawning Zombies: " + zombieCount);
-
-        for (int i = 0; i < zombieCount; i++)
+    private void SpawnZombies(int count)
+    {
+        for (int i = 0; i < count; i++)
         {
-            Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            Instantiate(zombiePrefab, point.position, point.rotation);
+            Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+            Instantiate(zombiePrefab, spawnPoint.position, spawnPoint.rotation);
         }
     }
 }

@@ -12,7 +12,7 @@ public class ZombieTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             triggered = true;
-            zombieSpawner.SpawnZombies();
+            zombieSpawner.TriggerSpawn();
         }
     }
 }
