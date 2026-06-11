@@ -171,6 +171,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   interactText: {fileID: 0}
+  weaponManager: {fileID: 0}
 --- !u!114 &4918395676718949796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,7 +666,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 97af4ca5349c8de499285bb523ce3ac6, type: 2}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: jumpMax
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: walkSpeed

@@ -204,24 +204,24 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
-
+        //Debug.LogError("Enter");
         if (model != null && highlight != null)
         {
             model.material = highlight;
         }
-
+        gameManager.instance.interactText.gameObject.SetActive(true);
         TempUI.OnHover(0);
 
     }
 
     public void OnHoverExit()
     {
-
+        //Debug.LogError("Exit");
         if (model != null && materialOg != null)
         {
             model.material = materialOg;
         }
-
+        gameManager.instance.interactText.gameObject.SetActive(false);
         TempUI.OffHover();
 
     }

@@ -32,7 +32,7 @@ public class StatHandler : MonoBehaviour, IDamage
 
 
     [Range(0f, 100f)][SerializeField] public float modSpeed;
-    [Range(0f, 100f)][SerializeField] public float modJumps;
+    [Range(0, 100)][SerializeField] public int modJumps;
 
     public Slider healthBar;
     public TMP_Text healthText;
@@ -53,6 +53,7 @@ public class StatHandler : MonoBehaviour, IDamage
         sprintCost = gameManager.instance.sprintCost;
 
         currentDamage = damage + modDamage;
+        modJumps = 1;
     }
 
     // Update is called once per frame
@@ -110,10 +111,15 @@ public class StatHandler : MonoBehaviour, IDamage
         return (int)currentDamage;
     }
 
+
+
     public void takeDamage(int amount)
     {
         currentHealth += amount;
+        
     }
+
+   
 
 }
 

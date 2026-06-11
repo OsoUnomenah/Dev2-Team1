@@ -359,7 +359,7 @@ MonoBehaviour:
     ammo: 30
     maxAmmo: 30
     ammoTimer: 2.5
-    weaponPrefab: {fileID: 2163901082907539163, guid: ac9ca24722d7f1c4cab6d09e13ffe15a, type: 3}
+    weaponPrefab: {fileID: 431479469405402423, guid: 2041460b5348f4346a0dd1900c17850b, type: 3}
   - weaponName: Sniper
     weaponType: 1
     damage: 60
@@ -383,7 +383,7 @@ MonoBehaviour:
     ammoTimer: 2.75
     weaponPrefab: {fileID: 1315392376950004720, guid: 0a23a22b69a5cf441801a0205846b19e, type: 3}
   canGiveMaxAmmo: 1
-  enemyPrefab: {fileID: 7791680660320909169, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
+  enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 9034420200080744866}
   enemySpawnChance: 15
   model: {fileID: 5855259565331375741}

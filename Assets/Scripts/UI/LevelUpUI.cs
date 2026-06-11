@@ -306,7 +306,7 @@ public class LevelUpUI : MonoBehaviour
                 break;
 
             case upgradeType.Jumps:
-                playerStats.modJumps += option.amount;
+                playerStats.modJumps += (int)option.amount;
                 break;
         }
     }

@@ -60,7 +60,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
 
     private float footstepTimer;
-
+    private StatHandler playerStats;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -103,7 +103,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         Cursor.lockState = CursorLockMode.Locked;
 
         weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
-        playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");
+        playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");        
+        playerStats = playerStatHandler.GetComponent<StatHandler>();        
     }
 
     void Update()
@@ -127,10 +128,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
+
         if (playerStatHandler == null)
         {
             return;
         }
+
+        StartCoroutine(FlashDamage());
+
 
         StatHandler stats = playerStatHandler.GetComponent<StatHandler>();
 
@@ -156,6 +161,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             gameManager.instance.youLose();
         }
+
     }
 
     void OnEnable()
@@ -346,6 +352,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     public int jumpCount;
     public bool canJump;
 
+
     private void HandleJumping()
     {
         if (jumpCount >= jumpMax)
@@ -357,6 +364,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             canJump = true;
             jumpCount = 0;
+            jumpMax = playerStats.modJumps;
         }
 
         if (JumpTriggered)
@@ -388,6 +396,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     public void OnJumpCanceled(InputAction.CallbackContext context)
     {
         JumpTriggered = false;
+        
 
         if (turnOnDebug)
         {
@@ -669,5 +678,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 gameManager.instance.isSprinting = false;
             }
         }
+    }
+
+    IEnumerator FlashDamage()
+    {
+        gameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerDamageFlash.SetActive(false);
     }
 }
