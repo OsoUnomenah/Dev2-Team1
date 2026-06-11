@@ -14,7 +14,7 @@ public class ZoneTrigger : MonoBehaviour
         {
             triggered = true;
 
-            zombieSpawner.SpawnZombies();
+            zombieSpawner.TriggerSpawn();
             gameManager.instance.NextZone();
         }
     }
