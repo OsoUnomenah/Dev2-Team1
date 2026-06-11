@@ -119,7 +119,13 @@ public class StatHandler : MonoBehaviour, IDamage
         
     }
 
-   
+   public void Heal(float amount)
+    {
+        currentHealth += amount;
+
+        if (currentHealth >  maxHealth)
+            currentHealth = maxHealth;
+    }
 
 }
 

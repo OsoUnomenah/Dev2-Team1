@@ -365,6 +365,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             canJump = true;
             jumpCount = 0;
             jumpMax = playerStats.modJumps;
+            currentMovement.y = 0;
         }
 
         if (JumpTriggered)

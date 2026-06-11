@@ -8,6 +8,7 @@ public class gameManager : MonoBehaviour
     public static gameManager instance;
 
     [SerializeField] public bool gameDebug;
+    public TMP_Text objectiveText;
 
     [Header ("XP Config")]
     public Slider xpBar;
@@ -55,6 +56,7 @@ public class gameManager : MonoBehaviour
     public GameObject playerStatHandler;
 
     float timeScaleOrig;
+    
 
     int gameGoalCount;
 
@@ -62,6 +64,7 @@ public class gameManager : MonoBehaviour
     public bool canShoot;
     public bool isReloading;
     public int enemyDamageOut;
+    public int playerDamageOut;
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
@@ -84,17 +87,19 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //Objective text update
+        objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
+
         //XP requirement is based on the player's current level
         xpToNextLevel = 10 + (level * 10);
-
-
 
         //Update XP text only if the text reference exists
         //XP is no longer gained over time here. XP should come from addXp()
         //Which is called when enemies die or when another reward gives XP
         if (xpText != null)
         {
-            xpText.text = "LVL: " + level + " XP: " + currentXP + " / " + xpToNextLevel;
+            xpText.text = "LVL: " + level + " XP: " + (int)currentXP + " / " + xpToNextLevel;
         }
 
 
@@ -109,6 +114,7 @@ public class gameManager : MonoBehaviour
         {
             xpBar.value = currentXP / xpToNextLevel;
         }
+
         if (isReloading)
         {
             Reload.SetActive(true);
@@ -119,6 +125,23 @@ public class gameManager : MonoBehaviour
             Reload.SetActive(false);
         }
 
+        PassiveXP();
+    }
+
+    private void PassiveXP()
+    {
+        if (!LevelUpUI.Instance.isChoosing)
+        {
+            currentXP += xpGain;
+            //Handles leveling up when enough XP is gained
+            while (currentXP >= xpToNextLevel)
+            {
+                currentXP -= xpToNextLevel;
+                levelUp();
+
+                xpToNextLevel = 10 + (level * 10);
+            }
+        }
     }
 
     public void PauseGame()
@@ -158,14 +181,7 @@ public class gameManager : MonoBehaviour
             xpBoostText.SetText(" + " + amount + " XP");
         }
 
-        //Handles leveling up when enough XP is gained
-        while (currentXP >= xpToNextLevel)
-        {
-            currentXP -= xpToNextLevel;
-            levelUp();
-
-            xpToNextLevel = 10 + (level * 10);
-        }
+        
 
     }
     public void levelUp()
@@ -235,10 +251,7 @@ public class gameManager : MonoBehaviour
             menuActive = menuPause;
             menuActive.SetActive(true);
         }
-        //else if (menuActive == menuPause)
-        //{
-        //    stateUnpause();
-        //}
+        
     }
 
     public void settings()
