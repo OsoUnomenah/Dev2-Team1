@@ -296,7 +296,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
 
         if (timer < 0)
         {
-            phasePicker = Random.Range(1, 2);
+            phasePicker = Random.Range(1, 3);
         }
 
         switch (phasePicker)
