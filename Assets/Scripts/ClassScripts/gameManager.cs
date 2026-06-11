@@ -56,6 +56,7 @@ public class gameManager : MonoBehaviour
     public GameObject playerStatHandler;
 
     float timeScaleOrig;
+    
 
     int gameGoalCount;
 
@@ -88,7 +89,7 @@ public class gameManager : MonoBehaviour
     {
 
         //Objective text update
-        objectiveText.text = "Objective: Body Count (Enemies Remaining: " + gameGoalCount + " )";
+        objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
 
         //XP requirement is based on the player's current level
         xpToNextLevel = 10 + (level * 10);
@@ -98,7 +99,7 @@ public class gameManager : MonoBehaviour
         //Which is called when enemies die or when another reward gives XP
         if (xpText != null)
         {
-            xpText.text = "LVL: " + level + " XP: " + currentXP + " / " + xpToNextLevel;
+            xpText.text = "LVL: " + level + " XP: " + (int)currentXP + " / " + xpToNextLevel;
         }
 
 
@@ -124,6 +125,23 @@ public class gameManager : MonoBehaviour
             Reload.SetActive(false);
         }
 
+        PassiveXP();
+    }
+
+    private void PassiveXP()
+    {
+        if (!LevelUpUI.Instance.isChoosing)
+        {
+            currentXP += xpGain;
+            //Handles leveling up when enough XP is gained
+            while (currentXP >= xpToNextLevel)
+            {
+                currentXP -= xpToNextLevel;
+                levelUp();
+
+                xpToNextLevel = 10 + (level * 10);
+            }
+        }
     }
 
     public void PauseGame()
@@ -163,14 +181,7 @@ public class gameManager : MonoBehaviour
             xpBoostText.SetText(" + " + amount + " XP");
         }
 
-        //Handles leveling up when enough XP is gained
-        while (currentXP >= xpToNextLevel)
-        {
-            currentXP -= xpToNextLevel;
-            levelUp();
-
-            xpToNextLevel = 10 + (level * 10);
-        }
+        
 
     }
     public void levelUp()

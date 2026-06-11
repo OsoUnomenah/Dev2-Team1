@@ -283,22 +283,29 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
 
     private void Attack()
     {
-        if (!PlayerInTrigger)
-        {
-            Rest();
-        }
-        else if(timer == -100)
-        {
-            timer = Random.Range(1, 3000); //1200
-        }
+        //if (!PlayerInTrigger)
+        //{
+        //    Rest();
+        //}
+        //else if(timer == -100)
+        //{
+        //    timer = Random.Range(1, 3000); //1200
+        //}
 
-        timer -= 1;
+        //timer -= 1;
 
-        if (timer < 0)
+        //if (timer < 0)
+        //{
+        //    phasePicker = Random.Range(1, 3);
+        //}
+        if(phasePicker < 2)
         {
-            phasePicker = Random.Range(1, 3);
+            phasePicker = 2;
         }
-
+        else
+        {
+            phasePicker = 1;
+        }
         switch (phasePicker)
         {
             case 0:

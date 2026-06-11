@@ -45,7 +45,7 @@ public class turretTrap : MonoBehaviour, IDamage
     void Start()
     {
         HP = maxHP;
-        gameManager.instance.updateGameGoal(1);
+       // gameManager.instance.updateGameGoal(1);
         originalColor = model.material.color;
     }
 
@@ -128,7 +128,7 @@ public class turretTrap : MonoBehaviour, IDamage
         if (HP <= 0)
         {
             gameManager.instance.addXp(xpGive);
-            gameManager.instance.updateGameGoal(-1);
+            //gameManager.instance.updateGameGoal(-1);
             Destroy(gameObject);
         }
         else

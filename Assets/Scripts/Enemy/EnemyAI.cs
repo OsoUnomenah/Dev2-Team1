@@ -73,7 +73,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
         currentState = ZombieState.Wander;
         wanderTime = wanderTimer;
-        gameManager.instance.updateGameGoal(1);
+       // gameManager.instance.updateGameGoal(1);
 
 
     }
@@ -216,7 +216,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
 
-            gameManager.instance.updateGameGoal(-1);
+            //gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
             TempUI.OffHover();
             Destroy(gameObject);

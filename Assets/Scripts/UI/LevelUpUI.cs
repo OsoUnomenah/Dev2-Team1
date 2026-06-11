@@ -7,6 +7,7 @@ public class LevelUpUI : MonoBehaviour
    
    public static LevelUpUI Instance;
 
+
     private enum upgradeType
     {
         Damage,
@@ -55,7 +56,7 @@ public class LevelUpUI : MonoBehaviour
     private UpgradeOption[] currentOptions = new UpgradeOption[3];
     private Coroutine countdownRoutine;
     private float originalTimeScale;
-    private bool isChoosing;
+    public bool isChoosing;
     private bool wasHiddenbyPause;
     private bool timerPaused;
 
