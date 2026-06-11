@@ -14,6 +14,7 @@ TagManager:
   - PlayerStatHandler
   - EnemyStatHandler
   - WeaponPickUp
+  - BossGun
   layers:
   - Default
   - TransparentFX
