@@ -140,6 +140,8 @@ public class BoxMover : MonoBehaviour, IInteract
     private IEnumerator MoveOnRail()
     {
         isMoving = true;
+        onHoverLight.color = Color.orange;
+        buttonRender.material.color = Color.orange;
 
         if (magnet.position.x <= magnetStartingPosition.x)
         {
@@ -160,6 +162,8 @@ public class BoxMover : MonoBehaviour, IInteract
         }
 
         isMoving = false;
+        onHoverLight.color = Color.green;
+        buttonRender.material.color = Color.green;
     }
 
     public void OnHoverEnter()
