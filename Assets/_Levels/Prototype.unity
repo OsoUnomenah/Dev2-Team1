@@ -137140,7 +137140,7 @@ PrefabInstance:
       objectReference: {fileID: 445666405}
     - target: {fileID: 3653939925578357764, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
       propertyPath: maxHealth
-      value: 99999
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 3653939925578357764, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
       propertyPath: shootRate
@@ -218107,6 +218107,7 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1406203609}
   - {fileID: 1005480567}
   - {fileID: 172557539}
   - {fileID: 745766751}
@@ -218128,7 +218129,6 @@ SceneRoots:
   - {fileID: 1069457668}
   - {fileID: 807352175}
   - {fileID: 160086066}
-  - {fileID: 1406203609}
   - {fileID: 996389375}
   - {fileID: 1331171030}
   - {fileID: 1798980318}

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class gameManager : MonoBehaviour
 {
@@ -130,7 +131,7 @@ public class gameManager : MonoBehaviour
 
     private void PassiveXP()
     {
-        if (!LevelUpUI.Instance.isChoosing)
+        if (!LevelUpUI.Instance.isChoosing && !gameManager.instance.isPaused)
         {
             currentXP += xpGain;
             //Handles leveling up when enough XP is gained

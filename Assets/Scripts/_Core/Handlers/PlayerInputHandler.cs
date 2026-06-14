@@ -151,6 +151,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         int finalDamage = Mathf.Max(1, amount - defenseBonus);
 
         stats.currentHealth -= finalDamage;
+        stats.UpdatePlayerHealthBarUI();
 
         if (turnOnDebug)
         {

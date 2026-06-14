@@ -181,7 +181,7 @@ public class LevelUpUI : MonoBehaviour
             UpgradeUI.instance.UpdateUpgradeText();
             UpgradeUI.instance.ShowUpgradeNotification(currentOptions[optionIndex].rarity + " " + currentOptions[optionIndex].upgradeType + " +" + currentOptions[optionIndex].amount);
         }
-
+        playerStats.UpdatePlayerHealthBarUI();
         CloseLevelUpPanel();
     }
 

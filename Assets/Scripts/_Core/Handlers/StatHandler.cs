@@ -47,10 +47,12 @@ public class StatHandler : MonoBehaviour, IDamage
     {
         maxHealth = health + modHealth;
         currentHealth = maxHealth;
+        UpdatePlayerHealthBarUI();
 
         maxStamina = stamina + modStamina;
         currentStamina = maxStamina;
         sprintCost = gameManager.instance.sprintCost;
+        UpdatePlayerStaminaBarUI();
 
         currentDamage = damage + modDamage;
         modJumps = 1;
@@ -58,17 +60,23 @@ public class StatHandler : MonoBehaviour, IDamage
 
     // Update is called once per frame
     void Update()
-    {
-        healthText.text = " HP: "+ currentHealth + " / " + maxHealth;
-        healthBar.value = (float)currentHealth / (float)maxHealth;
-
-        staminaText.text = " STM: " + Mathf.CeilToInt(currentStamina) + " / " + Mathf.CeilToInt(maxStamina);
-        staminaBar.value = (float)currentStamina / (float)maxStamina;
-        
+    {   
         currentDamage = damage + modDamage;
         
         HandleSprint();
 
+    }
+
+    public void UpdatePlayerStaminaBarUI()
+    {
+        staminaText.text = " STM: " + Mathf.CeilToInt(currentStamina) + " / " + Mathf.CeilToInt(maxStamina);
+        staminaBar.value = (float)currentStamina / (float)maxStamina;
+    }
+
+    public void UpdatePlayerHealthBarUI()
+    {
+        healthText.text = " HP: " + currentHealth + " / " + maxHealth;
+        healthBar.value = (float)currentHealth / (float)maxHealth;
     }
 
     public void HandleSprint()
@@ -102,6 +110,7 @@ public class StatHandler : MonoBehaviour, IDamage
             
             }
         }
+        UpdatePlayerStaminaBarUI();
     }
 
 
@@ -116,7 +125,8 @@ public class StatHandler : MonoBehaviour, IDamage
     public void takeDamage(int amount)
     {
         currentHealth += amount;
-        
+        UpdatePlayerHealthBarUI();
+
     }
 
    public void Heal(float amount)
@@ -125,6 +135,8 @@ public class StatHandler : MonoBehaviour, IDamage
 
         if (currentHealth >  maxHealth)
             currentHealth = maxHealth;
+        UpdatePlayerHealthBarUI();
+
     }
 
 }
