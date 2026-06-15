@@ -36,10 +36,11 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
     [SerializeField] public GameObject playerDamageFlash;
+    [SerializeField] public GameObject playerHealFlash;
+
     [SerializeField] public GameObject Reload;
     [SerializeField] public float reloadTime;
     [SerializeField] public float reloadMax;
-    [SerializeField] GameObject playerInputHandler;
     [SerializeField] public TextMeshProUGUI interactText;
     public bool isPaused;
     public bool isLevelingUp;
@@ -48,22 +49,23 @@ public class gameManager : MonoBehaviour
     public bool SprintTriggered;
     public bool canSprint;
     public bool isSprinting;
-
     public int sprintCost;
 
-    [Header("Player Config")]
-    public GameObject player;
-    public GameObject playerController;
-    public GameObject playerStatHandler;
+    [Header("Player References")]
+    [SerializeField] public GameObject player;
+    [SerializeField] public Camera playerCamera;
+    [SerializeField] public CharacterController characterController;
+    [SerializeField] public PlayerInputHandler playerInputHandler;
+    [SerializeField] public StatHandler playerStatHandler;
+    [SerializeField] public PlayerWeaponManager playerWeaponManager;
 
     float timeScaleOrig;
-    
-
     int gameGoalCount;
 
     public float recoil;
     public bool canShoot;
     public bool isReloading;
+    public bool isAiming;
     public int enemyDamageOut;
     public int playerDamageOut;
 
@@ -79,19 +81,26 @@ public class gameManager : MonoBehaviour
     {
         instance = this;
         timeScaleOrig = Time.timeScale;
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerInputHandler = GameObject.FindGameObjectWithTag("PlayerInputHandler");
-        playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");
-        
-    }
 
+        player = GameObject.FindGameObjectWithTag("Player");
+        characterController = player.GetComponentInChildren<CharacterController>();
+        playerInputHandler = player.GetComponentInChildren<PlayerInputHandler>();
+        playerStatHandler = player.GetComponentInChildren<StatHandler>();
+        playerWeaponManager = player.GetComponentInChildren<PlayerWeaponManager>();
+        playerCamera = player.GetComponentInChildren<Camera>();
+        
+        UpdateXPUI();
+
+    }
+    
     // Update is called once per frame
     void Update()
     {
+        PassiveXP();
+    }
 
-        //Objective text update
-        objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
-
+    private void UpdateXPUI()
+    {
         //XP requirement is based on the player's current level
         xpToNextLevel = 10 + (level * 10);
 
@@ -102,7 +111,6 @@ public class gameManager : MonoBehaviour
         {
             xpText.text = "LVL: " + level + " XP: " + (int)currentXP + " / " + xpToNextLevel;
         }
-
 
         //Clear the XP boost text by default
         if (xpBoostText != null)
@@ -115,18 +123,6 @@ public class gameManager : MonoBehaviour
         {
             xpBar.value = currentXP / xpToNextLevel;
         }
-
-        if (isReloading)
-        {
-            Reload.SetActive(true);
-            reloadBar.value = reloadTime / reloadMax;
-        }
-        else
-        {
-            Reload.SetActive(false);
-        }
-
-        PassiveXP();
     }
 
     private void PassiveXP()
@@ -134,6 +130,7 @@ public class gameManager : MonoBehaviour
         if (!LevelUpUI.Instance.isChoosing && !gameManager.instance.isPaused)
         {
             currentXP += xpGain;
+            UpdateXPUI();   
             //Handles leveling up when enough XP is gained
             while (currentXP >= xpToNextLevel)
             {
@@ -174,16 +171,8 @@ public class gameManager : MonoBehaviour
     public void addXp(int amount)
     {
         
-        currentXP += amount;
-
-        //Show how much XP was just earned
-        if (xpBoostText != null)
-        {
-            xpBoostText.SetText(" + " + amount + " XP");
-        }
-
-        
-
+        currentXP += amount;        
+        UpdateXPUI();
     }
     public void levelUp()
     {
@@ -223,10 +212,17 @@ public class gameManager : MonoBehaviour
         menuActive = null;
     }
 
+    private void UpdateObjectiveTextUI()
+    {
+        //Objective text update
+        objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
+    }
+
     public void updateGameGoal(int amount)
     {
         //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
+        UpdateObjectiveTextUI();
         if (gameGoalCount <= 0)
         {
             gameManager.instance.statePause();

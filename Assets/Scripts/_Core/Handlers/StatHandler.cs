@@ -1,8 +1,7 @@
-using System.Xml.XPath;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using JetBrains.Annotations;
+using System.Collections;
 
 public class StatHandler : MonoBehaviour, IDamage
 {
@@ -81,9 +80,10 @@ public class StatHandler : MonoBehaviour, IDamage
 
     public void HandleSprint()
     {
-
-
-        if (gameManager.instance.SprintTriggered && !gameManager.instance.isSprinting)
+        if (gameManager.instance.SprintTriggered 
+            && !gameManager.instance.isSprinting 
+            && gameManager.instance.characterController.isGrounded 
+            && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
             currentStamina -= gameManager.instance.sprintCost;
             gameManager.instance.isSprinting = true;
@@ -114,7 +114,7 @@ public class StatHandler : MonoBehaviour, IDamage
     }
 
 
-            public int EnemyAttack()
+    public int EnemyAttack()
     {
         gameManager.instance.enemyDamageOut = (int)currentDamage;
         return (int)currentDamage;
@@ -122,21 +122,56 @@ public class StatHandler : MonoBehaviour, IDamage
 
 
 
+
     public void takeDamage(int amount)
     {
-        currentHealth += amount;
-        UpdatePlayerHealthBarUI();
+        StartCoroutine(FlashDamage());
+
+        StatHandler stats = gameManager.instance.playerStatHandler;
+
+        int defenseBonus = Mathf.RoundToInt(stats.modDefense);
+
+        // Defense reduces incoming damage.
+        // Minimum damage is 1 so enemies can still hurt the player.
+        int finalDamage = Mathf.Max(1, amount - defenseBonus);
+
+        stats.currentHealth -= Mathf.Clamp(finalDamage, 0, maxHealth);
+        stats.UpdatePlayerHealthBarUI();
+
+        if (gameManager.instance.gameDebug)
+        {
+            Debug.Log("Enemy Damage: " + amount + " - Defense: " + defenseBonus + " = " + finalDamage);
+        }
+
+        if (stats.currentHealth <= 0)
+        {
+            gameManager.instance.youLose();
+        }
+
 
     }
 
-   public void Heal(float amount)
+    public void Heal(float amount)
     {
         currentHealth += amount;
-
+        StartCoroutine(FlashHeal());
         if (currentHealth >  maxHealth)
             currentHealth = maxHealth;
         UpdatePlayerHealthBarUI();
 
+    }
+    IEnumerator FlashDamage()
+    {
+        gameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerDamageFlash.SetActive(false);
+    }
+
+    IEnumerator FlashHeal()
+    {
+        gameManager.instance.playerHealFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerHealFlash.SetActive(false);
     }
 
 }

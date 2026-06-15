@@ -80,7 +80,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
 
     private void Update()
     {
-        updateHealthBar();
+        
         if (currentState == ZombieState.Dead)
             return;
         if (player == null)
@@ -165,7 +165,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
 
             Debug.Log("Zombie Attack");
 
-            IDamage damageable = player.GetComponentInChildren<IDamage>();
+            IDamage damageable = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
 
             if (damageable != null)
             {
@@ -203,10 +203,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
         StartCoroutine(updateDamageText());
 
         currentHealth -= amount;
-
-        
-        
-
+        updateHealthBar();
 
         if (currentHealth <= 0)
         {

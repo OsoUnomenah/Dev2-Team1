@@ -670,6 +670,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: walkSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: sprintSpeed
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
