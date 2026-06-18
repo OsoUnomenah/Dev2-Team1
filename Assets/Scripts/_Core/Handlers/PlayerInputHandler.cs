@@ -556,6 +556,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             {
                 gameManager.instance.playerWeaponManager.Ammo = gameManager.instance.playerWeaponManager.MaxAmmo;
                 gameManager.instance.isReloading = false;
+                isReloading = false;
+                gameManager.instance.Reload.SetActive(false);
                 reloadTimer = 0;
                 gameManager.instance.canShoot = true;
 
