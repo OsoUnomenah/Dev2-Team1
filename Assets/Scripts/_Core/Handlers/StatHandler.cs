@@ -36,11 +36,7 @@ public class StatHandler : MonoBehaviour, IDamage
 
     [Header("Events")]
     public GameEvent GE_OnPlayerHealthChanged;
-
-    public Slider staminaBar;
-    public TMP_Text staminaText;
-
-
+    public GameEvent GE_OnPlayerStaminaChanged;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -77,14 +73,9 @@ public class StatHandler : MonoBehaviour, IDamage
         maxStamina = stamina + modStamina;
         currentStamina = maxStamina;
         sprintCost = gameManager.instance.sprintCost;
-        UpdatePlayerStaminaBarUI();
+        GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
-    public void UpdatePlayerStaminaBarUI()
-    {
-        staminaText.text = " STM: " + Mathf.CeilToInt(currentStamina) + " / " + Mathf.CeilToInt(maxStamina);
-        staminaBar.value = (float)currentStamina / (float)maxStamina;
-    }
-
+    
     public void HandleSprint()
     {
         if (gameManager.instance.SprintTriggered 
@@ -100,6 +91,8 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += -sprintLoss;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
             if (currentStamina <= 0)
             {
                 gameManager.instance.SprintTriggered = false;
@@ -111,13 +104,15 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += sprintGain;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
             if (currentStamina >= maxStamina)
             {
              gameManager.instance.canSprint = true;
             
             }
         }
-        UpdatePlayerStaminaBarUI();
+        GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
 
 

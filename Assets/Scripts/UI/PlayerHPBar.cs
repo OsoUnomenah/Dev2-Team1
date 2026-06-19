@@ -17,11 +17,6 @@ public class PlayerHPBar : MonoBehaviour
        
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void InitHealth()
     {

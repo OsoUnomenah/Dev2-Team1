@@ -124,8 +124,9 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //remove comment if you want to enable passive xpGain. change xpGain value in inspector to adjust rate.
-        //PassiveXP();
+        //change xpGain value in inspector to adjust rate.
+        //Need to be in update for level function until refactored to be event based instead of update based.
+        PassiveXP();
     }
 
     private void UpdateXPUI()
