@@ -37,6 +37,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private int currentWeaponIndex = -1;
     [SerializeField] private int maxWeaponSlots = 4;
 
+    public int CurrentWeaponIndex => currentWeaponIndex;
+    public int WeaponCount => weaponInventory.Count;   
+    public int MaxWeaponSlots => maxWeaponSlots;
+
     //Ability Settings
     public int fireLevel;
     public int freezeLevel;
@@ -181,6 +185,16 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             UpgradeUI.instance.ShowUpgradeNotification("Equipped " + weapon.weaponName);
         }
+    }
+
+    public string GetWeaponNameAtSlot(int index)
+    {
+        if (index < 0 || index >= weaponInventory.Count)
+        {
+            return "Empty";
+        }
+
+        return weaponInventory[index].weaponName;
     }
 
     private void SwitchWeapon(int direction)
