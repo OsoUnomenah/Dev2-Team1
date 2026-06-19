@@ -34,7 +34,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [Header("Enemy Trap Settings")]
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform enemySpawnPoint;
-    [SerializeField] float enemySpawnChance;
+    [Range(0f, 100f)] [SerializeField] float enemySpawnChance;
 
     [Header("Weapon Drop Settings")]
     [SerializeField] private Transform weaponDropPoint;

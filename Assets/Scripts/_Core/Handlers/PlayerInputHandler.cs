@@ -459,7 +459,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             gameManager.instance.playerWeaponManager.Ammo--;
 
             RaycastHit hit;
-            if (Physics.Raycast(gameManager.instance.playerCamera.transform.position, gameManager.instance.playerCamera.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
             {
                 Debug.Log(hit.collider.name);
 
@@ -525,8 +525,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
+    //this is now a Ability button instead of ADS
+
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
+       // switch (gameManager.instance.playerWeaponManager)
+
+
         gameManager.instance.isAiming = true;
         if (gameManager.instance.gameDebug)
         {
@@ -534,6 +539,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
+    //this is now a Ability button instead of ADS
     private void OnADSCanceled(InputAction.CallbackContext context)
     {
         gameManager.instance.isAiming = false;
@@ -639,7 +645,5 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             }
         }
     }
-
-
     
 }

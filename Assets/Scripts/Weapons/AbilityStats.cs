@@ -8,6 +8,7 @@ public class AbilityStats : ScriptableObject
 
     [Range (1,4)] public int abilityType;
 
+
     [Range(1, 4)] public int shootDistance;
     [Range(1, 50)] public float shootCooldown;
     [Range(1, 50)] public float effectTimer;

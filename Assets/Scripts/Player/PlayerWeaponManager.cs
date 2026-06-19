@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
@@ -50,10 +51,21 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
-
+    
+    //Ability Stuff
     [SerializeField] GameObject abilityModel;
     public ParticleSystem effect;
     [SerializeField] public Transform effectSocket;
+    [Header("Weapon Inventory")]
+    [SerializeField] private List<InventoryWeapon> weaponInventory = new List<InventoryWeapon>();
+    [SerializeField] private int currentWeaponIndex = -1;
+    [SerializeField] private int maxWeaponSlots = 4;
+
+    public int CurrentWeaponIndex => currentWeaponIndex;
+    public int WeaponCount => weaponInventory.Count;
+    public int MaxWeaponSlots => maxWeaponSlots;
+
+    int abilityListPos;
 
     //CameraController cameraCon;
 
@@ -72,6 +84,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     void Update()
     {
         HandleWeaponSwitchInput();
+        abilitySwitch();
     }
 
     public bool AddWeaponToInventory(
@@ -231,23 +244,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             SwitchWeapon(-1);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            EquipWeaponFromInventory(0);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            EquipWeaponFromInventory(1);
-        }
-
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             EquipWeaponFromInventory(2);
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
             EquipWeaponFromInventory(3);
         }
     }
@@ -286,26 +290,84 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         switch(stats.abilityType)
         {
             case 1:
+                    firePos = abilities.Count - 1;
+                abilityEquip(abilities[firePos]);
                 fireLevel += stats.level;
                 break;
             case 2:
+                {
+                    firstTimePickup(stats);
+                    freezePos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[freezePos]);
                 freezeLevel += stats.level;
                 break;
             case 3:
+                if (bounceLevel == 0)
+                {
+                    firstTimePickup(stats);
+                    bouncePos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[bouncePos]);
                 bounceLevel += stats.level;
                 break;
             case 4:
+                if (zoomLevel == 0)
+                {
+                    firstTimePickup(stats);
+                    zoomPos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[zoomPos]);
                 zoomLevel += stats.level;
                 break;
         }
-        abilityModel.GetComponent<MeshFilter>().sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
-        abilityModel.GetComponent<MeshRenderer>().sharedMaterial = stats.model.GetComponent <MeshRenderer>().sharedMaterial;
-        effect = stats.loopedEffect;
-        
+       
+    }
 
-        effect = Instantiate(stats.loopedEffect, effectSocket);
-        effect.transform.localPosition = Vector3.zero;
-        effect.transform.localRotation = Quaternion.identity;
+    void firstTimePickup(AbilityStats stats)
+    {
+        abilities.Add(stats);
+        
+        abilityListPos = abilities.Count - 1;        
+    }
+
+    void abilityEquip(AbilityStats stats)
+    {
+        abilityModel.GetComponent<MeshFilter>().sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
+        abilityModel.GetComponent<MeshRenderer>().sharedMaterial = stats.model.GetComponent<MeshRenderer>().sharedMaterial;
+        effect = stats.loopedEffect;
+
+        if (activeEffect != null)
+        {
+            Destroy(activeEffect.gameObject);
+        }
+        effect = stats.loopedEffect;
+
+        activeEffect = Instantiate(effect, effectSocket);
+        activeEffect.transform.localPosition = Vector3.zero;
+        activeEffect.transform.localRotation = Quaternion.identity;
+    }
+    void abilitySwitch()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            abilityEquip(abilities[firePos]);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            abilityEquip(abilities[freezePos]);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            abilityEquip(abilities[bouncePos]);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            abilityEquip(abilities[zoomPos]);
+        }
     }
 }
 
