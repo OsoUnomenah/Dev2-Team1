@@ -49,6 +49,10 @@ PrefabInstance:
       value: 2.75
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: weaponName
+      value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponPrefab
       value: 
       objectReference: {fileID: 1315392376950004720, guid: 0a23a22b69a5cf441801a0205846b19e, type: 3}
