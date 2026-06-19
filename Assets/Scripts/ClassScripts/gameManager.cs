@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.UI;
-using UnityEngine;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
@@ -69,6 +70,8 @@ public class gameManager : MonoBehaviour
     public int enemyDamageOut;
     public int playerDamageOut;
 
+    private Coroutine xpBoostRoutine;
+
     [Header("Roguelite Run Config")]
     public int runZone = 1;
     
@@ -96,7 +99,7 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PassiveXP();
+        //PassiveXP(); //no passive xp
     }
 
     private void UpdateXPUI()
@@ -113,10 +116,10 @@ public class gameManager : MonoBehaviour
         }
 
         //Clear the XP boost text by default
-        if (xpBoostText != null)
-        {
-            xpBoostText.text = "";
-        }
+        //if (xpBoostText != null)
+       // {
+       //     xpBoostText.text = "";
+        //}
 
         //Update XP bar based on current XP progress toward the next level
         if (xpBar != null)
@@ -170,9 +173,39 @@ public class gameManager : MonoBehaviour
 
     public void addXp(int amount)
     {
-        
-        currentXP += amount;        
+
+        currentXP += amount;
+
+        if (xpBoostText != null)
+        {
+            if (xpBoostRoutine != null)
+            {
+                StopCoroutine(xpBoostRoutine);
+            }
+
+            xpBoostRoutine = StartCoroutine(ShowXPBoostText(amount));
+        }
+
+        xpToNextLevel = 10 + (level * 10);
+
+        while (currentXP >= xpToNextLevel)
+        {
+            currentXP -= xpToNextLevel;
+            levelUp();
+
+            xpToNextLevel = 10 + (level * 10);
+        }
+
         UpdateXPUI();
+    }
+
+    private IEnumerator ShowXPBoostText(int amount)
+    {
+        xpBoostText.text = " + " + amount + " XP";
+
+        yield return new WaitForSeconds(2f);
+
+        xpBoostText.text = "";
     }
     public void levelUp()
     {
