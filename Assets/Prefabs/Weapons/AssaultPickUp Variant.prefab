@@ -49,6 +49,10 @@ PrefabInstance:
       value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: weaponName
+      value: Assault Rifle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponPrefab
       value: 
       objectReference: {fileID: 431479469405402423, guid: 2041460b5348f4346a0dd1900c17850b, type: 3}

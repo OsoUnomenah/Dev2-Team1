@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Networking;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -18,19 +19,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
 
-    [Header("References")]
-    [SerializeField] private CharacterController characterController;
-    [SerializeField] private PlayerInputHandler playerInputHandler;
-    [SerializeField] private Camera playerCamera;
-    [SerializeField] private PlayerWeaponManager weaponManager;
-    [SerializeField] private GameObject playerStatHandler;
-
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
+    [Range(3.0f, 20.0f)][SerializeField] private float sprintSpeed = 3.0f;
     [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
-    private Vector3 currentMovement;
-    private float currentSpeed = 0f;
+    public Vector3 currentMovement;
+    public float currentSpeed = 0f;
 
     [Header("Rotation Config")]
     [Range(0.1f, 5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
@@ -50,8 +45,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] public Transform interactorSource;
     [SerializeField] public float interactRange;
     [SerializeField] public LayerMask ignoreSource;
-
-    [SerializeField] public int HP;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
@@ -74,6 +67,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction sprintAction;
     private InputAction interactAction;
     private InputAction shootAction;
+    private InputAction reloadAction;
+    private InputAction adsAction;
     private InputAction pauseAction;
 
     [Header("GlobalVariables")]
@@ -92,76 +87,37 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         sprintAction = playerActions.PlayerInput.Sprint;
 
         interactAction = playerActions.PlayerInput.Interact;
+        
         shootAction = playerActions.PlayerInput.Shoot;
+        reloadAction = playerActions.PlayerInput.Reload;
+        adsAction = playerActions.PlayerInput.ADS;
 
         pauseAction = playerActions.PlayerInput.Pause;
+
     }
 
     void Start()
     {
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
-        playerStatHandler = GameObject.FindGameObjectWithTag("PlayerStatHandler");        
-        playerStats = playerStatHandler.GetComponent<StatHandler>();        
+        Cursor.lockState = CursorLockMode.Locked;   
     }
 
     void Update()
     {
-        if (weaponManager == null)
-        {
-            weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
-            if (weaponManager == null) return;
-        }
-
-        HandleSprintInput();
+       
         HandleMovement();
         HandleRotation();
         ApplyMovement();
         HandleFootsteps();
         HandleJumping();
-        HandleReloadInput();
         ShootTimer();
-        IfReload();
+        HandleReload();
     }
 
     public void takeDamage(int amount)
     {
 
-        if (playerStatHandler == null)
-        {
-            return;
-        }
-
-        StartCoroutine(FlashDamage());
-
-
-        StatHandler stats = playerStatHandler.GetComponent<StatHandler>();
-
-        if (stats == null)
-        {
-            return;
-        }
-
-        int defenseBonus = Mathf.RoundToInt(stats.modDefense);
-
-        // Defense reduces incoming damage.
-        // Minimum damage is 1 so enemies can still hurt the player.
-        int finalDamage = Mathf.Max(1, amount - defenseBonus);
-
-        stats.currentHealth -= finalDamage;
-
-        if (turnOnDebug)
-        {
-            Debug.Log("Enemy Damage: " + amount + " - Defense: " + defenseBonus + " = " + finalDamage);
-        }
-
-        if (stats.currentHealth <= 0)
-        {
-            gameManager.instance.youLose();
-        }
-
+       
     }
 
     void OnEnable()
@@ -185,6 +141,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         shootAction.performed += OnShootPerformed;
         shootAction.canceled += OnShootCanceled;
+        reloadAction.performed += OnReloadPerformed;
+        reloadAction.canceled += OnReloadCanceled;
+        adsAction.performed += OnADSPerformed;
+        adsAction.canceled += OnADSCanceled;
 
         pauseAction.performed += OnPausePerformed;
         pauseAction.canceled += OnPauseCanceled;
@@ -236,8 +196,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         float currentSensitivity = GetCurrentSensitivity();
 
-        float mouseXRotation = playerInputHandler.RotateVector.x * currentSensitivity;
-        float mouseYRotation = playerInputHandler.RotateVector.y * currentSensitivity;
+        float mouseXRotation = RotateVector.x * currentSensitivity;
+        float mouseYRotation = RotateVector.y * currentSensitivity;
 
         ApplyHorizontalRotation(mouseXRotation);
         ApplyVerticalRotation(mouseYRotation);
@@ -264,33 +224,29 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             recoil = Mathf.Lerp(recoil, 0f, Time.deltaTime * 10f);
             verticalRotation = Mathf.Clamp(verticalRotation - mouseYRotation, -verticalViewRange, verticalViewRange);
-            playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
+            gameManager.instance.playerCamera.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
             verticalRotation -= recoil;
         }
     }
 
     private void ApplyHorizontalRotation(float mouseXRotation)
     {
-        characterController.transform.Rotate(0, mouseXRotation, 0);
+        gameManager.instance.characterController.transform.Rotate(0, mouseXRotation, 0);
     }
 
     private void HandleMovement()
     {
         Vector3 worldDirection = CalculateWorldDirection();
 
-        float targetSpeed = gameManager.instance.SprintTriggered
-            ? walkSpeed * sprintMultiplier
-            : walkSpeed;
-
-        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.deltaTime);
-
+        float targetSpeed = gameManager.instance.SprintTriggered ? sprintSpeed * sprintMultiplier : walkSpeed;
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * acceleration);
         currentMovement.x = worldDirection.x * currentSpeed;
         currentMovement.z = worldDirection.z * currentSpeed;
     }
 
     private Vector3 CalculateWorldDirection()
     {
-        Vector3 inputDirection = new Vector3(playerInputHandler.MovementVector.x, 0, playerInputHandler.MovementVector.y);
+        Vector3 inputDirection = new Vector3(MovementVector.x, 0, MovementVector.y);
         Vector3 worldDirection = transform.TransformDirection(inputDirection);
 
         return worldDirection.normalized;
@@ -298,7 +254,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void ApplyMovement()
     {
-        characterController.Move(currentMovement * Time.deltaTime);
+        gameManager.instance.characterController.Move(currentMovement * Time.deltaTime);
     }
 
     private void OnMovementPerformed(InputAction.CallbackContext context)
@@ -360,11 +316,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             canJump = false;
         }
 
-        if (characterController.isGrounded)
+        if (gameManager.instance.characterController.isGrounded)
         {
             canJump = true;
             jumpCount = 0;
-            jumpMax = playerStats.modJumps;
+            jumpMax = gameManager.instance.playerStatHandler.modJumps;
             currentMovement.y = 0;
         }
 
@@ -407,7 +363,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     public void OnSprintPerformed(InputAction.CallbackContext obj)
     {
-        if (gameManager.instance.canSprint)
+        if (gameManager.instance.canSprint && gameManager.instance.characterController.isGrounded)
         {
             gameManager.instance.SprintTriggered = true;
         }
@@ -432,7 +388,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
         Debug.Log("InteractorSource: " + interactorSource);
-        Debug.Log("WeaponManager: " + weaponManager);
+        Debug.Log("WeaponManager: " + gameManager.instance.playerWeaponManager);
 
         RaycastHit hit;
         if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
@@ -448,7 +404,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         Debug.DrawRay(interactorSource.position, interactorSource.forward * interactRange, Color.green);
 
-        if (turnOnDebug)
+        if (gameManager.instance.gameDebug)
         {
             Debug.Log("Interact Started!");
         }
@@ -456,7 +412,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnInteractCanceled(InputAction.CallbackContext context)
     {
-        if (turnOnDebug)
+        if (gameManager.instance.gameDebug)
         {
             Debug.Log("Stopped Interacting!");
         }
@@ -464,7 +420,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
-        if (weaponManager == null || weaponManager.Damage <= 0 || weaponManager.Range <= 0)
+        if (gameManager.instance.playerWeaponManager == null 
+            || gameManager.instance.playerWeaponManager.Damage <= 0 
+            || gameManager.instance.playerWeaponManager.Range <= 0)
         {
             return;
         }
@@ -475,7 +433,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
-        if (weaponManager.Ammo <= 0)
+        if (gameManager.instance.playerWeaponManager.Ammo <= 0)
         {
             
             StartReload();
@@ -498,41 +456,39 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             AudioManager.instance.PlaySound(_shoot);
 
-            weaponManager.Ammo--;
+            gameManager.instance.playerWeaponManager.Ammo--;
 
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreSource))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
             {
                 Debug.Log(hit.collider.name);
 
-                IDamage dmg = hit.collider.GetComponent<IDamage>();
+                IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
 
-                if (dmg != null && weaponManager.Damage != 0)
+                if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                 {
                     int bonusDamage = 0;
 
-                    if (playerStatHandler != null)
-                    {
-                        StatHandler stats = playerStatHandler.GetComponent<StatHandler>();
+                    
+                        StatHandler stats = gameManager.instance.playerStatHandler;
 
                         if (stats != null)
                         {
                             bonusDamage = Mathf.RoundToInt(stats.modDamage);
                         }
-                    }
 
-                    int finalDamage = weaponManager.Damage + bonusDamage;
+                    int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
 
                     dmg.takeDamage(finalDamage);
 
                     if (turnOnDebug)
                     {
-                        Debug.Log("Weapon Damage: " + weaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
+                        Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
                     }
                 }
             }
 
-            if (weaponManager.Ammo <= 0)
+            if (gameManager.instance.playerWeaponManager.Ammo <= 0)
             {
                 StartReload();
             }
@@ -549,22 +505,65 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         // cancel logic for button release if needed
     }
 
+    private void OnReloadPerformed(InputAction.CallbackContext context)
+    {
+        if (reloadTimer < gameManager.instance.playerWeaponManager.AmmoTimer)
+        {
+            gameManager.instance.playerWeaponManager.Ammo = 0;
+            gameManager.instance.isReloading = true;
+            StartReload();
+        }
+       
+    }
+
+    private void OnReloadCanceled(InputAction.CallbackContext context)
+    {
+        if (!gameManager.instance.isReloading)
+        {
+            gameManager.instance.Reload.SetActive(false);
+
+        }
+    }
+
+    //this is now a Ability button instead of ADS
+
+    private void OnADSPerformed(InputAction.CallbackContext context)
+    {
+       // switch (gameManager.instance.playerWeaponManager)
+
+
+        gameManager.instance.isAiming = true;
+        if (gameManager.instance.gameDebug)
+        {
+            Debug.Log("Aiming Down Sights!");
+        }
+    }
+
+    //this is now a Ability button instead of ADS
+    private void OnADSCanceled(InputAction.CallbackContext context)
+    {
+        gameManager.instance.isAiming = false;
+        if (gameManager.instance.gameDebug)
+        {
+            Debug.Log("Stopped Aiming Down Sights!");
+        }
+    }
+
+
+
     private void ShootTimer()
     {
-        if (weaponManager == null)
-        {
-            return;
-        }
-
         if (gameManager.instance.isReloading)
         {            
             reloadTimer += Time.deltaTime;
             gameManager.instance.canShoot = false;
 
-            if (reloadTimer >= weaponManager.AmmoTimer)
+            if (reloadTimer >= gameManager.instance.playerWeaponManager.AmmoTimer)
             {
-                weaponManager.Ammo = weaponManager.MaxAmmo;
+                gameManager.instance.playerWeaponManager.Ammo = gameManager.instance.playerWeaponManager.MaxAmmo;
                 gameManager.instance.isReloading = false;
+                isReloading = false;
+                gameManager.instance.Reload.SetActive(false);
                 reloadTimer = 0;
                 gameManager.instance.canShoot = true;
 
@@ -577,58 +576,48 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         timer += Time.deltaTime;
 
-        if (timer >= weaponManager.Timer)
+        if (timer >= gameManager.instance.playerWeaponManager.Timer)
         {
             gameManager.instance.canShoot = true;
         }
     }
 
-    private void HandleReloadInput()
-    {
-        if (Keyboard.current == null)
-        {
-            return;
-        }
 
-        if(Keyboard.current.rKey.wasPressedThisFrame && reloadTimer < weaponManager.AmmoTimer)
-        {
-            weaponManager.Ammo = 0;
-            gameManager.instance.isReloading = true;
-            StartReload();
-        }
-    }
-
-    private void IfReload()
+    private void HandleReload()
     {
         if (gameManager.instance.isReloading)
         {            
-            gameManager.instance.reloadMax = weaponManager.AmmoTimer;
+            gameManager.instance.reloadMax = gameManager.instance.playerWeaponManager.AmmoTimer;
             gameManager.instance.reloadTime = reloadTimer;
+
+            if (isReloading)
+            {
+                gameManager.instance.Reload.SetActive(true);
+                gameManager.instance.reloadBar.value = gameManager.instance.reloadTime / gameManager.instance.reloadMax;
+            }
+            else
+            {
+                gameManager.instance.Reload.SetActive(false);
+            }
         }
         
     }
     private void StartReload()
     {
-        if (weaponManager == null)
+        
+        if (gameManager.instance.playerWeaponManager.MaxAmmo <= 0)
         {
             return;
         }
-
-        if (weaponManager.MaxAmmo <= 0)
+        if (!isReloading)
         {
-            return;
-        }        
+            gameManager.instance.Reload.SetActive(false);
 
-        if (isReloading)
-        {
-            return;
         }
 
         isReloading = true;
         reloadTimer = 0;
         gameManager.instance.canShoot = false;
-
-        
 
         Debug.Log("Reloading...");
     }
@@ -641,7 +630,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
-        if (characterController.isGrounded)
+        if (gameManager.instance.characterController.isGrounded)
         {
             footstepTimer += Time.deltaTime;
 
@@ -656,35 +645,5 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             }
         }
     }
-
-    private void HandleSprintInput()
-    {
-        if (gameManager.instance == null || sprintAction == null)
-        {
-            return;
-        }
-
-        bool sprintHeld = sprintAction.IsPressed();
-
-        if (sprintHeld && gameManager.instance.canSprint)
-        {
-            gameManager.instance.SprintTriggered = true;
-        }
-        else
-        {
-            gameManager.instance.SprintTriggered = false;
-
-            if (!sprintHeld)
-            {
-                gameManager.instance.isSprinting = false;
-            }
-        }
-    }
-
-    IEnumerator FlashDamage()
-    {
-        gameManager.instance.playerDamageFlash.SetActive(true);
-        yield return new WaitForSeconds(0.1f);
-        gameManager.instance.playerDamageFlash.SetActive(false);
-    }
+    
 }

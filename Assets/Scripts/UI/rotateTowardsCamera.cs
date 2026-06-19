@@ -2,21 +2,21 @@ using UnityEngine;
 
 public class rotateTowardsCamera : MonoBehaviour
 {
-    public Camera mainCamera;
+    public Camera playerCamera;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mainCamera = Camera.main;
+        playerCamera = gameManager.instance.playerCamera;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (mainCamera != null)
+        if (playerCamera != null)
         {
-            transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward, mainCamera.transform.rotation * Vector3.up);
+            transform.LookAt(transform.position + playerCamera.transform.rotation * Vector3.forward, playerCamera.transform.rotation * Vector3.up);
         }
     }
 }

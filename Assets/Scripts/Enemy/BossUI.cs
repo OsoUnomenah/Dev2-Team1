@@ -376,7 +376,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
 
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
-            TempUI.OffHover();
+            RecticleBehaviour.OffHover();
             Destroy(gameObject);
         }
         else
@@ -407,10 +407,10 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
     }
     public void OnHoverEnter()
     {
-        TempUI.OnHover(1);
+        RecticleBehaviour.OnHover(1);
     }
     public void OnHoverExit()
     {
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
     }
 }

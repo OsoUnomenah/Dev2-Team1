@@ -4,6 +4,8 @@ using UnityEngine;
 public class WeaponPickUp : MonoBehaviour, IInteract
 {
     string objectName;
+
+    [SerializeField] private string weaponName;
     
     [SerializeField] Renderer model;
     Material materialOrig;
@@ -40,13 +42,41 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     }    
 
     public void Interact()
-    { 
-        Debug.Log($"Picked up {objectName}");        
+    {
+        Debug.Log($"Picked up {objectName}");
 
-        weaponManager.Equip(weaponType, damage, range, rate, recoil, timer, weaponPrefab, ammo, maxAmmo, ammoTimer);
+        if (weaponManager == null)
+        {
+            weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
+        }
+
+        if (weaponManager == null)
+        {
+            Debug.LogWarning("No PlayerWeaponManager found. Could not pick up weapon.");
+            return;
+        }
+
+        bool pickedUp = weaponManager.AddWeaponToInventory(
+            weaponName,
+            weaponType,
+            damage,
+            range,
+            rate,
+            recoil,
+            timer,
+            weaponPrefab,
+            ammo,
+            maxAmmo,
+            ammoTimer
+        );
+
+        if (!pickedUp)
+        {
+            return;
+        }
 
         gameManager.instance.interactText.gameObject.SetActive(false);
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
         Destroy(gameObject);
     }
 
@@ -54,13 +84,13 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     {
         model.material = highLight;
         gameManager.instance.interactText.gameObject.SetActive(true);
-        TempUI.OnHover(0);
+        RecticleBehaviour.OnHover(0);
     }
 
     public void OnHoverExit()
     {       
         model.material = materialOrig;
         gameManager.instance.interactText.gameObject.SetActive(false);
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
     }
 }
