@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
+using Unity.VisualScripting;
 
 public class gameManager : MonoBehaviour
 {
@@ -59,18 +58,19 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerInputHandler playerInputHandler;
     [SerializeField] public StatHandler playerStatHandler;
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
+    [SerializeField] public Transform playerTransform;
+
 
     float timeScaleOrig;
     int gameGoalCount;
 
     public float recoil;
     public bool canShoot;
+    public bool isShooting;
     public bool isReloading;
     public bool isAiming;
     public int enemyDamageOut;
     public int playerDamageOut;
-
-    private Coroutine xpBoostRoutine;
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
@@ -82,24 +82,50 @@ public class gameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        instance = this;
-        timeScaleOrig = Time.timeScale;
+        InitGM();
+        CacheTimeScale();
+        GetPlayerReferences();
+        UpdateXPUI();
 
+    }
+
+    private void InitGM()
+    {
+        instance = this;
+    }
+
+    private void CacheTimeScale()
+    {
+        timeScaleOrig = Time.timeScale;
+    }
+
+    private void GetPlayerReferences()
+    {
         player = GameObject.FindGameObjectWithTag("Player");
         characterController = player.GetComponentInChildren<CharacterController>();
         playerInputHandler = player.GetComponentInChildren<PlayerInputHandler>();
         playerStatHandler = player.GetComponentInChildren<StatHandler>();
         playerWeaponManager = player.GetComponentInChildren<PlayerWeaponManager>();
         playerCamera = player.GetComponentInChildren<Camera>();
-        
-        UpdateXPUI();
+        playerTransform = player.GetComponent<Transform>();
 
+        if (gameDebug)
+        {
+            Debug.Log("Player: " + player);
+            Debug.Log("CharacterController: " + characterController);
+            Debug.Log("PlayerInputHandler: " + playerInputHandler);
+            Debug.Log("StatHandler: " + playerStatHandler);
+            Debug.Log("PlayerWeaponManager: " + playerWeaponManager);
+            Debug.Log("PlayerCamera: " + playerCamera);
+            Debug.Log("PlayerPosition: " + playerTransform.position);
+        }
     }
-    
+
     // Update is called once per frame
     void Update()
     {
-        //PassiveXP(); //no passive xp
+        //remove comment if you want to enable passive xpGain. change xpGain value in inspector to adjust rate.
+        //PassiveXP();
     }
 
     private void UpdateXPUI()
@@ -116,10 +142,10 @@ public class gameManager : MonoBehaviour
         }
 
         //Clear the XP boost text by default
-        //if (xpBoostText != null)
-       // {
-       //     xpBoostText.text = "";
-        //}
+        if (xpBoostText != null)
+        {
+            xpBoostText.text = "";
+        }
 
         //Update XP bar based on current XP progress toward the next level
         if (xpBar != null)
@@ -133,7 +159,7 @@ public class gameManager : MonoBehaviour
         if (!LevelUpUI.Instance.isChoosing && !gameManager.instance.isPaused)
         {
             currentXP += xpGain;
-            UpdateXPUI();   
+            UpdateXPUI();
             //Handles leveling up when enough XP is gained
             while (currentXP >= xpToNextLevel)
             {
@@ -145,67 +171,11 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    public void PauseGame()
-        {
-        if (menuActive == null)
-        {
-            if (LevelUpUI.Instance != null)
-            {
-                LevelUpUI.Instance.HideForPause();
-            }
-
-            statePause();
-            menuActive = menuPause;
-            menuActive.SetActive(true);
-        }
-        else if (menuActive == menuPause)
-        {
-            stateUnpause();
-
-            if (LevelUpUI.Instance != null)
-            {
-                LevelUpUI.Instance.ShowAfterPause();
-            }
-        }
-    }
-
-    
-
     public void addXp(int amount)
     {
-
-        currentXP += amount;
-
-        if (xpBoostText != null)
-        {
-            if (xpBoostRoutine != null)
-            {
-                StopCoroutine(xpBoostRoutine);
-            }
-
-            xpBoostRoutine = StartCoroutine(ShowXPBoostText(amount));
-        }
-
-        xpToNextLevel = 10 + (level * 10);
-
-        while (currentXP >= xpToNextLevel)
-        {
-            currentXP -= xpToNextLevel;
-            levelUp();
-
-            xpToNextLevel = 10 + (level * 10);
-        }
-
+        
+        currentXP += amount;        
         UpdateXPUI();
-    }
-
-    private IEnumerator ShowXPBoostText(int amount)
-    {
-        xpBoostText.text = " + " + amount + " XP";
-
-        yield return new WaitForSeconds(2f);
-
-        xpBoostText.text = "";
     }
     public void levelUp()
     {
@@ -223,26 +193,6 @@ public class gameManager : MonoBehaviour
             Debug.Log("Gained a Level!");
         }
        
-    }
-
-
-    public void statePause()
-    {
-        isPaused = true;
-        Time.timeScale = 0;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Confined;
-
-    }
-
-    public void stateUnpause()
-    {
-        isPaused = false;
-        Time.timeScale = timeScaleOrig;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        menuActive.SetActive(false);
-        menuActive = null;
     }
 
     private void UpdateObjectiveTextUI()
@@ -265,6 +215,51 @@ public class gameManager : MonoBehaviour
         }
     }
 
+
+    public void PauseGame()
+    {
+        if (menuActive == null)
+        {
+            if (LevelUpUI.Instance != null)
+            {
+                LevelUpUI.Instance.HideForPause();
+            }
+
+            statePause();
+            menuActive = menuPause;
+            menuActive.SetActive(true);
+        }
+        else if (menuActive == menuPause)
+        {
+            stateUnpause();
+
+            if (LevelUpUI.Instance != null)
+            {
+                LevelUpUI.Instance.ShowAfterPause();
+            }
+        }
+    }
+
+    public void statePause()
+    {
+        isPaused = true;
+        Time.timeScale = 0;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+
+    }
+
+    public void stateUnpause()
+    {
+        isPaused = false;
+        Time.timeScale = timeScaleOrig;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        menuActive.SetActive(false);
+        menuActive = null;
+    }
+
+   
     public void youLose()
     {
         statePause();
