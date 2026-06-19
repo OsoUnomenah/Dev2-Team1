@@ -220337,6 +220337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1229ed5b60b17854fba020fa9e3fd9f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelUpUI
+  GE_OnPlayerLevelUP: {fileID: 11400000, guid: b307022d044274d4d921624d63a384dc, type: 2}
   levelUpPanel: {fileID: 9067919632201074310}
   countdownText: {fileID: 2138992229542856577}
   optionButton1: {fileID: 4155000109766264627}
@@ -220345,7 +220346,6 @@ MonoBehaviour:
   optionText1: {fileID: 7414090483390948085}
   optionText2: {fileID: 322217357876122259}
   optionText3: {fileID: 4853557157615271219}
-  playerStats: {fileID: 0}
   slowMotionScale: 0.25
   choiceTime: 10
   isChoosing: 0
@@ -220748,8 +220748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909bddc1b05a2e545aabbf42ddfdcfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HPBar
-  healthbar: {fileID: 0}
-  healthText: {fileID: 0}
+  playerHpBar: {fileID: 1791096551569208230}
+  playerHpBarText: {fileID: 665871558139226259}
   currentHealth: 0
   maxHealth: 0
 --- !u!114 &1791096551569208232
@@ -220768,8 +220768,18 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - {m_Target: {fileID: 1791096551569208231}, m_TargetAssemblyTypeName: PlayerHPBar, Assembly-CSharp, m_MethodName: UpdatePlayerHealthBarUI, m_Mode: 1, m_Arguments: {m_ObjectArgument: {fileID: 0}, m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, m_IntArgument: 0, m_FloatArgument: 0, m_StringArgument: , m_BoolArgument: 0}, m_CallState: 2}
-    m_CallsDirty: 1
+      - m_Target: {fileID: 1791096551569208231}
+        m_TargetAssemblyTypeName: PlayerHPBar, Assembly-CSharp
+        m_MethodName: UpdatePlayerHealthBarUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1791096551569208233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220786,8 +220796,18 @@ MonoBehaviour:
   response:
     m_PersistentCalls:
       m_Calls:
-      - {m_Target: {fileID: 1791096551569208231}, m_TargetAssemblyTypeName: PlayerHPBar, Assembly-CSharp, m_MethodName: UpdatePlayerHealthBarUI, m_Mode: 1, m_Arguments: {m_ObjectArgument: {fileID: 0}, m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, m_IntArgument: 0, m_FloatArgument: 0, m_StringArgument: , m_BoolArgument: 0}, m_CallState: 2}
-    m_CallsDirty: 1
+      - m_Target: {fileID: 1791096551569208231}
+        m_TargetAssemblyTypeName: PlayerHPBar, Assembly-CSharp
+        m_MethodName: UpdatePlayerHealthBarUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1864134642641840886
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -224281,17 +224301,7 @@ MonoBehaviour:
   Ammo: 0
   MaxAmmo: 0
   AmmoTimer: 0
-  weaponInventory: []
-  currentWeaponIndex: -1
-  maxWeaponSlots: 4
-  fireLevel: 0
-  freezeLevel: 0
-  bounceLevel: 0
-  zoomLevel: 0
   weaponHolder: {fileID: 2953726495653083750}
-  abilityModel: {fileID: 0}
-  effect: {fileID: 0}
-  effectSocket: {fileID: 0}
   Modifiers: 
 --- !u!224 &4470863276504610934
 RectTransform:
@@ -226168,8 +226178,7 @@ MonoBehaviour:
   modDefense: 0
   modSpeed: 0
   modJumps: 0
-  healthBar: {fileID: 0}
-  healthText: {fileID: 0}
+  GE_OnPlayerHealthChanged: {fileID: 11400000, guid: 472fbe100f33ae74c910983e954c9259, type: 2}
   staminaBar: {fileID: 3252563653410733601}
   staminaText: {fileID: 3322284485936715304}
 --- !u!222 &5627749707953868243

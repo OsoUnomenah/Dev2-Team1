@@ -215,7 +215,6 @@ public class gameManager : MonoBehaviour
         }
     }
 
-
     public void PauseGame()
     {
         if (menuActive == null)
@@ -259,7 +258,6 @@ public class gameManager : MonoBehaviour
         menuActive = null;
     }
 
-   
     public void youLose()
     {
         statePause();

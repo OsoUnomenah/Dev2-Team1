@@ -1,20 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TempUI : MonoBehaviour
+public class RecticleBehaviour : MonoBehaviour
 {
-    public static TempUI Instance;
+    public static RecticleBehaviour Instance;
     [SerializeField] public Image Reticle;
     [SerializeField] public RectTransform RetSize;
 
     void Awake()
     {
         Instance = this;
-        GameObject r = GameObject.Find("Reticle");
-        if (r != null)
+        GameObject _reticle = GameObject.Find("Reticle");
+        if (_reticle != null)
         {
-            Reticle = r.GetComponent<Image>();
-            RetSize = r.GetComponent<RectTransform>();
+            Reticle = _reticle.GetComponent<Image>();
+            RetSize = _reticle.GetComponent<RectTransform>();
         }
         else
         {
@@ -48,7 +48,7 @@ public class TempUI : MonoBehaviour
 
     public static void OffHover()
     {
-       // TempUI instance = FindFirstObjectByType<TempUI>();
+       
         if (Instance == null || Instance.Reticle == null)
         {
             return;
@@ -63,12 +63,6 @@ public class TempUI : MonoBehaviour
         //eventually this will let us resize and color the retical
         Reticle.color = new Color(255, 255, 255, 255);
         RetSize.sizeDelta = new Vector2(10, 10);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     

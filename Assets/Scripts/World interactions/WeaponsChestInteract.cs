@@ -198,7 +198,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             model.material = highlight;
         }
         gameManager.instance.interactText.gameObject.SetActive(true);
-        TempUI.OnHover(0);
+        RecticleBehaviour.OnHover(0);
 
     }
 
@@ -210,7 +210,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             model.material = materialOg;
         }
         gameManager.instance.interactText.gameObject.SetActive(false);
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
 
     }
 }
