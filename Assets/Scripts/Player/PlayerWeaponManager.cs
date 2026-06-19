@@ -33,15 +33,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int MaxAmmo;
     public float AmmoTimer;
 
-    [Header("Weapon Inventory")]
-    [SerializeField] private List<InventoryWeapon> weaponInventory = new List<InventoryWeapon>();
-    [SerializeField] private int currentWeaponIndex = -1;
-    [SerializeField] private int maxWeaponSlots = 4;
-
-    public int CurrentWeaponIndex => currentWeaponIndex;
-    public int WeaponCount => weaponInventory.Count;   
-    public int MaxWeaponSlots => maxWeaponSlots;
-
     //Ability Settings
     public int fireLevel;
     public int freezeLevel;
@@ -56,6 +47,13 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] GameObject abilityModel;
     public ParticleSystem effect;
     [SerializeField] public Transform effectSocket;
+    private ParticleSystem activeEffect;
+    [SerializeField] public List<AbilityStats> abilities = new List<AbilityStats>();
+    private int firePos;
+    private int freezePos;
+    private int bouncePos;
+    private int zoomPos;
+
     [Header("Weapon Inventory")]
     [SerializeField] private List<InventoryWeapon> weaponInventory = new List<InventoryWeapon>();
     [SerializeField] private int currentWeaponIndex = -1;
@@ -242,18 +240,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         else if (scroll < 0f)
         {
             SwitchWeapon(-1);
-        }
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            EquipWeaponFromInventory(2);
-        }
-            EquipWeaponFromInventory(3);
-        }
+        }                
     }
     public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer)
     {
@@ -287,14 +274,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     public void getStats(AbilityStats stats)
     {
+        
         switch(stats.abilityType)
         {
             case 1:
+                if(fireLevel == 0)
+                {
+                    firstTimePickup(stats);
                     firePos = abilities.Count - 1;
+                }
                 abilityEquip(abilities[firePos]);
                 fireLevel += stats.level;
                 break;
             case 2:
+                if (freezeLevel == 0)
                 {
                     firstTimePickup(stats);
                     freezePos = abilities.Count - 1;
