@@ -459,7 +459,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             gameManager.instance.playerWeaponManager.Ammo--;
 
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
+            if (Physics.Raycast(gameManager.instance.playerCamera.transform.position, gameManager.instance.playerCamera.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
             {
                 Debug.Log(hit.collider.name);
 
@@ -639,5 +639,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             }
         }
     }
+
+
     
 }

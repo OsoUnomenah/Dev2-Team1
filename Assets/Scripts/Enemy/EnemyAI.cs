@@ -215,7 +215,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
 
             //gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
-            TempUI.OffHover();
+            RecticleBehaviour.OffHover();
             Destroy(gameObject);
         }
         else
@@ -247,10 +247,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
     }
     public void OnHoverEnter()
     {
-        TempUI.OnHover(1);
+        RecticleBehaviour.OnHover(1);
     }
     public void OnHoverExit()
     {
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
     }
 }
