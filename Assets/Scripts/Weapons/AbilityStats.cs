@@ -1,0 +1,19 @@
+using UnityEngine;
+
+[CreateAssetMenu]
+public class AbilityStats : ScriptableObject
+{
+    public GameObject model;
+   
+
+    [Range (1,4)] public int abilityType;
+
+    [Range(1, 4)] public int shootDistance;
+    [Range(1, 50)] public float shootCooldown;
+    [Range(1, 50)] public float effectTimer;
+
+    public ParticleSystem loopedEffect;
+
+    [Range(1, 5)] public int level; //amount of upgrades this adds to the ability 
+                                    //gives lower cool down/higher shoot dist/ etc 
+}

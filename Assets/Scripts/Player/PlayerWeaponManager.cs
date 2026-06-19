@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerWeaponManager : MonoBehaviour
+public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 {
     //Weapon Settings
     public bool Type;
@@ -15,8 +15,19 @@ public class PlayerWeaponManager : MonoBehaviour
     public int MaxAmmo;
     public float AmmoTimer;
 
+    //Ability Settings
+    public int fireLevel;
+    public int freezeLevel;
+    public int bounceLevel;
+    public int zoomLevel;
+
+
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
+
+    [SerializeField] GameObject abilityModel;
+    public ParticleSystem effect;
+    [SerializeField] public Transform effectSocket;
 
     //CameraController cameraCon;
 
@@ -64,6 +75,33 @@ public class PlayerWeaponManager : MonoBehaviour
 
         weaponCurrent.transform.localPosition = Vector3.zero;
         weaponCurrent.transform.localRotation = Quaternion.identity;
+    }
+
+    public void getStats(AbilityStats stats)
+    {
+        switch(stats.abilityType)
+        {
+            case 1:
+                fireLevel += stats.level;
+                break;
+            case 2:
+                freezeLevel += stats.level;
+                break;
+            case 3:
+                bounceLevel += stats.level;
+                break;
+            case 4:
+                zoomLevel += stats.level;
+                break;
+        }
+        abilityModel.GetComponent<MeshFilter>().sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
+        abilityModel.GetComponent<MeshRenderer>().sharedMaterial = stats.model.GetComponent <MeshRenderer>().sharedMaterial;
+        effect = stats.loopedEffect;
+        
+
+        effect = Instantiate(stats.loopedEffect, effectSocket);
+        effect.transform.localPosition = Vector3.zero;
+        effect.transform.localRotation = Quaternion.identity;
     }
 }
 
