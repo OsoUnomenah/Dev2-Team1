@@ -59,6 +59,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] public StatHandler playerStatHandler;
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
     [SerializeField] public Transform playerTransform;
+    [SerializeField] public Players playerInteract;
 
 
     float timeScaleOrig;
@@ -108,6 +109,7 @@ public class gameManager : MonoBehaviour
         playerWeaponManager = player.GetComponentInChildren<PlayerWeaponManager>();
         playerCamera = player.GetComponentInChildren<Camera>();
         playerTransform = player.GetComponent<Transform>();
+        playerInteract = player.GetComponent<Players>();
 
         if (gameDebug)
         {

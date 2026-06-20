@@ -71,7 +71,21 @@ MonoBehaviour:
   wanderTimer: 5
   _hit: {fileID: 0}
   _dead: {fileID: 0}
+  bullet: {fileID: 0}
+  gunPivot: {fileID: 0}
+  shootPos: {fileID: 0}
+  shootRate: 0.1
+  gunRotateSpeed: 1
   Modifiers: 
+  gun: {fileID: 0}
+  lava1: {fileID: 0}
+  lava2: {fileID: 0}
+  lava3: {fileID: 0}
+  lava4: {fileID: 0}
+  lava5: {fileID: 0}
+  lava6: {fileID: 0}
+  lava7: {fileID: 0}
+  lava8: {fileID: 0}
 --- !u!23 &8802982114757267920
 MeshRenderer:
   m_ObjectHideFlags: 0

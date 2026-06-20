@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
+using System.Collections.Generic;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -645,5 +646,4 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             }
         }
     }
-    
 }
