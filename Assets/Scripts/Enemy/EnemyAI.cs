@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
+public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -253,4 +253,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
     {
         RecticleBehaviour.OffHover();
     }
+
+  
 }
