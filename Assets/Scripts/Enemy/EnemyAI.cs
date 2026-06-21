@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -196,10 +196,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
     public void takeDamage(int amount)
     {
-        //Set the damage to display on the damage text
         gameManager.instance.playerDamageOut = amount;
-
-        //Show the damage text
         StartCoroutine(updateDamageText());
 
         currentHealth -= amount;
@@ -208,13 +205,20 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         if (currentHealth <= 0)
         {
             currentState = ZombieState.Dead;
+
             if (agent != null)
                 agent.isStopped = true;
 
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
 
-            //gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
+
+            // ✅ NEW: wave system tracking (no Find calls)
+            if (WaveManager.instance != null)
+            {
+                WaveManager.instance.OnEnemyKilled();
+            }
+
             RecticleBehaviour.OffHover();
             Destroy(gameObject);
         }

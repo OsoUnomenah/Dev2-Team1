@@ -17,6 +17,7 @@ TagManager:
   - BossGun
   - PlayerWeaponManager
   - PlayerCamera
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
