@@ -1,13 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 public class WaveManager : MonoBehaviour
 {
     public static WaveManager instance;
 
+    public TMP_Text waveText;
+
     [Header("Wave Settings")]
-    public GameObject[] enemyPrefabs; // multiple enemy types
+    public GameObject[] enemyPrefabs; 
     public float timeBetweenWaves = 5f;
 
     [Header("Scaling")]
