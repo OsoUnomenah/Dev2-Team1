@@ -38,6 +38,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuSettings;
     [SerializeField] public GameObject playerDamageFlash;
     [SerializeField] public GameObject playerHealFlash;
+    [SerializeField] public GameObject checkpointUI;
 
     [SerializeField] public GameObject Reload;
     [SerializeField] public float reloadTime;
@@ -61,6 +62,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
+    [SerializeField] public Transform playerSpawnPoint;
+
 
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
@@ -97,7 +100,13 @@ public class gameManager : MonoBehaviour
         CacheTimeScale();
         GetPlayerReferences();
         UpdateXPUI();
-        abilityUI = FindFirstObjectByType<AbilityUI>();
+        abilityUI = FindAnyObjectByType<AbilityUI>();
+    }
+
+    private void Start()
+    {
+        //set player initial spawn point
+        playerTransform.position = playerSpawnPoint.transform.position;
     }
 
     private void InitGM()
