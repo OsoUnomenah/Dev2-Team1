@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Freeze
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
   model: {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
+  bullet: {fileID: 5054535592068500189, guid: 1350110ce28bd9f4392da3e55d142350, type: 3}
   abilityType: 2
   shootDistance: 4
-  shootCooldown: 20.9
-  effectTimer: 14.8
+  shootCooldown: 7
+  effectTimer: 14
   loopedEffect: {fileID: 1489387594953262563, guid: 0cce6629648d69949b49a98c533c70ee, type: 3}
   level: 1
