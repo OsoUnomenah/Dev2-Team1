@@ -266,7 +266,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         }
 
         gameManager.instance.interactText.gameObject.SetActive(false);
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
         if(WeaponModHoverUI.Instance != null)
         {
             WeaponModHoverUI.Instance.HideInfo();
@@ -279,7 +279,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     {
         model.material = highLight;
         gameManager.instance.interactText.gameObject.SetActive(true);
-        TempUI.OnHover(0);
+        RecticleBehaviour.OnHover(0);
 
         if(WeaponModHoverUI.Instance != null)
         {
@@ -291,7 +291,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     {       
         model.material = materialOrig;
         gameManager.instance.interactText.gameObject.SetActive(false);
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
 
         if(WeaponModHoverUI.Instance != null)
         {
