@@ -19,6 +19,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         public int maxAmmo;
         public float ammoTimer;
         public GameObject weaponPrefab;
+        public List<string> modDescriptions = new List<string>();
 
     }
 
@@ -98,7 +99,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     GameObject weaponPrefab,
     int ammo,
     int maxAmmo,
-    float ammoTimer)
+    float ammoTimer,
+    List<string> weaponMods = null)
     {
         for (int i = 0; i < weaponInventory.Count; i++)
         {
@@ -138,6 +140,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         newWeapon.ammo = ammo;
         newWeapon.maxAmmo = maxAmmo;
         newWeapon.ammoTimer = ammoTimer;
+        newWeapon.modDescriptions = CopyModList(weaponMods);
 
         weaponInventory.Add(newWeapon);
 
@@ -153,6 +156,88 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         Debug.Log("Added weapon to inventory: " + weaponName);
         return true;
+    }
+
+    public bool ReplaceWeaponInInventory(
+    string weaponName,
+    bool type,
+    int damage,
+    float range,
+    float rate,
+    float recoil,
+    float timer,
+    GameObject weaponPrefab,
+    int ammo,
+    int maxAmmo,
+    float ammoTimer,
+    List<string> weaponMods = null)
+    {
+        for (int i = 0; i < weaponInventory.Count; i++)
+        {
+            if (weaponInventory[i].weaponName == weaponName)
+            {
+                weaponInventory[i].type = type;
+                weaponInventory[i].damage = damage;
+                weaponInventory[i].range = range;
+                weaponInventory[i].rate = rate;
+                weaponInventory[i].recoil = recoil;
+                weaponInventory[i].timer = timer;
+                weaponInventory[i].weaponPrefab = weaponPrefab;
+                weaponInventory[i].ammo = ammo;
+                weaponInventory[i].maxAmmo = maxAmmo;
+                weaponInventory[i].ammoTimer = ammoTimer;
+                weaponInventory[i].modDescriptions = CopyModList(weaponMods);
+
+                EquipWeaponFromInventory(i, false);
+
+                if (UpgradeUI.instance != null)
+                {
+                    UpgradeUI.instance.ShowUpgradeNotification("Swapped " + weaponName);
+                }
+
+                Debug.Log("Replaced weapon in inventory: " + weaponName);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public string GetCurrentWeaponInfoText()
+    {
+        if (currentWeaponIndex < 0 || currentWeaponIndex >= weaponInventory.Count)
+        {
+            return "<b>Current Weapon</b>\nNone";
+        }
+
+        InventoryWeapon weapon = weaponInventory[currentWeaponIndex];
+
+        string info = "";
+
+        info += "<b>Current Weapon</b>\n";
+        info += "<color=#FFD966><b>" + weapon.weaponName + "</b></color>\n\n";
+
+        info += "DMG: " + Damage + "\n";
+        info += "Ammo: " + Ammo + " / " + MaxAmmo + "\n";
+        info += "Reload: " + AmmoTimer.ToString("0.00") + "s\n";
+        info += "Fire Delay: " + Timer.ToString("0.00") + "s\n";
+        info += "Range: " + Mathf.RoundToInt(Range) + "\n";
+
+        info += "\n<b>Mods</b>\n";
+
+        if (weapon.modDescriptions == null || weapon.modDescriptions.Count == 0)
+        {
+            info += "No weapon mods";
+        }
+        else
+        {
+            for (int i = 0; i < weapon.modDescriptions.Count; i++)
+            {
+                info += weapon.modDescriptions[i] + "\n";
+            }
+        }
+
+        return info;
     }
 
     private void SaveCurrentAmmoToInventory()
@@ -198,6 +283,16 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             UpgradeUI.instance.ShowUpgradeNotification("Equipped " + weapon.weaponName);
         }
+    }
+
+    private List<string> CopyModList(List<string> source)
+    {
+        if(source == null)
+        {
+            return new List<string>();
+        }
+
+        return new List<string>(source);
     }
 
     public string GetWeaponNameAtSlot(int index)

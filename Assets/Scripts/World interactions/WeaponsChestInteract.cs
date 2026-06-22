@@ -144,11 +144,22 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         Transform dropPoint = weaponDropPoint != null ? weaponDropPoint : transform;
 
-        Instantiate(
-            reward.pickupPrefab,
-            dropPoint.position,
-            dropPoint.rotation
+        GameObject spawnedWeapon = Instantiate(
+        reward.pickupPrefab,
+        dropPoint.position,
+        dropPoint.rotation
         );
+
+        WeaponPickUp pickup = spawnedWeapon.GetComponentInChildren<WeaponPickUp>();
+
+        if (pickup != null)
+        {
+            pickup.RollChestWeaponMods();
+        }
+        else
+        {
+            Debug.LogWarning("Spawned weapon pickup does not have a WeaponPickUp script.");
+        }
 
         if (UpgradeUI.instance != null)
         {
