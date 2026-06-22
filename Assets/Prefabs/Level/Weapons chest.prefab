@@ -375,7 +375,7 @@ MonoBehaviour:
     damage: 12
     range: 25
     rate: 1
-    recoil: 0.8
+    recoil: 0.9
     timer: 0.3
     ammo: 10
     maxAmmo: 10
@@ -421,7 +421,7 @@ MonoBehaviour:
   canGiveMaxAmmo: 1
   enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 9034420200080744866}
-  enemySpawnChance: 15
+  enemySpawnChance: 100
   weaponDropPoint: {fileID: 8244520926358620861}
   model: {fileID: 5855259565331375741}
   highlight: {fileID: 0}

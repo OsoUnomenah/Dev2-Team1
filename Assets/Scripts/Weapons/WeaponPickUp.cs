@@ -228,18 +228,37 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         }
 
         bool pickedUp = weaponManager.AddWeaponToInventory(
-            weaponName,
-            weaponType,
-            damage,
-            range,
-            rate,
-            recoil,
-            timer,
-            weaponPrefab,
-            ammo,
-            maxAmmo,
-            ammoTimer
-        );
+    weaponName,
+    weaponType,
+    damage,
+    range,
+    rate,
+    recoil,
+    timer,
+    weaponPrefab,
+    ammo,
+    maxAmmo,
+    ammoTimer,
+    modDescriptions
+);
+
+        if (!pickedUp)
+        {
+            pickedUp = weaponManager.ReplaceWeaponInInventory(
+                weaponName,
+                weaponType,
+                damage,
+                range,
+                rate,
+                recoil,
+                timer,
+                weaponPrefab,
+                ammo,
+                maxAmmo,
+                ammoTimer,
+                modDescriptions
+            );
+        }
 
         if (!pickedUp)
         {
