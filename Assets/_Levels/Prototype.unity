@@ -30982,6 +30982,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1406203612}
     - target: {fileID: 3364420343790567294, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
+      propertyPath: xpGain
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364420343790567294, guid: 53128174fc3a2734c87c5e2d2f047933, type: 3}
       propertyPath: playerStatHandler
       value: 
       objectReference: {fileID: 1406203613}
