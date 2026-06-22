@@ -172,6 +172,7 @@ MonoBehaviour:
     m_Bits: 8
   interactText: {fileID: 0}
   weaponManager: {fileID: 0}
+  keyList: []
 --- !u!114 &4918395676718949796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,9 +194,6 @@ MonoBehaviour:
   Ammo: 0
   MaxAmmo: 0
   AmmoTimer: 0
-  weaponInventory: []
-  currentWeaponIndex: -1
-  maxWeaponSlots: 4
   fireLevel: 0
   freezeLevel: 0
   bounceLevel: 0
@@ -204,6 +202,10 @@ MonoBehaviour:
   abilityModel: {fileID: 7746152867297857442}
   effect: {fileID: 0}
   effectSocket: {fileID: 4959700751784414776}
+  abilities: []
+  weaponInventory: []
+  currentWeaponIndex: -1
+  maxWeaponSlots: 4
   Modifiers: 
 --- !u!1 &4468424467714139017
 GameObject:
@@ -697,6 +699,14 @@ PrefabInstance:
       propertyPath: currentDefense
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: GE_OnPlayerHealthChanged
+      value: 
+      objectReference: {fileID: 11400000, guid: 472fbe100f33ae74c910983e954c9259, type: 2}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: GE_OnPlayerStaminaChanged
+      value: 
+      objectReference: {fileID: 11400000, guid: 47ca334dc78a4934b8ee27b5e59a90bb, type: 2}
     - target: {fileID: 3389285672651231312, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -49.827133
