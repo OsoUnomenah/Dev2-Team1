@@ -53,6 +53,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int freezePos;
     private int bouncePos;
     private int zoomPos;
+    
 
     [Header("Weapon Inventory")]
     [SerializeField] private List<InventoryWeapon> weaponInventory = new List<InventoryWeapon>();
@@ -75,7 +76,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     void Start()
     {
-       // cameraCon = FindAnyObjectByType<CameraController>();
+        // cameraCon = FindAnyObjectByType<CameraController>();
+       
     }
 
     // Update is called once per frame
@@ -321,7 +323,13 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     {
         abilities.Add(stats);
         
-        abilityListPos = abilities.Count - 1;        
+        abilityListPos = abilities.Count - 1;
+
+        Debug.LogError(gameManager.instance);
+        Debug.LogError(gameManager.instance?.abilityUI);
+        Debug.LogError(stats);
+        Debug.LogError(stats?.abilityType);
+        gameManager.instance.abilityUI.abilityAssign(stats.abilityType);
     }
 
     void abilityEquip(AbilityStats stats)

@@ -61,6 +61,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
 
+    [SerializeField] public AbilityUI abilityUI;
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -87,7 +88,7 @@ public class gameManager : MonoBehaviour
         CacheTimeScale();
         GetPlayerReferences();
         UpdateXPUI();
-
+        abilityUI = FindFirstObjectByType<AbilityUI>();
     }
 
     private void InitGM()
