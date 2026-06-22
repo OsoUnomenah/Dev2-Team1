@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using System.Threading;
 using NUnit.Framework.Internal;
 
-public class BossAI : MonoBehaviour, IDamage, IInteract
+public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -49,6 +49,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
 
     private Vector3 lastHeardPosition;
     private bool heardNoise;
+    private bool isFroze;
     private Transform player;
     
 
@@ -142,9 +143,17 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
         updateHealthBar();
         if (currentState == ZombieState.Dead)
             return;
-        if (player == null)
+        if (player == null || isFroze)
         {
             currentState = ZombieState.Rest;
+            lava1.SetActive(false);
+            lava2.SetActive(false);
+            lava3.SetActive(false);
+            lava4.SetActive(false);
+            lava5.SetActive(false);
+            lava6.SetActive(false);
+            lava7.SetActive(false);
+            lava8.SetActive(false);
             return;
         }
 
@@ -412,5 +421,22 @@ public class BossAI : MonoBehaviour, IDamage, IInteract
     public void OnHoverExit()
     {
         RecticleBehaviour.OffHover();
+    }
+
+    public void freeze(float duration)
+    {
+        //not using the durtion for him cause he is only gonna turn blue for a second and shake it off
+        isFroze = true;
+        StartCoroutine(freezeHandler(20f));
+    }
+    IEnumerator freezeHandler(float duration)
+    {
+        model.material.color = Color.blue;
+
+
+        yield return new WaitForSeconds(duration);
+
+        model.material.color = originalColor;
+        isFroze = false;
     }
 }

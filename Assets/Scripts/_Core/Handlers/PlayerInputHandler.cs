@@ -530,14 +530,78 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
-       // switch (gameManager.instance.playerWeaponManager)
-
-
-        gameManager.instance.isAiming = true;
-        if (gameManager.instance.gameDebug)
+        Debug.LogError("Fired Ability Shot");
+        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
         {
-            Debug.Log("Aiming Down Sights!");
+            case 1:
+                if (gameManager.instance.allowedAbility1)
+                {
+                    Debug.LogError("Fired Fire Shot");
+                    gameManager.instance.allowedAbility1 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown, gameManager.instance.firePos);
+                    StartCoroutine(fireCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown));
+                }
+                    break;
+            case 2:
+                if (gameManager.instance.allowedAbility2)
+                {
+                    Debug.LogError("Fired Freeze Shot");
+                    gameManager.instance.allowedAbility2 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown, gameManager.instance.freezePos);
+                    StartCoroutine(freezeCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown));                   
+                }
+                break;
+            case 3:
+                if (gameManager.instance.allowedAbility3)
+                {
+                    Debug.LogError("Fired Bounce Shot");
+                    gameManager.instance.allowedAbility3 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown, gameManager.instance.bouncePos);
+                }
+                break;
+            case 4:
+                if (gameManager.instance.allowedAbility4)
+                {
+                    Debug.LogError("Fired Zoom Shot");
+                    gameManager.instance.allowedAbility4 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown, gameManager.instance.zoomPos);
+                }
+                break;
         }
+    }
+    IEnumerator fireCooldown(float cd)
+    {
+        yield return new WaitForSeconds(cd);
+        gameManager.instance.allowedAbility1 = true;
+    }
+    IEnumerator freezeCooldown(float cd)
+    {
+        yield return new WaitForSeconds(cd);
+        gameManager.instance.allowedAbility2 = true;
+    }
+    IEnumerator bounceCooldown(float cd)
+    {
+
+        yield return new WaitForSeconds(cd);
+        gameManager.instance.allowedAbility3 = true;
+    }
+    IEnumerator zoomCooldown(float cd)
+    {
+        yield return new WaitForSeconds(cd);
+        gameManager.instance.allowedAbility4 = true;
+    }
+    private void abilityShoot()
+    {
+
+        Instantiate(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].bullet,
+                        Camera.main.transform.position +
+                        Camera.main.transform.forward * 1.5f,
+                        Quaternion.LookRotation(Camera.main.transform.forward));
+
     }
 
     //this is now a Ability button instead of ADS

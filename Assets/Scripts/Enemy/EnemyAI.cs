@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract
+public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -17,6 +17,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
     [SerializeField] Renderer model;
     public UnityEngine.UI.Slider healthbar;
     public TMP_Text healthText;
+    public bool isDead = false;
+    bool isFroze = false;
 
     public GameObject onScreenDMG;
     public TMP_Text damageText;
@@ -83,45 +85,53 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         
         if (currentState == ZombieState.Dead)
             return;
-        if (player == null)
+        if(!isFroze)
         {
-            currentState = ZombieState.Wander;
-            return;
+            
+            if (player == null)
+            {
+                currentState = ZombieState.Wander;
+                return;
+            }
+
+            float distance = Vector3.Distance(transform.position, player.position);
+
+            switch (currentState)
+            {
+                case ZombieState.Wander:
+                    Wander();
+
+                    if (distance <= sightRange)
+                    {
+                        currentState = ZombieState.Chase;
+                    }
+                    break;
+
+                case ZombieState.Chase:
+                    agent.SetDestination(player.position);
+
+                    if (distance <= attackRange)
+                    {
+                        currentState = ZombieState.Attack;
+                    }
+                    break;
+
+                case ZombieState.Attack:
+                    agent.SetDestination(transform.position);
+
+                    AttackPlayer();
+
+                    if (distance > attackRange)
+                    {
+                        currentState = ZombieState.Chase;
+                    }
+                    break;
+
+            }
         }
-
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        switch(currentState)
+        else
         {
-            case ZombieState.Wander:
-                Wander();
-
-                if (distance <= sightRange)
-                {
-                    currentState = ZombieState.Chase;
-                }
-                break;
-
-            case ZombieState.Chase:
-                agent.SetDestination(player.position);
-
-                if(distance <= attackRange)
-                {
-                    currentState = ZombieState.Attack;
-                }
-                break;
-
-            case ZombieState.Attack:
-                agent.SetDestination(transform.position);
-
-                AttackPlayer();
-
-                if (distance > attackRange)
-                {
-                    currentState = ZombieState.Chase;
-                }
-                break;
-
+            model.material.color = Color.blue;
         }
     }
 
@@ -196,6 +206,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
 
     public void takeDamage(int amount)
     {
+        if (isDead)
+        {
+            return;
+        }
         gameManager.instance.playerDamageOut = amount;
         StartCoroutine(updateDamageText());
 
@@ -205,6 +219,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         if (currentHealth <= 0)
         {
             currentState = ZombieState.Dead;
+            isDead = true;
 
             if (agent != null)
                 agent.isStopped = true;
@@ -220,6 +235,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
             }
 
             RecticleBehaviour.OffHover();
+            isDead = true;
             Destroy(gameObject);
         }
         else
@@ -236,6 +252,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
     }
+    
 
     IEnumerator flashGreen()
     {
@@ -258,5 +275,18 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract
         RecticleBehaviour.OffHover();
     }
 
-  
+    public void freeze(float duration)
+    {
+        isFroze = true;
+        StartCoroutine(freezeHandler(duration));
+    }
+    IEnumerator freezeHandler(float duration)
+    {
+        model.material.color = Color.blue;
+        
+        yield return new WaitForSeconds(duration);
+
+        model.material.color = originalColor;
+        isFroze = false;
+    }
 }

@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.UI;
-using UnityEngine;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
@@ -62,6 +63,14 @@ public class gameManager : MonoBehaviour
     [SerializeField] public Players playerInteract;
 
     [SerializeField] public AbilityUI abilityUI;
+    public bool allowedAbility1 = true;
+    public bool allowedAbility2 = true;
+    public bool allowedAbility3 = true;
+    public bool allowedAbility4 = true;
+    [SerializeField] public int firePos = -1;
+    [SerializeField] public int freezePos = -1;
+    [SerializeField] public int bouncePos = -1;
+    [SerializeField] public int zoomPos = -1;
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -130,6 +139,89 @@ public class gameManager : MonoBehaviour
         //change xpGain value in inspector to adjust rate.
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
+    }
+    public void slotFiller()
+    {
+        //fills the slots list that remembers where each bullet type is in
+        if (firePos != -1 && freezePos != -1 && bouncePos != -1 && zoomPos != -1)
+        {
+            Debug.LogError("Does not Run");
+            return;
+        }
+        { 
+            AbilityStats slot = instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot];
+            
+            if (slot == null) return;
+            
+            if (slot.abilityType == 1)
+            {
+                firePos = instance.playerWeaponManager.abilitySlot;
+                Debug.LogError("FIRE");
+                return;
+            }
+            if (slot.abilityType == 2)
+            {
+                freezePos = instance.playerWeaponManager.abilitySlot;
+                Debug.LogError("FREEZE");
+                return;
+            }
+            if (slot.abilityType == 3)
+            {
+                bouncePos = instance.playerWeaponManager.abilitySlot;
+                Debug.LogError("BOUNCE");
+                return;
+            }
+            if (slot.abilityType == 4)
+            {
+                zoomPos = instance.playerWeaponManager.abilitySlot;
+                Debug.LogError("ZOOM");
+                return;
+            }
+            Debug.LogError("Found None");
+        }
+        Debug.LogError("FAILURE");
+    }
+    public void greyedOut(float cd, int slot)
+    {
+        StartCoroutine(greyHandler(cd, slot));
+    }
+    IEnumerator greyHandler(float cd, int slot)
+    {
+        
+        switch (slot)
+        {
+            case 0:
+                abilityUI.grey1.SetActive(true);
+                break;
+            case 1:
+                abilityUI.grey2.SetActive(true);
+                break;
+            case 2:
+                abilityUI.grey3.SetActive(true);
+                break;
+            case 3:
+                abilityUI.grey4.SetActive(true);
+                break;
+        }
+
+        yield return new WaitForSeconds(cd);
+
+        switch (slot)
+        {
+            case 0:
+                abilityUI.grey1.SetActive(false);
+                break;
+            case 1:
+                abilityUI.grey2.SetActive(false);
+                break;
+            case 2:
+                abilityUI.grey3.SetActive(false);
+                break;
+            case 3:
+                abilityUI.grey4.SetActive(false);
+                break;
+        }
+
     }
 
     private void UpdateXPUI()

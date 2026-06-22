@@ -4,6 +4,7 @@ using UnityEngine;
 public class AbilityStats : ScriptableObject
 {
     public GameObject model;
+    public GameObject bullet;
    
 
     [Range (1,4)] public int abilityType;
@@ -11,7 +12,7 @@ public class AbilityStats : ScriptableObject
 
     [Range(1, 4)] public int shootDistance;
     [Range(1, 50)] public float shootCooldown;
-    [Range(1, 50)] public float effectTimer;
+    [Range(1, 2000)] public float effectTimer;
 
     public ParticleSystem loopedEffect;
 

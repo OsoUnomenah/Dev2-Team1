@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
-  m_Name: Fire
+  m_Name: Bounce
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
-  model: {fileID: 8869053030028166981, guid: c125db30a259be84d8eea7fdfa0396d0, type: 3}
-  bullet: {fileID: 5054535592068500189, guid: ace7d1da71c1faf49bd995bc77ef5c76, type: 3}
-  abilityType: 1
+  model: {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
+  abilityType: 3
   shootDistance: 4
   shootCooldown: 20.9
-  effectTimer: 12
-  loopedEffect: {fileID: 1489387594953262563, guid: c4fd024e20532754485f995531afe0ef, type: 3}
+  effectTimer: 14.8
+  loopedEffect: {fileID: 1489387594953262563, guid: 349785d2d73ebf2429497634000921ed, type: 3}
   level: 1

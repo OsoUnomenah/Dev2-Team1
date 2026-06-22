@@ -33,12 +33,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int MaxAmmo;
     public float AmmoTimer;
 
-    //Ability Settings
-    public int fireLevel;
-    public int freezeLevel;
-    public int bounceLevel;
-    public int zoomLevel;
-
+    
 
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
@@ -53,7 +48,12 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int freezePos;
     private int bouncePos;
     private int zoomPos;
-    
+    //Ability Settings
+    public int fireLevel;
+    public int freezeLevel;
+    public int bounceLevel;
+    public int zoomLevel;
+    public int abilitySlot;
 
     [Header("Weapon Inventory")]
     [SerializeField] private List<InventoryWeapon> weaponInventory = new List<InventoryWeapon>();
@@ -64,7 +64,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int WeaponCount => weaponInventory.Count;
     public int MaxWeaponSlots => maxWeaponSlots;
 
-    int abilityListPos;
 
     //CameraController cameraCon;
 
@@ -323,13 +322,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     {
         abilities.Add(stats);
         
-        abilityListPos = abilities.Count - 1;
-
-        Debug.LogError(gameManager.instance);
-        Debug.LogError(gameManager.instance?.abilityUI);
-        Debug.LogError(stats);
-        Debug.LogError(stats?.abilityType);
         gameManager.instance.abilityUI.abilityAssign(stats.abilityType);
+
+        gameManager.instance.slotFiller();
     }
 
     void abilityEquip(AbilityStats stats)
@@ -350,24 +345,28 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     }
     void abilitySwitch()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) && abilities.Count > 0)
         {
-            abilityEquip(abilities[firePos]);
+            abilityEquip(abilities[0]);
+            abilitySlot = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2) && abilities.Count > 1)
         {
-            abilityEquip(abilities[freezePos]);
+            abilityEquip(abilities[1]);
+            abilitySlot = 1;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3) && abilities.Count > 2)
         {
-            abilityEquip(abilities[bouncePos]);
+            abilityEquip(abilities[2]);
+            abilitySlot = 2;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (Input.GetKeyDown(KeyCode.Alpha4) && abilities.Count > 3)
         {
-            abilityEquip(abilities[zoomPos]);
+            abilityEquip(abilities[3]);
+            abilitySlot = 3;
         }
     }
 }
