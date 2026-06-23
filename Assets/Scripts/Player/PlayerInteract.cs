@@ -1,14 +1,17 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Players : MonoBehaviour
+public class Players : MonoBehaviour, IOpen
 {
     [SerializeField] private Transform interactorSource;
     [SerializeField] private float interactRange;
     [SerializeField] private LayerMask ignoreSource;
     [SerializeField] private TextMeshProUGUI interactText; //"Press E to interact" when hovering over interactable objects
     [SerializeField] private PlayerWeaponManager weaponManager;
-       
+
+    [SerializeField] public List<keyItem> keyList;
+
     private IInteract currentInteractable;
 
     RaycastHit hit;
@@ -77,5 +80,13 @@ public class Players : MonoBehaviour
             }
         }
 
+    }
+
+    public void GrabKey(keyItem key)
+    {
+        if (!keyList.Contains(key))
+        {
+            keyList.Add(key);
+        }
     }
 }

@@ -1,8 +1,7 @@
-using System.Xml.XPath;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using JetBrains.Annotations;
+using System.Collections;
 
 public class StatHandler : MonoBehaviour, IDamage
 {
@@ -34,23 +33,16 @@ public class StatHandler : MonoBehaviour, IDamage
     [Range(0f, 100f)][SerializeField] public float modSpeed;
     [Range(0, 100)][SerializeField] public int modJumps;
 
-    public Slider healthBar;
-    public TMP_Text healthText;
 
-    public Slider staminaBar;
-    public TMP_Text staminaText;
-
-
+    [Header("Events")]
+    public GameEvent GE_OnPlayerHealthChanged;
+    public GameEvent GE_OnPlayerStaminaChanged;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        maxHealth = health + modHealth;
-        currentHealth = maxHealth;
-
-        maxStamina = stamina + modStamina;
-        currentStamina = maxStamina;
-        sprintCost = gameManager.instance.sprintCost;
+        InitHealth();
+        InitStamina();
 
         currentDamage = damage + modDamage;
         modJumps = 1;
@@ -58,24 +50,35 @@ public class StatHandler : MonoBehaviour, IDamage
 
     // Update is called once per frame
     void Update()
-    {
-        healthText.text = " HP: "+ currentHealth + " / " + maxHealth;
-        healthBar.value = (float)currentHealth / (float)maxHealth;
-
-        staminaText.text = " STM: " + Mathf.CeilToInt(currentStamina) + " / " + Mathf.CeilToInt(maxStamina);
-        staminaBar.value = (float)currentStamina / (float)maxStamina;
-        
+    {   
         currentDamage = damage + modDamage;
         
         HandleSprint();
 
     }
 
+    private void InitHealth()
+    {
+        maxHealth = health + modHealth;
+        currentHealth = maxHealth;
+        GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
+
+    }
+
+    private void InitStamina()
+    {
+        maxStamina = stamina + modStamina;
+        currentStamina = maxStamina;
+        sprintCost = gameManager.instance.sprintCost;
+        GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+    }
+    
     public void HandleSprint()
     {
-
-
-        if (gameManager.instance.SprintTriggered && !gameManager.instance.isSprinting)
+        if (gameManager.instance.SprintTriggered 
+            && !gameManager.instance.isSprinting 
+            && gameManager.instance.characterController.isGrounded 
+            && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
             currentStamina -= gameManager.instance.sprintCost;
             gameManager.instance.isSprinting = true;
@@ -85,6 +88,8 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += -sprintLoss;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
             if (currentStamina <= 0)
             {
                 gameManager.instance.SprintTriggered = false;
@@ -96,16 +101,19 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += sprintGain;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
             if (currentStamina >= maxStamina)
             {
              gameManager.instance.canSprint = true;
             
             }
         }
+        GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
 
 
-            public int EnemyAttack()
+    public int EnemyAttack()
     {
         gameManager.instance.enemyDamageOut = (int)currentDamage;
         return (int)currentDamage;
@@ -113,18 +121,59 @@ public class StatHandler : MonoBehaviour, IDamage
 
 
 
+
     public void takeDamage(int amount)
     {
-        currentHealth += amount;
-        
+        StartCoroutine(FlashDamage());
+
+        StatHandler stats = gameManager.instance.playerStatHandler;
+
+        int defenseBonus = Mathf.RoundToInt(stats.modDefense);
+
+        // Defense reduces incoming damage.
+        // Minimum damage is 1 so enemies can still hurt the player.
+        int finalDamage = Mathf.Max(1, amount - defenseBonus);
+
+        stats.currentHealth -= Mathf.Clamp(finalDamage, 0, maxHealth);
+
+        //Raise Event to update health UI and trigger any other responses to health change
+        GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
+
+        if (gameManager.instance.gameDebug)
+        {
+            Debug.Log("Enemy Damage: " + amount + " - Defense: " + defenseBonus + " = " + finalDamage);
+        }
+
+        if (stats.currentHealth <= 0)
+        {
+            gameManager.instance.youLose();
+        }
+
+
     }
 
-   public void Heal(float amount)
+    public void Heal(float amount)
     {
-        currentHealth += amount;
+        currentHealth += Mathf.Clamp(amount, 0, maxHealth);
+        StartCoroutine(FlashHeal());
+        if(currentHealth > maxHealth){ currentHealth = maxHealth; }
 
-        if (currentHealth >  maxHealth)
-            currentHealth = maxHealth;
+        //Raise Event to update health UI and trigger any other responses to health change
+        GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
+
+    }
+    IEnumerator FlashDamage()
+    {
+        gameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerDamageFlash.SetActive(false);
+    }
+
+    IEnumerator FlashHeal()
+    {
+        gameManager.instance.playerHealFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        gameManager.instance.playerHealFlash.SetActive(false);
     }
 
 }

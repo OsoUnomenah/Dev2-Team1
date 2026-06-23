@@ -15,6 +15,10 @@ TagManager:
   - EnemyStatHandler
   - WeaponPickUp
   - BossGun
+  - PlayerWeaponManager
+  - PlayerCamera
+  - SpawnPoint
+  - PlayerSpawnPos
   layers:
   - Default
   - TransparentFX
@@ -24,7 +28,7 @@ TagManager:
   - UI
   - OnTop
   - Environment
-  - 
+  - Prop
   - 
   - 
   - 

@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
+using UnityEngine.UI;
+using TMPro;
 
-public class WarehouseInteract : MonoBehaviour
+public class WarehouseInteract : MonoBehaviour, IOpen
 {
     [SerializeField] private float doorSpeed;
     [SerializeField] private float heightFinal;
@@ -15,6 +16,9 @@ public class WarehouseInteract : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private BaseSoundSO _raise;
+
+    [Header("Keys")]
+    [SerializeField] keyItem keyExpected;
 
     private int numInTrigger = 0;
 
@@ -31,7 +35,9 @@ public class WarehouseInteract : MonoBehaviour
     {
         hoverLight.enabled = true;
         hoverLight2.enabled = true;
-        
+
+        AudioManager.instance.PlaySoundAtPosition(_raise, gameObject);
+
         while (transform.position.y < heightFinal)
         {
             transform.position += Vector3.up * doorSpeed * Time.deltaTime;
@@ -44,8 +50,9 @@ public class WarehouseInteract : MonoBehaviour
         hoverLight.enabled = false;
         hoverLight2.enabled = false;
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
+        AudioManager.instance.PlaySoundAtPosition(_raise, gameObject);
         while (transform.position.y > heightStart)
         {
             transform.position -= Vector3.up * doorSpeed * Time.deltaTime;
@@ -65,23 +72,33 @@ public class WarehouseInteract : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        IOpen opener = other.GetComponent<IOpen>();
 
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
+        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected) || (keyExpected == null && opener != null))
         {
             numInTrigger++;
             StartCoroutine(Open());
         }
+      
+    
     }
 
     private void OnTriggerExit(Collider other)
     {
+        IOpen opener = other.GetComponent<IOpen>();
 
-        if ((other.CompareTag("Player") || other.CompareTag("Enemy")))
+        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected) || (keyExpected == null && opener != null))
         {
             numInTrigger--;
 
                 if(numInTrigger <= 0)
                     StartCoroutine(Close());
         }
+
+    }
+
+    public void GrabKey(keyItem key)
+    {
+
     }
 }

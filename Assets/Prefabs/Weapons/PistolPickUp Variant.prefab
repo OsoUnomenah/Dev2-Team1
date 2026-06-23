@@ -38,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: recoil
-      value: 0.9
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: maxAmmo
@@ -48,33 +48,37 @@ PrefabInstance:
       propertyPath: ammoTimer
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: weaponName
+      value: Pistol
+      objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.5
+      value: -0.052
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.25
+      value: 0.84
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.75
+      value: 1.067
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.31263378
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.94987375
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -82,7 +86,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -143.564
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
