@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +11,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] public bool gameDebug;
     public TMP_Text objectiveText;
 
-    [Header ("XP Config")]
+    public GameEvent onPlayerHealthChange;
+
+    [Header("XP Config")]
     public Slider xpBar;
     public Slider reloadBar;
     public TMP_Text xpText;
@@ -30,7 +31,7 @@ public class gameManager : MonoBehaviour
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
 
-    [Header ("Menu Config")]
+    [Header("Menu Config")]
     [SerializeField] GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
@@ -63,10 +64,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
-    [SerializeField] public GameObject playerSpawnPoint;
 
-
-
+    public GameObject playerSpawnPos;
 
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
@@ -91,7 +90,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
-    
+
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -104,14 +103,13 @@ public class gameManager : MonoBehaviour
         GetPlayerReferences();
         UpdateXPUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-
-        playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
+        playerSpawnPos = GameObject.FindGameObjectWithTag("PlayerSpawnPos");
     }
 
     private void Start()
     {
         //set player initial spawn point
-        playerTransform.position = playerSpawnPoint.transform.position;
+        //playerTransform.position = playerSpawnPoint.transform.position;
     }
 
     private void InitGM()
@@ -163,11 +161,11 @@ public class gameManager : MonoBehaviour
             Debug.LogError("Does not Run");
             return;
         }
-        { 
+        {
             AbilityStats slot = instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot];
-            
+
             if (slot == null) return;
-            
+
             if (slot.abilityType == 1)
             {
                 firePos = instance.playerWeaponManager.abilitySlot;
@@ -202,7 +200,7 @@ public class gameManager : MonoBehaviour
     }
     IEnumerator greyHandler(float cd, int slot)
     {
-        
+
         switch (slot)
         {
             case 0:
@@ -284,8 +282,8 @@ public class gameManager : MonoBehaviour
 
     public void addXp(int amount)
     {
-        
-        currentXP += amount;        
+
+        currentXP += amount;
         UpdateXPUI();
     }
     public void levelUp()
@@ -294,7 +292,7 @@ public class gameManager : MonoBehaviour
 
         //level up logic here
 
-        if(!isPaused && LevelUpUI.Instance != null) //only show lvl up choices in active gameplay, prevents lvl up screen from popping up over win/lose/pause menu
+        if (!isPaused && LevelUpUI.Instance != null) //only show lvl up choices in active gameplay, prevents lvl up screen from popping up over win/lose/pause menu
         {
             LevelUpUI.Instance.ShowLevelUpOptions();
         }
@@ -303,7 +301,7 @@ public class gameManager : MonoBehaviour
         {
             Debug.Log("Gained a Level!");
         }
-       
+
     }
 
     private void UpdateObjectiveTextUI()
@@ -385,7 +383,7 @@ public class gameManager : MonoBehaviour
             menuActive = menuPause;
             menuActive.SetActive(true);
         }
-        
+
     }
 
     public void settings()
@@ -400,5 +398,18 @@ public class gameManager : MonoBehaviour
     {
         runZone++;
         Debug.Log("Entered Zone: " + runZone);
+    }
+
+    public void updatePlayerUI()
+    {
+        playerStatHandler.currentHealth = playerStatHandler.maxHealth;
+    }
+
+    public void respawnPlayer()
+    {
+        characterController.transform.position = gameManager.instance.playerSpawnPos.transform.position;
+        Physics.SyncTransforms();
+        updatePlayerUI();
+        onPlayerHealthChange.Raise(this, this);
     }
 }
