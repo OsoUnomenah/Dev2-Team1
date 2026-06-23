@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class laser : MonoBehaviour
+public class laser : MonoBehaviour, IDamage
 {
     [SerializeField] LineRenderer laserLine;
 
@@ -50,5 +50,10 @@ public class laser : MonoBehaviour
         d.takeDamage(damageAmount);
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
+    }
+
+    public void takeDamage(int amount)
+    {
+        Destroy(GameObject);
     }
 }
