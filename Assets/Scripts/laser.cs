@@ -27,18 +27,20 @@ public class laser : MonoBehaviour, IDamage
         {
             laserLine.SetPosition(0, laserStartPos.position);
             laserLine.SetPosition(1, hit.point);
+            hitEffect.SetActive(true);
+            hitEffect.transform.position = hit.point;
 
             IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if (dmg != null)
+            if (dmg != null && !isDamaging)
             {
                 // damage it
                 StartCoroutine(damageTime(dmg));
             }
-        }
-        else
+        } else
         {
             laserLine.SetPosition(0, laserStartPos.position);
             laserLine.SetPosition(1, laserStartPos.position + (laserStartPos.forward * laserDist));
+            hitEffect.SetActive(false);
         }
     }
 
