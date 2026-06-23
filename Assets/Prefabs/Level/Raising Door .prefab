@@ -250,8 +250,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2639551770470907412}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0.009600142, y: 0.5753001, z: 3.3999932}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.0000011473893}
+  m_LocalPosition: {x: 0.0192, y: 0.5625001, z: 3.43}
   m_LocalScale: {x: 0.05, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -259,7 +259,7 @@ Transform:
   - {fileID: 8931434295215050915}
   - {fileID: 2067369556297177260}
   m_Father: {fileID: 3149020237498055081}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &4820241548522324328
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,7 +676,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8647663084630564779}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.03999901, y: 2, z: 75.9}
   m_LocalScale: {x: 10, y: 4, z: 0.25000006}
   m_ConstrainProportionsScale: 0
@@ -698,13 +698,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WarehouseInteract
   doorSpeed: 5
-  heightFinal: 5
-  heightStart: 2
+  heightFinal: 10
+  heightStart: 6
   hoverLight: {fileID: 8473291543201639202}
   hoverLight2: {fileID: 1408627894502882115}
   button: {fileID: 6097357894522468283}
   button2: {fileID: 2639551770470907412}
   _raise: {fileID: 11400000, guid: 7c2012139fd7d964d98649672ba577eb, type: 2}
+  keyExpected: {fileID: 11400000, guid: b7468e76ec572d7458795c2ce4465b0e, type: 2}
 --- !u!33 &5379607512532535114
 MeshFilter:
   m_ObjectHideFlags: 0

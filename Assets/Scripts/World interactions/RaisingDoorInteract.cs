@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using TMPro;
 
 public class WarehouseInteract : MonoBehaviour, IOpen
 {
@@ -70,22 +72,29 @@ public class WarehouseInteract : MonoBehaviour, IOpen
 
     private void OnTriggerEnter(Collider other)
     {
-        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected))
+        IOpen opener = other.GetComponent<IOpen>();
+
+        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected) || (keyExpected == null && opener != null))
         {
             numInTrigger++;
             StartCoroutine(Open());
         }
+      
+    
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected))
+        IOpen opener = other.GetComponent<IOpen>();
+
+        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected) || (keyExpected == null && opener != null))
         {
             numInTrigger--;
 
                 if(numInTrigger <= 0)
                     StartCoroutine(Close());
         }
+
     }
 
     public void GrabKey(keyItem key)
