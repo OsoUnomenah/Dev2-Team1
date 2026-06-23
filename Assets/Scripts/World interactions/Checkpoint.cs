@@ -1,13 +1,13 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && gameManager.instance.playerSpawnPos.transform.position != transform.position)
         {
-           gameManager.instance.playerSpawnPoint.transform.position = transform.position;
+            gameManager.instance.playerSpawnPos.transform.position = transform.position;
             StartCoroutine(CheckpointFlash());
 
             Debug.Log("Checkpoint reached!");

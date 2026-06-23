@@ -18,7 +18,7 @@ TagManager:
   - PlayerWeaponManager
   - PlayerCamera
   - SpawnPoint
-  - PlayerSpawnPoint
+  - PlayerSpawnPos
   layers:
   - Default
   - TransparentFX
