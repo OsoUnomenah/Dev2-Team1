@@ -19,7 +19,6 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         public int maxAmmo;
         public float ammoTimer;
         public GameObject weaponPrefab;
-        public GameObject pickupPrefab;
     }
 
     [Header("Chest Settings")]
@@ -34,10 +33,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [Header("Enemy Trap Settings")]
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Transform enemySpawnPoint;
-    [Range(0f, 100f)] [SerializeField] float enemySpawnChance;
-
-    [Header("Weapon Drop Settings")]
-    [SerializeField] private Transform weaponDropPoint;
+    [SerializeField] float enemySpawnChance;
 
     [Header("Highlight Settings")]
     [SerializeField] private Renderer model;
@@ -113,6 +109,17 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
     private void GiveWeaponReward()
     {
+        if (weaponManager == null)
+        {
+            weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
+        }
+
+        if (weaponManager == null)
+        {
+            Debug.LogWarning("No PlayerWeaponManager found. Weapon chest could not give reward.");
+            return;
+        }
+
         int rewardCount = weaponRewards.Length;
 
         if (canGiveMaxAmmo)
@@ -136,37 +143,31 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         WeaponReward reward = weaponRewards[rewardRoll];
 
-        if (reward.pickupPrefab == null)
+        if (reward.weaponPrefab == null)
         {
-            Debug.LogWarning("Weapon reward is missing a pickup prefab.");
+            Debug.LogWarning("Weapon reward is missing a weapon prefab.");
             return;
         }
 
-        Transform dropPoint = weaponDropPoint != null ? weaponDropPoint : transform;
-
-        GameObject spawnedWeapon = Instantiate(
-        reward.pickupPrefab,
-        dropPoint.position,
-        dropPoint.rotation
+        weaponManager.Equip(
+            reward.weaponType,
+            reward.damage,
+            reward.range,
+            reward.rate,
+            reward.recoil,
+            reward.timer,
+            reward.weaponPrefab,
+            reward.ammo,
+            reward.maxAmmo,
+            reward.ammoTimer
         );
-
-        WeaponPickUp pickup = spawnedWeapon.GetComponentInChildren<WeaponPickUp>();
-
-        if (pickup != null)
-        {
-            pickup.RollChestWeaponMods();
-        }
-        else
-        {
-            Debug.LogWarning("Spawned weapon pickup does not have a WeaponPickUp script.");
-        }
 
         if (UpgradeUI.instance != null)
         {
-            UpgradeUI.instance.ShowUpgradeNotification("Weapon Chest: " + reward.weaponName + " dropped");
+            UpgradeUI.instance.ShowUpgradeNotification("Weapon Chest: " + reward.weaponName);
         }
 
-        Debug.Log("Weapon chest dropped: " + reward.weaponName);
+        Debug.Log("Weapon chest gave: " + reward.weaponName);
     }
 
     private void GiveMaxAmmo()
@@ -209,7 +210,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             model.material = highlight;
         }
         gameManager.instance.interactText.gameObject.SetActive(true);
-        RecticleBehaviour.OnHover(0);
+        TempUI.OnHover(0);
 
     }
 
@@ -221,7 +222,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             model.material = materialOg;
         }
         gameManager.instance.interactText.gameObject.SetActive(false);
-        RecticleBehaviour.OffHover();
+        TempUI.OffHover();
 
     }
 }

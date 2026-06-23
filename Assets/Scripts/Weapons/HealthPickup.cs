@@ -1,21 +1,11 @@
 using UnityEngine;
 
-public class HealthPickup : MonoBehaviour, ISpin
+public class HealthPickup : MonoBehaviour
 {
-    //GameObject player;
-    [SerializeField] private GameObject healthPickup;
-    [Range(0f, 1f)][SerializeField] public float healPercent = 0.25f;
-    [SerializeField] private float spinSpeed = 50f;
+    GameObject player;
 
-    private void Update()
-    {
-        Spin(spinSpeed);
-    }
-
-    public void Spin(float _spinSpeed)
-    {
-         healthPickup.transform.Rotate(Vector3.up * _spinSpeed * Time.deltaTime);
-    }
+    [Range(0f, 1f)]
+    public float healPercent = 0.25f;
 
     private void OnTriggerEnter(Collider other)
     {

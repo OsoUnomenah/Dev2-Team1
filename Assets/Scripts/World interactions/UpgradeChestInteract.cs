@@ -274,7 +274,7 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
             model.material = highlight;
         }
         gameManager.instance.interactText.gameObject.SetActive(true);
-        RecticleBehaviour.OnHover(0);
+        TempUI.OnHover(0);
     }
 
     public void OnHoverExit()
@@ -285,6 +285,6 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
             model.material = materialOrig;
         }
         gameManager.instance.interactText.gameObject.SetActive(false);
-        RecticleBehaviour.OffHover();
+        TempUI.OffHover();
     }
 }

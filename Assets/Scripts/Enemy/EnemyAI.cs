@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
+public class enemyAI : MonoBehaviour, IDamage, IInteract
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -17,8 +17,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] Renderer model;
     public UnityEngine.UI.Slider healthbar;
     public TMP_Text healthText;
-    public bool isDead = false;
-    bool isFroze = false;
 
     public GameObject onScreenDMG;
     public TMP_Text damageText;
@@ -66,9 +64,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     private void Start()
     {
         currentHealth = maxHealth;
-        updateHealthBar();
-
-
+        
         originalColor = model.material.color;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -84,56 +80,48 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
     private void Update()
     {
-        
+        updateHealthBar();
         if (currentState == ZombieState.Dead)
             return;
-        if(!isFroze)
+        if (player == null)
         {
-            
-            if (player == null)
-            {
-                currentState = ZombieState.Wander;
-                return;
-            }
-
-            float distance = Vector3.Distance(transform.position, player.position);
-
-            switch (currentState)
-            {
-                case ZombieState.Wander:
-                    Wander();
-
-                    if (distance <= sightRange)
-                    {
-                        currentState = ZombieState.Chase;
-                    }
-                    break;
-
-                case ZombieState.Chase:
-                    agent.SetDestination(player.position);
-
-                    if (distance <= attackRange)
-                    {
-                        currentState = ZombieState.Attack;
-                    }
-                    break;
-
-                case ZombieState.Attack:
-                    agent.SetDestination(transform.position);
-
-                    AttackPlayer();
-
-                    if (distance > attackRange)
-                    {
-                        currentState = ZombieState.Chase;
-                    }
-                    break;
-
-            }
+            currentState = ZombieState.Wander;
+            return;
         }
-        else
+
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        switch(currentState)
         {
-            model.material.color = Color.blue;
+            case ZombieState.Wander:
+                Wander();
+
+                if (distance <= sightRange)
+                {
+                    currentState = ZombieState.Chase;
+                }
+                break;
+
+            case ZombieState.Chase:
+                agent.SetDestination(player.position);
+
+                if(distance <= attackRange)
+                {
+                    currentState = ZombieState.Attack;
+                }
+                break;
+
+            case ZombieState.Attack:
+                agent.SetDestination(transform.position);
+
+                AttackPlayer();
+
+                if (distance > attackRange)
+                {
+                    currentState = ZombieState.Chase;
+                }
+                break;
+
         }
     }
 
@@ -177,7 +165,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
             Debug.Log("Zombie Attack");
 
-            IDamage damageable = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
+            IDamage damageable = player.GetComponentInChildren<IDamage>();
 
             if (damageable != null)
             {
@@ -208,36 +196,29 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
     public void takeDamage(int amount)
     {
-        if (isDead)
-        {
-            return;
-        }
+        //Set the damage to display on the damage text
         gameManager.instance.playerDamageOut = amount;
+
+        //Show the damage text
         StartCoroutine(updateDamageText());
 
         currentHealth -= amount;
-        updateHealthBar();
+
+        
+        
+
 
         if (currentHealth <= 0)
         {
             currentState = ZombieState.Dead;
-            isDead = true;
-
             if (agent != null)
                 agent.isStopped = true;
 
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
 
+            //gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
-
-            // ✅ NEW: wave system tracking (no Find calls)
-            if (WaveManager.instance != null)
-            {
-                WaveManager.instance.OnEnemyKilled();
-            }
-
-            RecticleBehaviour.OffHover();
-            isDead = true;
+            TempUI.OffHover();
             Destroy(gameObject);
         }
         else
@@ -254,7 +235,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
     }
-    
 
     IEnumerator flashGreen()
     {
@@ -270,25 +250,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     }
     public void OnHoverEnter()
     {
-        RecticleBehaviour.OnHover(1);
+        TempUI.OnHover(1);
     }
     public void OnHoverExit()
     {
-        RecticleBehaviour.OffHover();
-    }
-
-    public void freeze(float duration)
-    {
-        isFroze = true;
-        StartCoroutine(freezeHandler(duration));
-    }
-    IEnumerator freezeHandler(float duration)
-    {
-        model.material.color = Color.blue;
-        
-        yield return new WaitForSeconds(duration);
-
-        model.material.color = originalColor;
-        isFroze = false;
+        TempUI.OffHover();
     }
 }

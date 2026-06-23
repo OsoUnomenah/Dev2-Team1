@@ -6,8 +6,6 @@ public class LevelUpUI : MonoBehaviour
 {
    
    public static LevelUpUI Instance;
-   private StatHandler playerStats;
-   [SerializeField] public GameEvent GE_OnPlayerLevelUP;
 
 
     private enum upgradeType
@@ -48,6 +46,9 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private TMP_Text optionText2;
     [SerializeField] private TMP_Text optionText3;
 
+    [Header("Player References")]
+    [SerializeField] private StatHandler playerStats;
+
     [Header("Level Up Settings")]
     [SerializeField] private float slowMotionScale = 0.25f; //so time slows down on lvl up and doesnt completely stop
     [SerializeField] private float choiceTime = 10f; //amount of time to select upgrade before game resumes
@@ -66,15 +67,19 @@ public class LevelUpUI : MonoBehaviour
 
     void Start()
     {
-
-        if (playerStats == null)
-        {
-            playerStats = gameManager.instance.playerStatHandler;
-        }
-
         if (levelUpPanel != null)
         {
             levelUpPanel.SetActive(false);
+        }
+
+        if(playerStats == null)
+        {
+            GameObject statObj = GameObject.FindGameObjectWithTag("PlayerStatHandler");
+
+            if (statObj != null)
+            {
+                playerStats = statObj.GetComponent<StatHandler>();
+            }
         }
 
         optionButton1.onClick.AddListener(() => PickOption(0));
@@ -279,36 +284,30 @@ public class LevelUpUI : MonoBehaviour
         {
             case upgradeType.Damage:
                 playerStats.modDamage += option.amount;
-                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.Defense:
                 playerStats.modDefense += option.amount;
-                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.MaxHealth:
                 playerStats.modHealth += option.amount;
                 playerStats.maxHealth += option.amount;
                 playerStats.currentHealth += option.amount;
-                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.MaxStamina:
                 playerStats.modStamina += option.amount;
                 playerStats.maxStamina += option.amount;
                 playerStats.currentStamina += option.amount;
-                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.Speed:
                 playerStats.modSpeed += option.amount;
-                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.Jumps:
                 playerStats.modJumps += (int)option.amount;
-                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
         }
     }

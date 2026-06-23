@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using System.Threading;
 using NUnit.Framework.Internal;
 
-public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
+public class BossAI : MonoBehaviour, IDamage, IInteract
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -49,7 +49,6 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
     private Vector3 lastHeardPosition;
     private bool heardNoise;
-    private bool isFroze;
     private Transform player;
     
 
@@ -143,17 +142,9 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         updateHealthBar();
         if (currentState == ZombieState.Dead)
             return;
-        if (player == null || isFroze)
+        if (player == null)
         {
             currentState = ZombieState.Rest;
-            lava1.SetActive(false);
-            lava2.SetActive(false);
-            lava3.SetActive(false);
-            lava4.SetActive(false);
-            lava5.SetActive(false);
-            lava6.SetActive(false);
-            lava7.SetActive(false);
-            lava8.SetActive(false);
             return;
         }
 
@@ -385,7 +376,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
-            RecticleBehaviour.OffHover();
+            TempUI.OffHover();
             Destroy(gameObject);
         }
         else
@@ -416,27 +407,10 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     }
     public void OnHoverEnter()
     {
-        RecticleBehaviour.OnHover(1);
+        TempUI.OnHover(1);
     }
     public void OnHoverExit()
     {
-        RecticleBehaviour.OffHover();
-    }
-
-    public void freeze(float duration)
-    {
-        //not using the durtion for him cause he is only gonna turn blue for a second and shake it off
-        isFroze = true;
-        StartCoroutine(freezeHandler(20f));
-    }
-    IEnumerator freezeHandler(float duration)
-    {
-        model.material.color = Color.blue;
-
-
-        yield return new WaitForSeconds(duration);
-
-        model.material.color = originalColor;
-        isFroze = false;
+        TempUI.OffHover();
     }
 }

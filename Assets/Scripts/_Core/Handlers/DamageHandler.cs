@@ -6,6 +6,7 @@ public class DamageHandler : MonoBehaviour
     enum damageType { bullet, stationary, DOT }
     [SerializeField] damageType type;
     [SerializeField] Rigidbody rb;
+    [SerializeField] GameObject player;
     [SerializeField] int damageAmount;
     [SerializeField] float damageRate;
     [SerializeField] int bulletSpeed;
@@ -22,6 +23,8 @@ public class DamageHandler : MonoBehaviour
             rb.linearVelocity = transform.forward * bulletSpeed;
             Destroy(gameObject, bulletDestroyTime);
         }
+
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -30,7 +33,7 @@ public class DamageHandler : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            IDamage damageable = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
+            IDamage damageable = player.GetComponentInChildren<IDamage>();
             if (damageable != null && type != damageType.DOT)
             {
                 damageable.takeDamage(damageAmount);
@@ -68,7 +71,7 @@ public class DamageHandler : MonoBehaviour
         if (other.isTrigger) return;
         if (other.CompareTag("Player"))
         {
-            IDamage damageable = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
+            IDamage damageable = player.GetComponentInChildren<IDamage>();
             if (damageable != null && type == damageType.DOT && !isDamaging)
             {
                 StartCoroutine(damageOther(damageable));

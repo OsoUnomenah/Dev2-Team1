@@ -32,9 +32,4 @@ public class buttonFunctions : MonoBehaviour
         gameManager.instance.back();
     }
 
-    public void respawn()
-    {
-        gameManager.instance.respawnPlayer();
-        gameManager.instance.stateUnpause();
-    }
 }
