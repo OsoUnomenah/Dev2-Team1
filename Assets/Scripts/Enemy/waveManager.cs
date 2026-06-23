@@ -1,22 +1,23 @@
-using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using TMPro;
 
 public class WaveManager : MonoBehaviour
 {
     public static WaveManager instance;
 
-    public TMP_Text waveText;
-
     [Header("Wave Settings")]
-    public GameObject[] enemyPrefabs; 
+    public GameObject[] enemyPrefabs;
     public float timeBetweenWaves = 5f;
 
     [Header("Scaling")]
     public int baseEnemies = 5;
     public int enemiesPerWave = 2;
     public int enemiesPerPlayerLevel = 1;
+
+    [Header("UI")]
+    public TMP_Text waveText;
 
     private gameManager gm;
 
@@ -36,28 +37,36 @@ public class WaveManager : MonoBehaviour
     private void Start()
     {
         gm = gameManager.instance;
-
         CacheSpawnPoints();
+
+        StartCoroutine(BeginGame());
     }
 
-    // Collect spawn points from children
+    IEnumerator BeginGame()
+    {
+        yield return new WaitForSeconds(2f); // small intro delay
+
+        StartCoroutine(StartNextWave());
+    }
+
     void CacheSpawnPoints()
     {
         List<Transform> points = new List<Transform>();
 
         foreach (Transform child in transform)
         {
-            if (child.CompareTag("SpawnPoint"))
-            {
-                points.Add(child);
-            }
+            points.Add(child);
         }
+
         spawnPoints = points.ToArray();
     }
 
     private void Update()
     {
-        if (enemiesAlive <= 0 && !spawningWave)
+        if (spawningWave)
+            return;
+
+        if (enemiesAlive <= 0 && waveSystemStarted)
         {
             StartCoroutine(StartNextWave());
         }
@@ -75,7 +84,7 @@ public class WaveManager : MonoBehaviour
 
         currentWave++;
 
-        Debug.Log($"Wave {currentWave} starting in {timeBetweenWaves} seconds");
+        ShowWaveUI();
 
         yield return new WaitForSeconds(timeBetweenWaves);
 
@@ -86,8 +95,6 @@ public class WaveManager : MonoBehaviour
             SpawnEnemy();
             yield return new WaitForSeconds(0.25f);
         }
-
-        Debug.Log($"Spawned {enemyCount} enemies");
 
         spawningWave = false;
     }
@@ -101,12 +108,16 @@ public class WaveManager : MonoBehaviour
 
     void SpawnEnemy()
     {
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogError("No spawn points found!");
+            return;
+        }
+
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        GameObject enemy = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
 
-        GameObject enemyToSpawn =
-            enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
-
-        Instantiate(enemyToSpawn, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
 
         enemiesAlive++;
     }
@@ -117,5 +128,23 @@ public class WaveManager : MonoBehaviour
 
         if (enemiesAlive < 0)
             enemiesAlive = 0;
+    }
+
+    void ShowWaveUI()
+    {
+        if (waveText == null) return;
+
+        waveText.gameObject.SetActive(true);
+        waveText.text = "WAVE " + currentWave + " INCOMING";
+
+        StartCoroutine(HideWaveUI());
+    }
+
+    IEnumerator HideWaveUI()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if (waveText != null)
+            waveText.gameObject.SetActive(false);
     }
 }
