@@ -15,6 +15,9 @@ public class WarehouseInteract : MonoBehaviour, IOpen
     [Header("Audio")]
     [SerializeField] private BaseSoundSO _raise;
 
+    [Header("Keys")]
+    [SerializeField] keyItem keyExpected;
+
     private int numInTrigger = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -67,9 +70,7 @@ public class WarehouseInteract : MonoBehaviour, IOpen
 
     private void OnTriggerEnter(Collider other)
     {
-        IOpen opener = other.GetComponent<IOpen>();
-
-        if (opener != null)
+        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected))
         {
             numInTrigger++;
             StartCoroutine(Open());
@@ -78,14 +79,17 @@ public class WarehouseInteract : MonoBehaviour, IOpen
 
     private void OnTriggerExit(Collider other)
     {
-        IOpen opener = other.GetComponent<IOpen>();
-
-        if (opener != null)
+        if (gameManager.instance.playerInteract.keyList.Contains(keyExpected))
         {
             numInTrigger--;
 
                 if(numInTrigger <= 0)
                     StartCoroutine(Close());
         }
+    }
+
+    public void GrabKey(keyItem key)
+    {
+
     }
 }

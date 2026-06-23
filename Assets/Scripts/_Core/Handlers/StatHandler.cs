@@ -33,25 +33,16 @@ public class StatHandler : MonoBehaviour, IDamage
     [Range(0f, 100f)][SerializeField] public float modSpeed;
     [Range(0, 100)][SerializeField] public int modJumps;
 
-    public Slider healthBar;
-    public TMP_Text healthText;
 
-    public Slider staminaBar;
-    public TMP_Text staminaText;
-
-
+    [Header("Events")]
+    public GameEvent GE_OnPlayerHealthChanged;
+    public GameEvent GE_OnPlayerStaminaChanged;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        maxHealth = health + modHealth;
-        currentHealth = maxHealth;
-        UpdatePlayerHealthBarUI();
-
-        maxStamina = stamina + modStamina;
-        currentStamina = maxStamina;
-        sprintCost = gameManager.instance.sprintCost;
-        UpdatePlayerStaminaBarUI();
+        InitHealth();
+        InitStamina();
 
         currentDamage = damage + modDamage;
         modJumps = 1;
@@ -66,18 +57,22 @@ public class StatHandler : MonoBehaviour, IDamage
 
     }
 
-    public void UpdatePlayerStaminaBarUI()
+    private void InitHealth()
     {
-        staminaText.text = " STM: " + Mathf.CeilToInt(currentStamina) + " / " + Mathf.CeilToInt(maxStamina);
-        staminaBar.value = (float)currentStamina / (float)maxStamina;
+        maxHealth = health + modHealth;
+        currentHealth = maxHealth;
+        GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
+
     }
 
-    public void UpdatePlayerHealthBarUI()
+    private void InitStamina()
     {
-        healthText.text = " HP: " + currentHealth + " / " + maxHealth;
-        healthBar.value = (float)currentHealth / (float)maxHealth;
+        maxStamina = stamina + modStamina;
+        currentStamina = maxStamina;
+        sprintCost = gameManager.instance.sprintCost;
+        GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
-
+    
     public void HandleSprint()
     {
         if (gameManager.instance.SprintTriggered 
@@ -93,6 +88,8 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += -sprintLoss;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
             if (currentStamina <= 0)
             {
                 gameManager.instance.SprintTriggered = false;
@@ -104,13 +101,15 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             currentStamina += sprintGain;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
             if (currentStamina >= maxStamina)
             {
              gameManager.instance.canSprint = true;
             
             }
         }
-        UpdatePlayerStaminaBarUI();
+        GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
 
 
@@ -136,7 +135,9 @@ public class StatHandler : MonoBehaviour, IDamage
         int finalDamage = Mathf.Max(1, amount - defenseBonus);
 
         stats.currentHealth -= Mathf.Clamp(finalDamage, 0, maxHealth);
-        stats.UpdatePlayerHealthBarUI();
+
+        //Raise Event to update health UI and trigger any other responses to health change
+        GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
 
         if (gameManager.instance.gameDebug)
         {
@@ -153,11 +154,12 @@ public class StatHandler : MonoBehaviour, IDamage
 
     public void Heal(float amount)
     {
-        currentHealth += amount;
+        currentHealth += Mathf.Clamp(amount, 0, maxHealth);
         StartCoroutine(FlashHeal());
-        if (currentHealth >  maxHealth)
-            currentHealth = maxHealth;
-        UpdatePlayerHealthBarUI();
+        if(currentHealth > maxHealth){ currentHealth = maxHealth; }
+
+        //Raise Event to update health UI and trigger any other responses to health change
+        GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
 
     }
     IEnumerator FlashDamage()

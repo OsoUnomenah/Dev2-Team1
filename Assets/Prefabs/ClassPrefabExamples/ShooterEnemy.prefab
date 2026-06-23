@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f88d73eaf14629488c6bbd0741577ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  mainCamera: {fileID: 0}
+  playerCamera: {fileID: 0}
 --- !u!1 &4529671536898076507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,7 +1001,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
   model: {fileID: 2168005645633339413}
   faceTargetSpeed: 7
-  bullet: {fileID: 5054535592068500189, guid: 6b85ccaefa9a00147b4e69aa58f2d13f, type: 3}
+  bullet: {fileID: 5054535592068500189, guid: cd9b95801581d0446bfb9f2dad2f6495, type: 3}
   gunPivot: {fileID: 8018800797147213749}
   shootPos: {fileID: 2022599661193192832}
   shootRate: 0.75
@@ -1027,7 +1027,7 @@ MonoBehaviour:
   onScreenDMG: {fileID: 8320634052033886365}
   damageText: {fileID: 6737263062706976687}
   currentHealth: 0
-  sightRange: 25
+  sightRange: 15
   attackRange: 2
   hearingRange: 20
   wanderRadius: 10
@@ -1089,7 +1089,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 0fd029d321646974c8232ea6a44684c1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

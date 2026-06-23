@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
+  m_Name: Bounce
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
+  model: {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
+  abilityType: 3
+  shootDistance: 4
+  shootCooldown: 20.9
+  effectTimer: 14.8
+  loopedEffect: {fileID: 1489387594953262563, guid: 349785d2d73ebf2429497634000921ed, type: 3}
+  level: 1

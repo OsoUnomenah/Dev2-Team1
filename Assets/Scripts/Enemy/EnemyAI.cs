@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
+public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -17,6 +17,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
     [SerializeField] Renderer model;
     public UnityEngine.UI.Slider healthbar;
     public TMP_Text healthText;
+    public bool isDead = false;
+    bool isFroze = false;
 
     public GameObject onScreenDMG;
     public TMP_Text damageText;
@@ -64,7 +66,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
     private void Start()
     {
         currentHealth = maxHealth;
-        
+        updateHealthBar();
+
+
         originalColor = model.material.color;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -83,45 +87,53 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
         
         if (currentState == ZombieState.Dead)
             return;
-        if (player == null)
+        if(!isFroze)
         {
-            currentState = ZombieState.Wander;
-            return;
+            
+            if (player == null)
+            {
+                currentState = ZombieState.Wander;
+                return;
+            }
+
+            float distance = Vector3.Distance(transform.position, player.position);
+
+            switch (currentState)
+            {
+                case ZombieState.Wander:
+                    Wander();
+
+                    if (distance <= sightRange)
+                    {
+                        currentState = ZombieState.Chase;
+                    }
+                    break;
+
+                case ZombieState.Chase:
+                    agent.SetDestination(player.position);
+
+                    if (distance <= attackRange)
+                    {
+                        currentState = ZombieState.Attack;
+                    }
+                    break;
+
+                case ZombieState.Attack:
+                    agent.SetDestination(transform.position);
+
+                    AttackPlayer();
+
+                    if (distance > attackRange)
+                    {
+                        currentState = ZombieState.Chase;
+                    }
+                    break;
+
+            }
         }
-
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        switch(currentState)
+        else
         {
-            case ZombieState.Wander:
-                Wander();
-
-                if (distance <= sightRange)
-                {
-                    currentState = ZombieState.Chase;
-                }
-                break;
-
-            case ZombieState.Chase:
-                agent.SetDestination(player.position);
-
-                if(distance <= attackRange)
-                {
-                    currentState = ZombieState.Attack;
-                }
-                break;
-
-            case ZombieState.Attack:
-                agent.SetDestination(transform.position);
-
-                AttackPlayer();
-
-                if (distance > attackRange)
-                {
-                    currentState = ZombieState.Chase;
-                }
-                break;
-
+            model.material.color = Color.blue;
         }
     }
 
@@ -196,10 +208,11 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
 
     public void takeDamage(int amount)
     {
-        //Set the damage to display on the damage text
+        if (isDead)
+        {
+            return;
+        }
         gameManager.instance.playerDamageOut = amount;
-
-        //Show the damage text
         StartCoroutine(updateDamageText());
 
         currentHealth -= amount;
@@ -208,14 +221,23 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
         if (currentHealth <= 0)
         {
             currentState = ZombieState.Dead;
+            isDead = true;
+
             if (agent != null)
                 agent.isStopped = true;
 
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
 
-            //gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
-            TempUI.OffHover();
+
+            // ✅ NEW: wave system tracking (no Find calls)
+            if (WaveManager.instance != null)
+            {
+                WaveManager.instance.OnEnemyKilled();
+            }
+
+            RecticleBehaviour.OffHover();
+            isDead = true;
             Destroy(gameObject);
         }
         else
@@ -232,6 +254,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
     }
+    
 
     IEnumerator flashGreen()
     {
@@ -247,10 +270,25 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IOpen
     }
     public void OnHoverEnter()
     {
-        TempUI.OnHover(1);
+        RecticleBehaviour.OnHover(1);
     }
     public void OnHoverExit()
     {
-        TempUI.OffHover();
+        RecticleBehaviour.OffHover();
+    }
+
+    public void freeze(float duration)
+    {
+        isFroze = true;
+        StartCoroutine(freezeHandler(duration));
+    }
+    IEnumerator freezeHandler(float duration)
+    {
+        model.material.color = Color.blue;
+        
+        yield return new WaitForSeconds(duration);
+
+        model.material.color = originalColor;
+        isFroze = false;
     }
 }
