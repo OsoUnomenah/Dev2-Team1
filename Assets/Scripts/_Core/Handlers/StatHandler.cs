@@ -44,9 +44,6 @@ public class StatHandler : MonoBehaviour, IDamage
         InitHealth();
         InitStamina();
 
-
-        
-
         currentDamage = damage + modDamage;
         modJumps = 1;
     }

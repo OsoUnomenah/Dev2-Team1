@@ -421,7 +421,7 @@ MonoBehaviour:
   canGiveMaxAmmo: 1
   enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 9034420200080744866}
-  enemySpawnChance: 100
+  enemySpawnChance: 15.1
   weaponDropPoint: {fileID: 8244520926358620861}
   model: {fileID: 5855259565331375741}
   highlight: {fileID: 0}

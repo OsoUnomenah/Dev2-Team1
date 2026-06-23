@@ -36,6 +36,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
+
     [SerializeField] public GameObject playerDamageFlash;
     [SerializeField] public GameObject playerHealFlash;
     [SerializeField] public GameObject checkpointUI;
@@ -62,7 +63,9 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
-    [SerializeField] public Transform playerSpawnPoint;
+    [SerializeField] public GameObject playerSpawnPoint;
+
+
 
 
     [SerializeField] public AbilityUI abilityUI;
@@ -101,6 +104,8 @@ public class gameManager : MonoBehaviour
         GetPlayerReferences();
         UpdateXPUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
+
+        playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
     }
 
     private void Start()
@@ -129,6 +134,7 @@ public class gameManager : MonoBehaviour
         playerCamera = player.GetComponentInChildren<Camera>();
         playerTransform = player.GetComponent<Transform>();
         playerInteract = player.GetComponent<Players>();
+
 
         if (gameDebug)
         {

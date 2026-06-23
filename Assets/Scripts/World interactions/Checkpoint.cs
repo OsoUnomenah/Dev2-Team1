@@ -7,7 +7,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-           gameManager.instance.playerSpawnPoint.position = transform.position;
+           gameManager.instance.playerSpawnPoint.transform.position = transform.position;
             StartCoroutine(CheckpointFlash());
 
             Debug.Log("Checkpoint reached!");

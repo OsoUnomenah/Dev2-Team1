@@ -2,8 +2,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PlayerHPBar : MonoBehaviour
 {
+    public static PlayerHPBar instance;
+
+
     [Header("HP Bar Config")]
     [SerializeField] public Slider playerHpBar;
     [SerializeField] public TMP_Text playerHpBarText;
@@ -13,6 +17,10 @@ public class PlayerHPBar : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (instance == null)
+        {
+            instance = this;
+        }
         InitHealth();
        
     }

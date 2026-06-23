@@ -279,36 +279,36 @@ public class LevelUpUI : MonoBehaviour
         {
             case upgradeType.Damage:
                 playerStats.modDamage += option.amount;
-               // GE_OnPlayerLevelUP.Raise(this, this );
+                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.Defense:
                 playerStats.modDefense += option.amount;
-                //GE_OnPlayerLevelUP.Raise(this, this);
+                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.MaxHealth:
                 playerStats.modHealth += option.amount;
                 playerStats.maxHealth += option.amount;
                 playerStats.currentHealth += option.amount;
-                //GE_OnPlayerLevelUP.Raise(this, this);
+                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.MaxStamina:
                 playerStats.modStamina += option.amount;
                 playerStats.maxStamina += option.amount;
                 playerStats.currentStamina += option.amount;
-                //GE_OnPlayerLevelUP.Raise(this, this);
+                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.Speed:
                 playerStats.modSpeed += option.amount;
-                //GE_OnPlayerLevelUP.Raise(this, this);
+                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
 
             case upgradeType.Jumps:
                 playerStats.modJumps += (int)option.amount;
-                //GE_OnPlayerLevelUP.Raise(this, this);
+                GE_OnPlayerLevelUP.Raise(this, this);
                 break;
         }
     }

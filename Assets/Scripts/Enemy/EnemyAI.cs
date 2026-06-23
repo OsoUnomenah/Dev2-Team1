@@ -66,7 +66,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     private void Start()
     {
         currentHealth = maxHealth;
-        
+        updateHealthBar();
+
+
         originalColor = model.material.color;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
