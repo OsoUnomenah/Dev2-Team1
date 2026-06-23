@@ -54,6 +54,6 @@ public class laser : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
-        Destroy(GameObject);
+        Destroy(gameObject);
     }
 }
