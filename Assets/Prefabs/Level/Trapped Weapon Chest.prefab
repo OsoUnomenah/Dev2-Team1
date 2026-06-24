@@ -129,7 +129,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9de35f0d831e5344eae93a031a279129, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -279,6 +279,9 @@ MonoBehaviour:
   enemySpawnPoint: {fileID: 4042994696534692808}
   enemySpawnChance: 100
   weaponDropPoint: {fileID: 5295786164589822145}
+  abilityOrbPrefabs: []
+  abilityDropPoint: {fileID: 0}
+  abilityOrbDropChance: 25
   model: {fileID: 4427680901665408942}
   highlight: {fileID: 0}
 --- !u!1 &5950503762398011447
@@ -348,7 +351,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 164c584c75a0dba40b960d1f71c8007f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

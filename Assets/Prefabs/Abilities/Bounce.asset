@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
   m_Name: Bounce
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
+  abilityName: Bounce
   model: {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
   bullet: {fileID: 5054535592068500189, guid: bb0c5df1f5e0ac94b923522d5434c467, type: 3}
   abilityType: 3
