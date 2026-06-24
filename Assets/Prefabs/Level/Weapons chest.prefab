@@ -112,6 +112,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2488442398349654001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5594935643576844280}
+  m_Layer: 0
+  m_Name: AbilityDropPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5594935643576844280
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2488442398349654001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.58, y: 0.466, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8556784288914419011}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3609340162731717126
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +343,7 @@ Transform:
   m_GameObject: {fileID: 5549765346746094401}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.27, y: 0.663, z: -0.057}
+  m_LocalPosition: {x: 3.536, y: 0.663, z: -0.057}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -352,6 +383,7 @@ Transform:
   - {fileID: 2923204972680099932}
   - {fileID: 9034420200080744866}
   - {fileID: 8244520926358620861}
+  - {fileID: 5594935643576844280}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4809520938124825825
@@ -418,10 +450,17 @@ MonoBehaviour:
     ammoTimer: 2.75
     weaponPrefab: {fileID: 1315392376950004720, guid: 0a23a22b69a5cf441801a0205846b19e, type: 3}
     pickupPrefab: {fileID: 8655629924127046308, guid: 3403d90aca528fe42b9d28ea55a28d17, type: 3}
-  canGiveMaxAmmo: 1
+  canGiveMaxAmmo: 0
   enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 9034420200080744866}
   enemySpawnChance: 15.1
   weaponDropPoint: {fileID: 8244520926358620861}
+  abilityOrbPrefabs:
+  - {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
+  - {fileID: 8869053030028166981, guid: c125db30a259be84d8eea7fdfa0396d0, type: 3}
+  - {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
+  - {fileID: 0}
+  abilityDropPoint: {fileID: 5594935643576844280}
+  abilityOrbDropChance: 35
   model: {fileID: 5855259565331375741}
   highlight: {fileID: 0}
