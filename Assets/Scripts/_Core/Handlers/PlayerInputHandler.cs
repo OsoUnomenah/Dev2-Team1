@@ -263,20 +263,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         MovementVector = context.ReadValue<Vector2>();
 
-        if (turnOnDebug)
-        {
-            Debug.Log(MovementVector);
-        }
+        //if (turnOnDebug)
+        //{
+          //  Debug.Log(MovementVector);
+       // }
     }
 
     private void OnMovementCanceled(InputAction.CallbackContext context)
     {
         MovementVector = Vector2.zero;
 
-        if (turnOnDebug)
-        {
-            Debug.Log(MovementVector);
-        }
+       // if (turnOnDebug)
+       // {
+          //  Debug.Log(MovementVector);
+       // }
     }
 
     private void OnRotatePerformed(InputAction.CallbackContext context)
@@ -285,10 +285,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             RotateVector = context.ReadValue<Vector2>();
 
-            if (turnOnDebug)
-            {
-                Debug.Log(RotateVector);
-            }
+           //if (turnOnDebug)
+           // {
+                //Debug.Log(RotateVector);
+            //}
         }
     }
 
@@ -296,10 +296,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         RotateVector = Vector2.zero;
 
-        if (turnOnDebug)
-        {
-            Debug.Log(RotateVector);
-        }
+       // if (turnOnDebug)
+       // {
+       //     Debug.Log(RotateVector);
+       // }
     }
 
     [Header("Jump Config")]
@@ -375,10 +375,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             gameManager.instance.SprintTriggered = true;
         }
 
-        if (turnOnDebug)
-        {
-            Debug.Log("Sprinting!");
-        }
+       // if (turnOnDebug)
+        //{
+       //     Debug.Log("Sprinting!");
+       // }
     }
 
     private void OnSprintCanceled(InputAction.CallbackContext context)
@@ -386,21 +386,21 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         gameManager.instance.SprintTriggered = false;
         gameManager.instance.isSprinting = false;
 
-        if (turnOnDebug)
-        {
-            Debug.Log("Sprinting Canceled!");
-        }
+       // if (turnOnDebug)
+        //{
+        //    Debug.Log("Sprinting Canceled!");
+        //}
     }
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("InteractorSource: " + interactorSource);
-        Debug.Log("WeaponManager: " + gameManager.instance.playerWeaponManager);
+       // Debug.Log("InteractorSource: " + interactorSource);
+        //Debug.Log("WeaponManager: " + gameManager.instance.playerWeaponManager);
 
         RaycastHit hit;
         if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
         {
-            Debug.Log(hit.collider.name);
+          //  Debug.Log(hit.collider.name);
 
             IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
             if (iAct != null)
@@ -411,18 +411,18 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         Debug.DrawRay(interactorSource.position, interactorSource.forward * interactRange, Color.green);
 
-        if (gameManager.instance.gameDebug)
-        {
-            Debug.Log("Interact Started!");
-        }
+        //if (gameManager.instance.gameDebug)
+       // {
+        //    Debug.Log("Interact Started!");
+        //}
     }
 
     private void OnInteractCanceled(InputAction.CallbackContext context)
     {
-        if (gameManager.instance.gameDebug)
-        {
-            Debug.Log("Stopped Interacting!");
-        }
+       // if (gameManager.instance.gameDebug)
+       // {
+       //     Debug.Log("Stopped Interacting!");
+       // }
     }
 
     private void OnShootPerformed(InputAction.CallbackContext context)
@@ -441,7 +441,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         if (gameManager.instance.isReloading)
         {
-            Debug.Log("Cannot shoot while reloading.");
+         //   Debug.Log("Cannot shoot while reloading.");
             return;
         }
 
@@ -449,7 +449,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (gameManager.instance.playerWeaponManager.Ammo <= 0)
         {
             PlayDryFireSound();
-            Debug.Log("Out of ammo. Press reload.");
+         //   Debug.Log("Out of ammo. Press reload.");
             return;
         }
 
@@ -493,17 +493,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
                     dmg.takeDamage(finalDamage);
 
-                    if (turnOnDebug)
-                    {
-                        Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
-                    }
+                   // if (turnOnDebug)
+                  //  {
+                   //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
+                   // }
                 }
             }
 
-            if (turnOnDebug)
-            {
-                Debug.Log("ShotFired!");
-            }
+            //if (turnOnDebug)
+            //{
+           ///    Debug.Log("ShotFired!");
+           // }
         }
     }
 
@@ -542,7 +542,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             case 1:
                 if (gameManager.instance.allowedAbility1)
                 {
-                    Debug.LogError("Fired Fire Shot");
+                   // Debug.LogError("Fired Fire Shot");
                     gameManager.instance.allowedAbility1 = false;
                     abilityShoot();
                     gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown, gameManager.instance.firePos);
@@ -552,7 +552,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             case 2:
                 if (gameManager.instance.allowedAbility2)
                 {
-                    Debug.LogError("Fired Freeze Shot");
+                   // Debug.LogError("Fired Freeze Shot");
                     gameManager.instance.allowedAbility2 = false;
                     abilityShoot();
                     gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown, gameManager.instance.freezePos);
@@ -562,7 +562,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             case 3:
                 if (gameManager.instance.allowedAbility3)
                 {
-                    Debug.LogError("Fired Bounce Shot");
+                   // Debug.LogError("Fired Bounce Shot");
                     gameManager.instance.allowedAbility3 = false;
                     abilityShoot();
                     gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown, gameManager.instance.bouncePos);
@@ -572,7 +572,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             case 4:
                 if (gameManager.instance.allowedAbility4)
                 {
-                    Debug.LogError("Fired Zoom Shot");
+                  //  Debug.LogError("Fired Zoom Shot");
                     gameManager.instance.allowedAbility4 = false;
                     abilityShoot();
                     gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown, gameManager.instance.zoomPos);
@@ -598,7 +598,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
     IEnumerator zoomCooldown(float cd)
     {
-        yield return new WaitForSeconds(cd);
+        yield return new WaitForSeconds(cd - (gameManager.instance.playerWeaponManager.zoomLevel * 1.5f));
         gameManager.instance.allowedAbility4 = true;
     }
     private void abilityShoot()
@@ -626,10 +626,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void OnADSCanceled(InputAction.CallbackContext context)
     {
         gameManager.instance.isAiming = false;
-        if (gameManager.instance.gameDebug)
-        {
-            Debug.Log("Stopped Aiming Down Sights!");
-        }
+        //if (gameManager.instance.gameDebug)
+        //{
+       //     Debug.Log("Stopped Aiming Down Sights!");
+        //}
     }
 
 
@@ -651,7 +651,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 gameManager.instance.canShoot = true;
 
 
-                Debug.Log("Reload complete!");
+               // Debug.Log("Reload complete!");
             }
             
             return;
@@ -711,7 +711,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         PlayCurrentWeaponReloadSound();
 
-        Debug.Log("Reloading...");
+        //Debug.Log("Reloading...");
     }
 
     private void PlayCurrentWeaponShootSound()

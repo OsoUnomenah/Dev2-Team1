@@ -122,7 +122,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 UpgradeUI.instance.ShowUpgradeNotification("Weapon inventory full");
             }
 
-            Debug.Log("Weapon inventory full.");
+           // Debug.Log("Weapon inventory full.");
             return false;
         }
 
@@ -155,7 +155,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             UpgradeUI.instance.ShowUpgradeNotification("Picked up " + weaponName);
         }
 
-        Debug.Log("Added weapon to inventory: " + weaponName);
+        //Debug.Log("Added weapon to inventory: " + weaponName);
         return true;
     }
 
@@ -202,7 +202,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                     UpgradeUI.instance.ShowUpgradeNotification("Swapped " + weaponName);
                 }
 
-                Debug.Log("Replaced weapon in inventory: " + weaponName);
+                //Debug.Log("Replaced weapon in inventory: " + weaponName);
                 return true;
             }
         }
