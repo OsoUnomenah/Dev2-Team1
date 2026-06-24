@@ -398,6 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0784ea32c6220478b80ce41a609075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponsChestInteract
+  chestOpenSound: {fileID: 11400000, guid: 7344b3146a3cc5e4586be286d8717e6f, type: 2}
   lidTransform: {fileID: 2923204972680099932}
   openAngle: 80
   openSpeed: 2

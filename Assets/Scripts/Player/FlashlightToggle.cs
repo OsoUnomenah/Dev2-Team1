@@ -2,6 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class FlashlightToggle : MonoBehaviour
 {
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO flashlightToggleSound;
+
     [Header("FlashLight")]
     [SerializeField] private Light flashlight;
 
@@ -52,6 +55,12 @@ public class FlashlightToggle : MonoBehaviour
         }
 
         flashlight.enabled = !flashlight.enabled;
+
+        if (AudioManager.instance != null && flashlightToggleSound != null)
+        {
+            AudioManager.instance.PlaySound(flashlightToggleSound);
+        }
+
     }
 
         
