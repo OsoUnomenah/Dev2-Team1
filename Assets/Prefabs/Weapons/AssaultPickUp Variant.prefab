@@ -49,6 +49,10 @@ PrefabInstance:
       value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: hitEffect
+      value: 
+      objectReference: {fileID: 8497891991718266384, guid: 04264d13aec6db845a2e76eb12909f92, type: 3}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: shootSound
       value: 
       objectReference: {fileID: 11400000, guid: a81a8565f0a59f64297e962b8c8dba03, type: 2}
@@ -64,6 +68,10 @@ PrefabInstance:
       propertyPath: weaponPrefab
       value: 
       objectReference: {fileID: 431479469405402423, guid: 2041460b5348f4346a0dd1900c17850b, type: 3}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: weaponPickupSound
+      value: 
+      objectReference: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.1556

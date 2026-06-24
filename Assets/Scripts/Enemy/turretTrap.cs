@@ -15,7 +15,7 @@ public class turretTrap : MonoBehaviour, IDamage
     [Header("Audio")]
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
-
+    [SerializeField] private BaseSoundSO turretShootSound;
 
 
 
@@ -92,6 +92,7 @@ public class turretTrap : MonoBehaviour, IDamage
     {
         shootTimer = 0;
         Instantiate(bullet, shootPos.position, gunPivot.rotation);
+        PlayTurretShootSound();
     }
 
     private void rotateGun()
@@ -142,5 +143,13 @@ public class turretTrap : MonoBehaviour, IDamage
         model.material.color = Color.yellow;
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
+    }
+
+    private void PlayTurretShootSound()
+    {
+        if (AudioManager.instance != null && turretShootSound != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(turretShootSound, gameObject);
+        }
     }
 }

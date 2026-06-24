@@ -4892,6 +4892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3592fdf3c1b697d49acaaea9bc7c8c0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AbilityPickup
+  abilityPickupSound: {fileID: 11400000, guid: ae5391a6b7fefcf4a9fa148988775552, type: 2}
   stats: {fileID: 11400000, guid: e9c99ae4c07077c428c36bb47f113b07, type: 2}
 --- !u!23 &1869342567608222335
 MeshRenderer:

@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [Header("References")]
     [SerializeField] CharacterController controller;
     [SerializeField] LayerMask ignoreLayer;
+    [SerializeField] PlayerWeaponManager weaponManager;
 
     [Header("Player Settings")]
     [SerializeField] int HP;
@@ -35,7 +36,11 @@ public class PlayerController : MonoBehaviour, IDamage
     void Start()
     {
         HPOriginal = HP;
-        
+
+        if (weaponManager == null)
+        {
+            weaponManager = GetComponent<PlayerWeaponManager>();
+        }
     }
 
     // Update is called once per frame
@@ -102,6 +107,12 @@ public class PlayerController : MonoBehaviour, IDamage
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootRange, ~ignoreLayer))
         {
             Debug.Log(hit.collider.name);
+
+            if (weaponManager.HitEffect != null)
+            {
+                // Instantiates the particle on the surface, pointed back out towards the player
+                Instantiate(weaponManager.HitEffect, hit.point, Quaternion.identity);
+            }
 
             IDamage dmg = hit.collider.GetComponent<IDamage>();
             if (dmg != null)

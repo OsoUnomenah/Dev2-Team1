@@ -38,7 +38,7 @@ public class WaveManager : MonoBehaviour
     {
         gm = gameManager.instance;
         CacheSpawnPoints();
-
+        waveText = gameManager.instance.waveText;
         StartCoroutine(BeginGame());
     }
 

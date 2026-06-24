@@ -104,19 +104,19 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
-        agent1 = lava1.GetComponent<NavMeshAgent>();
-        agent2 = lava2.GetComponent<NavMeshAgent>();
-        agent3 = lava3.GetComponent<NavMeshAgent>();
-        agent4 = lava4.GetComponent<NavMeshAgent>();
+        //agent1 = lava1.GetComponent<NavMeshAgent>();
+        //agent2 = lava2.GetComponent<NavMeshAgent>();
+        //agent3 = lava3.GetComponent<NavMeshAgent>();
+        //agent4 = lava4.GetComponent<NavMeshAgent>();
         agent5 = lava5.GetComponent<NavMeshAgent>();
         agent6 = lava6.GetComponent<NavMeshAgent>();
         agent7 = lava7.GetComponent<NavMeshAgent>();
         agent8 = lava8.GetComponent<NavMeshAgent>();
 
-        transform1 = lava1.transform.position;
-        transform2 = lava2.transform.position;
-        transform3 = lava3.transform.position;
-        transform4 = lava4.transform.position;
+        //transform1 = lava1.transform.position;
+        //transform2 = lava2.transform.position;
+        //transform3 = lava3.transform.position;
+        //transform4 = lava4.transform.position;
         transform5 = lava5.transform.position;
         transform6 = lava6.transform.position;
         transform7 = lava7.transform.position;
@@ -146,14 +146,14 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         if (player == null || isFroze)
         {
             currentState = ZombieState.Rest;
-            lava1.SetActive(false);
-            lava2.SetActive(false);
-            lava3.SetActive(false);
-            lava4.SetActive(false);
-            lava5.SetActive(false);
-            lava6.SetActive(false);
-            lava7.SetActive(false);
-            lava8.SetActive(false);
+           // lava1.SetActive(false);
+            //lava2.SetActive(false);
+            //lava3.SetActive(false);
+            //lava4.SetActive(false);
+            //lava5.SetActive(false);
+            //lava6.SetActive(false);
+            //lava7.SetActive(false);
+            //lava8.SetActive(false);
             return;
         }
 
@@ -218,10 +218,10 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     {
         if (!lava1.activeSelf)
         {
-            lava1.SetActive(true);
-            lava2.SetActive(true);
-            lava3.SetActive(true);
-            lava4.SetActive(true);
+          //  lava1.SetActive(true);
+           // lava2.SetActive(true);
+          //  lava3.SetActive(true);
+          //  lava4.SetActive(true);
             lava5.SetActive(true);
             lava6.SetActive(true);
             lava7.SetActive(true);
@@ -234,19 +234,19 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             gun.SetActive(false);
             currentState = ZombieState.Rest;
 
-            lava1.SetActive(false);
-            lava2.SetActive(false);
-            lava3.SetActive(false);
-            lava4.SetActive(false);
+           // lava1.SetActive(false);
+           // lava2.SetActive(false);
+            //lava3.SetActive(false);
+            //lava4.SetActive(false);
             lava5.SetActive(false);
             lava6.SetActive(false);
             lava7.SetActive(false);
             lava8.SetActive(false);
 
-            lava1.transform.position = transform1;
-            lava2.transform.position = transform2;
-            lava3.transform.position = transform3;
-            lava4.transform.position = transform4;
+           // lava1.transform.position = transform1;
+            //lava2.transform.position = transform2;
+            //lava3.transform.position = transform3;
+           // lava4.transform.position = transform4;
             lava5.transform.position = transform5;
             lava6.transform.position = transform6;
             lava7.transform.position = transform7;
@@ -257,10 +257,10 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         }
         
 
-        agent1.SetDestination(player.position);
-        agent2.SetDestination(player.position);
-        agent3.SetDestination(player.position);
-        agent4.SetDestination(player.position);
+       // agent1.SetDestination(player.position);
+       // agent2.SetDestination(player.position);
+        //agent3.SetDestination(player.position);
+        //agent4.SetDestination(player.position);
         agent5.SetDestination(player.position);
         agent6.SetDestination(player.position);
         agent7.SetDestination(player.position);

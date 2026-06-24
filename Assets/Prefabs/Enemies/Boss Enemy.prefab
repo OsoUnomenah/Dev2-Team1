@@ -658,6 +658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::shooterEnemy
   model: {fileID: 8440042407393076508}
+  enemyShootSound: {fileID: 11400000, guid: 6b6eb208da7daa14aac336567985362a, type: 2}
   faceTargetSpeed: 3
   bullet: {fileID: 5054535592068500189, guid: cd9b95801581d0446bfb9f2dad2f6495, type: 3}
   gunPivot: {fileID: 7489747320642545726}

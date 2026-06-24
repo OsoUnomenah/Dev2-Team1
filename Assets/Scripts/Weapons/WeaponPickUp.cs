@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponPickUp : MonoBehaviour, IInteract
@@ -21,10 +21,12 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] public int maxAmmo;
     [SerializeField] float ammoTimer;
     [SerializeField] private GameObject weaponPrefab;
+    [SerializeField] private GameObject hitEffect;
 
     [Header("Audio")]
     [SerializeField] private BaseSoundSO shootSound;
     [SerializeField] private BaseSoundSO reloadSound;
+    [SerializeField] private BaseSoundSO weaponPickupSound;
 
     [Header("Generated Weapon Mods")]
     [SerializeField] private bool hasGeneratedMod;
@@ -245,6 +247,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     ammoTimer,
     shootSound,
     reloadSound,
+    hitEffect,
     modDescriptions
 );
 
@@ -264,6 +267,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
                 ammoTimer,
                 shootSound,
                 reloadSound,
+                hitEffect,
                 modDescriptions
             );
         }
@@ -280,7 +284,17 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             WeaponModHoverUI.Instance.HideInfo();
         }
 
+        PlayWeaponPickupSound();
+
         Destroy(gameObject);
+    }
+
+    private void PlayWeaponPickupSound()
+    {
+        if (AudioManager.instance != null && weaponPickupSound != null)
+        {
+            AudioManager.instance.PlaySound(weaponPickupSound);
+        }
     }
 
     public void OnHoverEnter()

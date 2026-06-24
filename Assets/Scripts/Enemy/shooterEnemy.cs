@@ -7,7 +7,8 @@ public class shooterEnemy : MonoBehaviour
     [Header("Components")]
     [SerializeField] Renderer model;
 
-
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO enemyShootSound;
 
     [Header("Stats")]
     [Range(1, 10)][SerializeField] int faceTargetSpeed;
@@ -62,7 +63,7 @@ public class shooterEnemy : MonoBehaviour
     {
             shootTimer = 0;
             Instantiate(bullet, shootPos.position, gunPivot.rotation);
-            
+            PlayEnemyShootSound();
     }
     
      private void rotateGun()
@@ -85,6 +86,14 @@ public class shooterEnemy : MonoBehaviour
         if (other.CompareTag("Player"))
             playerInTrigger = false;
             model.material.color = originalColor;
+    }
+
+    private void PlayEnemyShootSound()
+    {
+        if (AudioManager.instance != null && enemyShootSound != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(enemyShootSound, gameObject);
+        }
     }
 
 }

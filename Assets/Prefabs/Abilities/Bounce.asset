@@ -15,6 +15,7 @@ MonoBehaviour:
   abilityName: Bounce
   model: {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
   bullet: {fileID: 5054535592068500189, guid: bb0c5df1f5e0ac94b923522d5434c467, type: 3}
+  throwSound: {fileID: 11400000, guid: 32ee1a6239fad0548ba004fdab560170, type: 2}
   abilityType: 3
   shootDistance: 4
   shootCooldown: 0.1

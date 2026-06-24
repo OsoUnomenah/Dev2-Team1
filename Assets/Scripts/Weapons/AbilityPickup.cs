@@ -3,6 +3,9 @@ using UnityEngine;
 public class AbilityPickup : MonoBehaviour
 {
 
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO abilityPickupSound;
+
     [SerializeField] AbilityStats stats;
 
 
@@ -14,7 +17,16 @@ public class AbilityPickup : MonoBehaviour
         if (pic != null)
         {
             pic.getStats(stats);
+            PlayAbilityPickupSound();
             Destroy(gameObject);
+        }
+    }
+
+    private void PlayAbilityPickupSound()
+    {
+        if (AudioManager.instance != null && abilityPickupSound != null)
+        {
+            AudioManager.instance.PlaySound(abilityPickupSound);
         }
     }
 }

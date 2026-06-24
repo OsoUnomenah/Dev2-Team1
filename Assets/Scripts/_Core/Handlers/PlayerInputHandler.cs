@@ -603,12 +603,23 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
     private void abilityShoot()
     {
+        AbilityStats currentAbility = gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot];
 
-        Instantiate(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].bullet,
-                        Camera.main.transform.position +
-                        Camera.main.transform.forward * 1.5f,
-                        Quaternion.LookRotation(Camera.main.transform.forward));
+        if (currentAbility == null || currentAbility.bullet == null)
+        {
+            return;
+        }
 
+        if (AudioManager.instance != null && currentAbility.throwSound != null)
+        {
+            AudioManager.instance.PlaySound(currentAbility.throwSound);
+        }
+
+        Instantiate(
+            currentAbility.bullet,
+            Camera.main.transform.position + Camera.main.transform.forward * 1.5f,
+            Quaternion.LookRotation(Camera.main.transform.forward)
+        );
     }
 
     //this is now a Ability button instead of ADS
