@@ -53,9 +53,17 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: shootSound
+      value: 
+      objectReference: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponName
       value: Sniper
       objectReference: {fileID: 0}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: reloadSound
+      value: 
+      objectReference: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponPrefab
       value: 

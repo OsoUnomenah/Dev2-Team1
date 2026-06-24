@@ -19,6 +19,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         public int maxAmmo;
         public float ammoTimer;
         public GameObject weaponPrefab;
+        public BaseSoundSO shootSound;
+        public BaseSoundSO reloadSound;
         public List<string> modDescriptions = new List<string>();
 
     }
@@ -33,6 +35,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int Ammo;
     public int MaxAmmo;
     public float AmmoTimer;
+    public BaseSoundSO ShootSound;
+    public BaseSoundSO ReloadSound;
 
     
 
@@ -100,6 +104,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     int ammo,
     int maxAmmo,
     float ammoTimer,
+    BaseSoundSO shootSound,
+    BaseSoundSO reloadSound,
     List<string> weaponMods = null)
     {
         for (int i = 0; i < weaponInventory.Count; i++)
@@ -140,6 +146,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         newWeapon.ammo = ammo;
         newWeapon.maxAmmo = maxAmmo;
         newWeapon.ammoTimer = ammoTimer;
+        newWeapon.shootSound = shootSound;
+        newWeapon.reloadSound = reloadSound;
         newWeapon.modDescriptions = CopyModList(weaponMods);
 
         weaponInventory.Add(newWeapon);
@@ -170,6 +178,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     int ammo,
     int maxAmmo,
     float ammoTimer,
+    BaseSoundSO shootSound,
+    BaseSoundSO reloadSound,
     List<string> weaponMods = null)
     {
         for (int i = 0; i < weaponInventory.Count; i++)
@@ -186,6 +196,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 weaponInventory[i].ammo = ammo;
                 weaponInventory[i].maxAmmo = maxAmmo;
                 weaponInventory[i].ammoTimer = ammoTimer;
+                weaponInventory[i].shootSound = shootSound;
+                weaponInventory[i].reloadSound = reloadSound;
                 weaponInventory[i].modDescriptions = CopyModList(weaponMods);
 
                 EquipWeaponFromInventory(i, false);
@@ -276,7 +288,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             weapon.weaponPrefab,
             weapon.ammo,
             weapon.maxAmmo,
-            weapon.ammoTimer
+            weapon.ammoTimer,
+            weapon.shootSound,
+            weapon.reloadSound
         );
 
         if (UpgradeUI.instance != null)
@@ -339,7 +353,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             SwitchWeapon(-1);
         }                
     }
-    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer)
+    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer, BaseSoundSO shootSound, BaseSoundSO reloadSound)
     {
         Type = type;
         Damage = damage;
@@ -354,6 +368,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         Ammo = ammo;
         MaxAmmo = maxAmmo;
         AmmoTimer = ammoTimer;
+        ShootSound = shootSound;
+        ReloadSound = reloadSound;
 
         if (weaponCurrent != null)
         {

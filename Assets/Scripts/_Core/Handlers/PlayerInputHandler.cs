@@ -50,6 +50,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
+    [SerializeField] private BaseSoundSO _dryFire;
     [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
     [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
 
@@ -426,8 +427,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
-        if (gameManager.instance.playerWeaponManager == null 
-            || gameManager.instance.playerWeaponManager.Damage <= 0 
+        if (gameManager.instance.playerWeaponManager == null)
+        {
+            return;
+        }
+
+        // No weapon equipped / invalid weapon = no sound.
+        if (gameManager.instance.playerWeaponManager.Damage <= 0
             || gameManager.instance.playerWeaponManager.Range <= 0)
         {
             return;
@@ -439,15 +445,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
+        // Weapon is equipped, but ammo is already empty = dry fire.
         if (gameManager.instance.playerWeaponManager.Ammo <= 0)
         {
+            PlayDryFireSound();
             Debug.Log("Out of ammo. Press reload.");
             return;
         }
 
         if (gameManager.instance.canShoot == true)
-        { 
-            recoil = gameManager.instance.recoil; 
+        {
+            recoil = gameManager.instance.recoil;
         }
         else
         {
@@ -459,7 +467,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             timer = 0;
             gameManager.instance.canShoot = false;
 
-            AudioManager.instance.PlaySound(_shoot);
+            PlayCurrentWeaponShootSound();
 
             gameManager.instance.playerWeaponManager.Ammo--;
 
@@ -474,13 +482,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 {
                     int bonusDamage = 0;
 
-                    
-                        StatHandler stats = gameManager.instance.playerStatHandler;
+                    StatHandler stats = gameManager.instance.playerStatHandler;
 
-                        if (stats != null)
-                        {
-                            bonusDamage = Mathf.RoundToInt(stats.modDamage);
-                        }
+                    if (stats != null)
+                    {
+                        bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                    }
 
                     int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
 
@@ -684,12 +691,55 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         reloadTimer = 0;
         gameManager.instance.canShoot = false;
 
+
+
         if (gameManager.instance.Reload != null)
         {
             gameManager.instance.Reload.SetActive(true);
         }
 
+        PlayCurrentWeaponReloadSound();
+
         Debug.Log("Reloading...");
+    }
+
+    private void PlayCurrentWeaponShootSound()
+    {
+        BaseSoundSO soundToPlay = _shoot;
+
+        if (gameManager.instance.playerWeaponManager != null &&
+            gameManager.instance.playerWeaponManager.ShootSound != null)
+        {
+            soundToPlay = gameManager.instance.playerWeaponManager.ShootSound;
+        }
+
+        if (AudioManager.instance != null && soundToPlay != null)
+        {
+            AudioManager.instance.PlaySound(soundToPlay);
+        }
+    }
+
+    private void PlayCurrentWeaponReloadSound()
+    {
+        if (gameManager.instance.playerWeaponManager == null)
+        {
+            return;
+        }
+
+        BaseSoundSO soundToPlay = gameManager.instance.playerWeaponManager.ReloadSound;
+
+        if (AudioManager.instance != null && soundToPlay != null)
+        {
+            AudioManager.instance.PlaySound(soundToPlay);
+        }
+    }
+
+    private void PlayDryFireSound()
+    {
+        if (AudioManager.instance != null && _dryFire != null)
+        {
+            AudioManager.instance.PlaySound(_dryFire);
+        }
     }
 
     private void HandleFootsteps()
