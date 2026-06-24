@@ -28,6 +28,7 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
     [SerializeField] private Transform lidTransform;
     [SerializeField] private float openAngle;
     [SerializeField] private float openSpeed;
+    [SerializeField] private float resetTimer;
 
     [Header("Enemy Trap Settings")]
     [SerializeField] private GameObject enemyPrefab;
@@ -83,6 +84,7 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
         RecticleBehaviour.OffHover();
 
         StartCoroutine(OpenChest());
+        StartCoroutine(ResetChest());
         isOpen = true;
     }
 
@@ -116,7 +118,23 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
 
         Debug.Log("Upgrade chest opened!");
     }
+    private IEnumerator ResetChest()
+    {
+        yield return new WaitForSeconds(resetTimer);
 
+        isMoving = true;
+        while (Quaternion.Angle(lidTransform.rotation, closedRotation) > 0.1f)
+        {
+            lidTransform.rotation = Quaternion.Slerp(
+                lidTransform.rotation,
+                closedRotation,
+                openSpeed * Time.deltaTime
+            );
+        }
+        isMoving = false;
+        isOpen = false;
+
+    }
     private void GiveUpgradeReward()
     {
         if(playerStats == null)

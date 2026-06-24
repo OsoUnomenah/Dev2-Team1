@@ -616,6 +616,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9199058122021989064}
   - component: {fileID: 8023310919466633969}
+  - component: {fileID: 6370610315799308593}
   - component: {fileID: 6962100633902984938}
   - component: {fileID: 8440042407393076508}
   - component: {fileID: 4549957520099369778}
@@ -665,6 +666,18 @@ MonoBehaviour:
   shootPos: {fileID: 2931508858521453660}
   shootRate: 0.1
   gunRotateSpeed: 10
+--- !u!114 &6370610315799308593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8445165310664096854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e2159ba7334b54ca8fb98f206b056b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KillAfterSpawn
 --- !u!33 &6962100633902984938
 MeshFilter:
   m_ObjectHideFlags: 0
