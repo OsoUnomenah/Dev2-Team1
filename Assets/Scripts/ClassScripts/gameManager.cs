@@ -41,7 +41,6 @@ public class gameManager : MonoBehaviour
     [SerializeField] public GameObject playerDamageFlash;
     [SerializeField] public GameObject playerHealFlash;
     [SerializeField] public GameObject checkpointUI;
-    [SerializeField] public GameObject outOfAmmoUI;
 
     [SerializeField] public GameObject Reload;
     [SerializeField] public float reloadTime;
@@ -90,9 +89,6 @@ public class gameManager : MonoBehaviour
     public bool isAiming;
     public int enemyDamageOut;
     public int playerDamageOut;
-
-    private Coroutine ammoFlashCoroutine;
-    private WaitForSeconds ammoFlashWait = new WaitForSeconds(1f);
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
@@ -433,23 +429,5 @@ public class gameManager : MonoBehaviour
             StartCoroutine(instance.playerInputHandler.bounceCooldown(gameManager.instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer));
         }
         
-    }
-
-    public void TriggerOutOfAmmoFlash()
-    {
-        if (isPaused || menuActive != null) return;
-        if (ammoFlashCoroutine != null) return;
-
-        ammoFlashCoroutine = StartCoroutine(DisplayPopup());
-    }
-
-    private IEnumerator DisplayPopup()
-    {
-        outOfAmmoUI.SetActive(true);
-
-        yield return ammoFlashWait; 
-
-        outOfAmmoUI.SetActive(false);
-        ammoFlashCoroutine = null;
     }
 }

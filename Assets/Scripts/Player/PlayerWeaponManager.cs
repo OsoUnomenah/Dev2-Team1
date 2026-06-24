@@ -86,12 +86,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     {
         HandleWeaponSwitchInput();
         abilitySwitch();
-
-        // Check if out of ammo
-        if (currentWeaponIndex >= 0 && Input.GetButtonDown("Fire1") && Ammo <= 0)
-        {
-            gameManager.instance.TriggerOutOfAmmoFlash();
-        }
     }
 
     public bool AddWeaponToInventory(
