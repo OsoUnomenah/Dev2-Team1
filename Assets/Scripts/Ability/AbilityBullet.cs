@@ -76,10 +76,6 @@ public class abilityBullet : MonoBehaviour
 
         if(type == damageType.bounce)
         {
-            
-
-            
-
             Vector3 hitPoint = other.ClosestPointOnBounds(transform.position);
 
             hitPoint += Vector3.up * 0.2f;
@@ -100,6 +96,20 @@ public class abilityBullet : MonoBehaviour
             gameManager.instance.StartCoroutine(gameManager.instance.bounceDestroy());
             Destroy(gameObject);
         }
+        if (type == damageType.zoom)
+        {
+            Vector3 hitPoint = other.ClosestPointOnBounds(transform.position);
+
+            hitPoint += Vector3.up * 0.2f;
+
+            gameManager.instance.characterController.transform.position = hitPoint;
+            StartCoroutine(zoomWait());
+        }
+    }
+    IEnumerator zoomWait()
+    {
+        yield return new WaitForEndOfFrame();
+        Destroy(gameObject);
     }
     IEnumerator fireDamage(IDamage d, Collider other)
     {

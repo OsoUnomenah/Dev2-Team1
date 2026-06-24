@@ -22,6 +22,9 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         public GameObject pickupPrefab;
     }
 
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO chestOpenSound;
+
     [Header("Chest Settings")]
     [SerializeField] private Transform lidTransform;
     [SerializeField] private float openAngle;
@@ -97,6 +100,8 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     private IEnumerator OpenChest()
     {
         isMoving = true;
+        PlayChestOpenSound();
+
         bool rewardGiven = false;
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
@@ -275,5 +280,13 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         gameManager.instance.interactText.gameObject.SetActive(false);
         RecticleBehaviour.OffHover();
+    }
+
+    private void PlayChestOpenSound()
+    {
+        if (AudioManager.instance != null && chestOpenSound != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(chestOpenSound, gameObject);
+        }
     }
 }
