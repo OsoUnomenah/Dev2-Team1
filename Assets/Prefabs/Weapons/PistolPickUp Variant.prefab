@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: reloadSound
       value: 
       objectReference: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: weaponPickupSound
+      value: 
+      objectReference: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.052

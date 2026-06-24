@@ -1000,6 +1000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::enemyAI
   model: {fileID: 2168005645633339413}
+  enemyShootSound: {fileID: 11400000, guid: 6b6eb208da7daa14aac336567985362a, type: 2}
   faceTargetSpeed: 7
   bullet: {fileID: 5054535592068500189, guid: cd9b95801581d0446bfb9f2dad2f6495, type: 3}
   gunPivot: {fileID: 8018800797147213749}
@@ -1024,6 +1025,7 @@ MonoBehaviour:
   model: {fileID: 2168005645633339413}
   healthbar: {fileID: 5448688189988614238}
   healthText: {fileID: 1314950671197638770}
+  isDead: 0
   onScreenDMG: {fileID: 8320634052033886365}
   damageText: {fileID: 6737263062706976687}
   currentHealth: 0

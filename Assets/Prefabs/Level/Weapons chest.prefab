@@ -462,6 +462,6 @@ MonoBehaviour:
   - {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
   - {fileID: 8869053030028166981, guid: 3d1e7de392c971241ab13044e4cd8cbe, type: 3}
   abilityDropPoint: {fileID: 5594935643576844280}
-  abilityOrbDropChance: 35
+  abilityOrbDropChance: 40
   model: {fileID: 5855259565331375741}
   highlight: {fileID: 0}

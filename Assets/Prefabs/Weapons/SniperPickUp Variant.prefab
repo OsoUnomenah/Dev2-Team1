@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: weaponPrefab
       value: 
       objectReference: {fileID: 759089939085317326, guid: 4a9be8da16743b4498cd534e5ae1c055, type: 3}
+    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: weaponPickupSound
+      value: 
+      objectReference: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.29

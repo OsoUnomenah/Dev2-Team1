@@ -25,6 +25,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [Header("Audio")]
     [SerializeField] private BaseSoundSO shootSound;
     [SerializeField] private BaseSoundSO reloadSound;
+    [SerializeField] private BaseSoundSO weaponPickupSound;
 
     [Header("Generated Weapon Mods")]
     [SerializeField] private bool hasGeneratedMod;
@@ -280,7 +281,17 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             WeaponModHoverUI.Instance.HideInfo();
         }
 
+        PlayWeaponPickupSound();
+
         Destroy(gameObject);
+    }
+
+    private void PlayWeaponPickupSound()
+    {
+        if (AudioManager.instance != null && weaponPickupSound != null)
+        {
+            AudioManager.instance.PlaySound(weaponPickupSound);
+        }
     }
 
     public void OnHoverEnter()
