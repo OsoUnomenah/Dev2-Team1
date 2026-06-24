@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eee50487d35164c448ebd6537353de66, type: 3}
-  m_Name: _dead
+  m_Name: _machine
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
   clips:
-  - {fileID: 8300000, guid: fb855d6b47a66d94caa489c695446cc7, type: 3}
+  - {fileID: 8300000, guid: 8905c50c3072fd94ea789abd71bdd242, type: 3}
   loop: 0
   randomizePitch: 0
   randomPitchRangeMod: 0.1

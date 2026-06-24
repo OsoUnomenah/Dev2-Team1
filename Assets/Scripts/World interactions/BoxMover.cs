@@ -17,6 +17,7 @@ public class BoxMover : MonoBehaviour, IInteract
     [SerializeField] private LayerMask grabLayer;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Behavior")]
     public float grabActionSpeed = 2f;
     public float moveActionSpeed = 5f;
     private int interactCounter = 0;
@@ -72,7 +73,7 @@ public class BoxMover : MonoBehaviour, IInteract
         if (Physics.Raycast(magnet.position, Vector3.down, out hit, 20, grabLayer))
         {
 
-            // lower the magnet until the magnets lower face "touches" the objects upper face
+            // lower the magnet until the magnets lower face touches the objects upper face
             while (magnet.position.y > hit.point.y + (magnet.localScale.y / 2f))
             {
                 magnet.Translate(Vector3.down * grabActionSpeed * Time.deltaTime);
@@ -142,6 +143,7 @@ public class BoxMover : MonoBehaviour, IInteract
         isMoving = true;
         onHoverLight.color = Color.orange;
         buttonRender.material.color = Color.orange;
+
 
         if (magnet.position.x <= magnetStartingPosition.x)
         {
