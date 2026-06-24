@@ -48,13 +48,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c15e81f2bd790545b85073ce3342d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::abilityBullet
-  type: 1
+  type: 3
   rb: {fileID: 8632641917491625518}
   damageAmount: 0
   damageRate: 276.4
-  bulletSpeed: 34
+  bulletSpeed: 9
   bulletDestroyTime: 92
-  hitEffect: {fileID: 1489387594953262563, guid: 0cce6629648d69949b49a98c533c70ee, type: 3}
+  hitEffect: {fileID: 1489387594953262563, guid: 1dfe7a56f9a2e3344a4135bbccb72fa5, type: 3}
 --- !u!135 &6919192181097799100
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -136,7 +136,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 47be6f38a08d1ba4e9cc46873e2a4556, type: 2}
+  - {fileID: 2100000, guid: 77add5d0f108e334bb86d440175aa904, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -575,6 +575,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     gameManager.instance.allowedAbility4 = false;
                     abilityShoot();
                     gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown, gameManager.instance.zoomPos);
+                    StartCoroutine(zoomCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown));
                 }
                 break;
         }
