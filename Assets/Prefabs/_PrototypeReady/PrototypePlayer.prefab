@@ -109,6 +109,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   effectSocket: {fileID: 9042797767232042624}
   abilities: []
+  bouncePad: {fileID: 8405657338730397385, guid: 71d43a5100017964f9b53c511ccc72db, type: 3}
   fireLevel: 0
   freezeLevel: 0
   bounceLevel: 0

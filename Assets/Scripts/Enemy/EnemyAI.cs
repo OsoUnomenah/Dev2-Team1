@@ -285,10 +285,12 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     IEnumerator freezeHandler(float duration)
     {
         model.material.color = Color.blue;
+        agent.isStopped = true;
         
         yield return new WaitForSeconds(duration);
 
         model.material.color = originalColor;
         isFroze = false;
+        agent.isStopped = false;
     }
 }

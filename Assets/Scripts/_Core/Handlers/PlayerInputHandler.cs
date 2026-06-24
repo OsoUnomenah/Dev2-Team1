@@ -338,6 +338,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
+    public void Bounce(int force)
+    {        
+        currentMovement.y = force + (force * 5);
+    }
+
     public void OnJumpPerformed(InputAction.CallbackContext context)
     {
         if (canJump)
@@ -560,6 +565,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     gameManager.instance.allowedAbility3 = false;
                     abilityShoot();
                     gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown, gameManager.instance.bouncePos);
+                    StartCoroutine(bounceCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown));
                 }
                 break;
             case 4:
@@ -583,9 +589,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility2 = true;
     }
-    IEnumerator bounceCooldown(float cd)
+    public IEnumerator bounceCooldown(float cd)
     {
-
         yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility3 = true;
     }

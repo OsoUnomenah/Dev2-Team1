@@ -11,7 +11,7 @@ public class AbilityStats : ScriptableObject
 
 
     [Range(1, 4)] public int shootDistance;
-    [Range(1, 50)] public float shootCooldown;
+    [Range(0.1f, 50)] public float shootCooldown;
     [Range(1, 2000)] public float effectTimer;
 
     public ParticleSystem loopedEffect;

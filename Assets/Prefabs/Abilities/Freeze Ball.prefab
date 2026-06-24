@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 8155322213960565122}
   - component: {fileID: 7479445574309219775}
   - component: {fileID: 2347451912064266834}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Freeze Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}

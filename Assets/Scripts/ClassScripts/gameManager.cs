@@ -76,6 +76,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public int freezePos = -1;
     [SerializeField] public int bouncePos = -1;
     [SerializeField] public int zoomPos = -1;
+    public GameObject pad;
+    public ParticleSystem bounceeffect;
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -411,5 +413,21 @@ public class gameManager : MonoBehaviour
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
+    }
+    private bool isBounceDest = false;
+    public IEnumerator bounceDestroy()
+    {
+        if (!isBounceDest)
+        {
+            isBounceDest = true;
+            yield return new WaitForSeconds(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].effectTimer);
+            Destroy(gameManager.instance.pad);
+            Destroy(gameManager.instance.bounceeffect);
+            isBounceDest = false;
+            gameManager.instance.allowedAbility3 = false;
+            instance.greyedOut(instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer, instance.bouncePos);
+            StartCoroutine(instance.playerInputHandler.bounceCooldown(gameManager.instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer));
+        }
+        
     }
 }

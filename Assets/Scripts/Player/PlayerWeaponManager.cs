@@ -49,6 +49,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int freezePos;
     private int bouncePos;
     private int zoomPos;
+    [SerializeField] public GameObject bouncePad;
     //Ability Settings
     public int fireLevel;
     public int freezeLevel;

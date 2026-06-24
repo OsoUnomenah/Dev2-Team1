@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6924474846413176349}
   - component: {fileID: 7484332136112459}
   m_Layer: 0
-  m_Name: Bullet 2
+  m_Name: Bounce Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,13 +48,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c15e81f2bd790545b85073ce3342d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::abilityBullet
-  type: 0
+  type: 2
   rb: {fileID: 8632641917491625518}
-  damageAmount: 7
-  damageRate: 276.4
-  bulletSpeed: 34
+  damageAmount: 0
+  damageRate: 0
+  bulletSpeed: 12
   bulletDestroyTime: 209
-  hitEffect: {fileID: 1489387594953262563, guid: c4fd024e20532754485f995531afe0ef, type: 3}
+  hitEffect: {fileID: 1489387594953262563, guid: 349785d2d73ebf2429497634000921ed, type: 3}
 --- !u!135 &6919192181097799100
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -136,7 +136,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 678e5b348f1944549856921d6236abb0, type: 2}
+  - {fileID: 2100000, guid: ab8de68c6351ca543b696b7c4b3c3b11, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

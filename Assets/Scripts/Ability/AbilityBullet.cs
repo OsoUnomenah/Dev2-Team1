@@ -12,7 +12,7 @@ public class abilityBullet : MonoBehaviour
     [SerializeField] int bulletSpeed;
     [SerializeField] int bulletDestroyTime;
     [SerializeField] ParticleSystem hitEffect;
-
+    
 
     bool isDamaging;
 
@@ -34,8 +34,6 @@ public class abilityBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
-
         if (other.isTrigger) return;
 
         IDamage dmg = other.GetComponent<IDamage>();
@@ -75,6 +73,33 @@ public class abilityBullet : MonoBehaviour
             
             Destroy(gameObject);
         }
+
+        if(type == damageType.bounce)
+        {
+            
+
+            
+
+            Vector3 hitPoint = other.ClosestPointOnBounds(transform.position);
+
+            hitPoint += Vector3.up * 0.2f;
+            if (gameManager.instance.pad != null)
+            {
+                Destroy(gameManager.instance.pad);
+                Destroy(gameManager.instance.bounceeffect);                
+            }
+            if (hitEffect != null)
+            {
+                gameManager.instance.bounceeffect = Instantiate(hitEffect, transform.position, Quaternion.identity);
+                gameManager.instance.bounceeffect.Play();
+            }
+            gameManager.instance.pad = Instantiate(gameManager.instance.playerWeaponManager.bouncePad,
+                                                     hitPoint,
+                                                     Quaternion.identity);
+
+            gameManager.instance.StartCoroutine(gameManager.instance.bounceDestroy());
+            Destroy(gameObject);
+        }
     }
     IEnumerator fireDamage(IDamage d, Collider other)
     {
@@ -100,6 +125,4 @@ public class abilityBullet : MonoBehaviour
         Destroy(gameObject);
         
     }
-
-   
 }
