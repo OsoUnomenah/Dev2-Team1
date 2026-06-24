@@ -19,6 +19,7 @@ TagManager:
   - PlayerCamera
   - SpawnPoint
   - PlayerSpawnPos
+  - PlayerSpawnPoint
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - OnTop
   - Environment
   - Prop
-  - 
+  - Ceiling
   - 
   - 
   - 

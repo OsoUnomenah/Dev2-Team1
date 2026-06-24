@@ -29,7 +29,7 @@ public class BoxMover : MonoBehaviour, IInteract
 
     void Start()
     {
-        onHoverLight.enabled = false;
+        onHoverLight.enabled = true;
         isGrabbing = false;
         isMoving = false;
         hasBox = false;
@@ -168,7 +168,6 @@ public class BoxMover : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
-        onHoverLight.enabled = true;
         if (!isGrabbing)
         {
             onHoverLight.color = Color.green;
@@ -177,9 +176,6 @@ public class BoxMover : MonoBehaviour, IInteract
 
     public void OnHoverExit()
     {
-        if (!isGrabbing && !isMoving)
-        {
-            onHoverLight.enabled = false;
-        }
+        
     }
 }
