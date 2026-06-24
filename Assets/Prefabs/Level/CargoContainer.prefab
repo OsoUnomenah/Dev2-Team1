@@ -22,15 +22,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b3660015371f49e45bac2637bf16dc1b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.31967735
+      value: 38.490326
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b3660015371f49e45bac2637bf16dc1b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.1399674
+      value: -7.229971
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b3660015371f49e45bac2637bf16dc1b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.2698059
+      value: -72.980194
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b3660015371f49e45bac2637bf16dc1b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: b3660015371f49e45bac2637bf16dc1b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -4314468751321406459, guid: 5d8325a34fa9d5f41b43225b635ede26, type: 3}
     - target: {fileID: 919132149155446097, guid: b3660015371f49e45bac2637bf16dc1b, type: 3}
       propertyPath: m_Name
       value: CargoContainer

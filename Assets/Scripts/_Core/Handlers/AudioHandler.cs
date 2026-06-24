@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -28,7 +29,9 @@ public class AudioManager : MonoBehaviour
         audioSource.outputAudioMixerGroup =
             sound.soundType == BaseSoundSO.SoundTypes.Music ? musicGroup : sfxGroup;
 
-        audioSource.clip = sound.clip;
+        AudioClip currSound = sound.clips[Random.Range(0, sound.clips.Length)];
+
+        audioSource.clip = currSound;
         audioSource.volume = sound.volume;
         audioSource.pitch = sound.pitch;
         audioSource.loop = sound.loop;
@@ -40,7 +43,7 @@ public class AudioManager : MonoBehaviour
 
         if (!sound.loop)
         {
-            Destroy(soundObject, sound.clip.length);
+            Destroy(soundObject, currSound.length);
         }
     }
 
@@ -53,14 +56,16 @@ public class AudioManager : MonoBehaviour
             audioSource = noiseMaker.AddComponent<AudioSource>();
         }
 
+        AudioClip currSound = _footsteps.clips[Random.Range(0, _footsteps.clips.Length)];
+
         audioSource.outputAudioMixerGroup = sfxGroup;
 
-        audioSource.clip = _footsteps.clip;
+        audioSource.clip = currSound;
         audioSource.volume = _footsteps.volume;
         audioSource.pitch = _footsteps.pitch;
         audioSource.loop = _footsteps.loop;
 
-        audioSource.Play();
+        audioSource.PlayOneShot(currSound, _footsteps.volume);
     }
 
     public void PlaySoundAtPosition(BaseSoundSO sound, GameObject noiseMaker)
@@ -78,12 +83,14 @@ public class AudioManager : MonoBehaviour
         audioSource.outputAudioMixerGroup =
             sound.soundType == BaseSoundSO.SoundTypes.Music ? musicGroup : sfxGroup;
 
+        AudioClip currSound = sound.clips[Random.Range(0, sound.clips.Length)];
+
         audioSource.spatialBlend = 1f;
         audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
         audioSource.minDistance = sound.fallOffDistMin;
         audioSource.maxDistance = sound.fallOffDistMax;
 
-        audioSource.clip = sound.clip;
+        audioSource.clip = currSound;
         audioSource.volume = sound.volume;
         audioSource.pitch = sound.pitch;
 
@@ -92,6 +99,6 @@ public class AudioManager : MonoBehaviour
             audioSource.Play();
         }
 
-        Destroy(soundObject, sound.clip.length);
+        Destroy(soundObject, currSound.length);
     }
 }
