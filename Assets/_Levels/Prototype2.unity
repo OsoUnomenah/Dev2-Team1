@@ -43372,6 +43372,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpdatedPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 4918395676718949796, guid: a19e7cce2ef086643a7cfd08cdface0c, type: 3}
+      propertyPath: bouncePad
+      value: 
+      objectReference: {fileID: 8405657338730397385, guid: 71d43a5100017964f9b53c511ccc72db, type: 3}
     - target: {fileID: 5026453916610437694, guid: a19e7cce2ef086643a7cfd08cdface0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.33
