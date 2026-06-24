@@ -496,6 +496,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             if (gameManager.instance.playerWeaponManager.Ammo <= 0)
             {
+                gameManager.instance.isReloading = true;
                 StartReload();
             }
 
@@ -675,20 +676,25 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
     private void StartReload()
     {
-        
         if (gameManager.instance.playerWeaponManager.MaxAmmo <= 0)
         {
             return;
         }
-        if (!isReloading)
-        {
-            gameManager.instance.Reload.SetActive(false);
 
+        if (isReloading)
+        {
+            return;
         }
 
         isReloading = true;
+        gameManager.instance.isReloading = true;
         reloadTimer = 0;
         gameManager.instance.canShoot = false;
+
+        if (gameManager.instance.Reload != null)
+        {
+            gameManager.instance.Reload.SetActive(true);
+        }
 
         Debug.Log("Reloading...");
     }
