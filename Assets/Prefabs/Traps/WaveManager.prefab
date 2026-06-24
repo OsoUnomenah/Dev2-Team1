@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1479248947684063086}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.07, z: -16.16}
+  m_LocalPosition: {x: 0, y: 11.96, z: 182.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -85,6 +85,7 @@ MonoBehaviour:
   baseEnemies: 5
   enemiesPerWave: 2
   enemiesPerPlayerLevel: 1
+  waveText: {fileID: 0}
 --- !u!1 &3358783084983957137
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 3358783084983957137}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.62, y: 0, z: 35.42}
+  m_LocalPosition: {x: 74.2, y: 9.79, z: 86.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -141,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 8216640939424699401}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -11.99, z: 0}
+  m_LocalPosition: {x: -52, y: 13.12, z: 89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

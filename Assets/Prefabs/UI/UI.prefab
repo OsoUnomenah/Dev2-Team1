@@ -9655,6 +9655,7 @@ MonoBehaviour:
   interactText: {fileID: 8225161589672223974}
   isPaused: 0
   isLevelingUp: 0
+  waveText: {fileID: 7891315937489850483}
   SprintTriggered: 0
   canSprint: 0
   isSprinting: 0

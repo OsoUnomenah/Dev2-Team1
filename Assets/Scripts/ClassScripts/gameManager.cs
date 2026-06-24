@@ -49,6 +49,8 @@ public class gameManager : MonoBehaviour
     public bool isPaused;
     public bool isLevelingUp;
 
+    public TMP_Text waveText;
+
     [Header("Sprint Config")]
     public bool SprintTriggered;
     public bool canSprint;
