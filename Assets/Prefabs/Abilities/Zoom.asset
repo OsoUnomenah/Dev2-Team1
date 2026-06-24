@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
   m_Name: Zoom
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
+  abilityName: 
   model: {fileID: 8869053030028166981, guid: 3d1e7de392c971241ab13044e4cd8cbe, type: 3}
   bullet: {fileID: 5054535592068500189, guid: 1f6f9f3d88eda5046bed317d6685191b, type: 3}
+  throwSound: {fileID: 11400000, guid: 128125529cd634d44933c97f78807c9e, type: 2}
   abilityType: 4
   shootDistance: 4
   shootCooldown: 16.5
