@@ -25,23 +25,35 @@ public class laser : MonoBehaviour, IDamage
         RaycastHit hit;
         if (Physics.Raycast(laserStartPos.position, laserStartPos.forward, out hit, laserDist))
         {
+            
             laserLine.SetPosition(0, laserStartPos.position);
             laserLine.SetPosition(1, hit.point);
             hitEffect.SetActive(true);
             hitEffect.transform.position = hit.point;
 
+            
+            
             IDamage dmg = hit.collider.GetComponent<IDamage>();
-            if (dmg != null && !isDamaging)
+            IDamage playerDmg = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
+            if (hit.collider.CompareTag("Player"))
             {
+                StartCoroutine(damageTime(playerDmg));
+            }
+            else if (dmg != null && !isDamaging)
+            {
+
                 // damage it
                 StartCoroutine(damageTime(dmg));
+
             }
-        } else
+        } 
+        else
         {
             laserLine.SetPosition(0, laserStartPos.position);
             laserLine.SetPosition(1, laserStartPos.position + (laserStartPos.forward * laserDist));
             hitEffect.SetActive(false);
         }
+
     }
 
     IEnumerator damageTime(IDamage d)
