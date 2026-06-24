@@ -22,6 +22,10 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] float ammoTimer;
     [SerializeField] private GameObject weaponPrefab;
 
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO shootSound;
+    [SerializeField] private BaseSoundSO reloadSound;
+
     [Header("Generated Weapon Mods")]
     [SerializeField] private bool hasGeneratedMod;
     [SerializeField] private List<string> modDescriptions = new List<string>();
@@ -239,6 +243,8 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     ammo,
     maxAmmo,
     ammoTimer,
+    shootSound,
+    reloadSound,
     modDescriptions
 );
 
@@ -256,6 +262,8 @@ public class WeaponPickUp : MonoBehaviour, IInteract
                 ammo,
                 maxAmmo,
                 ammoTimer,
+                shootSound,
+                reloadSound,
                 modDescriptions
             );
         }

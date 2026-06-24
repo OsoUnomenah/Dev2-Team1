@@ -45,14 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   turnOnDebug: 1
-  characterController: {fileID: 0}
-  playerInputHandler: {fileID: 0}
-  playerCamera: {fileID: 0}
-  weaponManager: {fileID: 0}
-  playerStatHandler: {fileID: 0}
   walkSpeed: 3
+  sprintSpeed: 3
   sprintMultiplier: 2
   acceleration: 20
+  currentMovement: {x: 0, y: 0, z: 0}
+  currentSpeed: 0
   mouseSensitivity: 0.5
   gamepadSensitivity: 1.5
   verticalViewRange: 80
@@ -62,9 +60,9 @@ MonoBehaviour:
   ignoreSource:
     serializedVersion: 2
     m_Bits: 8
-  HP: 0
-  _shoot: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
+  _shoot: {fileID: 0}
   _footsteps: {fileID: 11400000, guid: 03493be87f5eab645b1caba8b7b91ca4, type: 2}
+  _dryFire: {fileID: 11400000, guid: afbcd5a775c6f5a4b84c01fc62726967, type: 2}
   footstepBaseInterval: 0.4
   footstepSprintInterval: 0.6
   jumpForce: 5
