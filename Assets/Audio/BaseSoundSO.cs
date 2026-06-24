@@ -10,7 +10,7 @@ public class BaseSoundSO : ScriptableObject
     }
 
     public SoundTypes soundType;
-    public AudioClip clip;
+    public AudioClip[] clips;
     public bool loop = false;
     public bool randomizePitch = false;
     [Range(0.1f, 1f)] public float randomPitchRangeMod = .1f;

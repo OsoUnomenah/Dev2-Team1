@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: _hit
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
-  clip: {fileID: 8300000, guid: 36b186ddcc55d46429f9f51643b05d03, type: 3}
+  clips:
+  - {fileID: 8300000, guid: 36b186ddcc55d46429f9f51643b05d03, type: 3}
   loop: 0
   randomizePitch: 1
   randomPitchRangeMod: 0.197
   volume: 1
   pitch: 1
+  fallOffDistMin: 2
+  fallOffDistMax: 20

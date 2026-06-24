@@ -13,11 +13,21 @@ MonoBehaviour:
   m_Name: _footsteps
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
-  clip: {fileID: 8300000, guid: 7ab300d9052a3904db1d64df801b780b, type: 3}
+  clips:
+  - {fileID: 8300000, guid: 237c245db70c5e847a41655f1c25c0c8, type: 3}
+  - {fileID: 8300000, guid: 1a17a2966d1ea694290b525727aa4969, type: 3}
+  - {fileID: 8300000, guid: 5cf85930f5732124296e4b3eebd73ef9, type: 3}
+  - {fileID: 8300000, guid: 0d8ef79a92f193141a69ff91b9c8c883, type: 3}
+  - {fileID: 8300000, guid: 2b5c51bc2871a4a4d8741d12ae9254e8, type: 3}
+  - {fileID: 8300000, guid: f2f2df6d7b696bb4ba3089b6aff4320f, type: 3}
+  - {fileID: 8300000, guid: d0c2fd60df0494648b81c357c1d868a5, type: 3}
+  - {fileID: 8300000, guid: 27a6b37ccd7d25141b77bfd60b1e8c13, type: 3}
+  - {fileID: 8300000, guid: 8a0bc58dfe6c4ce43b5ebd7a20792b70, type: 3}
+  - {fileID: 8300000, guid: 619210250a219ce49b950a8358fb4564, type: 3}
   loop: 0
   randomizePitch: 0
   randomPitchRangeMod: 0.1
-  volume: 0.65
+  volume: 0.4
   pitch: 1
   fallOffDistMin: 2
   fallOffDistMax: 20

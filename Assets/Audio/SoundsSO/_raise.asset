@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: _raise
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
-  clip: {fileID: 8300000, guid: 3134c3ce037204c4d89bd5e108dfa5bb, type: 3}
+  clips:
+  - {fileID: 8300000, guid: 3134c3ce037204c4d89bd5e108dfa5bb, type: 3}
   loop: 0
   randomizePitch: 0
   randomPitchRangeMod: 0.1
