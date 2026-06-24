@@ -476,6 +476,16 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             {
                 Debug.Log(hit.collider.name);
 
+                if (gameManager.instance.playerWeaponManager.HitEffect != null)
+                {
+                    // Spawns the effect exactly where the raycast hit, facing away from the surface
+                    Instantiate(
+                        gameManager.instance.playerWeaponManager.HitEffect,
+                        hit.point,
+                        Quaternion.LookRotation(hit.normal)
+                    );
+                }
+
                 IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
 
                 if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)

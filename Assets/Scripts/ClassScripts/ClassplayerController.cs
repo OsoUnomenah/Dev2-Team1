@@ -106,11 +106,10 @@ public class PlayerController : MonoBehaviour, IDamage
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootRange, ~ignoreLayer))
         {
-            Debug.Log(hit.collider.name);
+            Debug.Log("Hitting: " + hit.collider.name);
 
             if (weaponManager.HitEffect != null)
             {
-                // Instantiates the particle on the surface, pointed back out towards the player
                 Instantiate(weaponManager.HitEffect, hit.point, Quaternion.identity);
             }
 
