@@ -7,7 +7,9 @@ public class AbilityStats : ScriptableObject
 
     public GameObject model;
     public GameObject bullet;
-   
+
+    [Header("Audio")]
+    public BaseSoundSO throwSound;
 
     [Range (1,4)] public int abilityType;
 

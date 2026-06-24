@@ -15,6 +15,7 @@ MonoBehaviour:
   abilityName: Fire
   model: {fileID: 8869053030028166981, guid: c125db30a259be84d8eea7fdfa0396d0, type: 3}
   bullet: {fileID: 5054535592068500189, guid: ace7d1da71c1faf49bd995bc77ef5c76, type: 3}
+  throwSound: {fileID: 11400000, guid: 0c452ca0e546cbe448856fe03a59ff70, type: 2}
   abilityType: 1
   shootDistance: 4
   shootCooldown: 20.9
