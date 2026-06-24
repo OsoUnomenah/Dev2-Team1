@@ -22,6 +22,9 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         public GameObject pickupPrefab;
     }
 
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO chestOpenSound;
+
     [Header("Chest Settings")]
     [SerializeField] private Transform lidTransform;
     [SerializeField] private float openAngle;
@@ -38,6 +41,11 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
     [Header("Weapon Drop Settings")]
     [SerializeField] private Transform weaponDropPoint;
+
+    [Header("Ability Orb Rewards")]
+    [SerializeField] private GameObject[] abilityOrbPrefabs;
+    [SerializeField] private Transform abilityDropPoint;
+    [Range(0f, 100f)][SerializeField] private float abilityOrbDropChance = 25f;
 
     [Header("Highlight Settings")]
     [SerializeField] private Renderer model;
@@ -75,20 +83,25 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
     public void Interact()
     {
-
         if (isOpen || isMoving)
         {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+            RecticleBehaviour.OffHover();
             return;
         }
 
+        gameManager.instance.interactText.gameObject.SetActive(false);
+        RecticleBehaviour.OffHover();
+
         StartCoroutine(OpenChest());
         isOpen = true;
-
     }
 
     private IEnumerator OpenChest()
     {
         isMoving = true;
+        PlayChestOpenSound();
+
         bool rewardGiven = false;
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
@@ -103,6 +116,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             if (!rewardGiven && Quaternion.Angle(lidTransform.rotation, closedRotation) > 20f)
             {
                 GiveWeaponReward();
+                TrySpawnAbilityOrb();
                 TrySpawnEnemy();
                 rewardGiven = true;
             }
@@ -201,27 +215,78 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         }
     }
 
+    private void TrySpawnAbilityOrb()
+    {
+        if (abilityOrbPrefabs == null || abilityOrbPrefabs.Length == 0)
+        {
+            return;
+        }
+
+        float roll = Random.Range(0f, 100f);
+
+        if (roll > abilityOrbDropChance)
+        {
+            return;
+        }
+
+        Transform dropPoint = abilityDropPoint != null ? abilityDropPoint : weaponDropPoint;
+
+        if (dropPoint == null)
+        {
+            dropPoint = transform;
+        }
+
+        GameObject orbPrefab = abilityOrbPrefabs[Random.Range(0, abilityOrbPrefabs.Length)];
+
+        if (orbPrefab == null)
+        {
+            return;
+        }
+
+        Instantiate(orbPrefab, dropPoint.position, dropPoint.rotation);
+
+        if (UpgradeUI.instance != null)
+        {
+            UpgradeUI.instance.ShowUpgradeNotification("Ability orb dropped");
+        }
+
+        Debug.Log("Weapon chest dropped an ability orb.");
+    }
+
     public void OnHoverEnter()
     {
-        //Debug.LogError("Enter");
+        if (isOpen)
+        {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+            RecticleBehaviour.OffHover();
+            return;
+        }
+
         if (model != null && highlight != null)
         {
             model.material = highlight;
         }
+
         gameManager.instance.interactText.gameObject.SetActive(true);
         RecticleBehaviour.OnHover(0);
-
     }
 
     public void OnHoverExit()
     {
-        //Debug.LogError("Exit");
         if (model != null && materialOg != null)
         {
             model.material = materialOg;
         }
+
         gameManager.instance.interactText.gameObject.SetActive(false);
         RecticleBehaviour.OffHover();
+    }
 
+    private void PlayChestOpenSound()
+    {
+        if (AudioManager.instance != null && chestOpenSound != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(chestOpenSound, gameObject);
+        }
     }
 }

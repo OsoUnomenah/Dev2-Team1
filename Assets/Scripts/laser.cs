@@ -6,6 +6,7 @@ public class laser : MonoBehaviour, IDamage
     [SerializeField] LineRenderer laserLine;
 
     [SerializeField] GameObject hitEffect;
+    [SerializeField] GameObject startEffect;
     [SerializeField] Transform laserStartPos;
 
     [SerializeField] int damageAmount;
@@ -25,7 +26,8 @@ public class laser : MonoBehaviour, IDamage
         RaycastHit hit;
         if (Physics.Raycast(laserStartPos.position, laserStartPos.forward, out hit, laserDist))
         {
-            
+            startEffect.transform.position = laserStartPos.position;
+            startEffect.SetActive(true);
             laserLine.SetPosition(0, laserStartPos.position);
             laserLine.SetPosition(1, hit.point);
             hitEffect.SetActive(true);

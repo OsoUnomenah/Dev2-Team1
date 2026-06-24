@@ -21,6 +21,9 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
         Legendary
     }
 
+    [Header("Audio")]
+    [SerializeField] private BaseSoundSO chestOpenSound;
+
     [Header("Chest Settings")]
     [SerializeField] private Transform lidTransform;
     [SerializeField] private float openAngle;
@@ -69,20 +72,24 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
 
     public void Interact()
     {
-
         if (isOpen || isMoving)
         {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+            RecticleBehaviour.OffHover();
             return;
         }
 
+        gameManager.instance.interactText.gameObject.SetActive(false);
+        RecticleBehaviour.OffHover();
+
         StartCoroutine(OpenChest());
         isOpen = true;
-
     }
 
     private IEnumerator OpenChest()
     {
         isMoving = true;
+        PlayChestOpenSound();
         bool rewardGiven = false;
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
@@ -268,23 +275,38 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
-        //Debug.LogError("Enter");
+        if (isOpen)
+        {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+            RecticleBehaviour.OffHover();
+            return;
+        }
+
         if (model != null && highlight != null)
         {
             model.material = highlight;
         }
+
         gameManager.instance.interactText.gameObject.SetActive(true);
         RecticleBehaviour.OnHover(0);
     }
 
     public void OnHoverExit()
     {
-        //Debug.LogError("Exit");
         if (model != null && materialOrig != null)
         {
             model.material = materialOrig;
         }
+
         gameManager.instance.interactText.gameObject.SetActive(false);
         RecticleBehaviour.OffHover();
+    }
+
+    private void PlayChestOpenSound()
+    {
+        if (AudioManager.instance != null && chestOpenSound != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(chestOpenSound, gameObject);
+        }
     }
 }

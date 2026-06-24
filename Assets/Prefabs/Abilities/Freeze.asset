@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
   m_Name: Freeze
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
+  abilityName: Freeze
   model: {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
   bullet: {fileID: 5054535592068500189, guid: 1350110ce28bd9f4392da3e55d142350, type: 3}
   abilityType: 2

@@ -199,7 +199,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         if (!gun.activeSelf)
         {
             gun.SetActive(true);
-            timer = Random.Range(120, 1200);
+            timer = Random.Range(1200, 2000);
         }
         if (!PlayerInTrigger || timer < 0)
         {            
@@ -211,7 +211,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         Quaternion rot = Quaternion.LookRotation(playerDir);
         gunPivot.rotation = Quaternion.Lerp(gunPivot.rotation, rot, 3 * Time.deltaTime);
     
-        Instantiate(bullet, shootPos.position, gunPivot.rotation);
+        
         timer--;
     }
     private void Lava()
@@ -226,7 +226,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             lava6.SetActive(true);
             lava7.SetActive(true);
             lava8.SetActive(true);
-            timer = Random.Range(1200, 3000);
+            timer = Random.Range(1200, 2000);
             
         }
         if (!PlayerInTrigger || timer < 0)

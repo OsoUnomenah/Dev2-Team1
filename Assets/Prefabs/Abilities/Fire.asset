@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
   m_Name: Fire
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
+  abilityName: Fire
   model: {fileID: 8869053030028166981, guid: c125db30a259be84d8eea7fdfa0396d0, type: 3}
   bullet: {fileID: 5054535592068500189, guid: ace7d1da71c1faf49bd995bc77ef5c76, type: 3}
   abilityType: 1

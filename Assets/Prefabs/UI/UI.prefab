@@ -5933,6 +5933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::gameManager
   gameDebug: 0
   objectiveText: {fileID: 9011078614883199327}
+  onPlayerHealthChange: {fileID: 0}
   xpBar: {fileID: 4753987710716398749}
   reloadBar: {fileID: 2881368996557603040}
   xpText: {fileID: 6586570592618403073}
@@ -5971,7 +5972,7 @@ MonoBehaviour:
   playerWeaponManager: {fileID: 0}
   playerTransform: {fileID: 0}
   playerInteract: {fileID: 0}
-  playerSpawnPoint: {fileID: 0}
+  playerSpawnPos: {fileID: 0}
   abilityUI: {fileID: 1994858063339617454}
   allowedAbility1: 1
   allowedAbility2: 1
@@ -5981,6 +5982,8 @@ MonoBehaviour:
   freezePos: -1
   bouncePos: -1
   zoomPos: -1
+  pad: {fileID: 0}
+  bounceeffect: {fileID: 0}
   recoil: 0
   canShoot: 0
   isShooting: 0
@@ -9192,7 +9195,7 @@ Transform:
   m_GameObject: {fileID: 5529451907412461400}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -948.755, y: -548.25, z: -64.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

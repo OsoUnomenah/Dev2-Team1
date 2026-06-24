@@ -2,9 +2,13 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Audio;
 
 public class bounce : MonoBehaviour
 {
+    [SerializeField] private AudioClip bounceNoise;
+    [SerializeField] private AudioSource audSource;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,6 +29,7 @@ public class bounce : MonoBehaviour
                 Bounce(gameManager.instance.playerWeaponManager.abilities//[]
                 [gameManager.instance.bouncePos].level);
             Debug.LogError("Bounce Pad");
+            audSource.PlayOneShot(bounceNoise);
         }
         Debug.LogError("Fail Bounce Pad");
     }
