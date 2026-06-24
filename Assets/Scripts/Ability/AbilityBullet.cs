@@ -127,7 +127,7 @@ public class abilityBullet : MonoBehaviour
             if (enemy != null && enemy.isDead)
                 yield break;
 
-            d.takeDamage(damageAmount + gameManager.instance.playerWeaponManager.fireLevel * (int)gameManager.instance.playerStatHandler.modDamage);
+            d.takeDamage((damageAmount + gameManager.instance.playerWeaponManager.fireLevel) + (int)gameManager.instance.playerStatHandler.modDamage);
             yield return new WaitForSeconds(2f);
         }
         isDamaging = false;

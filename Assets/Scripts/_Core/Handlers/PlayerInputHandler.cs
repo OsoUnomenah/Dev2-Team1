@@ -598,7 +598,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
     IEnumerator zoomCooldown(float cd)
     {
-        yield return new WaitForSeconds(cd);
+        yield return new WaitForSeconds(cd - (gameManager.instance.playerWeaponManager.zoomLevel * 1.5f));
         gameManager.instance.allowedAbility4 = true;
     }
     private void abilityShoot()
