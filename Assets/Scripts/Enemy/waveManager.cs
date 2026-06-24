@@ -79,7 +79,7 @@ public class WaveManager : MonoBehaviour
         if (!waveSystemStarted)
         {
             waveSystemStarted = true;
-            Debug.Log("Wave system activated.");
+           // Debug.Log("Wave system activated.");
         }
 
         currentWave++;

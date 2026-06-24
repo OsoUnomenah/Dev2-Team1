@@ -110,7 +110,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             }
         }
 
-        Debug.Log(gameObject.name + " rolled chest mods: " + string.Join(", ", modDescriptions));
+        //Debug.Log(gameObject.name + " rolled chest mods: " + string.Join(", ", modDescriptions));
     }
 
     private ModRarity RollModRarity()
@@ -219,7 +219,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
     public void Interact()
     {
-        Debug.Log($"Picked up {objectName}");
+        //Debug.Log($"Picked up {objectName}");
 
         if (weaponManager == null)
         {
@@ -228,7 +228,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
         if (weaponManager == null)
         {
-            Debug.LogWarning("No PlayerWeaponManager found. Could not pick up weapon.");
+           // Debug.LogWarning("No PlayerWeaponManager found. Could not pick up weapon.");
             return;
         }
 
