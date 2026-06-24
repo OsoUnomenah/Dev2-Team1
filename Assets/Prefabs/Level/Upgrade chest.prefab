@@ -191,6 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898d1462eb63f9b458c64f1c6d4e7d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeChestInteract
+  chestOpenSound: {fileID: 11400000, guid: 7344b3146a3cc5e4586be286d8717e6f, type: 2}
   lidTransform: {fileID: 1467039037365258259}
   openAngle: 80
   openSpeed: 2
