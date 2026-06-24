@@ -5,14 +5,17 @@ using TMPro;
 
 public class WarehouseInteract : MonoBehaviour, IOpen
 {
+    [Header("Behavior")]
     [SerializeField] private float doorSpeed;
     [SerializeField] private float heightFinal;
     [SerializeField] private float heightStart;
 
+    [Header("Children")]
     [SerializeField] private Light hoverLight;
     [SerializeField] private Light hoverLight2;
     [SerializeField] private GameObject button;
     [SerializeField] private GameObject button2;
+    [SerializeField] private GameObject lockedText;
 
     [Header("Audio")]
     [SerializeField] private BaseSoundSO _raise;
@@ -79,8 +82,10 @@ public class WarehouseInteract : MonoBehaviour, IOpen
             numInTrigger++;
             StartCoroutine(Open());
         }
-      
-    
+        else if(keyExpected != null && !gameManager.instance.playerInteract.keyList.Contains(keyExpected))
+        {
+            lockedText.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -93,6 +98,10 @@ public class WarehouseInteract : MonoBehaviour, IOpen
 
                 if(numInTrigger <= 0)
                     StartCoroutine(Close());
+        }
+        else if (opener != null)
+        {
+            lockedText.SetActive(false);
         }
 
     }
