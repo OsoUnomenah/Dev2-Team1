@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu]
 public class AbilityStats : ScriptableObject
 {
+    public string abilityName;
+
     public GameObject model;
     public GameObject bullet;
    

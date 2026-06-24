@@ -69,15 +69,18 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
 
     public void Interact()
     {
-
         if (isOpen || isMoving)
         {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+            RecticleBehaviour.OffHover();
             return;
         }
 
+        gameManager.instance.interactText.gameObject.SetActive(false);
+        RecticleBehaviour.OffHover();
+
         StartCoroutine(OpenChest());
         isOpen = true;
-
     }
 
     private IEnumerator OpenChest()
@@ -268,22 +271,29 @@ public class UpgradeChestInteract : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
-        //Debug.LogError("Enter");
+        if (isOpen)
+        {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+            RecticleBehaviour.OffHover();
+            return;
+        }
+
         if (model != null && highlight != null)
         {
             model.material = highlight;
         }
+
         gameManager.instance.interactText.gameObject.SetActive(true);
         RecticleBehaviour.OnHover(0);
     }
 
     public void OnHoverExit()
     {
-        //Debug.LogError("Exit");
         if (model != null && materialOrig != null)
         {
             model.material = materialOrig;
         }
+
         gameManager.instance.interactText.gameObject.SetActive(false);
         RecticleBehaviour.OffHover();
     }
