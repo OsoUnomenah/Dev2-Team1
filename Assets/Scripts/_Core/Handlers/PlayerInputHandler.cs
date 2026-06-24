@@ -441,12 +441,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         if (gameManager.instance.playerWeaponManager.Ammo <= 0)
         {
-            
-            StartReload();
+            Debug.Log("Out of ammo. Press reload.");
             return;
         }
 
-        if(gameManager.instance.canShoot == true)
+        if (gameManager.instance.canShoot == true)
         { 
             recoil = gameManager.instance.recoil; 
         }
@@ -492,12 +491,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                         Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
                     }
                 }
-            }
-
-            if (gameManager.instance.playerWeaponManager.Ammo <= 0)
-            {
-                gameManager.instance.isReloading = true;
-                StartReload();
             }
 
             if (turnOnDebug)
