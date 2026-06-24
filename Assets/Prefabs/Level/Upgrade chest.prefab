@@ -195,6 +195,7 @@ MonoBehaviour:
   lidTransform: {fileID: 1467039037365258259}
   openAngle: 80
   openSpeed: 2
+  resetTimer: 10
   enemyPrefab: {fileID: 7791680660320909169, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
   enemySpawnPoint: {fileID: 5299175877528330424}
   enemySpawnChance: 15

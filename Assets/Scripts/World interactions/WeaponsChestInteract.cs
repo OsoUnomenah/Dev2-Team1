@@ -29,6 +29,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [SerializeField] private Transform lidTransform;
     [SerializeField] private float openAngle;
     [SerializeField] private float openSpeed;
+    [SerializeField] private float resetTimer;
 
     [Header("weapon Rewards")]
     [SerializeField] private WeaponReward[] weaponRewards;
@@ -94,9 +95,26 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         RecticleBehaviour.OffHover();
 
         StartCoroutine(OpenChest());
+        StartCoroutine(ResetChest());
         isOpen = true;
     }
+    private IEnumerator ResetChest()
+    {
+        yield return new WaitForSeconds(resetTimer);
 
+        isMoving = true;
+        while (Quaternion.Angle(lidTransform.rotation, closedRotation) > 0.1f)
+        {
+            lidTransform.rotation = Quaternion.Slerp(
+                lidTransform.rotation,
+                closedRotation,
+                openSpeed * Time.deltaTime
+            );
+        }
+        isMoving = false;
+        isOpen = false;
+
+    }
     private IEnumerator OpenChest()
     {
         isMoving = true;
@@ -187,7 +205,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     {
         if (weaponManager.MaxAmmo <= 0)
         {
-            Debug.Log("Max ammo reward rolled, but player has no weapon equipped.");
+            //Debug.Log("Max ammo reward rolled, but player has no weapon equipped.");
             return;
         }
 
@@ -198,7 +216,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             UpgradeUI.instance.ShowUpgradeNotification("Weapon Chest: Max Ammo");
         }
 
-        Debug.Log("Weapon chest gave max ammo!");
+       // Debug.Log("Weapon chest gave max ammo!");
     }
 
     private void TrySpawnEnemy()
