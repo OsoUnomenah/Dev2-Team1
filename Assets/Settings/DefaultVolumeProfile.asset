@@ -255,13 +255,13 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.9
+    m_Value: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 238.93
   scatter:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0
   clamp:
     m_OverrideState: 1
     m_Value: 65472
@@ -273,7 +273,7 @@ MonoBehaviour:
     m_Value: 0
   filter:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   downscale:
     m_OverrideState: 1
     m_Value: 0
@@ -281,11 +281,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 6
   dirtTexture:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {fileID: 0}
     dimension: 1
   dirtIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
 --- !u!114 &-1170528603972255243
 MonoBehaviour:
@@ -299,13 +299,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221518ef91623a7438a71fef23660601, type: 3}
   m_Name: WhiteBalance
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   temperature:
     m_OverrideState: 1
-    m_Value: 25.8
+    m_Value: -100
   tint:
     m_OverrideState: 1
-    m_Value: -17.2
+    m_Value: -100
 --- !u!114 &-581120513425526550
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -619,7 +619,7 @@ MonoBehaviour:
   active: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 0.35
 --- !u!114 &6940869943325143175
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -676,13 +676,13 @@ MonoBehaviour:
   active: 1
   redOutRedIn:
     m_OverrideState: 1
-    m_Value: 120
+    m_Value: 144
   redOutGreenIn:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -175
   redOutBlueIn:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: -158
   greenOutRedIn:
     m_OverrideState: 1
     m_Value: 0
