@@ -13,6 +13,7 @@ using NUnit.Framework.Internal;
 public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 {
     
+    
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int attackDamage = 10;
     [SerializeField] int xpGive = 100;
@@ -29,7 +30,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] private float attackRange;
     [SerializeField] private float hearingRange;
 
-    [SerializeField] private GameObject exitPortal;
+    [SerializeField] public GameObject exitPortal;
 
 
     [SerializeField] private float wanderRadius;
@@ -104,8 +105,13 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     private Vector3 transform7;
     private Vector3 transform8;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    
     private void Start()
     {
+        exitPortal = GameObject.FindGameObjectWithTag("Portal");
+        exitPortal.SetActive(false);
+
         //agent1 = lava1.GetComponent<NavMeshAgent>();
         //agent2 = lava2.GetComponent<NavMeshAgent>();
         //agent3 = lava3.GetComponent<NavMeshAgent>();

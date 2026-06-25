@@ -35077,10 +35077,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2294640852999212046, guid: 5ad33d58a66ab154a89c9e88255601e5, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4659087304275547816, guid: 5ad33d58a66ab154a89c9e88255601e5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.28
@@ -137935,11 +137931,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314131021}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1314477847 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4752457369876416285, guid: 5ad33d58a66ab154a89c9e88255601e5, type: 3}
-  m_PrefabInstance: {fileID: 323161779}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1315257656
 GameObject:
   m_ObjectHideFlags: 0
@@ -142608,10 +142599,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1052459218}
     m_Modifications:
-    - target: {fileID: 3653939925578357764, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
-      propertyPath: exitPortal
-      value: 
-      objectReference: {fileID: 1314477847}
     - target: {fileID: 3974287435618577201, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.07
@@ -142655,10 +142642,6 @@ PrefabInstance:
     - target: {fileID: 4963158121488189207, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
       propertyPath: m_Name
       value: Boss
-      objectReference: {fileID: 0}
-    - target: {fileID: 4963158121488189207, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8167564633996476709, guid: cbfac6b0d24422b4c97536b971588cb5, type: 3}
       propertyPath: m_AnchorMax.x
@@ -229039,8 +229022,8 @@ SceneRoots:
   - {fileID: 1909901280}
   - {fileID: 1052459218}
   - {fileID: 1021342392}
-  - {fileID: 2092229357}
   - {fileID: 349277307}
+  - {fileID: 2092229357}
   - {fileID: 630116705}
   - {fileID: 1428888145}
   - {fileID: 1797785750}
@@ -229057,3 +229040,4 @@ SceneRoots:
   - {fileID: 1338834747}
   - {fileID: 674037969}
   - {fileID: 1786165331}
+  - {fileID: 323161779}

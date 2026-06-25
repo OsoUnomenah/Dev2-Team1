@@ -20,6 +20,7 @@ TagManager:
   - SpawnPoint
   - PlayerSpawnPos
   - PlayerSpawnPoint
+  - Portal
   layers:
   - Default
   - TransparentFX

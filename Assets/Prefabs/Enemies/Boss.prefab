@@ -5542,7 +5542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 389b64e0dbf642148bd7d400dabe5578, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossAI
-  maxHealth: 2000
+  maxHealth: 1000
   attackDamage: 10
   xpGive: 100
   model: {fileID: 8802982114757267920}
@@ -5554,6 +5554,7 @@ MonoBehaviour:
   sightRange: 15
   attackRange: 2
   hearingRange: 20
+  exitPortal: {fileID: 0}
   wanderRadius: 10
   wanderTimer: 5
   _hit: {fileID: 11400000, guid: 18d4ca4ec298ea94b829f44e15a9bedf, type: 2}
