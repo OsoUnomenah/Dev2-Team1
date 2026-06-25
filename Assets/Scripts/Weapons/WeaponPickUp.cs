@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponPickUp : MonoBehaviour, IInteract
@@ -21,6 +21,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] public int maxAmmo;
     [SerializeField] float ammoTimer;
     [SerializeField] private GameObject weaponPrefab;
+    [SerializeField] private GameObject hitEffect;
 
     [Header("Audio")]
     [SerializeField] private BaseSoundSO shootSound;
@@ -246,6 +247,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     ammoTimer,
     shootSound,
     reloadSound,
+    hitEffect,
     modDescriptions
 );
 
@@ -265,6 +267,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
                 ammoTimer,
                 shootSound,
                 reloadSound,
+                hitEffect,
                 modDescriptions
             );
         }

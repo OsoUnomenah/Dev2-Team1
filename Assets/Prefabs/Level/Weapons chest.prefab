@@ -402,6 +402,7 @@ MonoBehaviour:
   lidTransform: {fileID: 2923204972680099932}
   openAngle: 80
   openSpeed: 2
+  resetTimer: 10
   weaponRewards:
   - weaponName: Pistol
     weaponType: 0

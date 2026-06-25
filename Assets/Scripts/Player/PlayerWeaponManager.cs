@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
@@ -21,8 +21,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         public GameObject weaponPrefab;
         public BaseSoundSO shootSound;
         public BaseSoundSO reloadSound;
+        public GameObject hitEffect;
         public List<string> modDescriptions = new List<string>();
-
     }
 
     //Weapon Settings
@@ -37,12 +37,11 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float AmmoTimer;
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
-
-    
+    public GameObject HitEffect;
 
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
-    
+
     //Ability Stuff
     [SerializeField] GameObject abilityModel;
     public ParticleSystem effect;
@@ -54,6 +53,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int bouncePos;
     private int zoomPos;
     [SerializeField] public GameObject bouncePad;
+
     //Ability Settings
     public int fireLevel;
     public int freezeLevel;
@@ -70,22 +70,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int WeaponCount => weaponInventory.Count;
     public int MaxWeaponSlots => maxWeaponSlots;
 
-
-    //CameraController cameraCon;
-
-    [Header("Don't touch unles debugging")]
+    [Header("Don't touch unless debugging")]
     [SerializeField] List<int> Modifiers;
-    //PlayerInputHandler player = gameManager.instance;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     void Start()
     {
         // cameraCon = FindAnyObjectByType<CameraController>();
-       
     }
 
-    // Update is called once per frame
     void Update()
     {
         HandleWeaponSwitchInput();
@@ -106,6 +98,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     float ammoTimer,
     BaseSoundSO shootSound,
     BaseSoundSO reloadSound,
+    GameObject hitEffect, // <-- Fixed: Changed ; to ,
     List<string> weaponMods = null)
     {
         for (int i = 0; i < weaponInventory.Count; i++)
@@ -148,13 +141,13 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         newWeapon.ammoTimer = ammoTimer;
         newWeapon.shootSound = shootSound;
         newWeapon.reloadSound = reloadSound;
+        newWeapon.hitEffect = hitEffect;
         newWeapon.modDescriptions = CopyModList(weaponMods);
 
         weaponInventory.Add(newWeapon);
 
         currentWeaponIndex = weaponInventory.Count - 1;
 
-        // Do not save the previous weapon's ammo into this brand-new weapon slot.
         EquipWeaponFromInventory(currentWeaponIndex, false);
 
         if (UpgradeUI.instance != null)
@@ -180,6 +173,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     float ammoTimer,
     BaseSoundSO shootSound,
     BaseSoundSO reloadSound,
+    GameObject hitEffect, // <-- Fixed: Lowercase 'h', and changed ; to ,
     List<string> weaponMods = null)
     {
         for (int i = 0; i < weaponInventory.Count; i++)
@@ -198,6 +192,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 weaponInventory[i].ammoTimer = ammoTimer;
                 weaponInventory[i].shootSound = shootSound;
                 weaponInventory[i].reloadSound = reloadSound;
+                weaponInventory[i].hitEffect = hitEffect;
                 weaponInventory[i].modDescriptions = CopyModList(weaponMods);
 
                 EquipWeaponFromInventory(i, false);
@@ -290,7 +285,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             weapon.maxAmmo,
             weapon.ammoTimer,
             weapon.shootSound,
-            weapon.reloadSound
+            weapon.reloadSound,
+            weapon.hitEffect
         );
 
         if (UpgradeUI.instance != null)
@@ -301,7 +297,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     private List<string> CopyModList(List<string> source)
     {
-        if(source == null)
+        if (source == null)
         {
             return new List<string>();
         }
@@ -351,18 +347,18 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         else if (scroll < 0f)
         {
             SwitchWeapon(-1);
-        }                
+        }
     }
-    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer, BaseSoundSO shootSound, BaseSoundSO reloadSound)
+
+    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer, BaseSoundSO shootSound, BaseSoundSO reloadSound, GameObject hitEffect)
     {
         Type = type;
         Damage = damage;
         Range = range;
         Rate = rate;
-        
+
         Recoil = recoil;
         gameManager.instance.recoil = recoil;
-
 
         Timer = timer;
         Ammo = ammo;
@@ -370,16 +366,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         AmmoTimer = ammoTimer;
         ShootSound = shootSound;
         ReloadSound = reloadSound;
+        HitEffect = hitEffect;
 
         if (weaponCurrent != null)
         {
             Destroy(weaponCurrent);
         }
 
-        weaponCurrent = Instantiate(weaponPrefab, weaponHolder); 
-        //you must place the weapon prefab corrisponding with the weapon pick-up prefab
-        //this allows the player to obtain the weapon in their view
-        //Only working prefab so far is pistol3, but we can absolutely add them all eventually
+        weaponCurrent = Instantiate(weaponPrefab, weaponHolder);
 
         weaponCurrent.transform.localPosition = Vector3.zero;
         weaponCurrent.transform.localRotation = Quaternion.identity;
@@ -387,11 +381,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     public void getStats(AbilityStats stats)
     {
-        
-        switch(stats.abilityType)
+        switch (stats.abilityType)
         {
             case 1:
-                if(fireLevel == 0)
+                if (fireLevel == 0)
                 {
                     firstTimePickup(stats);
                     firePos = abilities.Count - 1;
@@ -427,15 +420,12 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 zoomLevel += stats.level;
                 break;
         }
-       
     }
 
     void firstTimePickup(AbilityStats stats)
     {
         abilities.Add(stats);
-        
         gameManager.instance.abilityUI.abilityAssign(stats.abilityType);
-
         gameManager.instance.slotFiller();
     }
 
@@ -455,6 +445,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         activeEffect.transform.localPosition = Vector3.zero;
         activeEffect.transform.localRotation = Quaternion.identity;
     }
+
     void abilitySwitch()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && abilities.Count > 0)
@@ -482,4 +473,3 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         }
     }
 }
-
