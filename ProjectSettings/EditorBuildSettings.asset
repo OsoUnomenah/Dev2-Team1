@@ -11,5 +11,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Levels/Prototype.unity
     guid: b66c3fc8571686144b33283abdbe30ad
+  - enabled: 1
+    path: Assets/_Levels/Prototype2.unity
+    guid: 039c8ad3fd77361478ef4adb7f779347
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9ea45904cfdff304cbc76e43e867f2f4, type: 3}

@@ -37,4 +37,9 @@ public class buttonFunctions : MonoBehaviour
         gameManager.instance.respawnPlayer();
         gameManager.instance.stateUnpause();
     }
+
+    public void nextLevel()
+    {
+        gameManager.instance.NextLevel();
+    }
 }

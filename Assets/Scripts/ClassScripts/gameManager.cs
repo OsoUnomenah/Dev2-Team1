@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
@@ -95,6 +96,9 @@ public class gameManager : MonoBehaviour
     [Header("Roguelite Run Config")]
     public int runZone = 1;
 
+    [Header("Win Config")]
+    public Button nextLevelButton;
+
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -112,6 +116,10 @@ public class gameManager : MonoBehaviour
 
     private void Start()
     {
+        if (nextLevelButton != null)
+        {
+            nextLevelButton.onClick.AddListener(NextLevel);
+        }
         //set player initial spawn point
         //playerTransform.position = playerSpawnPoint.transform.position;
     }
@@ -173,25 +181,25 @@ public class gameManager : MonoBehaviour
             if (slot.abilityType == 1)
             {
                 firePos = instance.playerWeaponManager.abilitySlot;
-                Debug.LogError("FIRE");
+                //Debug.LogError("FIRE");
                 return;
             }
             if (slot.abilityType == 2)
             {
                 freezePos = instance.playerWeaponManager.abilitySlot;
-                Debug.LogError("FREEZE");
+                //Debug.LogError("FREEZE");
                 return;
             }
             if (slot.abilityType == 3)
             {
                 bouncePos = instance.playerWeaponManager.abilitySlot;
-                Debug.LogError("BOUNCE");
+                //Debug.LogError("BOUNCE");
                 return;
             }
             if (slot.abilityType == 4)
             {
                 zoomPos = instance.playerWeaponManager.abilitySlot;
-                Debug.LogError("ZOOM");
+                //Debug.LogError("ZOOM");
                 return;
             }
             Debug.LogError("Found None");
@@ -319,12 +327,10 @@ public class gameManager : MonoBehaviour
         //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
         UpdateObjectiveTextUI();
-        if (gameGoalCount <= 0)
+       
+        if(gameGoalCount <= 0)
         {
-            gameManager.instance.statePause();
-            menuActive = menuWin;
-            menuActive.SetActive(true);
-
+            Debug.Log("Boss Degeated - Open Portal");
         }
     }
 
@@ -369,6 +375,17 @@ public class gameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         menuActive.SetActive(false);
         menuActive = null;
+    }
+
+    public void WinGame()
+    {
+        statePause();
+
+        menuActive = menuWin;
+        menuActive.SetActive(true);
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public void youLose()
@@ -431,5 +448,17 @@ public class gameManager : MonoBehaviour
             StartCoroutine(instance.playerInputHandler.bounceCooldown(gameManager.instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer));
         }
         
+    }
+
+    public void NextLevel()
+    {
+        Time.timeScale = 1f;
+
+        int nextScene = SceneManager.GetActiveScene().buildIndex + 1;
+
+        if (nextScene < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(nextScene);
+        }
     }
 }

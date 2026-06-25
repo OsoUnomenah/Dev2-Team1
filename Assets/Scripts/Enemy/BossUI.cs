@@ -29,6 +29,8 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] private float attackRange;
     [SerializeField] private float hearingRange;
 
+    [SerializeField] private GameObject exitPortal;
+
 
     [SerializeField] private float wanderRadius;
     [SerializeField] private float wanderTimer;
@@ -386,6 +388,12 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
             RecticleBehaviour.OffHover();
+
+            if (exitPortal != null)
+            {
+                exitPortal.SetActive(true);
+            }
+
             Destroy(gameObject);
         }
         else
