@@ -122,6 +122,7 @@ public class gameManager : MonoBehaviour
         }
         //set player initial spawn point
         //playerTransform.position = playerSpawnPoint.transform.position;
+        menuWin.SetActive(false);
     }
 
     private void InitGM()
