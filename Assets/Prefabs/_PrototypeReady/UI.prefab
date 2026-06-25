@@ -10217,7 +10217,7 @@ MonoBehaviour:
   currentXP: 0
   xpSource: 0
   xpToNextLevel: 0
-  xpGain: 0
+  xpGain: 0.01
   currentLevel: 1
   menuActive: {fileID: 0}
   menuPause: {fileID: 207518416591129297}
@@ -10233,6 +10233,7 @@ MonoBehaviour:
   interactText: {fileID: 6529719332003721635}
   isPaused: 0
   isLevelingUp: 0
+  waveText: {fileID: 5125776231153844115}
   SprintTriggered: 0
   canSprint: 0
   isSprinting: 0
