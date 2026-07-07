@@ -5,31 +5,35 @@ using System.Collections;
 
 public class StatHandler : MonoBehaviour, IDamage
 {
+    [Header("HP")]
     [Range(10f, 500f)][SerializeField] public float health = 100;
     public float currentHealth;
     public float maxHealth;
     public float modHealth = 0;
 
-
+    [Header("Stamina")]
     [Range(50f, 500f)][SerializeField] public float stamina;
+    [Range(0, 1)][SerializeField] public float staminaRegen;
     public float currentStamina;
     public float maxStamina;
     public float modStamina;
-    [Range(0, 10)][SerializeField] public float sprintCost;
-    [Range(0, 1)][SerializeField] public float sprintGain;
-    [Range(0, 1)][SerializeField] public float sprintLoss;
+
+    [Header("Dash")]
+    [Range(0, 10)][SerializeField] public float dashCost;
+    [Range(0, 10)][SerializeField] public float dashLoss;
 
 
-
+    [Header("Damage")]
     [Range(0, 1000)][SerializeField] public float damage;
     [Range(0, 1000)][SerializeField] public float modDamage;
     public float currentDamage;
 
+    [Header("Defense")]
     [Range(0, 100)][SerializeField] public float defense;
     [Range(0, 100)][SerializeField] public float currentDefense;
     [Range(0, 100)][SerializeField] public float modDefense;
 
-
+    [Header("Movement Mods")]
     [Range(0f, 100f)][SerializeField] public float modSpeed;
     [Range(0, 100)][SerializeField] public int modJumps;
 
@@ -53,7 +57,7 @@ public class StatHandler : MonoBehaviour, IDamage
     {   
         currentDamage = damage + modDamage;
         
-        HandleSprint();
+        HandleDash();
 
     }
 
@@ -69,44 +73,40 @@ public class StatHandler : MonoBehaviour, IDamage
     {
         maxStamina = stamina + modStamina;
         currentStamina = maxStamina;
-        sprintCost = gameManager.instance.sprintCost;
+        dashCost = gameManager.instance.dashCost;
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
     
-    public void HandleSprint()
+    public void HandleDash()
     {
-        if (gameManager.instance.SprintTriggered 
-            && !gameManager.instance.isSprinting 
+        if (gameManager.instance.dashTriggered 
+            && !gameManager.instance.isDashing 
             && gameManager.instance.characterController.isGrounded 
             && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
-            currentStamina -= gameManager.instance.sprintCost;
-            gameManager.instance.isSprinting = true;
+            currentStamina -= gameManager.instance.dashCost;
         }
 
-        if (gameManager.instance.isSprinting)
+        if (gameManager.instance.isDashing)
         {
-            currentStamina += -sprintLoss;
+            currentStamina += -dashLoss;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
             GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
 
             if (currentStamina <= 0)
             {
-                gameManager.instance.SprintTriggered = false;
-                gameManager.instance.isSprinting = false;
-                gameManager.instance.canSprint = false;
+                gameManager.instance.canDash = false;
             }
         }
         else 
         {
-            currentStamina += sprintGain;
+            currentStamina += staminaRegen;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
             GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
 
             if (currentStamina >= maxStamina)
             {
-             gameManager.instance.canSprint = true;
-            
+             gameManager.instance.canDash = true;
             }
         }
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
@@ -124,6 +124,11 @@ public class StatHandler : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
+        if (gameManager.instance.isDashing)
+        {
+            return;
+        }
+
         StartCoroutine(FlashDamage());
 
         StatHandler stats = gameManager.instance.playerStatHandler;

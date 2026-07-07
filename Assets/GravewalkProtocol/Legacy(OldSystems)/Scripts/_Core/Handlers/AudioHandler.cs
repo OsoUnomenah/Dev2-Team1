@@ -17,6 +17,9 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(BaseSoundSO sound)
     {
+        if (sound == null)
+            return;
+
         GameObject soundObject = new GameObject("Temp Audio");
         AudioSource audioSource = soundObject.GetComponent<AudioSource>();
 
@@ -47,8 +50,11 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayFootsteps(BaseSoundSO _footsteps, GameObject noiseMaker)
+    public void PlaySoundFromSource(BaseSoundSO sound, GameObject noiseMaker)
     {
+        if(sound == null || noiseMaker == null)
+            return;
+
         AudioSource audioSource = noiseMaker.GetComponent<AudioSource>();
 
         if (audioSource == null)
@@ -56,20 +62,23 @@ public class AudioManager : MonoBehaviour
             audioSource = noiseMaker.AddComponent<AudioSource>();
         }
 
-        AudioClip currSound = _footsteps.clips[Random.Range(0, _footsteps.clips.Length)];
+        AudioClip currSound = sound.clips[Random.Range(0, sound.clips.Length)];
 
         audioSource.outputAudioMixerGroup = sfxGroup;
 
         audioSource.clip = currSound;
-        audioSource.volume = _footsteps.volume;
-        audioSource.pitch = _footsteps.pitch;
-        audioSource.loop = _footsteps.loop;
+        audioSource.volume = sound.volume;
+        audioSource.pitch = sound.pitch;
+        audioSource.loop = sound.loop;
 
-        audioSource.PlayOneShot(currSound, _footsteps.volume);
+        audioSource.PlayOneShot(currSound, sound.volume);
     }
 
     public void PlaySoundAtPosition(BaseSoundSO sound, GameObject noiseMaker)
     {
+        if (sound == null || noiseMaker == null)
+            return;
+
         GameObject soundObject = new GameObject("Temp Audio");
         AudioSource audioSource = soundObject.GetComponent<AudioSource>();
 
