@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee50487d35164c448ebd6537353de66, type: 3}
+  m_Name: SFX_Dash
+  m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
+  soundType: 0
+  clips:
+  - {fileID: 8300000, guid: 92cc1dfd76db6ff479f0ae50690f2c52, type: 3}
+  - {fileID: 8300000, guid: 418307f8f8b11764f87a1a5ada2fda2a, type: 3}
+  - {fileID: 8300000, guid: 79ef33d02282e6149bd3730df7f256b8, type: 3}
+  - {fileID: 8300000, guid: 6412e2b9a2a3f764ca035d7f8979189f, type: 3}
+  - {fileID: 8300000, guid: fc578246407ade9438443d438ee71e5e, type: 3}
+  - {fileID: 8300000, guid: a7d4fec523af87a4d9217bc82603bb0d, type: 3}
+  loop: 0
+  randomizePitch: 0
+  randomPitchRangeMod: 0.1
+  volume: 0.4
+  pitch: 1
+  fallOffDistMin: 2
+  fallOffDistMax: 20

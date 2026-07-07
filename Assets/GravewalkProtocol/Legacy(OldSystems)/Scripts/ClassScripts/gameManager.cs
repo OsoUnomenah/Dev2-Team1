@@ -53,10 +53,10 @@ public class gameManager : MonoBehaviour
     public TMP_Text waveText;
 
     [Header("Sprint Config")]
-    public bool SprintTriggered;
-    public bool canSprint;
-    public bool isSprinting;
-    public int sprintCost;
+    public bool dashTriggered;
+    public bool canDash;
+    public bool isDashing;
+    public int dashCost;
 
     [Header("Player References")]
     [SerializeField] public GameObject player;

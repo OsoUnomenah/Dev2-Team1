@@ -22,11 +22,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
-    [Range(3.0f, 20.0f)][SerializeField] private float sprintSpeed = 3.0f;
     [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
+    [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
+    [Range(1.0f, 20f)][SerializeField] float dashSpeed;
+    [Range(0.05f, 0.5f)][SerializeField] float dashTime;
+    [Range(1, 30)][SerializeField] int dashFOVMod;
+
     public Vector3 currentMovement;
     public float currentSpeed = 0f;
+    private float dashTimer;
+    private bool isDashing;
 
     [Header("Rotation Config")]
     [Range(0.1f, 5.0f)][SerializeField] private float mouseSensitivity = 0.5f;
@@ -50,6 +56,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
+    [SerializeField] BaseSoundSO _dash;
     [SerializeField] private BaseSoundSO _dryFire;
     [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
     [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
@@ -66,7 +73,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction moveAction;
     private InputAction rotateAction;
     private InputAction jumpAction;
-    private InputAction sprintAction;
+    private InputAction dashAction;
     private InputAction interactAction;
     private InputAction shootAction;
     private InputAction reloadAction;
@@ -74,7 +81,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction pauseAction;
 
     [Header("GlobalVariables")]
-    public bool SprintTriggered { get; private set; }
+    public bool DashTriggered { get; private set; }
     public Vector2 MovementVector { get; private set; }
     public Vector2 RotateVector { get; private set; }
 
@@ -86,7 +93,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         rotateAction = playerActions.PlayerInput.Rotate;
 
         jumpAction = playerActions.PlayerInput.Jump;
-        sprintAction = playerActions.PlayerInput.Sprint;
+        dashAction = playerActions.PlayerInput.Sprint;
 
         interactAction = playerActions.PlayerInput.Interact;
         
@@ -110,6 +117,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleMovement();
         HandleRotation();
         ApplyMovement();
+        HandleDash();
         HandleFootsteps();
         HandleJumping();
         ShootTimer();
@@ -135,8 +143,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         jumpAction.performed += OnJumpPerformed;
         jumpAction.canceled += OnJumpCanceled;
 
-        sprintAction.performed += OnSprintPerformed;
-        sprintAction.canceled += OnSprintCanceled;
+        dashAction.performed += OnDashPerformed;
+        dashAction.canceled += OnDashCanceled;
 
         interactAction.performed += OnInteractPerformed;
         interactAction.canceled += OnInteractCanceled;
@@ -165,8 +173,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         jumpAction.performed -= OnJumpPerformed;
         jumpAction.canceled -= OnJumpCanceled;
 
-        sprintAction.performed -= OnSprintPerformed;
-        sprintAction.canceled -= OnSprintCanceled;
+        dashAction.performed -= OnDashPerformed;
+        dashAction.canceled -= OnDashCanceled;
 
         interactAction.performed -= OnInteractPerformed;
         interactAction.canceled -= OnInteractCanceled;
@@ -240,10 +248,52 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Vector3 worldDirection = CalculateWorldDirection();
 
-        float targetSpeed = gameManager.instance.SprintTriggered ? sprintSpeed * sprintMultiplier : walkSpeed;
-        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * acceleration);
+        currentSpeed = Mathf.Lerp(currentSpeed, walkSpeed, Time.deltaTime * acceleration);
         currentMovement.x = worldDirection.x * currentSpeed;
         currentMovement.z = worldDirection.z * currentSpeed;
+    }
+
+    private IEnumerator Dash()
+    {
+        float startTime = Time.time;
+        dashTimer = 0f;
+
+        Physics.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Enemy"),
+            true);
+
+        gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
+
+        // move the character by some speed for a set time
+        while (Time.time < startTime + dashTime)
+        {
+            gameManager.instance.characterController.Move(currentMovement * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        Physics.IgnoreLayerCollision(
+            LayerMask.NameToLayer("Player"),
+            LayerMask.NameToLayer("Enemy"),
+            false);
+
+        gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
+        gameManager.instance.isDashing = false;
+    }
+
+    private void HandleDash()
+    {
+        dashTimer += Time.deltaTime;
+
+        if (dashAction.WasPressedThisFrame() && dashTimer > dashCd && gameManager.instance.canDash)
+        {
+            AudioManager.instance.PlaySoundFromSource(_dash, gameObject);
+            gameManager.instance.isDashing = true;
+            gameManager.instance.dashTriggered = true;
+            StartCoroutine(Dash());
+        }
+
+        gameManager.instance.dashTriggered = false;
     }
 
     private Vector3 CalculateWorldDirection()
@@ -256,6 +306,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void ApplyMovement()
     {
+        dashTimer += Time.deltaTime;
+
         gameManager.instance.characterController.Move(currentMovement * Time.deltaTime);
     }
 
@@ -329,7 +381,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (JumpTriggered)
         {
             currentMovement.y = jumpForce;
-            AudioManager.instance.PlayFootsteps(_footsteps, gameManager.instance.player);
+            AudioManager.instance.PlaySoundFromSource(_footsteps, gameManager.instance.player);
             jumpCount++;
             JumpTriggered = false;
         }
@@ -368,23 +420,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
-    public void OnSprintPerformed(InputAction.CallbackContext obj)
+    public void OnDashPerformed(InputAction.CallbackContext obj)
     {
-        if (gameManager.instance.canSprint && gameManager.instance.characterController.isGrounded)
-        {
-            gameManager.instance.SprintTriggered = true;
-        }
 
-       // if (turnOnDebug)
+        // if (turnOnDebug)
         //{
-       //     Debug.Log("Sprinting!");
-       // }
+        //     Debug.Log("Sprinting!");
+        // }
     }
 
-    private void OnSprintCanceled(InputAction.CallbackContext context)
+    private void OnDashCanceled(InputAction.CallbackContext context)
     {
-        gameManager.instance.SprintTriggered = false;
-        gameManager.instance.isSprinting = false;
 
        // if (turnOnDebug)
         //{
@@ -775,15 +821,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             footstepTimer += Time.deltaTime;
 
-            float interval = gameManager.instance.SprintTriggered
+            float interval = gameManager.instance.isDashing
                 ? footstepBaseInterval * footstepSprintInterval
                 : footstepBaseInterval;
 
             if (footstepTimer >= interval)
             {
-                AudioManager.instance.PlayFootsteps(_footsteps, gameManager.instance.player);
+                AudioManager.instance.PlaySoundFromSource(_footsteps, gameManager.instance.player);
                 footstepTimer = 0;
             }
         }
     }
+
+    
 }

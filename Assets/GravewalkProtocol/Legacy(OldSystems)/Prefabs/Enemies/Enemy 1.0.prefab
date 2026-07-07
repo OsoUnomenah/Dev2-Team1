@@ -539,7 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f88d73eaf14629488c6bbd0741577ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  mainCamera: {fileID: 0}
+  playerCamera: {fileID: 0}
 --- !u!1 &4932189050763179211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1165,7 @@ GameObject:
   - component: {fileID: -2838318328245437893}
   - component: {fileID: 7604649987162195448}
   - component: {fileID: 4971764561390135137}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy 1.0
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -1208,6 +1208,7 @@ MonoBehaviour:
   model: {fileID: 6515721808002073225}
   healthbar: {fileID: 4071806678052758362}
   healthText: {fileID: 527207266131902223}
+  isDead: 0
   onScreenDMG: {fileID: 8943116513222720860}
   damageText: {fileID: 8668104182665007097}
   currentHealth: 0
@@ -1333,8 +1334,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 909bddc1b05a2e545aabbf42ddfdcfb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  healthbar: {fileID: 4071806678052758362}
-  healthText: {fileID: 527207266131902223}
+  playerHpBar: {fileID: 0}
+  playerHpBarText: {fileID: 0}
   currentHealth: 100
   maxHealth: 0
 --- !u!54 &4971764561390135137
