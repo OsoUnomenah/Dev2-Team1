@@ -18,6 +18,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] private int attackDamage = 10;
     [SerializeField] int xpGive = 100;
     [SerializeField] Renderer model;
+    [SerializeField] BoxCollider bombSpawnArea;
+
     private NavMeshAgent agent0;
     public UnityEngine.UI.Slider healthbar;
     public TMP_Text healthText;
@@ -46,6 +48,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
     //only needed if you are using the same type of gun pivot as the enemies
     [SerializeField] GameObject armor;
+    [SerializeField] GameObject bomb;
 
     [SerializeField] GameObject weakpoint1;
     [SerializeField] GameObject weakpoint2;
@@ -74,6 +77,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     private float RestTime;
     private bool PlayerInTrigger;
     private float timer;
+    private bool attacking = false;
     private enum BossState
     {
         Rest,
@@ -101,6 +105,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         exitPortal = GameObject.FindGameObjectWithTag("Portal");
         exitPortal.SetActive(false);
         
+       
+
         armor.SetActive(false);
 
         currentHealth = maxHealth;
@@ -143,7 +149,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
                 break;
 
             case BossState.Attack1:
-                Spin();
+                CrystalBomb();
 
                 break;
 
@@ -222,6 +228,12 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         yield return new WaitForSeconds(15f);
         isArmored = false;
     }
+    bool canBomb = true;
+    IEnumerator BombCooldown()
+    {
+        yield return new WaitForSeconds(15f);
+        canBomb = true;
+    }
     private void Lava()
     {
         Debug.Log("Attack 3");
@@ -230,15 +242,70 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
         //timer--;
     }
-    private void Spin()
+    private void CrystalBomb()
     {
-        Debug.Log("Attack 1");
-        currentState = BossState.Decide;
-        //if (!PlayerInTrigger)
-        //{
-        //    currentState = BossState.Rest;
-        //}
+        if(!canBomb)
+        {
+            currentState = BossState.Decide;
+            return;
+        }
+        if(attacking)
+        {
+            if (!isBombing)
+            {
+                isBombing = true;
+                StartCoroutine(BombPlacer());
+
+            }
+            timer -= Time.deltaTime;
+            Debug.Log("Timer: " + timer);
+           
+        }
+        else
+        {
+            attacking = true;
+            timer = Random.Range(5f, 10f);
+        }
+            Debug.Log("Attack 1");      
+
+        
+        if (!PlayerInTrigger)
+        {
+            currentState = BossState.Rest;
+        }
+        if(timer <= 0f)
+        {
+            Debug.Log("Timer: " + timer);
+            attacking = false;
+            timer = -100;
+            canBomb = false;
+            StartCoroutine(BombCooldown());
+            currentState = BossState.Decide;
+        }
+        
     }
+    private bool isBombing = false;
+    IEnumerator BombPlacer()
+    {
+        
+            //place a bomb
+            Bounds bounds = bombSpawnArea.bounds;
+
+            float x = Random.Range(bounds.min.x, bounds.max.x);
+            float y = Random.Range(bounds.max.y, bounds.min.y);
+            float z = Random.Range(bounds.max.z, bounds.min.z);
+            Vector3 vec = new Vector3(x, y, z);
+
+            Quaternion rot = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+
+            Instantiate(bomb, vec, rot);
+       float rand = Random.Range(1f, 2f);
+            yield return new WaitForSeconds(rand);
+
+        isBombing=false;
+        
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -262,7 +329,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         }
         else if (timer == -100)
         {
-            timer = Random.Range(1, 1200); //1200
+            timer = Random.Range(300, 1200); //1200
         }
 
         timer -= 1;
