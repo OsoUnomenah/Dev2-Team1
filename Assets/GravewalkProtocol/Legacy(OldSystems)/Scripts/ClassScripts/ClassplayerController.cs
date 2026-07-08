@@ -1,41 +1,35 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
     [Header("References")]
-    [SerializeField] CharacterController controller;
-    [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] PlayerWeaponManager weaponManager;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private LayerMask ignoreLayer;
+    [SerializeField] private PlayerWeaponManager weaponManager;
 
     [Header("Player Settings")]
-    [SerializeField] int HP;
-    [SerializeField] int speed;
-    [SerializeField] int sprintMod;
-    [SerializeField] int jumpSpeed;
-    [SerializeField] int jumpMax;
-    [SerializeField] int gravity;
+    [SerializeField] private int HP;
+    [SerializeField] private int speed;
+    [SerializeField] private int sprintMod;
+    [SerializeField] private int jumpSpeed;
+    [SerializeField] private int jumpMax;
+    [SerializeField] private int gravity;
 
-    [Header("Gun Settings")]
-    [SerializeField] int shootDamage;
-    [SerializeField] float shootRange;
-    [SerializeField] float speedRate;
+    private int jumpCount;
+    private int HPOriginal;
+    private float shootTimer;
 
-    int jumpCount;
-    int HPOriginal;
+    private Vector3 moveDir;
+    private Vector3 playerVel;
 
-    float shootTimer;
-
-    Vector3 moveDir;
-    Vector3 playerVel;
-
-    bool isSprinting;
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         HPOriginal = HP;
+
+        if (controller == null)
+        {
+            controller = GetComponent<CharacterController>();
+        }
 
         if (weaponManager == null)
         {
@@ -43,41 +37,75 @@ public class PlayerController : MonoBehaviour, IDamage
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        movement();
-        sprint();
+        Movement();
+        Sprint();
     }
 
-    void movement()
+    void Movement()
     {
         shootTimer += Time.deltaTime;
 
-        if (controller.isGrounded)
+        if (controller != null && controller.isGrounded)
         {
             jumpCount = 0;
             playerVel.y = 0;
         }
 
         moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
-        controller.Move(moveDir * speed * Time.deltaTime);
 
-        jump();
-        controller.Move(playerVel * Time.deltaTime);
+        if (controller != null)
+        {
+            controller.Move(moveDir * speed * Time.deltaTime);
+        }
+
+        Jump();
+
+        if (controller != null)
+        {
+            controller.Move(playerVel * Time.deltaTime);
+        }
 
         playerVel.y -= gravity * Time.deltaTime;
 
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootRange, Color.red);
-
-        if (Input.GetButton("Fire1") && shootTimer > speedRate)
-        {
-            shoot();
-        }
-
+        HandleShooting();
     }
 
-    void jump()
+    void HandleShooting()
+    {
+        if (weaponManager == null || !weaponManager.HasWeapon || Camera.main == null)
+        {
+            return;
+        }
+
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * weaponManager.Range, Color.red);
+
+        bool wantsToFire;
+
+        if (weaponManager.CurrentWeaponData != null && weaponManager.CurrentWeaponData.fullAuto)
+        {
+            wantsToFire = Input.GetButton("Fire1");
+        }
+        else
+        {
+            wantsToFire = Input.GetButtonDown("Fire1");
+        }
+
+        Debug.Log(
+    "Weapon: " + weaponManager.CurrentWeaponName +
+    " | fullAuto: " + weaponManager.CurrentWeaponData.fullAuto +
+    " | shootTimer: " + shootTimer +
+    " | requiredTimer: " + weaponManager.Timer +
+    " | ammo: " + weaponManager.Ammo
+);
+        if (wantsToFire && shootTimer >= weaponManager.Timer && weaponManager.Ammo > 0)
+        {
+            Shoot();
+        }
+    }
+
+    void Jump()
     {
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
@@ -86,7 +114,7 @@ public class PlayerController : MonoBehaviour, IDamage
         }
     }
 
-    void sprint()
+    void Sprint()
     {
         if (Input.GetButtonDown("Sprint"))
         {
@@ -96,15 +124,20 @@ public class PlayerController : MonoBehaviour, IDamage
         {
             speed /= sprintMod;
         }
-        
     }
 
-    void shoot()
+    void Shoot()
     {
-        shootTimer = 0;
+        if (weaponManager == null || !weaponManager.HasWeapon || Camera.main == null)
+        {
+            return;
+        }
+
+        shootTimer = 0f;
+        weaponManager.Ammo--;
 
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootRange, ~ignoreLayer))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponManager.Range, ~ignoreLayer))
         {
             Debug.Log("Hitting: " + hit.collider.name);
 
@@ -116,20 +149,18 @@ public class PlayerController : MonoBehaviour, IDamage
             IDamage dmg = hit.collider.GetComponent<IDamage>();
             if (dmg != null)
             {
-                dmg.takeDamage(shootDamage);
+                dmg.takeDamage(weaponManager.Damage);
             }
         }
-
     }
 
     public void takeDamage(int amount)
     {
         HP -= amount;
 
-        if(HP <= 0) 
+        if (HP <= 0)
         {
             gameManager.instance.youLose();
         }
     }
 }
-

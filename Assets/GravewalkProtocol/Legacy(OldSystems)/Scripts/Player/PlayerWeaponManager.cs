@@ -1,31 +1,14 @@
 ﻿using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 {
-    [System.Serializable]
-    public class InventoryWeapon
-    {
-        public string weaponName;
-        public bool type;
-        public int damage;
-        public float range;
-        public float rate;
-        public float recoil;
-        public float timer;
-        public int ammo;
-        public int maxAmmo;
-        public float ammoTimer;
-        public GameObject weaponPrefab;
-        public BaseSoundSO shootSound;
-        public BaseSoundSO reloadSound;
-        public GameObject hitEffect;
-        public List<string> modDescriptions = new List<string>();
-    }
+    [Header("Current Weapon Data")]
+    [SerializeField] private WeaponData currentWeaponData;
+    [SerializeField] private string currentWeaponName;
+    [SerializeField] private List<string> currentWeaponMods = new List<string>();
 
-    //Weapon Settings
+    // Weapon Settings
     public bool Type;
     public int Damage;
     public float Range;
@@ -42,8 +25,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
 
-    //Ability Stuff
-    [SerializeField] GameObject abilityModel;
+    // Ability Stuff
+    [SerializeField] private GameObject abilityModel;
     public ParticleSystem effect;
     [SerializeField] public Transform effectSocket;
     private ParticleSystem activeEffect;
@@ -54,245 +37,101 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int zoomPos;
     [SerializeField] public GameObject bouncePad;
 
-    //Ability Settings
+    // Ability Settings
     public int fireLevel;
     public int freezeLevel;
     public int bounceLevel;
     public int zoomLevel;
     public int abilitySlot;
 
-    [Header("Weapon Inventory")]
-    [SerializeField] private List<InventoryWeapon> weaponInventory = new List<InventoryWeapon>();
-    [SerializeField] private int currentWeaponIndex = -1;
-    [SerializeField] private int maxWeaponSlots = 4;
-
-    public int CurrentWeaponIndex => currentWeaponIndex;
-    public int WeaponCount => weaponInventory.Count;
-    public int MaxWeaponSlots => maxWeaponSlots;
-
     [Header("Don't touch unless debugging")]
-    [SerializeField] List<int> Modifiers;
+    [SerializeField] private List<string> Modifiers = new List<string>();
 
-    void Start()
-    {
-        // cameraCon = FindAnyObjectByType<CameraController>();
-    }
+    public string CurrentWeaponName => currentWeaponName;
+    public WeaponData CurrentWeaponData => currentWeaponData;
+    public bool HasWeapon => currentWeaponData != null;
 
     void Update()
     {
-        HandleWeaponSwitchInput();
         abilitySwitch();
     }
 
-    public bool AddWeaponToInventory(
-    string weaponName,
-    bool type,
-    int damage,
-    float range,
-    float rate,
-    float recoil,
-    float timer,
-    GameObject weaponPrefab,
-    int ammo,
-    int maxAmmo,
-    float ammoTimer,
-    BaseSoundSO shootSound,
-    BaseSoundSO reloadSound,
-    GameObject hitEffect, // <-- Fixed: Changed ; to ,
-    List<string> weaponMods = null)
+    public bool EquipPickedUpWeapon(
+        WeaponData weaponData,
+        int damage,
+        float range,
+        float rate,
+        float recoil,
+        float timer,
+        int ammo,
+        int maxAmmo,
+        float ammoTimer,
+        List<string> weaponMods = null)
     {
-        for (int i = 0; i < weaponInventory.Count; i++)
+        if (weaponData == null)
         {
-            if (weaponInventory[i].weaponName == weaponName)
-            {
-                if (UpgradeUI.instance != null)
-                {
-                    UpgradeUI.instance.ShowUpgradeNotification("Already have " + weaponName);
-                }
-
-                Debug.Log("Player already has weapon: " + weaponName);
-                return false;
-            }
-        }
-
-        if (weaponInventory.Count >= maxWeaponSlots)
-        {
-            if (UpgradeUI.instance != null)
-            {
-                UpgradeUI.instance.ShowUpgradeNotification("Weapon inventory full");
-            }
-
-           // Debug.Log("Weapon inventory full.");
             return false;
         }
 
-        InventoryWeapon newWeapon = new InventoryWeapon();
+        currentWeaponData = weaponData;
+        currentWeaponName = weaponData.weaponName;
+        currentWeaponMods = CopyModList(weaponMods);
 
-        newWeapon.weaponName = weaponName;
-        newWeapon.type = type;
-        newWeapon.damage = damage;
-        newWeapon.range = range;
-        newWeapon.rate = rate;
-        newWeapon.recoil = recoil;
-        newWeapon.timer = timer;
-        newWeapon.weaponPrefab = weaponPrefab;
-        newWeapon.ammo = ammo;
-        newWeapon.maxAmmo = maxAmmo;
-        newWeapon.ammoTimer = ammoTimer;
-        newWeapon.shootSound = shootSound;
-        newWeapon.reloadSound = reloadSound;
-        newWeapon.hitEffect = hitEffect;
-        newWeapon.modDescriptions = CopyModList(weaponMods);
-
-        weaponInventory.Add(newWeapon);
-
-        currentWeaponIndex = weaponInventory.Count - 1;
-
-        EquipWeaponFromInventory(currentWeaponIndex, false);
+        Equip(
+            weaponData.weaponType,
+            damage,
+            range,
+            rate,
+            recoil,
+            timer,
+            weaponData.weaponPrefab,
+            ammo,
+            maxAmmo,
+            ammoTimer,
+            weaponData.shootSound,
+            weaponData.reloadSound,
+            weaponData.hitEffect
+        );
 
         if (UpgradeUI.instance != null)
         {
-            UpgradeUI.instance.ShowUpgradeNotification("Picked up " + weaponName);
+            UpgradeUI.instance.ShowUpgradeNotification("Equipped " + currentWeaponName);
         }
 
-        //Debug.Log("Added weapon to inventory: " + weaponName);
         return true;
-    }
-
-    public bool ReplaceWeaponInInventory(
-    string weaponName,
-    bool type,
-    int damage,
-    float range,
-    float rate,
-    float recoil,
-    float timer,
-    GameObject weaponPrefab,
-    int ammo,
-    int maxAmmo,
-    float ammoTimer,
-    BaseSoundSO shootSound,
-    BaseSoundSO reloadSound,
-    GameObject hitEffect, // <-- Fixed: Lowercase 'h', and changed ; to ,
-    List<string> weaponMods = null)
-    {
-        for (int i = 0; i < weaponInventory.Count; i++)
-        {
-            if (weaponInventory[i].weaponName == weaponName)
-            {
-                weaponInventory[i].type = type;
-                weaponInventory[i].damage = damage;
-                weaponInventory[i].range = range;
-                weaponInventory[i].rate = rate;
-                weaponInventory[i].recoil = recoil;
-                weaponInventory[i].timer = timer;
-                weaponInventory[i].weaponPrefab = weaponPrefab;
-                weaponInventory[i].ammo = ammo;
-                weaponInventory[i].maxAmmo = maxAmmo;
-                weaponInventory[i].ammoTimer = ammoTimer;
-                weaponInventory[i].shootSound = shootSound;
-                weaponInventory[i].reloadSound = reloadSound;
-                weaponInventory[i].hitEffect = hitEffect;
-                weaponInventory[i].modDescriptions = CopyModList(weaponMods);
-
-                EquipWeaponFromInventory(i, false);
-
-                if (UpgradeUI.instance != null)
-                {
-                    UpgradeUI.instance.ShowUpgradeNotification("Swapped " + weaponName);
-                }
-
-                //Debug.Log("Replaced weapon in inventory: " + weaponName);
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public string GetCurrentWeaponInfoText()
     {
-        if (currentWeaponIndex < 0 || currentWeaponIndex >= weaponInventory.Count)
+        if (currentWeaponData == null)
         {
-            return "<b>Current Weapon</b>\nNone";
+            return "Current Weapon\nNone";
         }
 
-        InventoryWeapon weapon = weaponInventory[currentWeaponIndex];
-
         string info = "";
-
-        info += "<b>Current Weapon</b>\n";
-        info += "<color=#FFD966><b>" + weapon.weaponName + "</b></color>\n\n";
-
+        info += "Current Weapon\n";
+        info += currentWeaponName + "\n\n";
         info += "DMG: " + Damage + "\n";
         info += "Ammo: " + Ammo + " / " + MaxAmmo + "\n";
         info += "Reload: " + AmmoTimer.ToString("0.00") + "s\n";
         info += "Fire Delay: " + Timer.ToString("0.00") + "s\n";
         info += "Range: " + Mathf.RoundToInt(Range) + "\n";
 
-        info += "\n<b>Mods</b>\n";
+        info += "\nMods\n";
 
-        if (weapon.modDescriptions == null || weapon.modDescriptions.Count == 0)
+        if (currentWeaponMods == null || currentWeaponMods.Count == 0)
         {
             info += "No weapon mods";
         }
         else
         {
-            for (int i = 0; i < weapon.modDescriptions.Count; i++)
+            for (int i = 0; i < currentWeaponMods.Count; i++)
             {
-                info += weapon.modDescriptions[i] + "\n";
+                info += currentWeaponMods[i] + "\n";
             }
         }
 
         return info;
-    }
-
-    private void SaveCurrentAmmoToInventory()
-    {
-        if (currentWeaponIndex < 0 || currentWeaponIndex >= weaponInventory.Count)
-        {
-            return;
-        }
-
-        weaponInventory[currentWeaponIndex].ammo = Ammo;
-    }
-
-    private void EquipWeaponFromInventory(int index, bool saveCurrentAmmo = true)
-    {
-        if (index < 0 || index >= weaponInventory.Count)
-        {
-            return;
-        }
-
-        if (saveCurrentAmmo)
-        {
-            SaveCurrentAmmoToInventory();
-        }
-
-        currentWeaponIndex = index;
-
-        InventoryWeapon weapon = weaponInventory[currentWeaponIndex];
-
-        Equip(
-            weapon.type,
-            weapon.damage,
-            weapon.range,
-            weapon.rate,
-            weapon.recoil,
-            weapon.timer,
-            weapon.weaponPrefab,
-            weapon.ammo,
-            weapon.maxAmmo,
-            weapon.ammoTimer,
-            weapon.shootSound,
-            weapon.reloadSound,
-            weapon.hitEffect
-        );
-
-        if (UpgradeUI.instance != null)
-        {
-            UpgradeUI.instance.ShowUpgradeNotification("Equipped " + weapon.weaponName);
-        }
     }
 
     private List<string> CopyModList(List<string> source)
@@ -305,52 +144,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         return new List<string>(source);
     }
 
-    public string GetWeaponNameAtSlot(int index)
-    {
-        if (index < 0 || index >= weaponInventory.Count)
-        {
-            return "Empty";
-        }
-
-        return weaponInventory[index].weaponName;
-    }
-
-    private void SwitchWeapon(int direction)
-    {
-        if (weaponInventory.Count <= 1)
-        {
-            return;
-        }
-
-        int newIndex = currentWeaponIndex + direction;
-
-        if (newIndex >= weaponInventory.Count)
-        {
-            newIndex = 0;
-        }
-        else if (newIndex < 0)
-        {
-            newIndex = weaponInventory.Count - 1;
-        }
-
-        EquipWeaponFromInventory(newIndex);
-    }
-
-    private void HandleWeaponSwitchInput()
-    {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-
-        if (scroll > 0f)
-        {
-            SwitchWeapon(1);
-        }
-        else if (scroll < 0f)
-        {
-            SwitchWeapon(-1);
-        }
-    }
-
-    public void Equip(bool type, int damage, float range, float rate, float recoil, float timer, GameObject weaponPrefab, int ammo, int maxAmmo, float ammoTimer, BaseSoundSO shootSound, BaseSoundSO reloadSound, GameObject hitEffect)
+    public void Equip(
+        bool type,
+        int damage,
+        float range,
+        float rate,
+        float recoil,
+        float timer,
+        GameObject weaponPrefab,
+        int ammo,
+        int maxAmmo,
+        float ammoTimer,
+        BaseSoundSO shootSound,
+        BaseSoundSO reloadSound,
+        GameObject hitEffect)
     {
         Type = type;
         Damage = damage;
@@ -358,7 +165,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         Rate = rate;
 
         Recoil = recoil;
-        gameManager.instance.recoil = recoil;
+        if (gameManager.instance != null)
+        {
+            gameManager.instance.recoil = recoil;
+        }
 
         Timer = timer;
         Ammo = ammo;
@@ -373,10 +183,12 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             Destroy(weaponCurrent);
         }
 
-        weaponCurrent = Instantiate(weaponPrefab, weaponHolder);
-
-        weaponCurrent.transform.localPosition = Vector3.zero;
-        weaponCurrent.transform.localRotation = Quaternion.identity;
+        if (weaponPrefab != null && weaponHolder != null)
+        {
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder);
+            weaponCurrent.transform.localPosition = Vector3.zero;
+            weaponCurrent.transform.localRotation = Quaternion.identity;
+        }
     }
 
     public void getStats(AbilityStats stats)
@@ -392,6 +204,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 abilityEquip(abilities[firePos]);
                 fireLevel += stats.level;
                 break;
+
             case 2:
                 if (freezeLevel == 0)
                 {
@@ -401,6 +214,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 abilityEquip(abilities[freezePos]);
                 freezeLevel += stats.level;
                 break;
+
             case 3:
                 if (bounceLevel == 0)
                 {
@@ -410,6 +224,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 abilityEquip(abilities[bouncePos]);
                 bounceLevel += stats.level;
                 break;
+
             case 4:
                 if (zoomLevel == 0)
                 {
@@ -425,25 +240,49 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     void firstTimePickup(AbilityStats stats)
     {
         abilities.Add(stats);
-        gameManager.instance.abilityUI.abilityAssign(stats.abilityType);
-        gameManager.instance.slotFiller();
+
+        if (gameManager.instance != null)
+        {
+            gameManager.instance.abilityUI.abilityAssign(stats.abilityType);
+            gameManager.instance.slotFiller();
+        }
     }
 
     void abilityEquip(AbilityStats stats)
     {
-        abilityModel.GetComponent<MeshFilter>().sharedMesh = stats.model.GetComponent<MeshFilter>().sharedMesh;
-        abilityModel.GetComponent<MeshRenderer>().sharedMaterial = stats.model.GetComponent<MeshRenderer>().sharedMaterial;
+        if (stats == null || stats.model == null || abilityModel == null)
+        {
+            return;
+        }
+
+        MeshFilter abilityMeshFilter = abilityModel.GetComponent<MeshFilter>();
+        MeshFilter statsMeshFilter = stats.model.GetComponent<MeshFilter>();
+        MeshRenderer abilityMeshRenderer = abilityModel.GetComponent<MeshRenderer>();
+        MeshRenderer statsMeshRenderer = stats.model.GetComponent<MeshRenderer>();
+
+        if (abilityMeshFilter != null && statsMeshFilter != null)
+        {
+            abilityMeshFilter.sharedMesh = statsMeshFilter.sharedMesh;
+        }
+
+        if (abilityMeshRenderer != null && statsMeshRenderer != null)
+        {
+            abilityMeshRenderer.sharedMaterial = statsMeshRenderer.sharedMaterial;
+        }
+
         effect = stats.loopedEffect;
 
         if (activeEffect != null)
         {
             Destroy(activeEffect.gameObject);
         }
-        effect = stats.loopedEffect;
 
-        activeEffect = Instantiate(effect, effectSocket);
-        activeEffect.transform.localPosition = Vector3.zero;
-        activeEffect.transform.localRotation = Quaternion.identity;
+        if (effect != null && effectSocket != null)
+        {
+            activeEffect = Instantiate(effect, effectSocket);
+            activeEffect.transform.localPosition = Vector3.zero;
+            activeEffect.transform.localRotation = Quaternion.identity;
+        }
     }
 
     void abilitySwitch()

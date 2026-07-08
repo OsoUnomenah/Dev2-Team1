@@ -3,34 +3,30 @@ using UnityEngine;
 
 public class WeaponPickUp : MonoBehaviour, IInteract
 {
-    string objectName;
+    [SerializeField] private WeaponData weaponData;
 
-    [SerializeField] private string weaponName;
-    
-    [SerializeField] Renderer model;
-    Material materialOrig;
-    [SerializeField] Material highLight;
-   
-    [SerializeField] bool weaponType; //true for melee false for projectile
-    [SerializeField] int damage;
-    [SerializeField] float range;
-    [SerializeField] float rate;
-    [SerializeField] float recoil;
-    [SerializeField] float timer;
-    [SerializeField] public int ammo;
-    [SerializeField] public int maxAmmo;
-    [SerializeField] float ammoTimer;
-    [SerializeField] private GameObject weaponPrefab;
-    [SerializeField] private GameObject hitEffect;
-
-    [Header("Audio")]
-    [SerializeField] private BaseSoundSO shootSound;
-    [SerializeField] private BaseSoundSO reloadSound;
-    [SerializeField] private BaseSoundSO weaponPickupSound;
+    [SerializeField] private Renderer model;
+    private Material materialOrig;
+    [SerializeField] private Material highLight;
 
     [Header("Generated Weapon Mods")]
     [SerializeField] private bool hasGeneratedMod;
     [SerializeField] private List<string> modDescriptions = new List<string>();
+
+    [Header("Rolled Runtime Stats")]
+    [SerializeField] private int rolledDamage;
+    [SerializeField] private float rolledRange;
+    [SerializeField] private float rolledRate;
+    [SerializeField] private float rolledRecoil;
+    [SerializeField] private float rolledTimer;
+    [SerializeField] private int rolledAmmo;
+    [SerializeField] private int rolledMaxAmmo;
+    [SerializeField] private float rolledAmmoTimer;
+
+    [Header("Don't touch unless debugging")]
+    [SerializeField] private List<string> Modifiers = new List<string>();
+
+    private PlayerWeaponManager weaponManager;
 
     private enum ModRarity
     {
@@ -40,36 +36,48 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         Legendary
     }
 
-
-    [Header("Don't touch unles debugging")]
-    [SerializeField] List<int> Modifiers;
-
-    private PlayerWeaponManager weaponManager;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        materialOrig = model.material;
+        if (model != null)
+        {
+            materialOrig = model.material;
+        }
+
         weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
+        ResetRolledStatsFromData();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void ResetRolledStatsFromData()
     {
-        objectName = gameObject.name;
-    }    
+        if (weaponData == null)
+        {
+            return;
+        }
+
+        rolledDamage = weaponData.damage;
+        rolledRange = weaponData.range;
+        rolledRate = weaponData.rate;
+        rolledRecoil = weaponData.recoil;
+        rolledTimer = weaponData.timer;
+        rolledAmmo = weaponData.ammo;
+        rolledMaxAmmo = weaponData.maxAmmo;
+        rolledAmmoTimer = weaponData.ammoTimer;
+    }
 
     public void RollChestWeaponMods()
     {
-        if (hasGeneratedMod)
+        if (hasGeneratedMod || weaponData == null)
+        {
             return;
+        }
 
         hasGeneratedMod = true;
         modDescriptions.Clear();
+        ResetRolledStatsFromData();
 
         int modCount = Random.Range(1, 3);
 
-        for(int i =0; i < modCount; i++)
+        for (int i = 0; i < modCount; i++)
         {
             ModRarity rarity = RollModRarity();
             float rarityMultiplier = GetRarityMultiplier(rarity);
@@ -80,38 +88,36 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             {
                 case 0:
                     int bonusDamage = Mathf.RoundToInt(Random.Range(3, 11) * rarityMultiplier);
-                    damage += bonusDamage;
+                    rolledDamage += bonusDamage;
                     AddModDescription(rarity, "Damage +" + bonusDamage);
                     break;
 
                 case 1:
                     int bonusAmmo = Mathf.RoundToInt(Random.Range(2, 8) * rarityMultiplier);
-                    maxAmmo += bonusAmmo;
-                    ammo = maxAmmo;
+                    rolledMaxAmmo += bonusAmmo;
+                    rolledAmmo = rolledMaxAmmo;
                     AddModDescription(rarity, "Max Ammo +" + bonusAmmo);
                     break;
 
                 case 2:
                     float reloadBonus = Random.Range(0.15f, 0.35f) * rarityMultiplier;
-                    ammoTimer = Mathf.Max(0.5f, ammoTimer - reloadBonus);
+                    rolledAmmoTimer = Mathf.Max(0.5f, rolledAmmoTimer - reloadBonus);
                     AddModDescription(rarity, "Reload Speed +" + Mathf.RoundToInt(reloadBonus * 100) + "%");
                     break;
 
                 case 3:
                     float fireRateBonus = Random.Range(0.05f, 0.2f) * rarityMultiplier;
-                    timer = Mathf.Max(0.05f, timer - fireRateBonus);
+                    rolledTimer = Mathf.Max(0.05f, rolledTimer - fireRateBonus);
                     AddModDescription(rarity, "Fire Rate +" + Mathf.RoundToInt(fireRateBonus * 100) + "%");
                     break;
 
                 case 4:
                     float rangeBonus = Random.Range(5f, 21f) * rarityMultiplier;
-                    range += rangeBonus;
+                    rolledRange += rangeBonus;
                     AddModDescription(rarity, "Range +" + Mathf.RoundToInt(rangeBonus));
                     break;
             }
         }
-
-        //Debug.Log(gameObject.name + " rolled chest mods: " + string.Join(", ", modDescriptions));
     }
 
     private ModRarity RollModRarity()
@@ -142,13 +148,10 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         {
             case ModRarity.Common:
                 return 1f;
-
             case ModRarity.Rare:
                 return 1.5f;
-
             case ModRarity.Epic:
                 return 2f;
-
             case ModRarity.Legendary:
                 return 3f;
         }
@@ -156,53 +159,31 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         return 1f;
     }
 
-    private string GetRarityColor(ModRarity rarity)
-    {
-        switch (rarity)
-        {
-            case ModRarity.Common:
-                return "#B8B8B8"; // gray
-
-            case ModRarity.Rare:
-                return "#4DA6FF"; // blue
-
-            case ModRarity.Epic:
-                return "#B84DFF"; // purple
-
-            case ModRarity.Legendary:
-                return "#FFB84D"; // gold
-        }
-
-        return "#FFFFFF";
-    }
-
     private void AddModDescription(ModRarity rarity, string description)
     {
-        string color = GetRarityColor(rarity);
-        modDescriptions.Add("<color=" + color + ">" + rarity + " " + description + "</color>");
+        modDescriptions.Add(rarity + " " + description);
     }
 
     public string GetWeaponHoverText()
     {
-        string displayName = weaponName;
-
-        if (string.IsNullOrEmpty(displayName))
+        if (weaponData == null)
         {
-            displayName = gameObject.name;
+            return "Weapon\nMissing WeaponData";
         }
 
+        string displayName = string.IsNullOrEmpty(weaponData.weaponName) ? gameObject.name : weaponData.weaponName;
+
         string info = "";
+        info += displayName + "\n";
+        info += "DMG: " + rolledDamage + "\n";
+        info += "Ammo: " + rolledAmmo + " / " + rolledMaxAmmo + "\n";
+        info += "Reload: " + rolledAmmoTimer.ToString("0.00") + "s\n";
+        info += "Fire Delay: " + rolledTimer.ToString("0.00") + "s\n";
+        info += "Range: " + Mathf.RoundToInt(rolledRange) + "\n";
 
-        info += "<b>" + displayName + "</b>\n";
-        info += "DMG: " + damage + "\n";
-        info += "Ammo: " + ammo + " / " + maxAmmo + "\n";
-        info += "Reload: " + ammoTimer.ToString("0.00") + "s\n";
-        info += "Fire Delay: " + timer.ToString("0.00") + "s\n";
-        info += "Range: " + Mathf.RoundToInt(range) + "\n";
+        info += "\nMods\n";
 
-        info += "\n<b>Mods</b>\n";
-
-        if (modDescriptions.Count == 0)
+        if (modDescriptions == null || modDescriptions.Count == 0)
         {
             info += "No chest mods";
         }
@@ -217,10 +198,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         return info;
     }
 
-
     public void Interact()
     {
-        //Debug.Log($"Picked up {objectName}");
+        Debug.Log("Interact called on: " + gameObject.name);
 
         if (weaponManager == null)
         {
@@ -229,93 +209,97 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
         if (weaponManager == null)
         {
-           // Debug.LogWarning("No PlayerWeaponManager found. Could not pick up weapon.");
+            Debug.LogWarning("Weapon pickup failed: no PlayerWeaponManager found.");
             return;
         }
 
-        bool pickedUp = weaponManager.AddWeaponToInventory(
-    weaponName,
-    weaponType,
-    damage,
-    range,
-    rate,
-    recoil,
-    timer,
-    weaponPrefab,
-    ammo,
-    maxAmmo,
-    ammoTimer,
-    shootSound,
-    reloadSound,
-    hitEffect,
-    modDescriptions
-);
-
-        if (!pickedUp)
+        if (weaponData == null)
         {
-            pickedUp = weaponManager.ReplaceWeaponInInventory(
-                weaponName,
-                weaponType,
-                damage,
-                range,
-                rate,
-                recoil,
-                timer,
-                weaponPrefab,
-                ammo,
-                maxAmmo,
-                ammoTimer,
-                shootSound,
-                reloadSound,
-                hitEffect,
-                modDescriptions
-            );
+            Debug.LogWarning("Weapon pickup failed: no WeaponData assigned on " + gameObject.name);
+            return;
         }
+
+        Debug.Log("Trying to equip: " + weaponData.weaponName);
+
+        bool pickedUp = weaponManager.EquipPickedUpWeapon(
+            weaponData,
+            rolledDamage,
+            rolledRange,
+            rolledRate,
+            rolledRecoil,
+            rolledTimer,
+            rolledAmmo,
+            rolledMaxAmmo,
+            rolledAmmoTimer,
+            modDescriptions
+        );
+
+        Debug.Log("EquipPickedUpWeapon result: " + pickedUp);
 
         if (!pickedUp)
         {
             return;
         }
 
-        gameManager.instance.interactText.gameObject.SetActive(false);
+        if (gameManager.instance != null && gameManager.instance.interactText != null)
+        {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+        }
+
         RecticleBehaviour.OffHover();
-        if(WeaponModHoverUI.Instance != null)
+
+        if (WeaponModHoverUI.Instance != null)
         {
             WeaponModHoverUI.Instance.HideInfo();
         }
 
         PlayWeaponPickupSound();
-
         Destroy(gameObject);
     }
 
     private void PlayWeaponPickupSound()
     {
-        if (AudioManager.instance != null && weaponPickupSound != null)
+        if (AudioManager.instance != null && weaponData != null && weaponData.weaponPickupSound != null)
         {
-            AudioManager.instance.PlaySound(weaponPickupSound);
+            AudioManager.instance.PlaySound(weaponData.weaponPickupSound);
         }
     }
 
     public void OnHoverEnter()
     {
-        model.material = highLight;
-        gameManager.instance.interactText.gameObject.SetActive(true);
+        if (model != null && highLight != null)
+        {
+            model.material = highLight;
+        }
+
+        if (gameManager.instance != null && gameManager.instance.interactText != null)
+        {
+            gameManager.instance.interactText.gameObject.SetActive(true);
+        }
+
         RecticleBehaviour.OnHover(0);
 
-        if(WeaponModHoverUI.Instance != null)
+        if (WeaponModHoverUI.Instance != null)
         {
             WeaponModHoverUI.Instance.ShowInfo(GetWeaponHoverText());
         }
     }
 
     public void OnHoverExit()
-    {       
-        model.material = materialOrig;
-        gameManager.instance.interactText.gameObject.SetActive(false);
+    {
+        if (model != null && materialOrig != null)
+        {
+            model.material = materialOrig;
+        }
+
+        if (gameManager.instance != null && gameManager.instance.interactText != null)
+        {
+            gameManager.instance.interactText.gameObject.SetActive(false);
+        }
+
         RecticleBehaviour.OffHover();
 
-        if(WeaponModHoverUI.Instance != null)
+        if (WeaponModHoverUI.Instance != null)
         {
             WeaponModHoverUI.Instance.HideInfo();
         }
