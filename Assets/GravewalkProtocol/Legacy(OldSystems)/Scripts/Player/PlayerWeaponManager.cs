@@ -16,6 +16,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float Rate;
     public float Recoil;
     public float Timer;
+    public float TimerOrig;
     public int Ammo;
     public int MaxAmmo;
     public float AmmoTimer;
@@ -47,7 +48,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int abilitySlot;
 
     // Animation hashes
-    private readonly int lightAttack = Animator.StringToHash("isHitting");
+    private int lightAttack = Animator.StringToHash("isHitting");
     private readonly int heavyAttack = Animator.StringToHash("heavyHit");
 
     [Header("Don't touch unless debugging")]
@@ -178,6 +179,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         }
 
         Timer = timer;
+        TimerOrig = timer;
         Ammo = ammo;
         MaxAmmo = maxAmmo;
         AmmoTimer = ammoTimer;

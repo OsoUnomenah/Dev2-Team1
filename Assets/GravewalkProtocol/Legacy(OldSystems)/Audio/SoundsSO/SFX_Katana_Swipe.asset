@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eee50487d35164c448ebd6537353de66, type: 3}
-  m_Name: SFX_Melee_Swipe
+  m_Name: SFX_Katana_Swipe
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
   clips:
-  - {fileID: 8300000, guid: cffd8ae1b918c2147a18c98d00aa3dbd, type: 3}
+  - {fileID: 8300000, guid: 485e34c92c87d3c499fca9eb6d394db6, type: 3}
   loop: 0
   randomizePitch: 1
   randomPitchRangeMod: 0.1
-  volume: 0.408
+  volume: 0.3
   pitch: 1
   fallOffDistMin: 2
   fallOffDistMax: 20
