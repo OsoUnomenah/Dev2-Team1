@@ -26,11 +26,13 @@ public class gameManager : MonoBehaviour
     [Range(1, 100)][SerializeField] public float level;
     [Range(1, 1000)][SerializeField] public float maxLevel;
     [Range(1, 1000)][SerializeField] public float xp;
+    [SerializeField] LevelBuilder LevelBuilder;
     public float currentXP;
     public float xpSource;
     [SerializeField] public float xpToNextLevel;
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
+    
 
     [Header("Menu Config")]
     [SerializeField] GameObject menuActive;
@@ -111,7 +113,7 @@ public class gameManager : MonoBehaviour
         GetPlayerReferences();
         UpdateXPUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        playerSpawnPos = GameObject.FindGameObjectWithTag("PlayerSpawnPos");
+        LevelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder").GetComponentInChildren<LevelBuilder>();
     }
 
     private void Start()
@@ -429,7 +431,7 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
-        characterController.transform.position = gameManager.instance.playerSpawnPos.transform.position;
+        player.transform.position = LevelBuilder.playerStart;
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);

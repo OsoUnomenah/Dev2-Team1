@@ -9,6 +9,8 @@ public class LevelBuilder : MonoBehaviour
     [SerializeField] NavMeshSurface navMeshSurface;
     [SerializeField] RoomDecorator roomDecorator;
 
+    public Vector3 playerStart;
+
     void Start()
     {
         GenerateRandom();
@@ -31,23 +33,20 @@ public class LevelBuilder : MonoBehaviour
         Room startRoom = level.PlayerStartRoom;
         Vector2 roomCenter = startRoom.Area.center;
         Vector3 playerPosition = LevelPositionToWorldPosition(roomCenter);
+        playerStart = playerPosition;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         NavMeshAgent playerNavMeshAgent = player.GetComponent<NavMeshAgent>();
-        if (playerNavMeshAgent == null)
-        {
-            player.transform.position = playerPosition;
-        }
-        else
-        {
-            playerNavMeshAgent.Warp(playerPosition);
-        }
+        
+
+        GameObject PSP = GameObject.FindGameObjectWithTag("PlayerSpawnPos");
+        PSP.transform.position = playerPosition;
     }
 
     Vector3 LevelPositionToWorldPosition(Vector2 levelPosition)
     {
         int scale = SharedLevelData.Instance.Scale;
-        return new Vector3((levelPosition.x - 1) * scale, 5, (levelPosition.y - 1) * scale);
+        return new Vector3((levelPosition.x - 1) * scale, 1, (levelPosition.y - 1) * scale);
     }
     
 }
