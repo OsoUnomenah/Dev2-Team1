@@ -12,6 +12,8 @@ public class SkyBombs : MonoBehaviour, IDamage
     [SerializeField] private GameObject explotion;
     [SerializeField] Rigidbody rb;
 
+    [SerializeField] private BaseSoundSO _explode;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,6 +28,7 @@ public class SkyBombs : MonoBehaviour, IDamage
     }
     IEnumerator Explode()
     {
+        AudioManager.instance.PlaySound(_explode);
         explotion.SetActive(true);
         rb.isKinematic = true;
         yield return new WaitForSeconds(1f);

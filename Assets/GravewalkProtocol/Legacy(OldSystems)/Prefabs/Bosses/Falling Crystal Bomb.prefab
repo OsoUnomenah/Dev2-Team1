@@ -63,6 +63,7 @@ MonoBehaviour:
   gravity: 9.8
   explotion: {fileID: 5335138975159366715}
   rb: {fileID: 2537247810867418110}
+  _explode: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
 --- !u!23 &6358980116308525405
 MeshRenderer:
   m_ObjectHideFlags: 0

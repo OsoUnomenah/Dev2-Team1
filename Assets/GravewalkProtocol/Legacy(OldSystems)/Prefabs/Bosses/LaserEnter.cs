@@ -10,6 +10,7 @@ public class LaserEnter : MonoBehaviour
     private bool isGrow = false;
 
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

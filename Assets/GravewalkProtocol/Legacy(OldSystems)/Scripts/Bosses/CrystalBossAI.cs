@@ -1,16 +1,20 @@
+using NUnit;
+using NUnit.Framework.Internal;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Threading;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
-using UnityEngine.UIElements;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
-using System.Threading;
-using NUnit.Framework.Internal;
+using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
-public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
+public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 {
     
     
@@ -20,6 +24,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] Renderer model;
     [SerializeField] BoxCollider bombSpawnArea;
     [SerializeField] BoxCollider fallingBombSpawnArea;
+    [SerializeField] List<GameObject> movementPos;
+    [SerializeField] private int rotateSpeed;
 
     private NavMeshAgent agent0;
     public UnityEngine.UI.Slider healthbar;
@@ -42,6 +48,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [Header("Audio")]
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
+    [SerializeField] BaseSoundSO _slam;
+    [SerializeField] BaseSoundSO _laserStartUp;
 
     [Header("Weapon")]
     // may need multiple types of bullets so make another one if need be
@@ -69,7 +77,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
 
-    private Vector3 lastHeardPosition;
+    private UnityEngine.Vector3 lastHeardPosition;
     private bool heardNoise;
 
     //makes a boss freeze, some bosses may not make sense to freeze
@@ -97,7 +105,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     private BossState currentState;
     int phasePicker;
 
-    Vector3 playerDir;
+    UnityEngine.Vector3 playerDir;
 
     Color originalColor;
     [SerializeField] GameObject gun;
@@ -141,9 +149,18 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         phasePicker = 0;
         
     }
+    IEnumerator NeedArmor()
+    {
+        mustArmor = false;
 
+        yield return new WaitForSeconds(50f);
+
+        mustArmor = true;
+    }
+    private bool mustArmor = false;
     private void Update()
     {
+        
         playerDir = gameManager.instance.player.transform.position - transform.position;
         updateHealthBar();
         if (currentState == BossState.Dead)
@@ -154,36 +171,137 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
            
             return;
         }
-
-        float distance = Vector3.Distance(transform.position, player.position);
-
-        ArmorCheck();
-
-        switch(currentState)
+        if(mustArmor)
         {
-            case BossState.Rest:                
-                Rest();
-                
+            StartCoroutine(NeedArmor());
+        }
+
+        float distance = UnityEngine.Vector3.Distance(transform.position, player.position);
+       // Debug.Log("Attack" + allowedAttack);
+        ArmorCheck();
+        if (allowedAttack)
+        {
+            FacePlayer();
+            switch (currentState)
+            {
+                case BossState.Rest:
+                    Rest();
+
+                    break;
+
+                case BossState.Attack1:
+                    CrystalBomb();
+
+                    break;
+
+                case BossState.Attack2:
+                    ArmoredUp();
+
+                    break;
+                case BossState.Attack3:
+                    FallingBombs();
+                    break;
+
+                case BossState.Decide:
+                    Decide();
+
+                    break;
+            }
+        }
+       // Debug.Log("Movement" + allowedMovement);
+        Movement();
+    }
+    private void FacePlayer()
+    {
+        UnityEngine.Vector3 dir = player.transform.position - transform.position;
+        dir.y = 0f;
+
+        UnityEngine.Quaternion target = UnityEngine.Quaternion.LookRotation(dir);
+
+        transform.rotation = UnityEngine.Quaternion.RotateTowards(
+            transform.rotation,
+            target,
+            rotateSpeed * Time.deltaTime);
+    }
+    private bool allowedMovement = false;
+    private bool allowedAttack = true;
+    private void Movement()
+    {
+        if(!allowedMovement)
+        { return; }
+        allowedAttack = false;
+
+        int pathPicker = Random.Range(1, 5);
+        UnityEngine.Vector3 end;
+
+        end = movementPos[pathPicker].transform.position;
+        end.y = 2f;
+
+
+        int willJump = Random.Range(1, 3);
+        
+        StartCoroutine(Turn(end, willJump));
+        
+        allowedMovement = false;
+    }
+    IEnumerator Turn(UnityEngine.Vector3 end, int willJump)
+    {
+        UnityEngine.Vector3 dir = end - transform.position;
+        UnityEngine.Quaternion target;
+        target = UnityEngine.Quaternion.LookRotation(dir);
+
+        while (UnityEngine.Quaternion.Angle(transform.rotation, target) > 1f)
+        {
+            transform.rotation = UnityEngine.Quaternion.RotateTowards(
+                transform.rotation,
+                target,
+                rotateSpeed * Time.deltaTime);
+            yield return null;
+        }
+        switch (willJump)
+        {
+            case 1:    //not jumping
+                Debug.Log("walking");
+                StartCoroutine(Moving(transform.position, end));
                 break;
-
-            case BossState.Attack1:
-                CrystalBomb();
-
-                break;
-
-            case BossState.Attack2:
-                ArmoredUp();
-
-                break;
-            case BossState.Attack3:
-                FallingBombs();
-                break;
-
-            case BossState.Decide:
-                Decide();
-
+            case 2:    //jumping
+                Debug.Log("jumping");
+                StartCoroutine(Jumping(transform.position, end));
                 break;
         }
+    }
+    IEnumerator Moving(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
+    {
+        float moveTime = 2f;
+        float time = 0f;
+
+        while (time < moveTime)
+        {
+            time += Time.deltaTime;
+            transform.position = UnityEngine.Vector3.Lerp(startPos, endPos, time / moveTime);
+            yield return null;
+        }
+        transform.position = endPos;
+        allowedAttack = true;
+    }
+    [SerializeField] int jumpHeight;
+    IEnumerator Jumping(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
+    {
+        float moveTime = 2f;
+        float time = 0f;
+
+        while (time < moveTime)
+        {
+            time += Time.deltaTime;
+
+            UnityEngine.Vector3 position = UnityEngine.Vector3.Lerp(startPos, endPos, time / moveTime);
+            position.y += Mathf.Sin(time/moveTime * Mathf.PI) * jumpHeight;
+            transform.position = position;
+
+            yield return null;
+        }
+        transform.position = endPos;
+        allowedAttack = true;
     }
 
     private void Rest()
@@ -207,8 +325,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         {
             armor.SetActive(true);
             isArmored = true;
-            timer = Random.Range(1200, 2000);
-
+            timer = -100;
         }
         if (!PlayerInTrigger)
         {            
@@ -217,9 +334,6 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             timer = -100;
             
         }
-         
-        
-        timer--;
     }
     private void ArmorCheck()
     {
@@ -249,13 +363,15 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     bool canBomb = true;
     IEnumerator BombCooldown()
     {
-        yield return new WaitForSeconds(15f);
+        allowedMovement = true;
+        yield return new WaitForSeconds(16f);
         canBomb = true;
     }
     bool canFallBomb = true;
     IEnumerator FallBombCooldown()
     {
-        yield return new WaitForSeconds(15f);
+        allowedMovement = true;
+        yield return new WaitForSeconds(18f);
         canFallBomb = true;
         noBomb = false;
         fallBombReady = false;
@@ -274,6 +390,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         else if(!noBomb)
         {
            patternPicker = Random.Range(1, 3);
+           allowedMovement = false;
         }
 
             
@@ -332,6 +449,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     }
     IEnumerator FallBombStartUp()
     {
+        AudioManager.instance.PlaySound(_laserStartUp);
         for (int i = 0; i < laser.Count; i++)
         {
             laser[i].SetActive(true);
@@ -352,6 +470,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         {
             if (!isBombing)
             {
+                allowedMovement = false;
                 isBombing = true;
                 StartCoroutine(BombPlacer());
 
@@ -393,9 +512,9 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             float x = Random.Range(bounds.min.x, bounds.max.x);
             float y = Random.Range(bounds.max.y, bounds.min.y);
             float z = Random.Range(bounds.max.z, bounds.min.z);
-            Vector3 vec = new Vector3(x, y, z);
+            UnityEngine.Vector3 vec = new UnityEngine.Vector3(x, y, z);
 
-            Quaternion rot = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+            UnityEngine.Quaternion rot = UnityEngine.Quaternion.Euler(0, Random.Range(0f, 360f), 0);
 
             Instantiate(bomb, vec, rot);
        float rand = Random.Range(1f, 2f);
@@ -404,8 +523,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         isBombing=false;
         
     }
-    
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] BoxCollider BossRoom;
+    public void TriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -413,12 +532,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             model.material.color = Color.orange;
         }
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInTrigger = false;
-        model.material.color = originalColor;
-    }
+   
 
     private void Decide()
     {
@@ -430,6 +544,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         {
             timer = Random.Range(300, 1200); //1200
         }
+        
 
         timer -= 1;
 
@@ -438,8 +553,11 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
             //phasePicker = 3;
         }
+        if (mustArmor)
+        {
+            phasePicker = 2;
+        }
 
-        
         switch (phasePicker)
         {
             case 0:

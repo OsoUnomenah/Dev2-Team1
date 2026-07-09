@@ -15,6 +15,8 @@ public class FloorBombs : MonoBehaviour, IDamage
     [SerializeField] Material redFlash;
     [SerializeField] private GameObject explotion;
 
+    [SerializeField] private BaseSoundSO _explode;
+
     Vector3 startPos;
     Vector3 endPos;
 
@@ -47,6 +49,7 @@ public class FloorBombs : MonoBehaviour, IDamage
     
     IEnumerator End()
     {
+        AudioManager.instance.PlaySound(_explode);
         explotion.SetActive(true);
         yield return new WaitForSeconds(1f);
         Destroy(gameObject);

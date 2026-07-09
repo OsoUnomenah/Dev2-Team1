@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using System.Threading;
 using NUnit.Framework.Internal;
 
-public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
+public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 {
     
     
@@ -29,6 +29,8 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] private float sightRange;
     [SerializeField] private float attackRange;
     [SerializeField] private float hearingRange;
+    [SerializeField] List<GameObject> movementPos;
+    [SerializeField] private int rotateSpeed;
 
     [SerializeField] public GameObject exitPortal;
 
@@ -127,32 +129,129 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         }
 
         float distance = Vector3.Distance(transform.position, player.position);
-
-        switch(currentState)
+        if (allowedAttack)
         {
-            case BossState.Rest:                
-                Rest();
-                
+            FacePlayer();
+            switch (currentState)
+            {
+                case BossState.Rest:
+                    Rest();
+
+                    break;
+
+                case BossState.Attack1:
+                    Attack1();
+
+                    break;
+
+                case BossState.Attack2:
+                    Attack2();
+
+                    break;
+                case BossState.Attack3:
+                    Attack3();
+                    break;
+
+                case BossState.Decide:
+                    Decide();
+
+                    break;
+            }
+        }
+        // Debug.Log("Movement" + allowedMovement);
+        Movement();
+    }
+    private void FacePlayer()
+    {
+        UnityEngine.Vector3 dir = player.transform.position - transform.position;
+        dir.y = 0f;
+
+        UnityEngine.Quaternion target = UnityEngine.Quaternion.LookRotation(dir);
+
+        transform.rotation = UnityEngine.Quaternion.RotateTowards(
+            transform.rotation,
+            target,
+            rotateSpeed * Time.deltaTime);
+    }
+    private bool allowedMovement = false;
+    private bool allowedAttack = true;
+    private void Movement()
+    {
+        if (!allowedMovement)
+        { return; }
+        allowedAttack = false;
+
+        int pathPicker = Random.Range(1, 5);
+        UnityEngine.Vector3 end;
+
+        end = movementPos[pathPicker].transform.position;
+        end.y = 2f;
+
+
+        int willJump = Random.Range(1, 3);
+
+        StartCoroutine(Turn(end, willJump));
+
+        allowedMovement = false;
+    }
+    IEnumerator Turn(UnityEngine.Vector3 end, int willJump)
+    {
+        UnityEngine.Vector3 dir = end - transform.position;
+        UnityEngine.Quaternion target;
+        target = UnityEngine.Quaternion.LookRotation(dir);
+
+        while (UnityEngine.Quaternion.Angle(transform.rotation, target) > 1f)
+        {
+            transform.rotation = UnityEngine.Quaternion.RotateTowards(
+                transform.rotation,
+                target,
+                rotateSpeed * Time.deltaTime);
+            yield return null;
+        }
+        switch (willJump)
+        {
+            case 1:    //not jumping
+                Debug.Log("walking");
+                StartCoroutine(Moving(transform.position, end));
                 break;
-
-            case BossState.Attack1:
-                Spin();
-
-                break;
-
-            case BossState.Attack2:
-                Shoot();
-
-                break;
-            case BossState.Attack3:
-                Lava();
-                break;
-
-            case BossState.Decide:
-                Decide();
-
+            case 2:    //jumping
+                Debug.Log("jumping");
+                StartCoroutine(Jumping(transform.position, end));
                 break;
         }
+    }
+    IEnumerator Moving(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
+    {
+        float moveTime = 2f;
+        float time = 0f;
+
+        while (time < moveTime)
+        {
+            time += Time.deltaTime;
+            transform.position = UnityEngine.Vector3.Lerp(startPos, endPos, time / moveTime);
+            yield return null;
+        }
+        transform.position = endPos;
+        allowedAttack = true;
+    }
+    [SerializeField] int jumpHeight;
+    IEnumerator Jumping(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
+    {
+        float moveTime = 2f;
+        float time = 0f;
+
+        while (time < moveTime)
+        {
+            time += Time.deltaTime;
+
+            UnityEngine.Vector3 position = UnityEngine.Vector3.Lerp(startPos, endPos, time / moveTime);
+            position.y += Mathf.Sin(time / moveTime * Mathf.PI) * jumpHeight;
+            transform.position = position;
+
+            yield return null;
+        }
+        transform.position = endPos;
+        allowedAttack = true;
     }
 
     private void Rest()
@@ -162,39 +261,114 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             currentState = BossState.Decide;
         }
     }
-
-    private void Shoot()
-    {       
-        if (!gun.activeSelf)
+    bool canAttack1 = true;
+    IEnumerator attack1Cooldown()
+    {
+        allowedMovement = true;
+        yield return new WaitForSeconds(15f);
+        canAttack1 = false;
+    }
+    bool canAttack2 = true;
+    IEnumerator attack2Cooldown()
+    {
+        allowedMovement = true;
+        yield return new WaitForSeconds(16f);
+        canAttack2 = true;
+    }
+    bool canAttack3 = true;
+    IEnumerator attack3Cooldown()
+    {
+        allowedMovement = true;
+        yield return new WaitForSeconds(18f);
+        canAttack3 = true;
+        
+    }
+    bool isAttack1 = false;
+    private void Attack1()
+    {
+        Debug.Log("Attack 1");
+        if (!canAttack1)
         {
-            gun.SetActive(true);
-            timer = Random.Range(1200, 2000);
+            currentState = BossState.Decide;
+            return;
         }
-        if (!PlayerInTrigger || timer < 0)
+        if (!isAttack1)
+        {
+            timer = Random.Range(500, 1000);
+            isAttack1 = true;
+        }
+
+
+        if (timer < 0)
         {            
             gun.SetActive(false);
             currentState = BossState.Rest;
             timer = -100;
-            
+            isAttack1 = false;
+            StartCoroutine(attack1Cooldown());
         }
-         
+
         
         timer--;
+
     }
-    private void Lava()
+    bool isAttack2 = false;
+    private void Attack2()
     {
-        timer = Random.Range(1200, 2000);
+        Debug.Log("Attack 2");
+        if (!canAttack2)
+        {
+            currentState = BossState.Decide;
+            return;
+        }
+        if (!isAttack2)
+        {
+            timer = Random.Range(500, 1000);
+            isAttack2 = true;
+        }
+
+
+        if (timer < 0)
+        {
+            gun.SetActive(false);
+            currentState = BossState.Rest;
+            timer = -100;
+            isAttack2 = false;
+            StartCoroutine(attack2Cooldown());
+        }
+
 
         timer--;
     }
-    private void Spin()
+    bool isAttack3 = false;
+    private void Attack3()
     {
-        if (!PlayerInTrigger)
+        Debug.Log("Attack 3");
+        if (!canAttack3)
         {
-            currentState = BossState.Rest;
+            currentState = BossState.Decide;
+            return;
         }
+        if (!isAttack3)
+        {
+            timer = Random.Range(500, 1000);
+            isAttack3 = true;
+        }
+
+
+        if (timer < 0)
+        {
+            gun.SetActive(false);
+            currentState = BossState.Rest;
+            timer = -100;
+            isAttack3 = false;
+            StartCoroutine(attack3Cooldown());
+        }
+
+
+        timer--;
     }
-    private void OnTriggerEnter(Collider other)
+    public void TriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -202,12 +376,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             model.material.color = Color.orange;
         }
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-            PlayerInTrigger = false;
-        model.material.color = originalColor;
-    }
+    
 
     private void Decide()
     {
@@ -215,7 +384,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         {
             Rest();
         }
-        else if (timer == -100)
+        else if (timer < -100)
         {
             timer = Random.Range(1, 3000); //1200
         }
@@ -242,24 +411,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze
                 currentState = BossState.Attack3;
                 break;
         }
-        //if (Time.time >= nextAttackTime)
-        //{
-        //    nextAttackTime = Time.time + attackCooldown;
-
-        //    Debug.Log("Zombie Attack");
-
-        //    IDamage damageable = player.GetComponentInChildren<IDamage>();
-
-        //    if (damageable != null)
-        //    {
-        //        damageable.takeDamage(attackDamage);
-        //        Debug.Log("Damage Applied");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("No IDamage Found");
-        //    }
-        //}
+        
     }
 
     public void updateHealthBar()
