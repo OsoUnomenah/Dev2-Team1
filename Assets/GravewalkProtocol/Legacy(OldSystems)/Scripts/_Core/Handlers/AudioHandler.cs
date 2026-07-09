@@ -36,7 +36,16 @@ public class AudioManager : MonoBehaviour
 
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
-        audioSource.pitch = sound.pitch;
+
+        if (sound.randomizePitch == true)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.3f);
+        }
+        else
+        {
+            audioSource.pitch = sound.pitch;
+        }
+
         audioSource.loop = sound.loop;
 
         if (!audioSource.isPlaying)
@@ -68,7 +77,16 @@ public class AudioManager : MonoBehaviour
 
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
-        audioSource.pitch = sound.pitch;
+
+        if (sound.randomizePitch == true)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.3f);
+        }
+        else
+        {
+            audioSource.pitch = sound.pitch;
+        }
+
         audioSource.loop = sound.loop;
 
         audioSource.PlayOneShot(currSound, sound.volume);
@@ -101,7 +119,15 @@ public class AudioManager : MonoBehaviour
 
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
-        audioSource.pitch = sound.pitch;
+
+        if (sound.randomizePitch == true)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.3f);
+        }
+        else
+        {
+            audioSource.pitch = sound.pitch;
+        }
 
         if (!audioSource.isPlaying)
         {

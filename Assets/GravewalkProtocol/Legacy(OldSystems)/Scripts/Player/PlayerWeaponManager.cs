@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
@@ -21,6 +22,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
+    public Animator weaponAnimator;
 
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
@@ -44,6 +46,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int zoomLevel;
     public int abilitySlot;
 
+    // Animation hashes
+    private readonly int lightAttack = Animator.StringToHash("isHitting");
+    private readonly int heavyAttack = Animator.StringToHash("heavyHit");
+
     [Header("Don't touch unless debugging")]
     [SerializeField] private List<string> Modifiers = new List<string>();
 
@@ -66,7 +72,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int ammo,
         int maxAmmo,
         float ammoTimer,
-        List<string> weaponMods = null)
+        List<string> weaponMods = null
+        )
     {
         if (weaponData == null)
         {
@@ -188,6 +195,13 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             weaponCurrent = Instantiate(weaponPrefab, weaponHolder);
             weaponCurrent.transform.localPosition = Vector3.zero;
             weaponCurrent.transform.localRotation = Quaternion.identity;
+
+            weaponAnimator = weaponCurrent.GetComponent<Animator>();
+
+            if (weaponAnimator != null)
+            {
+                weaponAnimator.SetBool("pickedUp", true);
+            }
         }
     }
 
@@ -310,5 +324,31 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityEquip(abilities[3]);
             abilitySlot = 3;
         }
+    }
+
+    public void PlayMeleeLightAttack()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(lightAttack, true);
+    }
+
+    public void PlayMeleeHeavyAttack()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(heavyAttack, true);
+    }
+
+    public void ResetMeleeAnimationTriggers()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(lightAttack, false);
+        weaponAnimator.SetBool(heavyAttack, false);
+        gameManager.instance.isMeleeing = false;
     }
 }

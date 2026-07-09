@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SniperData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Shotgun
-  weaponType: 1
+  weaponType: 0
   fullAuto: 0
   damage: 75
   range: 150
@@ -25,6 +25,7 @@ MonoBehaviour:
   ammoTimer: 2
   weaponPrefab: {fileID: 3824886265503906123, guid: 9aefcc7ecaa49344580758e509515108, type: 3}
   hitEffect: {fileID: 0}
+  weaponAnimator: {fileID: 0}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   weaponPickupSound: {fileID: 0}

@@ -134,7 +134,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""id"": ""9b64a38b-a17e-4a44-a09a-f483d9baf7d2"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.5),Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -355,7 +355,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""bcacd4bf-e96f-49db-bfde-2662316cda9d"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.5),Tap"",
                     ""processors"": """",
                     ""groups"": "";Keyboard and Mouse"",
                     ""action"": ""Shoot"",

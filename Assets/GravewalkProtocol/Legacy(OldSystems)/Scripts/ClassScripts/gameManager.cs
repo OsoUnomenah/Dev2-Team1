@@ -88,6 +88,8 @@ public class gameManager : MonoBehaviour
     public float recoil;
     public bool canShoot;
     public bool isShooting;
+    public bool isMeleeing;
+    public bool canMelee;
     public bool isReloading;
     public bool isAiming;
     public int enemyDamageOut;

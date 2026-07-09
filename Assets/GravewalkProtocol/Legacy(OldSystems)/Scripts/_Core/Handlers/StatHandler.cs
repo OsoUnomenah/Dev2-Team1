@@ -22,6 +22,9 @@ public class StatHandler : MonoBehaviour, IDamage
     [Range(0, 10)][SerializeField] public float dashCost;
     [Range(0, 10)][SerializeField] public float dashLoss;
 
+    [Header("Melee")]
+    [Range(0, 10)][SerializeField] public float meleeLoss;
+
 
     [Header("Damage")]
     [Range(0, 1000)][SerializeField] public float damage;
@@ -57,7 +60,7 @@ public class StatHandler : MonoBehaviour, IDamage
     {   
         currentDamage = damage + modDamage;
         
-        HandleDash();
+        HandleStamina();
 
     }
 
@@ -77,11 +80,11 @@ public class StatHandler : MonoBehaviour, IDamage
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
     
-    public void HandleDash()
+    public void HandleStamina()
     {
-        if (gameManager.instance.dashTriggered 
-            && !gameManager.instance.isDashing 
-            && gameManager.instance.characterController.isGrounded 
+        if (gameManager.instance.dashTriggered
+            && !gameManager.instance.isDashing
+            && gameManager.instance.characterController.isGrounded
             && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
             currentStamina -= gameManager.instance.dashCost;
@@ -98,7 +101,18 @@ public class StatHandler : MonoBehaviour, IDamage
                 gameManager.instance.canDash = false;
             }
         }
-        else 
+        else if (gameManager.instance.isMeleeing)
+        {
+            currentStamina -= meleeLoss;
+            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
+            if (currentStamina <= 0)
+            {
+                gameManager.instance.canMelee = false;
+            }
+        }
+        else if (!gameManager.instance.isDashing && !gameManager.instance.isMeleeing)
         {
             currentStamina += staminaRegen;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -106,9 +120,11 @@ public class StatHandler : MonoBehaviour, IDamage
 
             if (currentStamina >= maxStamina)
             {
-             gameManager.instance.canDash = true;
+                gameManager.instance.canDash = true;
+                gameManager.instance.canMelee = true;
             }
         }
+      
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
 
