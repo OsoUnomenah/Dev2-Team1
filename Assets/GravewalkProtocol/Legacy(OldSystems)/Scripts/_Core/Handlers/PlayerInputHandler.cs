@@ -25,10 +25,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
     [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
-    [Range(1.0f, 20f)][SerializeField] float dashSpeed;
+    [Range(1.0f, 30f)][SerializeField] float dashSpeed;
+    [Range(1.0f, 200f)][SerializeField] float dashAttackSpeed;
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
-    [Range(1, 30)][SerializeField] int dashFOVMod;
+    [Range(0, 30)][SerializeField] int dashFOVMod;
 
+    private Vector3 dashVector;
     public Vector3 currentMovement;
     public float currentSpeed = 0f;
     private float dashTimer;
@@ -55,6 +57,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Attacks Config")]
     [SerializeField] private float heavyAttackRadius = 4f;
     [SerializeField] private float aoeDelay = 0.5f;
+    [SerializeField] private float dashAttackDelay = 0.5f;
+    [SerializeField] private bool dashAttackTriggered;
     [SerializeField] private LayerMask enemyLayer;
 
     [Header("Audio")]
@@ -113,6 +117,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        enemyLayer = LayerMask.NameToLayer("Enemy");
     }
 
     void Update()
@@ -269,10 +274,23 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
 
+        float speed;
+
         // move the character by some speed for a set time
         while (Time.time < startTime + dashTime)
         {
-            gameManager.instance.characterController.Move(currentMovement * dashSpeed * Time.deltaTime);
+            if (dashAttackTriggered)
+            {
+                dashVector = gameManager.instance.playerCamera.transform.forward;
+                speed = dashAttackSpeed;
+            }
+            else
+            {
+                dashVector = currentMovement;
+                speed = dashSpeed;
+            }
+
+            gameManager.instance.characterController.Move(dashVector * speed * Time.deltaTime);
             yield return null;
         }
 
@@ -289,7 +307,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         dashTimer += Time.deltaTime;
 
-        if (dashAction.WasPressedThisFrame() && dashTimer > dashCd && gameManager.instance.canDash)
+        if ((dashAction.WasPressedThisFrame() || dashAttackTriggered) && dashTimer > dashCd && gameManager.instance.canDash)
         {
             AudioManager.instance.PlaySoundFromSource(_dash, gameObject);
             gameManager.instance.isDashing = true;
@@ -530,11 +548,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             {
                 if (gameManager.instance.playerWeaponManager.Type == true && gameManager.instance.canMelee)
                 {
-                    PlayCurrentWeaponShootSound();
+                    
                     gameManager.instance.isMeleeing = true;
-
                     gameManager.instance.playerWeaponManager.PlayMeleeHeavyAttack();
-                    StartCoroutine(HeavyAttackAOE());
+
+                    if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Hammer")
+                    {
+                        StartCoroutine(HeavyAttackAOE());
+                    }
+                    else if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Katana")
+                    {
+                        gameManager.instance.playerWeaponManager.Timer = 2.0f;
+                        StartCoroutine(KatanaDashAttack());
+   
+                    }
                 }
             }
             else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
@@ -874,9 +901,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     IEnumerator HeavyAttackAOE()
     {
-       // Debug.Log("Heavy attack aoe");
-
+        // Debug.Log("Heavy attack aoe");
         yield return new WaitForSeconds(aoeDelay);
+
+        PlayCurrentWeaponShootSound();
 
         Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, enemyLayer);
 
@@ -889,5 +917,21 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
             }
         }
+    }
+
+    IEnumerator KatanaDashAttack()
+    {
+
+     
+        yield return new WaitForSeconds(dashAttackDelay);
+
+        PlayCurrentWeaponShootSound();
+
+        dashAttackTriggered = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        dashAttackTriggered = false;
+        gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
     }
 }

@@ -94,6 +94,11 @@ public class WeaponPickUp : MonoBehaviour, IInteract
                     break;
 
                 case 1:
+                    if (weaponData.weaponType)
+                    {
+                        break;
+                    }
+
                     int bonusAmmo = Mathf.RoundToInt(Random.Range(2, 8) * rarityMultiplier);
                     rolledMaxAmmo += bonusAmmo;
                     rolledAmmo = rolledMaxAmmo;
@@ -101,18 +106,33 @@ public class WeaponPickUp : MonoBehaviour, IInteract
                     break;
 
                 case 2:
+                    if (weaponData.weaponType)
+                    {
+                        break;
+                    }
+
                     float reloadBonus = Random.Range(0.15f, 0.35f) * rarityMultiplier;
                     rolledAmmoTimer = Mathf.Max(0.5f, rolledAmmoTimer - reloadBonus);
                     AddModDescription(rarity, "Reload Speed +" + Mathf.RoundToInt(reloadBonus * 100) + "%");
                     break;
 
                 case 3:
+                    if (weaponData.weaponType)
+                    {
+                        break;
+                    }
+
                     float fireRateBonus = Random.Range(0.05f, 0.2f) * rarityMultiplier;
                     rolledTimer = Mathf.Max(0.05f, rolledTimer - fireRateBonus);
                     AddModDescription(rarity, "Fire Rate +" + Mathf.RoundToInt(fireRateBonus * 100) + "%");
                     break;
 
                 case 4:
+                    if (weaponData.weaponType)
+                    {
+                        break;
+                    }
+
                     float rangeBonus = Random.Range(5f, 21f) * rarityMultiplier;
                     rolledRange += rangeBonus;
                     AddModDescription(rarity, "Range +" + Mathf.RoundToInt(rangeBonus));

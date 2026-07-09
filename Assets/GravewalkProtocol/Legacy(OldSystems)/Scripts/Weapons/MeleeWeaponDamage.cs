@@ -9,13 +9,13 @@ public class MeleeWeaponDamage : MonoBehaviour
     private void Update()
     {
         
-        if (gameManager.instance.canShoot == true)
+        if (gameManager.instance.isMeleeing == true)
         {
-            dmgTrigger.enabled = false;
+            dmgTrigger.enabled = true;
         }
         else
         {
-            dmgTrigger.enabled = true;
+            dmgTrigger.enabled = false;
         }
     }
 
