@@ -19,6 +19,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [SerializeField] int xpGive = 100;
     [SerializeField] Renderer model;
     [SerializeField] BoxCollider bombSpawnArea;
+    [SerializeField] BoxCollider fallingBombSpawnArea;
 
     private NavMeshAgent agent0;
     public UnityEngine.UI.Slider healthbar;
@@ -49,12 +50,17 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     //only needed if you are using the same type of gun pivot as the enemies
     [SerializeField] GameObject armor;
     [SerializeField] GameObject bomb;
+    [SerializeField] GameObject fallingBomb;
 
     [SerializeField] GameObject weakpoint1;
     [SerializeField] GameObject weakpoint2;
     [SerializeField] GameObject weakpoint3;
     [SerializeField] GameObject weakpoint4;
-    
+
+    [SerializeField] List<GameObject> skyBombs;
+    [SerializeField] List<GameObject> laser;
+    [SerializeField] List<GameObject> skyAreas1;
+    [SerializeField] List<GameObject> skyAreas2;
 
     //might need multiple different shoot rates for a boss
     [Range(0.1f, 2f)][SerializeField] float shootRate;
@@ -105,7 +111,19 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         exitPortal = GameObject.FindGameObjectWithTag("Portal");
         exitPortal.SetActive(false);
         
-       
+       for(int i = 0; i < skyBombs.Count; i++)
+        {
+            GameObject newBomb = Instantiate(skyBombs[i]);
+            newBomb.SetActive(false);
+
+            skyBombs[i] = newBomb;
+
+            GameObject newLaser = Instantiate(laser[i]);
+            newLaser.SetActive(false);
+
+            laser[i] = newLaser;
+            
+        }
 
         armor.SetActive(false);
 
@@ -158,7 +176,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
                 break;
             case BossState.Attack3:
-                Lava();
+                FallingBombs();
                 break;
 
             case BossState.Decide:
@@ -234,13 +252,94 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         yield return new WaitForSeconds(15f);
         canBomb = true;
     }
-    private void Lava()
+    bool canFallBomb = true;
+    IEnumerator FallBombCooldown()
+    {
+        yield return new WaitForSeconds(15f);
+        canFallBomb = true;
+        noBomb = false;
+        fallBombReady = false;
+    }
+    bool fallBombReady = false;
+    bool noBomb = false;
+    int patternPicker;
+    private void FallingBombs()
     {
         Debug.Log("Attack 3");
-        currentState = BossState.Decide;
-        //timer = Random.Range(1200, 2000);
+        if(!canFallBomb)
+        {
+            currentState = BossState.Decide;
+            return;
+        }
+        else if(!noBomb)
+        {
+           patternPicker = Random.Range(1, 3);
+        }
 
-        //timer--;
+            
+
+        switch (patternPicker)
+        {
+            case 1:
+                noBomb = true;
+                if (!fallBombReady)
+                {
+                    if (!laser[0].activeSelf)
+                    {
+                        StartCoroutine(FallBombStartUp());
+                    }
+                    
+                    for(int i = 0; i < skyBombs.Count; i++)
+                    {
+                        laser[i].transform.position = skyAreas1[i].transform.position;                        
+                    }
+                    return;
+                }
+                for (int i = 0; i < skyBombs.Count; i++)
+                {
+                    skyBombs[i].transform.position = skyAreas1[i].transform.position;
+                    skyBombs[i].SetActive(true);                   
+                }
+                canFallBomb = false;
+                StartCoroutine(FallBombCooldown());
+                    break;
+            case 2:
+                noBomb = true;
+                if (!fallBombReady)
+                {
+                    if (!laser[0].activeSelf)
+                    {
+                        StartCoroutine(FallBombStartUp());
+                    }
+
+                    for (int i = 0; i < skyBombs.Count; i++)
+                    {
+                        laser[i].transform.position = skyAreas2[i].transform.position;
+                    }
+                    return;
+                }
+                for (int i = 0; i < skyBombs.Count; i++)
+                {
+                    skyBombs[i].transform.position = skyAreas2[i].transform.position;
+                    skyBombs[i].SetActive(true);
+                }
+                canFallBomb = false;
+                StartCoroutine(FallBombCooldown());
+                break;
+        }
+       
+        currentState = BossState.Decide;
+    }
+    IEnumerator FallBombStartUp()
+    {
+        for (int i = 0; i < laser.Count; i++)
+        {
+            laser[i].SetActive(true);
+            laser[i].GetComponent<LaserEnter>().Grower();
+        }
+        yield return new WaitForSeconds(10f);
+
+        fallBombReady = true;
     }
     private void CrystalBomb()
     {
@@ -337,6 +436,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         if (timer < 0)
         {
             phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
+            //phasePicker = 3;
         }
 
         
@@ -353,25 +453,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             case 3:
                 currentState = BossState.Attack3;
                 break;
-        }
-        //if (Time.time >= nextAttackTime)
-        //{
-        //    nextAttackTime = Time.time + attackCooldown;
-
-        //    Debug.Log("Zombie Attack");
-
-        //    IDamage damageable = player.GetComponentInChildren<IDamage>();
-
-        //    if (damageable != null)
-        //    {
-        //        damageable.takeDamage(attackDamage);
-        //        Debug.Log("Damage Applied");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("No IDamage Found");
-        //    }
-        //}
+        }        
     }
 
     public void updateHealthBar()
@@ -415,6 +497,11 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             if (exitPortal != null)
             {
                 exitPortal.SetActive(true);
+            }
+
+            for (int i = 0; i < laser.Count; i++)
+            {
+                laser[i].SetActive(false);
             }
 
             Destroy(gameObject);
