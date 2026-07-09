@@ -297,7 +297,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
             timer = Random.Range(500, 1000);
             isAttack1 = true;
         }
-
+        //attacks go here
 
         if (timer < 0)
         {            

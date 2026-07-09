@@ -493,7 +493,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         }
         if(timer <= 0f)
         {
-            Debug.Log("Timer: " + timer);
+           // Debug.Log("Timer: " + timer);
             attacking = false;
             timer = -100;
             canBomb = false;
