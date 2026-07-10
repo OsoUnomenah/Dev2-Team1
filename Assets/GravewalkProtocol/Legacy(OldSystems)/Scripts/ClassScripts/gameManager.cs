@@ -13,6 +13,7 @@ public class gameManager : MonoBehaviour
     public TMP_Text objectiveText;
 
     public GameEvent onPlayerHealthChange;
+    public Vector3 playerStart;
 
     [Header("XP Config")]
     public Slider xpBar;
@@ -26,7 +27,7 @@ public class gameManager : MonoBehaviour
     [Range(1, 100)][SerializeField] public float level;
     [Range(1, 1000)][SerializeField] public float maxLevel;
     [Range(1, 1000)][SerializeField] public float xp;
-    [SerializeField] LevelBuilder LevelBuilder;
+    
     public float currentXP;
     public float xpSource;
     [SerializeField] public float xpToNextLevel;
@@ -113,7 +114,7 @@ public class gameManager : MonoBehaviour
         GetPlayerReferences();
         UpdateXPUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        LevelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder").GetComponentInChildren<LevelBuilder>();
+        
     }
 
     private void Start()
@@ -122,8 +123,7 @@ public class gameManager : MonoBehaviour
         {
             nextLevelButton.onClick.AddListener(NextLevel);
         }
-        //set player initial spawn point
-        //playerTransform.position = playerSpawnPoint.transform.position;
+       
         menuWin.SetActive(false);
     }
 
@@ -431,7 +431,7 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
-        player.transform.position = LevelBuilder.playerStart;
+        player.transform.position = playerStart;
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);

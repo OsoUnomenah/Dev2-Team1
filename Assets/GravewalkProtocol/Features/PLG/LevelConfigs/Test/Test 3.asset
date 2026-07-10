@@ -10,15 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca197d62b4eb73e4080f7b9ec4082848, type: 3}
-  m_Name: Room Level Layout
-  m_EditorClassIdentifier: Assembly-CSharp::RoomLevelLayoutConfiguration
+  m_Name: Test 3
+  m_EditorClassIdentifier: 
   width: 64
   length: 64
-  roomTemplates: []
+  roomTemplates:
+  - name: Standard
+    numberOfRooms: 10
+    roomWidthMin: 7
+    roomWidthMax: 10
+    roomLengthMin: 7
+    roomLengthMax: 10
+    layoutTexture: {fileID: 0}
   doorDistanceFromEdge: 1
-  minHallwayLength: 3
-  maxHallwayLength: 5
-  minHallwayWidth: 1
-  maxHallwayWidth: 3
+  minHallwayLength: 0
+  maxHallwayLength: 1
   maxRoomCount: 10
   minRoomDistance: 1
