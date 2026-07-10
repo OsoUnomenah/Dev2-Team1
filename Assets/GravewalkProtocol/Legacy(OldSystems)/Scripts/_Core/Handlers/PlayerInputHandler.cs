@@ -72,7 +72,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float aoeDelay = 0.5f;
     [SerializeField] private float dashAttackDelay = 0.5f;
     [SerializeField] public bool dashAttackTriggered;
-    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] public LayerMask enemyLayer;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
@@ -446,7 +446,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         Physics.IgnoreLayerCollision(
             LayerMask.NameToLayer("Player"),
-            enemyLayer,
+            LayerMask.NameToLayer("Enemy"),
             true);
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
@@ -473,7 +473,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         Physics.IgnoreLayerCollision(
             LayerMask.NameToLayer("Player"),
-            enemyLayer,
+            LayerMask.NameToLayer("Enemy"),
             false);
 
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
@@ -1093,7 +1093,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         PlayCurrentWeaponShootSound();
 
-        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, enemyLayer);
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.NameToLayer("Enemy"));
 
         foreach (Collider others in hits)
         {
