@@ -44,6 +44,7 @@ public class VolumeController : MonoBehaviour
     {
         float v = Mathf.Clamp(volume, MinVolume, 1f);
         float dB = Mathf.Log10(v) * 20f;
+
         audioMixer.SetFloat(paramName, dB);
         PlayerPrefs.SetFloat(paramName, volume);
     }

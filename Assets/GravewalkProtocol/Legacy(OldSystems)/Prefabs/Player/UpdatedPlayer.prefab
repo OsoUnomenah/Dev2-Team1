@@ -148,7 +148,7 @@ CharacterController:
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 50
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
@@ -185,15 +185,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f067621dcd6d2924e92baa7f43f3757a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponManager
+  currentWeaponData: {fileID: 0}
+  currentWeaponName: 
+  currentWeaponMods: []
   Type: 0
   Damage: 0
   Range: 50
   Rate: 1
   Recoil: 0
   Timer: 1
+  TimerOrig: 0
   Ammo: 0
   MaxAmmo: 0
   AmmoTimer: 0
+  ShootSound: {fileID: 0}
+  ReloadSound: {fileID: 0}
+  HitEffect: {fileID: 0}
+  weaponAnimator: {fileID: 0}
   weaponHolder: {fileID: 5840519488510536703}
   abilityModel: {fileID: 7746152867297857442}
   effect: {fileID: 0}
@@ -205,10 +213,7 @@ MonoBehaviour:
   bounceLevel: 0
   zoomLevel: 0
   abilitySlot: 0
-  weaponInventory: []
-  currentWeaponIndex: -1
-  maxWeaponSlots: 4
-  Modifiers: 
+  Modifiers: []
 --- !u!1 &4468424467714139017
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,12 +820,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: dashCost
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: dashLoss
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: modJumps
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: modSpeed
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: meleeLoss
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: modDamage
@@ -841,6 +858,10 @@ PrefabInstance:
     - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: sprintLoss
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
+      propertyPath: staminaRegen
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2822032413055754572, guid: 9ff6b18277d508f46a4557035793c9cb, type: 3}
       propertyPath: currentDefense
@@ -965,6 +986,10 @@ PrefabInstance:
       value: PlayerInputHandler
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: _dash
+      value: 
+      objectReference: {fileID: 11400000, guid: 14a35d654db8f744bb8252227af5e3e7, type: 2}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: _jump
       value: 
       objectReference: {fileID: 11400000, guid: 27891e2f3f3d8124c975d23ccb9589d2, type: 2}
@@ -973,12 +998,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: dashCd
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: _sprint
       value: 
       objectReference: {fileID: 11400000, guid: 97af4ca5349c8de499285bb523ce3ac6, type: 2}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: jumpMax
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: aoeDelay
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: dashTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: dashSpeed
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: walkSpeed
@@ -997,6 +1038,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4918395676718949796}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: dashAttackDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: dashAttackSpeed
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: interactorSource
       value: 
       objectReference: {fileID: 4531488486862561097}
@@ -1007,6 +1056,14 @@ PrefabInstance:
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: sprintMultiplier
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: heavyAttackRadius
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: playerInputHandler

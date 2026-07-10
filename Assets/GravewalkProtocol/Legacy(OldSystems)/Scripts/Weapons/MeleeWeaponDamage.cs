@@ -28,11 +28,16 @@ public class MeleeWeaponDamage : MonoBehaviour
 
             int bonusDamage = 0;
 
+            if (gameManager.instance.playerInputHandler.dashAttackTriggered)
+            {
+                bonusDamage += 85;
+            }
+
             StatHandler stats = gameManager.instance.playerStatHandler;
 
             if (stats != null)
             {
-                bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                bonusDamage += Mathf.RoundToInt(stats.modDamage);
             }
 
             dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage + bonusDamage);

@@ -22,7 +22,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
-    [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
     [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
     [Range(1.0f, 30f)][SerializeField] float dashSpeed;
@@ -58,7 +57,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float heavyAttackRadius = 4f;
     [SerializeField] private float aoeDelay = 0.5f;
     [SerializeField] private float dashAttackDelay = 0.5f;
-    [SerializeField] private bool dashAttackTriggered;
+    [SerializeField] public bool dashAttackTriggered;
     [SerializeField] private LayerMask enemyLayer;
 
     [Header("Audio")]
@@ -71,6 +70,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private float footstepTimer;
     private StatHandler playerStats;
+    private bool isFrozenByBoss;
+    private Coroutine freezeRoutine;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -117,11 +118,21 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        enemyLayer = LayerMask.NameToLayer("Enemy");
     }
 
     void Update()
     {
+
+        if (isFrozenByBoss)
+        {
+            MovementVector = Vector2.zero;
+            RotateVector = Vector2.zero;
+            currentMovement = Vector3.zero;
+
+            ShootTimer();
+            HandleReload();
+            return;
+        }
 
         HandleMovement();
         HandleRotation();
@@ -462,6 +473,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+
         // Debug.Log("InteractorSource: " + interactorSource);
         //Debug.Log("WeaponManager: " + gameManager.instance.playerWeaponManager);
 
@@ -495,6 +512,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
+
+        if (isFrozenByBoss)
+        {
+            return;
+        }
 
 
 
@@ -554,6 +576,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
                     if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Hammer")
                     {
+                        Debug.Log("Hammer special");
                         StartCoroutine(HeavyAttackAOE());
                     }
                     else if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Katana")
@@ -663,6 +686,22 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnReloadPerformed(InputAction.CallbackContext context)
     {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        {
+            IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
+            if (iAct != null)
+            {
+                iAct.Interact();
+            }
+        }
+
+
         if (reloadTimer < gameManager.instance.playerWeaponManager.AmmoTimer)
         {
             gameManager.instance.playerWeaponManager.Ammo = 0;
@@ -684,7 +723,66 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     //this is now a Ability button instead of ADS
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
-        
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        {
+            IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
+            if (iAct != null)
+            {
+                iAct.Interact();
+            }
+        }
+
+
+        Debug.LogError("Fired Ability Shot");
+        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+        {
+            case 1:
+                if (gameManager.instance.allowedAbility1)
+                {
+                    // Debug.LogError("Fired Fire Shot");
+                    gameManager.instance.allowedAbility1 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown, gameManager.instance.firePos);
+                    StartCoroutine(fireCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown));
+                }
+                break;
+            case 2:
+                if (gameManager.instance.allowedAbility2)
+                {
+                    // Debug.LogError("Fired Freeze Shot");
+                    gameManager.instance.allowedAbility2 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown, gameManager.instance.freezePos);
+                    StartCoroutine(freezeCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown));
+                }
+                break;
+            case 3:
+                if (gameManager.instance.allowedAbility3)
+                {
+                    // Debug.LogError("Fired Bounce Shot");
+                    gameManager.instance.allowedAbility3 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown, gameManager.instance.bouncePos);
+                    StartCoroutine(bounceCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown));
+                }
+                break;
+            case 4:
+                if (gameManager.instance.allowedAbility4)
+                {
+                    //  Debug.LogError("Fired Zoom Shot");
+                    gameManager.instance.allowedAbility4 = false;
+                    abilityShoot();
+                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown, gameManager.instance.zoomPos);
+                    StartCoroutine(zoomCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown));
+                }
+                break;
+        }
     }
     IEnumerator fireCooldown(float cd)
     {
@@ -899,5 +997,24 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
+    }
+
+    public void FreezePlayer(float duration)
+    {
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+        }
+
+        freezeRoutine = StartCoroutine(FreezePlayerRoutine(duration));
+    }
+
+    private IEnumerator FreezePlayerRoutine(float duration)
+    {
+        isFrozenByBoss = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isFrozenByBoss = false;
     }
 }
