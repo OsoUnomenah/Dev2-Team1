@@ -5,23 +5,6 @@ using System.Threading;
 
 public class WeaponsChestInteract : MonoBehaviour, IInteract
 {
-    [System.Serializable]
-    public class WeaponReward
-    {
-        public string weaponName;
-        public bool weaponType;
-        public int damage;
-        public float range;
-        public float rate;
-        public float recoil;
-        public float timer;
-        public int ammo;
-        public int maxAmmo;
-        public float ammoTimer;
-        public GameObject weaponPrefab;
-        public GameObject pickupPrefab;
-    }
-
     [Header("Audio")]
     [SerializeField] private BaseSoundSO chestOpenSound;
 

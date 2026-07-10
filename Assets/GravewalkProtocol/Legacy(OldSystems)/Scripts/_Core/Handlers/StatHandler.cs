@@ -19,8 +19,8 @@ public class StatHandler : MonoBehaviour, IDamage
     public float modStamina;
 
     [Header("Dash")]
-    [Range(0, 10)][SerializeField] public float dashCost;
     [Range(0, 10)][SerializeField] public float dashLoss;
+    public float dashCost;
 
     [Header("Melee")]
     [Range(0, 10)][SerializeField] public float meleeLoss;
@@ -87,7 +87,7 @@ public class StatHandler : MonoBehaviour, IDamage
             && gameManager.instance.characterController.isGrounded
             && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
-            currentStamina -= gameManager.instance.dashCost;
+            currentStamina -= dashCost;
         }
 
         if (gameManager.instance.isDashing)

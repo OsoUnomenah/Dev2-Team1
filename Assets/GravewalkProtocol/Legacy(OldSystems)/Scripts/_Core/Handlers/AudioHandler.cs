@@ -1,6 +1,8 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,9 +12,14 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioMixerGroup sfxGroup;
     [SerializeField] private AudioMixerGroup musicGroup;
 
+    [SerializeField] public AudioSource amSource;
+
+    public bool UISound;
+
     private void Awake()
     {
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void PlaySound(BaseSoundSO sound)
@@ -135,5 +142,24 @@ public class AudioManager : MonoBehaviour
         }
 
         Destroy(soundObject, currSound.length);
+    }
+
+    public void PlayUISound(BaseSoundSO sound, PointerEventData data)
+    {
+        if (sound == null || data == null)
+            return;
+
+        // Route to correct mixer group based on sound type
+        amSource.outputAudioMixerGroup =
+            sound.soundType == BaseSoundSO.SoundTypes.Music ? musicGroup : sfxGroup;
+
+        AudioClip clip = sound.clips[0];
+        float clipLength = clip.length;
+
+        amSource.volume = sound.volume;
+        
+        amSource.PlayOneShot(clip, clipLength);
+
+        UISound = false;
     }
 }

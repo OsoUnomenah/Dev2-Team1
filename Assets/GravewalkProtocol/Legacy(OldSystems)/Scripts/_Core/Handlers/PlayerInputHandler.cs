@@ -22,7 +22,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
-    [Range(1.0f, 5.0f)][SerializeField] private float sprintMultiplier = 2.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
     [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
     [Range(1.0f, 30f)][SerializeField] float dashSpeed;
@@ -58,7 +57,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float heavyAttackRadius = 4f;
     [SerializeField] private float aoeDelay = 0.5f;
     [SerializeField] private float dashAttackDelay = 0.5f;
-    [SerializeField] private bool dashAttackTriggered;
+    [SerializeField] public bool dashAttackTriggered;
     [SerializeField] private LayerMask enemyLayer;
 
     [Header("Audio")]
@@ -117,7 +116,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        enemyLayer = LayerMask.NameToLayer("Enemy");
     }
 
     void Update()
@@ -554,6 +552,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
                     if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Hammer")
                     {
+                        Debug.Log("Hammer special");
                         StartCoroutine(HeavyAttackAOE());
                     }
                     else if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Katana")
