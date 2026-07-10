@@ -57,10 +57,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: a81a8565f0a59f64297e962b8c8dba03, type: 2}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
-      propertyPath: weaponData
-      value: 
-      objectReference: {fileID: 11400000, guid: 74841c93784515d41961d9ebc7778146, type: 2}
-    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponName
       value: Assault Rifle
       objectReference: {fileID: 0}

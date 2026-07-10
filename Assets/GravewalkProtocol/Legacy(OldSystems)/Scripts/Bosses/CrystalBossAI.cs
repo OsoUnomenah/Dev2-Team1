@@ -449,6 +449,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     }
     IEnumerator FallBombStartUp()
     {
+        Debug.Log(_laserStartUp);
+        Debug.Log(_laserStartUp == null ? "NULL" : _laserStartUp.name);
         AudioManager.instance.PlaySound(_laserStartUp);
         for (int i = 0; i < laser.Count; i++)
         {

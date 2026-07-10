@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Weapons/Weapon Data")]
 public class WeaponData : ScriptableObject
@@ -30,4 +33,5 @@ public class WeaponData : ScriptableObject
     public BaseSoundSO shootSound;
     public BaseSoundSO reloadSound;
     public BaseSoundSO weaponPickupSound;
+
 }
