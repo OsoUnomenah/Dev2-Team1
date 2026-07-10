@@ -739,50 +739,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
 
-        Debug.LogError("Fired Ability Shot");
-        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
-        {
-            case 1:
-                if (gameManager.instance.allowedAbility1)
-                {
-                    // Debug.LogError("Fired Fire Shot");
-                    gameManager.instance.allowedAbility1 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown, gameManager.instance.firePos);
-                    StartCoroutine(fireCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown));
-                }
-                break;
-            case 2:
-                if (gameManager.instance.allowedAbility2)
-                {
-                    // Debug.LogError("Fired Freeze Shot");
-                    gameManager.instance.allowedAbility2 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown, gameManager.instance.freezePos);
-                    StartCoroutine(freezeCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown));
-                }
-                break;
-            case 3:
-                if (gameManager.instance.allowedAbility3)
-                {
-                    // Debug.LogError("Fired Bounce Shot");
-                    gameManager.instance.allowedAbility3 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown, gameManager.instance.bouncePos);
-                    StartCoroutine(bounceCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown));
-                }
-                break;
-            case 4:
-                if (gameManager.instance.allowedAbility4)
-                {
-                    //  Debug.LogError("Fired Zoom Shot");
-                    gameManager.instance.allowedAbility4 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown, gameManager.instance.zoomPos);
-                    StartCoroutine(zoomCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown));
-                }
-                break;
-        }
+       
     }
     IEnumerator fireCooldown(float cd)
     {

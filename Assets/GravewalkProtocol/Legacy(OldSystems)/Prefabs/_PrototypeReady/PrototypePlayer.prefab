@@ -655,8 +655,8 @@ MonoBehaviour:
   currentStamina: 0
   maxStamina: 0
   modStamina: 0
-  dashCost: 0
   dashLoss: 0
+  dashCost: 0
   meleeLoss: 0
   damage: 0
   modDamage: 0
@@ -714,11 +714,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   turnOnDebug: 1
   walkSpeed: 8
-  sprintMultiplier: 2
   acceleration: 20
   dashCd: 1
-  dashSpeed: 11.5
-  dashAttackSpeed: 104
+  dashSpeed: 21.2
+  dashAttackSpeed: 200
   dashTime: 0.05
   dashFOVMod: 0
   currentMovement: {x: 0, y: 0, z: 0}

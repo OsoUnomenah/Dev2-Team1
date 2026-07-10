@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4142889057407374390}
   - component: {fileID: 3822265434403523232}
   - component: {fileID: 335966286086446089}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Crystal Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 2509265236009507909}
   - component: {fileID: 2838587944609772278}
   - component: {fileID: 96113359387587980}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Explotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
