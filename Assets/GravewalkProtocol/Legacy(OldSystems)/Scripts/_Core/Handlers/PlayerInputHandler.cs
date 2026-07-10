@@ -29,6 +29,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
     [Range(0, 30)][SerializeField] int dashFOVMod;
 
+    [Header("Crouch Config")]
+    [SerializeField] private float crouchSpeed = 1.5f;
+    [SerializeField] private float crouchHeight = 1.0f;
+    [SerializeField] private float crouchTransitionSpeed = 10f;
+    [SerializeField] private float ceilingCheckRadius = 0.3f;
+    [SerializeField] private LayerMask ceilingMask;
+
+    private float standingHeight;
+    private Vector3 standingCenter;
+    private Vector3 standingCameraPosition;
+
+    private bool isCrouching;
+    private bool crouchRequested;
+
     private Vector3 dashVector;
     public Vector3 currentMovement;
     public float currentSpeed = 0f;
@@ -83,6 +97,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction rotateAction;
     private InputAction jumpAction;
     private InputAction dashAction;
+    private InputAction crouchAction;
     private InputAction interactAction;
     private InputAction shootAction;
     private InputAction reloadAction;
@@ -103,6 +118,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         jumpAction = playerActions.PlayerInput.Jump;
         dashAction = playerActions.PlayerInput.Sprint;
+        crouchAction = playerActions.PlayerInput.Crouch;
 
         interactAction = playerActions.PlayerInput.Interact;
 
@@ -118,6 +134,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        CharacterController controller = gameManager.instance.characterController;
+
+        standingHeight = controller.height;
+        standingCenter = controller.center;
+
+        standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
     }
 
     void Update()
@@ -134,6 +157,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
+        HandleCrouch();
         HandleMovement();
         HandleRotation();
         ApplyMovement();
@@ -166,6 +190,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAction.performed += OnDashPerformed;
         dashAction.canceled += OnDashCanceled;
 
+        crouchAction.performed += OnCrouchPerformed;
+        crouchAction.canceled += OnCrouchCanceled;
+
         interactAction.performed += OnInteractPerformed;
         interactAction.canceled += OnInteractCanceled;
 
@@ -195,6 +222,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         dashAction.performed -= OnDashPerformed;
         dashAction.canceled -= OnDashCanceled;
+
+        crouchAction.performed -= OnCrouchPerformed;
+        crouchAction.canceled -= OnCrouchCanceled;
 
         interactAction.performed -= OnInteractPerformed;
         interactAction.canceled -= OnInteractCanceled;
@@ -268,9 +298,145 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Vector3 worldDirection = CalculateWorldDirection();
 
-        currentSpeed = Mathf.Lerp(currentSpeed, walkSpeed, Time.deltaTime * acceleration);
+        float targetSpeed = isCrouching
+            ? crouchSpeed
+            : walkSpeed;
+
+        currentSpeed = Mathf.Lerp(
+            currentSpeed,
+            targetSpeed,
+            Time.deltaTime * acceleration
+        );
+
         currentMovement.x = worldDirection.x * currentSpeed;
         currentMovement.z = worldDirection.z * currentSpeed;
+    }
+
+    private void HandleCrouch()
+    {
+        if (crouchRequested)
+        {
+            isCrouching = true;
+        }
+        else if (isCrouching && CanStandUp())
+        {
+            isCrouching = false;
+        }
+
+        UpdateCrouchHeight();
+        UpdateCrouchCamera();
+    }
+
+    private void UpdateCrouchHeight()
+    {
+        CharacterController controller =
+            gameManager.instance.characterController;
+
+        float targetHeight = isCrouching
+            ? crouchHeight
+            : standingHeight;
+
+        Vector3 targetCenter = isCrouching
+            ? GetCrouchingCenter()
+            : standingCenter;
+
+        controller.height = Mathf.Lerp(
+            controller.height,
+            targetHeight,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+
+        controller.center = Vector3.Lerp(
+            controller.center,
+            targetCenter,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+    }
+
+    private Vector3 GetCrouchingCenter()
+    {
+        float heightDifference = standingHeight - crouchHeight;
+
+        return new Vector3(
+            standingCenter.x,
+            standingCenter.y - heightDifference * 0.5f,
+            standingCenter.z
+        );
+    }
+
+    private void UpdateCrouchCamera()
+    {
+        Transform playerCamera =
+            gameManager.instance.playerCamera.transform;
+
+        float heightDifference = standingHeight - crouchHeight;
+
+        Vector3 crouchingCameraPosition =
+            standingCameraPosition - new Vector3(
+                0f,
+                heightDifference * 0.5f,
+                0f
+            );
+
+        Vector3 targetPosition = isCrouching
+            ? crouchingCameraPosition
+            : standingCameraPosition;
+
+        playerCamera.localPosition = Vector3.Lerp(
+            playerCamera.localPosition,
+            targetPosition,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+    }
+
+    private bool CanStandUp()
+    {
+        CharacterController controller =
+            gameManager.instance.characterController;
+
+        float radius = Mathf.Min(
+            controller.radius * 0.9f,
+            ceilingCheckRadius
+        );
+
+        Vector3 worldCenter =
+            transform.TransformPoint(standingCenter);
+
+        float halfHeight = Mathf.Max(
+            standingHeight * 0.5f,
+            radius
+        );
+
+        Vector3 bottomPoint =
+            worldCenter + Vector3.down * (halfHeight - radius);
+
+        Vector3 topPoint =
+            worldCenter + Vector3.up * (halfHeight - radius);
+
+        bool blocked = Physics.CheckCapsule(
+            bottomPoint,
+            topPoint,
+            radius,
+            ceilingMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        return !blocked;
+    }
+
+    private void OnCrouchPerformed(InputAction.CallbackContext context)
+    {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        crouchRequested = true;
+    }
+
+    private void OnCrouchCanceled(InputAction.CallbackContext context)
+    {
+        crouchRequested = false;
     }
 
     private IEnumerator Dash()
