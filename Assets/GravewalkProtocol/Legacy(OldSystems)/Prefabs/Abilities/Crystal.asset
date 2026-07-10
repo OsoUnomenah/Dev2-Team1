@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
-  m_Name: Bounce
+  m_Name: Crystal
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
-  abilityName: Bounce
-  model: {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
-  bullet: {fileID: 5054535592068500189, guid: bb0c5df1f5e0ac94b923522d5434c467, type: 3}
-  throwSound: {fileID: 11400000, guid: 32ee1a6239fad0548ba004fdab560170, type: 2}
+  abilityName: Crystal
+  model: {fileID: 8869053030028166981, guid: 3d1e7de392c971241ab13044e4cd8cbe, type: 3}
+  throwSound: {fileID: 11400000, guid: 128125529cd634d44933c97f78807c9e, type: 2}
   abilityType: 3
   shootDistance: 4
-  shootCooldown: 0.1
-  effectTimer: 9.517821
-  loopedEffect: {fileID: 1489387594953262563, guid: 349785d2d73ebf2429497634000921ed, type: 3}
+  shootCooldown: 16.5
+  effectTimer: 25
+  loopedEffect: {fileID: 1489387594953262563, guid: 1dfe7a56f9a2e3344a4135bbccb72fa5, type: 3}
   level: 1
