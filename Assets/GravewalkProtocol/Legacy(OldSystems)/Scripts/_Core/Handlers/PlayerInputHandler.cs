@@ -78,11 +78,16 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
     [SerializeField] BaseSoundSO _dash;
+    [SerializeField] BaseSoundSO jumpSound;
+    [SerializeField] BaseSoundSO landSound;
+    [SerializeField] BaseSoundSO crouchSound;
+    [SerializeField] BaseSoundSO standSound;
     [SerializeField] private BaseSoundSO _dryFire;
     [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
     [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
 
     private float footstepTimer;
+    private bool wasGrounded;
     private StatHandler playerStats;
     private bool isFrozenByBoss;
     private Coroutine freezeRoutine;
@@ -432,11 +437,28 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
         crouchRequested = true;
+
+        if (!isCrouching && AudioManager.instance != null && crouchSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                crouchSound,
+                gameManager.instance.player
+            );
+        }
     }
 
     private void OnCrouchCanceled(InputAction.CallbackContext context)
     {
         crouchRequested = false;
+
+        if (isCrouching && CanStandUp() &&
+    AudioManager.instance != null && standSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                standSound,
+                gameManager.instance.player
+            );
+        }
     }
 
     private IEnumerator Dash()
@@ -600,6 +622,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (canJump)
         {
             JumpTriggered = true;
+
+            if (AudioManager.instance != null && jumpSound != null)
+            {
+                AudioManager.instance.PlaySoundFromSource(
+                    jumpSound,
+                    gameManager.instance.player
+                );
+            }
 
             if (turnOnDebug)
             {
@@ -1084,6 +1114,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 footstepTimer = 0;
             }
         }
+    }
+
+    private void HandleLandingSound()
+    {
+        bool isGrounded = gameManager.instance.characterController.isGrounded;
+
+        if(!wasGrounded && isGrounded)
+        {
+            if(AudioManager.instance != null && landSound != null)
+            {
+                AudioManager.instance.PlaySoundFromSource(landSound, gameManager.instance.player);
+            }
+        }
+        wasGrounded = isGrounded;
     }
 
     IEnumerator HeavyAttackAOE()
