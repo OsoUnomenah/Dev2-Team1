@@ -71,6 +71,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private float footstepTimer;
     private StatHandler playerStats;
+    private bool isFrozenByBoss;
+    private Coroutine freezeRoutine;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -122,6 +124,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     void Update()
     {
+
+        if (isFrozenByBoss)
+        {
+            MovementVector = Vector2.zero;
+            RotateVector = Vector2.zero;
+            currentMovement = Vector3.zero;
+
+            ShootTimer();
+            HandleReload();
+            return;
+        }
 
         HandleMovement();
         HandleRotation();
@@ -462,6 +475,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnInteractPerformed(InputAction.CallbackContext context)
     {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+
         // Debug.Log("InteractorSource: " + interactorSource);
         //Debug.Log("WeaponManager: " + gameManager.instance.playerWeaponManager);
 
@@ -495,6 +514,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
+
+        if (isFrozenByBoss)
+        {
+            return;
+        }
 
 
 
@@ -636,6 +660,22 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void OnReloadPerformed(InputAction.CallbackContext context)
     {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        {
+            IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
+            if (iAct != null)
+            {
+                iAct.Interact();
+            }
+        }
+
+
         if (reloadTimer < gameManager.instance.playerWeaponManager.AmmoTimer)
         {
             gameManager.instance.playerWeaponManager.Ammo = 0;
@@ -657,6 +697,22 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     //this is now a Ability button instead of ADS
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        RaycastHit hit;
+        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+        {
+            IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
+            if (iAct != null)
+            {
+                iAct.Interact();
+            }
+        }
+
+
         Debug.LogError("Fired Ability Shot");
         switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
         {
@@ -933,5 +989,24 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
+    }
+
+    public void FreezePlayer(float duration)
+    {
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+        }
+
+        freezeRoutine = StartCoroutine(FreezePlayerRoutine(duration));
+    }
+
+    private IEnumerator FreezePlayerRoutine(float duration)
+    {
+        isFrozenByBoss = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isFrozenByBoss = false;
     }
 }
