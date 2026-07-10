@@ -77,10 +77,11 @@ public class gameManager : MonoBehaviour
     public bool allowedAbility4 = true;
     [SerializeField] public int firePos = -1;
     [SerializeField] public int freezePos = -1;
-    [SerializeField] public int bouncePos = -1;
-    [SerializeField] public int zoomPos = -1;
-    public GameObject pad;
-    public ParticleSystem bounceeffect;
+    [SerializeField] public int magnetPos = -1;
+    [SerializeField] public int toxicPos = -1;
+    [SerializeField] public int crystalPos = -1;
+    [SerializeField] public int lightningPos = -1;
+   
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -171,7 +172,7 @@ public class gameManager : MonoBehaviour
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
-        if (firePos != -1 && freezePos != -1 && bouncePos != -1 && zoomPos != -1)
+        if (instance.playerWeaponManager.abilities.Count == 4)
         {
             Debug.LogError("Does not Run");
             return;
@@ -181,28 +182,40 @@ public class gameManager : MonoBehaviour
 
             if (slot == null) return;
 
-            if (slot.abilityType == 1)
+            if (slot.abilityType == AbilityStats.ability.fire)
             {
                 firePos = instance.playerWeaponManager.abilitySlot;
                 //Debug.LogError("FIRE");
                 return;
             }
-            if (slot.abilityType == 2)
+            if (slot.abilityType == AbilityStats.ability.freeze)
             {
                 freezePos = instance.playerWeaponManager.abilitySlot;
                 //Debug.LogError("FREEZE");
                 return;
             }
-            if (slot.abilityType == 3)
+            if (slot.abilityType == AbilityStats.ability.magent)
             {
-                bouncePos = instance.playerWeaponManager.abilitySlot;
-                //Debug.LogError("BOUNCE");
+                magnetPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("MAGNET");
                 return;
             }
-            if (slot.abilityType == 4)
+            if (slot.abilityType == AbilityStats.ability.toxic)
             {
-                zoomPos = instance.playerWeaponManager.abilitySlot;
-                //Debug.LogError("ZOOM");
+                toxicPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("TOXIC");
+                return;
+            }
+            if (slot.abilityType == AbilityStats.ability.crystal)
+            {
+                crystalPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("CRYSTAL");
+                return;
+            }
+            if (slot.abilityType == AbilityStats.ability.lightning)
+            {
+                lightningPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("LIGHTNING");
                 return;
             }
             Debug.LogError("Found None");
@@ -436,22 +449,8 @@ public class gameManager : MonoBehaviour
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
     }
-    private bool isBounceDest = false;
-    public IEnumerator bounceDestroy()
-    {
-        if (!isBounceDest)
-        {
-            isBounceDest = true;
-            yield return new WaitForSeconds(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].effectTimer);
-            Destroy(gameManager.instance.pad);
-            Destroy(gameManager.instance.bounceeffect);
-            isBounceDest = false;
-            gameManager.instance.allowedAbility3 = false;
-            instance.greyedOut(instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer, instance.bouncePos);
-            StartCoroutine(instance.playerInputHandler.bounceCooldown(gameManager.instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer));
-        }
-        
-    }
+    
+    
 
     public void NextLevel()
     {

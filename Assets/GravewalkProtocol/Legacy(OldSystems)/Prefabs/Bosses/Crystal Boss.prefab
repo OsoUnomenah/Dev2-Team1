@@ -1214,7 +1214,7 @@ GameObject:
   - component: {fileID: 661307411345048127}
   - component: {fileID: 8813764044349690688}
   - component: {fileID: 1299987439740802359}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Crystal Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14587,7 +14587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b416f62c9d0c16d48a7dc37274beb572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeadShot
-  Boss: {fileID: 1666705403417863322}
+  enemy: {fileID: 0}
 --- !u!65 &8380065418120890876
 BoxCollider:
   m_ObjectHideFlags: 0

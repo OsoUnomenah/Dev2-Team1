@@ -36,15 +36,19 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] public List<AbilityStats> abilities = new List<AbilityStats>();
     private int firePos;
     private int freezePos;
-    private int bouncePos;
-    private int zoomPos;
+    private int magnetPos;
+    private int toxicPos;
+    private int crystalPos;
+    private int lightningPos;
     [SerializeField] public GameObject bouncePad;
 
     // Ability Settings
     public int fireLevel;
     public int freezeLevel;
-    public int bounceLevel;
-    public int zoomLevel;
+    public int magnetLevel;
+    public int toxicLevel;
+    public int crystalLevel;
+    public int lightningLevel;
     public int abilitySlot;
 
     // Animation hashes
@@ -211,7 +215,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     {
         switch (stats.abilityType)
         {
-            case 1:
+            case AbilityStats.ability.fire:
                 if (fireLevel == 0)
                 {
                     firstTimePickup(stats);
@@ -221,7 +225,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 fireLevel += stats.level;
                 break;
 
-            case 2:
+            case AbilityStats.ability.freeze:
                 if (freezeLevel == 0)
                 {
                     firstTimePickup(stats);
@@ -231,24 +235,42 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 freezeLevel += stats.level;
                 break;
 
-            case 3:
-                if (bounceLevel == 0)
+            case AbilityStats.ability.magent:
+                if (magnetLevel == 0)
                 {
                     firstTimePickup(stats);
-                    bouncePos = abilities.Count - 1;
+                    magnetPos = abilities.Count - 1;
                 }
-                abilityEquip(abilities[bouncePos]);
-                bounceLevel += stats.level;
+                abilityEquip(abilities[magnetPos]);
+                magnetLevel += stats.level;
                 break;
 
-            case 4:
-                if (zoomLevel == 0)
+            case AbilityStats.ability.toxic:
+                if (toxicLevel == 0)
                 {
                     firstTimePickup(stats);
-                    zoomPos = abilities.Count - 1;
+                    toxicPos = abilities.Count - 1;
                 }
-                abilityEquip(abilities[zoomPos]);
-                zoomLevel += stats.level;
+                abilityEquip(abilities[toxicPos]);
+                toxicLevel += stats.level;
+                break;
+            case AbilityStats.ability.crystal:
+                if (crystalLevel == 0)
+                {
+                    firstTimePickup(stats);
+                    crystalPos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[crystalPos]);
+                crystalLevel += stats.level;
+                break;
+            case AbilityStats.ability.lightning:
+                if (lightningLevel == 0)
+                {
+                    firstTimePickup(stats);
+                    lightningPos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[lightningPos]);
+                lightningLevel += stats.level;
                 break;
         }
     }
