@@ -534,7 +534,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             recoil = 0;
         }
-
+       
 
         // Debug.Log("Shoot interaction" + context.interaction);
 
@@ -585,7 +585,34 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 Quaternion.LookRotation(hit.normal)
                             );
                         }
+                        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                        {
+                            //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                            //infact most should still run the IDamage thing below,
+                            //but might have to change damage values or something in here first
+                            //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                            //personally I'll 
+                            case AbilityStats.ability.fire:
+                                //probably use a IFire interface that works like IDamage but makes them set fire
+                                break;
+                            case AbilityStats.ability.freeze:
+                                //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
+                                break;
+                            case AbilityStats.ability.toxic:
+                                //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                break;
+                            case AbilityStats.ability.magent:
+                                //good luck lol idk
+                                break;
+                            case AbilityStats.ability.crystal:
+                                //I got this one
+                                break;
+                            case AbilityStats.ability.lightning:
+                                //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                break;
 
+                        }
+                        
                         IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
@@ -676,7 +703,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
     IEnumerator zoomCooldown(float cd)
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility4 = true;
     }
   

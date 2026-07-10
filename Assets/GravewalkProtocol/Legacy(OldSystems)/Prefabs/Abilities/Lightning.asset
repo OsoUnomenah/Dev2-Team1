@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d72648350d39e3644b22f6f993b4a704, type: 3}
-  m_Name: Freeze
+  m_Name: Lightning
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
-  abilityName: Freeze
-  model: {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
-  throwSound: {fileID: 11400000, guid: 421e8e67f0c27d54597a005a8ad3db76, type: 2}
-  abilityType: 1
+  abilityName: Lightning
+  model: {fileID: 8869053030028166981, guid: 61bc54cafad4124438500939824bb96e, type: 3}
+  throwSound: {fileID: 11400000, guid: 32ee1a6239fad0548ba004fdab560170, type: 2}
+  abilityType: 5
   shootDistance: 4
-  shootCooldown: 7
-  effectTimer: 14
-  loopedEffect: {fileID: 1489387594953262563, guid: 0cce6629648d69949b49a98c533c70ee, type: 3}
+  shootCooldown: 0.1
+  effectTimer: 9.517821
+  loopedEffect: {fileID: 1489387594953262563, guid: bb51ae100c5328143b54b11a593b519d, type: 3}
   level: 1
