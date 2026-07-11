@@ -19,8 +19,11 @@ public class StatHandler : MonoBehaviour, IDamage
     public float modStamina;
 
     [Header("Dash")]
-    [Range(0, 10)][SerializeField] public float dashCost;
     [Range(0, 10)][SerializeField] public float dashLoss;
+    public float dashCost;
+
+    [Header("Melee")]
+    [Range(0, 10)][SerializeField] public float meleeLoss;
 
 
     [Header("Damage")]
@@ -37,10 +40,16 @@ public class StatHandler : MonoBehaviour, IDamage
     [Range(0f, 100f)][SerializeField] public float modSpeed;
     [Range(0, 100)][SerializeField] public int modJumps;
 
-
     [Header("Events")]
     public GameEvent GE_OnPlayerHealthChanged;
     public GameEvent GE_OnPlayerStaminaChanged;
+
+    [Header("Player Life Audio")]
+    [SerializeField] private BaseSoundSO spawnSound;
+    [SerializeField] private BaseSoundSO deathSound;
+    [SerializeField] private float deathSoundDelay = 1.5f;
+
+    private bool isDead;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,6 +59,16 @@ public class StatHandler : MonoBehaviour, IDamage
 
         currentDamage = damage + modDamage;
         modJumps = 1;
+
+        PlaySpawnSound();
+    }
+
+    private void PlaySpawnSound()
+    {
+        if (AudioManager.instance != null && spawnSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(spawnSound, gameManager.instance.player);
+        }
     }
 
     // Update is called once per frame
@@ -57,7 +76,7 @@ public class StatHandler : MonoBehaviour, IDamage
     {   
         currentDamage = damage + modDamage;
         
-        HandleDash();
+        HandleStamina();
 
     }
 
@@ -77,14 +96,14 @@ public class StatHandler : MonoBehaviour, IDamage
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
     
-    public void HandleDash()
+    public void HandleStamina()
     {
-        if (gameManager.instance.dashTriggered 
-            && !gameManager.instance.isDashing 
-            && gameManager.instance.characterController.isGrounded 
+        if (gameManager.instance.dashTriggered
+            && !gameManager.instance.isDashing
+            && gameManager.instance.characterController.isGrounded
             && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
-            currentStamina -= gameManager.instance.dashCost;
+            currentStamina -= dashCost;
         }
 
         if (gameManager.instance.isDashing)
@@ -98,7 +117,18 @@ public class StatHandler : MonoBehaviour, IDamage
                 gameManager.instance.canDash = false;
             }
         }
-        else 
+        else if (gameManager.instance.isMeleeing)
+        {
+            currentStamina -= meleeLoss;
+            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
+            GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
+
+            if (currentStamina <= 0)
+            {
+                gameManager.instance.canMelee = false;
+            }
+        }
+        else if (!gameManager.instance.isDashing && !gameManager.instance.isMeleeing)
         {
             currentStamina += staminaRegen;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -106,9 +136,11 @@ public class StatHandler : MonoBehaviour, IDamage
 
             if (currentStamina >= maxStamina)
             {
-             gameManager.instance.canDash = true;
+                gameManager.instance.canDash = true;
+                gameManager.instance.canMelee = true;
             }
         }
+      
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
 
@@ -124,6 +156,10 @@ public class StatHandler : MonoBehaviour, IDamage
 
     public void takeDamage(int amount)
     {
+        if (isDead)
+        {
+            return;
+        }
         if (gameManager.instance.isDashing)
         {
             return;
@@ -151,10 +187,36 @@ public class StatHandler : MonoBehaviour, IDamage
 
         if (stats.currentHealth <= 0)
         {
-            gameManager.instance.youLose();
+            stats.currentHealth = 0;
+            StartCoroutine(PlayerDeathRoutine());
+        }
+    }
+
+    private IEnumerator PlayerDeathRoutine()
+    {
+        if (isDead)
+        {
+            yield break;
         }
 
+        isDead = true;
 
+        if (gameManager.instance.playerInputHandler != null)
+        {
+            gameManager.instance.playerInputHandler.enabled = false;
+        }
+
+        if (AudioManager.instance != null && deathSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                deathSound,
+                gameManager.instance.player
+            );
+        }
+
+        yield return new WaitForSeconds(deathSoundDelay);
+
+        gameManager.instance.youLose();
     }
 
     public void Heal(float amount)

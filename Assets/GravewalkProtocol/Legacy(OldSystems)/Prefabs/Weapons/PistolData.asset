@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: PistolData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Pistol
-  weaponType: 1
+  weaponType: 0
+  fullAuto: 0
   damage: 10
   range: 50
   rate: 0
@@ -24,6 +25,6 @@ MonoBehaviour:
   ammoTimer: 2
   weaponPrefab: {fileID: 6418376403914927428, guid: 40509b50e6ed28c42adcbf775c4d3a8b, type: 3}
   hitEffect: {fileID: 0}
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  weaponPickupSound: {fileID: 0}
+  shootSound: {fileID: 11400000, guid: 53d9f88ecbdbbc149987b0cae22557df, type: 2}
+  reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
+  weaponPickupSound: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}

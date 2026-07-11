@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: ShotgunData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Shotgun
-  weaponType: 1
+  weaponType: 0
+  fullAuto: 0
   damage: 50
   range: 10
   rate: 1
@@ -24,6 +25,6 @@ MonoBehaviour:
   ammoTimer: 2
   weaponPrefab: {fileID: 8655629924127046308, guid: 3403d90aca528fe42b9d28ea55a28d17, type: 3}
   hitEffect: {fileID: 0}
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  weaponPickupSound: {fileID: 0}
+  shootSound: {fileID: 11400000, guid: 8b26e802959c76f4aa18990929dff89d, type: 2}
+  reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
+  weaponPickupSound: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}

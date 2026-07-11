@@ -6,12 +6,12 @@ public class AbilityStats : ScriptableObject
     public string abilityName;
 
     public GameObject model;
-    public GameObject bullet;
-
+    
     [Header("Audio")]
     public BaseSoundSO throwSound;
 
-    [Range (1,4)] public int abilityType;
+    public enum ability { fire, freeze, magent, crystal, toxic, lightning }
+    [SerializeField] public ability abilityType;
 
 
     [Range(1, 4)] public int shootDistance;

@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
@@ -9,8 +11,15 @@ public class buttonFunctions : MonoBehaviour
     }
     public void restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        gameManager.instance.stateUnpause();
+        if (AudioManager.instance.UISound)
+        {
+            StartCoroutine(WaitForUISoundRestart());
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            gameManager.instance.stateUnpause();
+        }
     }
 
     public void settings()
@@ -20,11 +29,19 @@ public class buttonFunctions : MonoBehaviour
 
     public void quit()
     {
+        if (AudioManager.instance.UISound)
+        {
+            StartCoroutine(WaitForUISoundQuit());
+        }
+        else
+        {
+
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
+        }
     }
 
     public void back()
@@ -40,6 +57,44 @@ public class buttonFunctions : MonoBehaviour
 
     public void nextLevel()
     {
+        if (AudioManager.instance.UISound)
+        {
+            StartCoroutine(WaitForUISoundNextLevel());
+        }
+        else
+        {
+            gameManager.instance.NextLevel();
+        }
+
+        
+    }
+
+    IEnumerator WaitForUISoundRestart()
+    {
+        float clipLength = AudioManager.instance.amSource.clip.length + 2;
+        yield return new WaitForSeconds(clipLength);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        gameManager.instance.stateUnpause();
+    }
+
+    IEnumerator WaitForUISoundQuit()
+    {
+        float clipLength = AudioManager.instance.amSource.clip.length + 2;
+        yield return new WaitForSeconds(clipLength);
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    IEnumerator WaitForUISoundNextLevel()
+    {
+        float clipLength = AudioManager.instance.amSource.clip.length + 2;
+        yield return new WaitForSeconds(clipLength);
+
         gameManager.instance.NextLevel();
     }
 }

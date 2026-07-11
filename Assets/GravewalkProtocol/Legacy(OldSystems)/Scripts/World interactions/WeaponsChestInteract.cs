@@ -5,23 +5,6 @@ using System.Threading;
 
 public class WeaponsChestInteract : MonoBehaviour, IInteract
 {
-    [System.Serializable]
-    public class WeaponReward
-    {
-        public string weaponName;
-        public bool weaponType;
-        public int damage;
-        public float range;
-        public float rate;
-        public float recoil;
-        public float timer;
-        public int ammo;
-        public int maxAmmo;
-        public float ammoTimer;
-        public GameObject weaponPrefab;
-        public GameObject pickupPrefab;
-    }
-
     [Header("Audio")]
     [SerializeField] private BaseSoundSO chestOpenSound;
 
@@ -32,7 +15,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [SerializeField] private float resetTimer;
 
     [Header("weapon Rewards")]
-    [SerializeField] private WeaponReward[] weaponRewards;
+    [SerializeField] private WeaponData[] weaponRewards;
     [SerializeField] private bool canGiveMaxAmmo = true;
 
     [Header("Enemy Trap Settings")]
@@ -166,9 +149,9 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             return;
         }
 
-        WeaponReward reward = weaponRewards[rewardRoll];
+        WeaponData reward = weaponRewards[rewardRoll];
 
-        if (reward.pickupPrefab == null)
+        if (reward.weaponPrefab == null)
         {
             Debug.LogWarning("Weapon reward is missing a pickup prefab.");
             return;
@@ -177,7 +160,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         Transform dropPoint = weaponDropPoint != null ? weaponDropPoint : transform;
 
         GameObject spawnedWeapon = Instantiate(
-        reward.pickupPrefab,
+        reward.weaponPrefab,
         dropPoint.position,
         dropPoint.rotation
         );

@@ -134,7 +134,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""id"": ""9b64a38b-a17e-4a44-a09a-f483d9baf7d2"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.5),Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -168,6 +168,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""name"": ""ADS"",
                     ""type"": ""Button"",
                     ""id"": ""e48a38ac-e443-4192-b6b4-54faa6bec1b4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f2bd4f0-4379-45c0-bdc3-0ea7a39c6d8d"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -355,7 +364,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""bcacd4bf-e96f-49db-bfde-2662316cda9d"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.5),Tap"",
                     ""processors"": """",
                     ""groups"": "";Keyboard and Mouse"",
                     ""action"": ""Shoot"",
@@ -460,6 +469,28 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""ADS"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7342f360-fc12-4d83-9162-39e0b8f34bda"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""42a864cd-4f9f-42fc-b57b-dc89cd093c04"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -505,6 +536,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_PlayerInput_Pause = m_PlayerInput.FindAction("Pause", throwIfNotFound: true);
         m_PlayerInput_Reload = m_PlayerInput.FindAction("Reload", throwIfNotFound: true);
         m_PlayerInput_ADS = m_PlayerInput.FindAction("ADS", throwIfNotFound: true);
+        m_PlayerInput_Crouch = m_PlayerInput.FindAction("Crouch", throwIfNotFound: true);
     }
 
     ~@PlayerActions()
@@ -594,6 +626,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerInput_Pause;
     private readonly InputAction m_PlayerInput_Reload;
     private readonly InputAction m_PlayerInput_ADS;
+    private readonly InputAction m_PlayerInput_Crouch;
     /// <summary>
     /// Provides access to input actions defined in input action map "PlayerInput".
     /// </summary>
@@ -641,6 +674,10 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "PlayerInput/ADS".
         /// </summary>
         public InputAction @ADS => m_Wrapper.m_PlayerInput_ADS;
+        /// <summary>
+        /// Provides access to the underlying input action "PlayerInput/Crouch".
+        /// </summary>
+        public InputAction @Crouch => m_Wrapper.m_PlayerInput_Crouch;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -694,6 +731,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ADS.started += instance.OnADS;
             @ADS.performed += instance.OnADS;
             @ADS.canceled += instance.OnADS;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
         }
 
         /// <summary>
@@ -732,6 +772,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ADS.started -= instance.OnADS;
             @ADS.performed -= instance.OnADS;
             @ADS.canceled -= instance.OnADS;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
         }
 
         /// <summary>
@@ -861,5 +904,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnADS(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Crouch" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCrouch(InputAction.CallbackContext context);
     }
 }

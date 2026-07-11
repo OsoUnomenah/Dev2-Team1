@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
@@ -15,12 +16,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float Rate;
     public float Recoil;
     public float Timer;
+    public float TimerOrig;
     public int Ammo;
     public int MaxAmmo;
     public float AmmoTimer;
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
+    public Animator weaponAnimator;
 
     [SerializeField] private Transform weaponHolder;
     private GameObject weaponCurrent;
@@ -33,16 +36,24 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] public List<AbilityStats> abilities = new List<AbilityStats>();
     private int firePos;
     private int freezePos;
-    private int bouncePos;
-    private int zoomPos;
+    private int magnetPos;
+    private int toxicPos;
+    private int crystalPos;
+    private int lightningPos;
     [SerializeField] public GameObject bouncePad;
 
     // Ability Settings
     public int fireLevel;
     public int freezeLevel;
-    public int bounceLevel;
-    public int zoomLevel;
+    public int magnetLevel;
+    public int toxicLevel;
+    public int crystalLevel;
+    public int lightningLevel;
     public int abilitySlot;
+
+    // Animation hashes
+    private int lightAttack = Animator.StringToHash("isHitting");
+    private readonly int heavyAttack = Animator.StringToHash("heavyHit");
 
     [Header("Don't touch unless debugging")]
     [SerializeField] private List<string> Modifiers = new List<string>();
@@ -66,7 +77,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int ammo,
         int maxAmmo,
         float ammoTimer,
-        List<string> weaponMods = null)
+        List<string> weaponMods = null
+        )
     {
         if (weaponData == null)
         {
@@ -171,6 +183,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         }
 
         Timer = timer;
+        TimerOrig = timer;
         Ammo = ammo;
         MaxAmmo = maxAmmo;
         AmmoTimer = ammoTimer;
@@ -188,6 +201,13 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             weaponCurrent = Instantiate(weaponPrefab, weaponHolder);
             weaponCurrent.transform.localPosition = Vector3.zero;
             weaponCurrent.transform.localRotation = Quaternion.identity;
+
+            weaponAnimator = weaponCurrent.GetComponent<Animator>();
+
+            if (weaponAnimator != null)
+            {
+                weaponAnimator.SetBool("pickedUp", true);
+            }
         }
     }
 
@@ -195,7 +215,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     {
         switch (stats.abilityType)
         {
-            case 1:
+            case AbilityStats.ability.fire:
                 if (fireLevel == 0)
                 {
                     firstTimePickup(stats);
@@ -205,7 +225,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 fireLevel += stats.level;
                 break;
 
-            case 2:
+            case AbilityStats.ability.freeze:
                 if (freezeLevel == 0)
                 {
                     firstTimePickup(stats);
@@ -215,24 +235,42 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 freezeLevel += stats.level;
                 break;
 
-            case 3:
-                if (bounceLevel == 0)
+            case AbilityStats.ability.magent:
+                if (magnetLevel == 0)
                 {
                     firstTimePickup(stats);
-                    bouncePos = abilities.Count - 1;
+                    magnetPos = abilities.Count - 1;
                 }
-                abilityEquip(abilities[bouncePos]);
-                bounceLevel += stats.level;
+                abilityEquip(abilities[magnetPos]);
+                magnetLevel += stats.level;
                 break;
 
-            case 4:
-                if (zoomLevel == 0)
+            case AbilityStats.ability.toxic:
+                if (toxicLevel == 0)
                 {
                     firstTimePickup(stats);
-                    zoomPos = abilities.Count - 1;
+                    toxicPos = abilities.Count - 1;
                 }
-                abilityEquip(abilities[zoomPos]);
-                zoomLevel += stats.level;
+                abilityEquip(abilities[toxicPos]);
+                toxicLevel += stats.level;
+                break;
+            case AbilityStats.ability.crystal:
+                if (crystalLevel == 0)
+                {
+                    firstTimePickup(stats);
+                    crystalPos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[crystalPos]);
+                crystalLevel += stats.level;
+                break;
+            case AbilityStats.ability.lightning:
+                if (lightningLevel == 0)
+                {
+                    firstTimePickup(stats);
+                    lightningPos = abilities.Count - 1;
+                }
+                abilityEquip(abilities[lightningPos]);
+                lightningLevel += stats.level;
                 break;
         }
     }
@@ -310,5 +348,31 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityEquip(abilities[3]);
             abilitySlot = 3;
         }
+    }
+
+    public void PlayMeleeLightAttack()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(lightAttack, true);
+    }
+
+    public void PlayMeleeHeavyAttack()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(heavyAttack, true);
+    }
+
+    public void ResetMeleeAnimationTriggers()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(lightAttack, false);
+        weaponAnimator.SetBool(heavyAttack, false);
+        gameManager.instance.isMeleeing = false;
     }
 }

@@ -14,9 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
   abilityName: Freeze
   model: {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
-  bullet: {fileID: 5054535592068500189, guid: 1350110ce28bd9f4392da3e55d142350, type: 3}
   throwSound: {fileID: 11400000, guid: 421e8e67f0c27d54597a005a8ad3db76, type: 2}
-  abilityType: 2
+  abilityType: 1
   shootDistance: 4
   shootCooldown: 7
   effectTimer: 14
