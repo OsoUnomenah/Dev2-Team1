@@ -11,7 +11,7 @@ public class LevelBuilder : MonoBehaviour
 
     void Start()
     {
-        GenerateRandom();
+        //GenerateRandom();
     }
 
     [ContextMenu("Generate Random")]
@@ -21,6 +21,12 @@ public class LevelBuilder : MonoBehaviour
         Generate();
     }
 
+    [ContextMenu("Generate From Seed")]
+     public void GenerateFromSeed()
+    {
+        SharedLevelData.Instance.SetSeed(SharedLevelData.Instance.levelSeed);
+        Generate();
+    }
     [ContextMenu("Generate")]
     public void Generate()
     {
@@ -30,12 +36,12 @@ public class LevelBuilder : MonoBehaviour
         navMeshSurface.BuildNavMesh();
         Room startRoom = level.PlayerStartRoom;
         Vector2 roomCenter = startRoom.Area.center;
-        gameManager.instance.player.transform.position = LevelPositionToWorldPosition(roomCenter);
+        gameManager.instance.playerSpawnPos.transform.position = LevelPositionToWorldPosition(roomCenter);
 
 
     }
 
-    Vector3 LevelPositionToWorldPosition(Vector2 levelPosition)
+    public Vector3 LevelPositionToWorldPosition(Vector2 levelPosition)
     {
         int scale = SharedLevelData.Instance.Scale;
         return new Vector3((levelPosition.x - 1) * scale, 3, (levelPosition.y - 1) * scale);

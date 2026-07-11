@@ -13,8 +13,7 @@ public class RoomLevelLayoutConfiguration : ScriptableObject
     [SerializeField] int doorDistanceFromEdge = 1;
     [SerializeField] int minHallwayLength = 3;
     [SerializeField] int maxHallwayLength = 5;
-    [SerializeField] int minHallwayWidth = 1;
-    [SerializeField] int maxHallwayWidth = 3;
+
     [SerializeField] int maxRoomCount = 10;
     [SerializeField] int minRoomDistance = 1;
 

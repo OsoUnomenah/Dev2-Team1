@@ -10,6 +10,7 @@ public class SharedLevelData : MonoBehaviour
     public static SharedLevelData Instance { get; private set; }
     [SerializeField] int scale = 1;
     [SerializeField] int seed = Environment.TickCount;
+    [SerializeField] public int levelSeed = 0;
 
     Random random;
     public int Scale => scale;
@@ -20,7 +21,15 @@ public class SharedLevelData : MonoBehaviour
     {
         seed = Environment.TickCount;
         random = new Random(seed);
+        levelSeed = seed;
     }
+
+    public void SetSeed( int seed)
+    {
+
+        this.seed = seed;
+    }
+
 
     private void OnEnable()
     {
@@ -35,11 +44,13 @@ public class SharedLevelData : MonoBehaviour
         }
         Debug.Log(Instance.GetEntityId());
         random = new Random(seed);
+        levelSeed = seed;
     }
 
     public void ResetRandom()
     {
         random = new Random(seed);
+        levelSeed = seed;
     }
 
 }

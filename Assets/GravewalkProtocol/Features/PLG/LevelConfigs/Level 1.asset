@@ -17,10 +17,10 @@ MonoBehaviour:
   roomTemplates:
   - name: Tiny
     numberOfRooms: 10
-    roomWidthMin: 3
-    roomWidthMax: 5
-    roomLengthMin: 3
-    roomLengthMax: 5
+    roomWidthMin: 5
+    roomWidthMax: 7
+    roomLengthMin: 5
+    roomLengthMax: 7
     layoutTexture: {fileID: 0}
   - name: Maxi
     numberOfRooms: 3
@@ -39,7 +39,5 @@ MonoBehaviour:
   doorDistanceFromEdge: 1
   minHallwayLength: 3
   maxHallwayLength: 5
-  minHallwayWidth: 1
-  maxHallwayWidth: 3
   maxRoomCount: 20
   minRoomDistance: 5

@@ -148,7 +148,10 @@ public class LayoutGeneratorRooms : MonoBehaviour
             layoutTexture.SetPixel(selectedEntryway.StartPositionAbsolute.x, selectedEntryway.StartPositionAbsolute.y, Color.red);
         }
 
+#if UNITY_EDITOR
         layoutTexture.SaveAsset();
+#endif
+
     }
 
     Hallway SelectHallwayCandidate(RectInt roomCandidateRect, RoomTemplate roomTemplate, Hallway entryway)

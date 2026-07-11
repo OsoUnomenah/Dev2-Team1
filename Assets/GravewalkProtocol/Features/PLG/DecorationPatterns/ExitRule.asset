@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
   m_Name: ExitRule
   m_EditorClassIdentifier: 
-  roomTypes: 4
-  prefab: {fileID: 919132149155446097, guid: 789570352fb27c748b6278c34718ec9f, type: 3}
+  roomTypes: 6
+  prefab: {fileID: 3472488264446540247, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
   prefabRotation: 0
   placement:
     array: 02000000

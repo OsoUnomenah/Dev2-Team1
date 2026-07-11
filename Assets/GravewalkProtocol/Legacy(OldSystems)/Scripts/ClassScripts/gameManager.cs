@@ -8,12 +8,17 @@ using UnityEngine.UI;
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
+    [SerializeField] GameObject levelBuilder;
+    [SerializeField] bool levelStarted = false;
+    public GameObject playerSpawnPos;
+
+
+
 
     [SerializeField] public bool gameDebug;
     public TMP_Text objectiveText;
 
     public GameEvent onPlayerHealthChange;
-    public Vector3 playerStart;
 
     [Header("XP Config")]
     public Slider xpBar;
@@ -71,7 +76,6 @@ public class gameManager : MonoBehaviour
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
 
-    public GameObject playerSpawnPos;
 
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
@@ -114,7 +118,8 @@ public class gameManager : MonoBehaviour
         GetPlayerReferences();
         UpdateXPUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        
+        levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+
     }
 
     private void Start()
@@ -123,8 +128,47 @@ public class gameManager : MonoBehaviour
         {
             nextLevelButton.onClick.AddListener(NextLevel);
         }
-       
+
         menuWin.SetActive(false);
+
+        StartNewLevel();
+
+    }
+
+    public void ChooseLevel()
+    {
+        if (!levelStarted)
+        {
+            StartNewLevel();
+            
+        }
+        else
+        {
+            RestartLevel();
+        }
+
+    }
+
+    public void StartNewLevel()
+    {
+        //If first time starting a levl in this scene, generate a random level
+        //Generate Random Level for current scene
+        if (levelBuilder != null)
+        {
+
+            levelBuilder.GetComponent<LevelBuilder>().GenerateRandom();
+            levelStarted = true;
+        }
+    }
+
+    public void RestartLevel()
+    {
+        if (levelBuilder != null)
+        {
+            levelBuilder.GetComponent<LevelBuilder>().GenerateFromSeed();
+        }
+
+
     }
 
     private void InitGM()
@@ -431,7 +475,7 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
-        player.transform.position = playerStart;
+        player.transform.position = playerSpawnPos.transform.position;
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);

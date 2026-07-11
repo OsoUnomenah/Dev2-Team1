@@ -128,8 +128,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 436620705549696511}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.04292679, y: -1.15, z: 3.1452665}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -149,9 +149,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   turnOnDebug: 1
   walkSpeed: 8
-  sprintSpeed: 12
   sprintMultiplier: 2
   acceleration: 20
+  dashCd: 1
+  dashSpeed: 1
+  dashTime: 0.05
+  dashFOVMod: 1
   currentMovement: {x: 0, y: 0, z: 0}
   currentSpeed: 0
   mouseSensitivity: 0.3
@@ -165,6 +168,7 @@ MonoBehaviour:
     m_Bits: 0
   _shoot: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
   _footsteps: {fileID: 11400000, guid: 03493be87f5eab645b1caba8b7b91ca4, type: 2}
+  _dash: {fileID: 0}
   _dryFire: {fileID: 0}
   footstepBaseInterval: 0.5
   footstepSprintInterval: 0.6
@@ -344,6 +348,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f067621dcd6d2924e92baa7f43f3757a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponManager
+  currentWeaponData: {fileID: 0}
+  currentWeaponName: 
+  currentWeaponMods: []
   Type: 0
   Damage: 0
   Range: 50
@@ -367,10 +374,7 @@ MonoBehaviour:
   bounceLevel: 0
   zoomLevel: 0
   abilitySlot: 0
-  weaponInventory: []
-  currentWeaponIndex: -1
-  maxWeaponSlots: 4
-  Modifiers: 
+  Modifiers: []
 --- !u!1 &3654864614377873668
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,7 +617,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -636,7 +640,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5066154709846340851}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &4193085837594661516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,7 +653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -660,7 +664,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -940,8 +944,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7756147823857390478}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -49.827133, y: -1.00003, z: -599.5939}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -964,12 +968,12 @@ MonoBehaviour:
   maxHealth: 0
   modHealth: 0
   stamina: 50
+  staminaRegen: 0
   currentStamina: 0
   maxStamina: 0
   modStamina: 0
-  sprintCost: 5
-  sprintGain: 0.2
-  sprintLoss: 0.4
+  dashCost: 0
+  dashLoss: 0
   damage: 0
   modDamage: 0
   currentDamage: 1

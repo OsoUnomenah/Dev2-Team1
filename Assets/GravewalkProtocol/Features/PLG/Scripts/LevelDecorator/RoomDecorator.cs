@@ -142,7 +142,10 @@ public class RoomDecorator : MonoBehaviour
         decoratedTexture.Reinitialize(width, length);
         decoratedTexture.SetPixels32(pixels);
         decoratedTexture.Apply();
+#if UNITY_EDITOR
         decoratedTexture.SaveAsset();
+#endif
+
     }
 
 }

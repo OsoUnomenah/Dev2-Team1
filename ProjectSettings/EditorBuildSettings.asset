@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/TitleScreen.unity
     guid: b75d3daf3fb65c94bba320a2820baaf1
-  - enabled: 1
+  - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype.unity
     guid: b66c3fc8571686144b33283abdbe30ad
-  - enabled: 1
+  - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype2.unity
     guid: 039c8ad3fd77361478ef4adb7f779347
   m_configObjects:

@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.IO;
-using UnityEditor;
+using UnityEditor; // Necessary because we use Editor-specific APIs (AssetDatabase, TextureImporter)
 
 public static class Texture2DExtension
 {
     /// <summary>
     /// Save content of a texture into a png image file.
+    /// This method is intended for runtime usage and does not require editor API calls.
     /// </summary>
     /// <param name="texture">The 2D texture that will be saved.</param>
     /// <param name="relativeFolder">Folder name used relative to the Application data Path. If the folder does not exist, it will be created.</param>
@@ -24,10 +25,12 @@ public static class Texture2DExtension
         File.WriteAllBytes(filePath, bytes);
     }
 
+#if UNITY_EDITOR 
     /// <summary>
     /// Takes an existing texture asset and saves it as png in the same place.
+    /// NOTE: This method uses AssetDatabase and ONLY works inside the Unity Editor.
     /// </summary>
-    /// <param name="texture">A texture that is already an asset in the project. If the texture is not an asset the method will fail.</param>
+    /// <param name="texture">A texture that is already an asset in the project.</param>
     public static void SaveAsset(this Texture2D texture)
     {
         var bytes = texture.EncodeToPNG();
@@ -38,9 +41,10 @@ public static class Texture2DExtension
 
     /// <summary>
     /// Save a Texture2D Object as Asset.
+    /// NOTE: This method uses AssetDatabase and ONLY works inside the Unity Editor.
     /// </summary>
     /// <param name="texture">Any Texture2D object.</param>
-    /// <param name="path">Path relative to the Assets folder. For example: "MyFolder/texture". This will save the texture in "Assets/MyFolder/texture.png"</param>
+    /// <param name="path">Path relative to the Assets folder. For example: "MyFolder/texture".</param>
     public static void SaveAsAsset(this Texture2D texture, string path)
     {
         var bytes = texture.EncodeToPNG();
@@ -52,7 +56,9 @@ public static class Texture2DExtension
         importer.mipmapEnabled = false;
         importer.SaveAndReimport();
     }
+#endif // UNITY_EDITOR
 
+    // --- Runtime Methods (No Changes Needed) ---
     public static Texture2D Copy(this Texture2D texture)
     {
         // Get the raw texture data from the original texture
@@ -159,4 +165,4 @@ public static class Texture2DExtension
         texture.Apply();
     }
 
-}
+} // End of Texture2DExtension
