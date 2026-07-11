@@ -1,19 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR.Haptics;
-using UnityEngine.UIElements;
-using UnityEngine.UI;
-using System.Threading;
-using NUnit.Framework.Internal;
 
 public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 {
-    
-    
+
+
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int attackDamage = 10;
     [SerializeField] int xpGive = 100;
@@ -45,7 +39,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
     [Header("Weapon")]
     // may need multiple types of bullets so make another one if need be
     [SerializeField] GameObject bullet;
-    
+
     //only needed if you are using the same type of gun pivot as the enemies
     [SerializeField] Transform gunPivot;
     [SerializeField] Transform shootPos;
@@ -53,7 +47,10 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 
     //might need multiple different shoot rates for a boss
     [Range(0.1f, 2f)][SerializeField] float shootRate;
-    
+
+    [Header("Currency")]
+    [SerializeField] private int minCurrencyDrop = 10;
+    [SerializeField] private int maxCurrencyDrop = 25;
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -63,9 +60,9 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 
     //makes a boss freeze, some bosses may not make sense to freeze
     private bool isFroze;
-    
+
     private Transform player;
-    
+
 
     private float nextAttackTime;
     private float attackCooldown = 1.5f;
@@ -90,29 +87,29 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
     Color originalColor;
     [SerializeField] GameObject gun;
 
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    
-    
+
+
     private void Start()
     {
         exitPortal = GameObject.FindGameObjectWithTag("Portal");
         exitPortal.SetActive(false);
-                
+
 
         currentHealth = maxHealth;
-        
+
         originalColor = model.material.color;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        
+
         currentState = BossState.Rest;
-        
+
         gameManager.instance.updateGameGoal(1);
 
         timer = -100;
         phasePicker = 0;
-        
+
     }
 
     private void Update()
@@ -124,7 +121,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
         if (player == null || isFroze)
         {
             currentState = BossState.Rest;
-           
+
             return;
         }
 
@@ -281,7 +278,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
         allowedMovement = true;
         yield return new WaitForSeconds(18f);
         canAttack3 = true;
-        
+
     }
     bool isAttack1 = false;
     private void Attack1()
@@ -300,7 +297,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
         //attacks go here
 
         if (timer < 0)
-        {            
+        {
             gun.SetActive(false);
             currentState = BossState.Rest;
             timer = -100;
@@ -308,7 +305,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
             StartCoroutine(attack1Cooldown());
         }
 
-        
+
         timer--;
 
     }
@@ -376,7 +373,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
             model.material.color = Color.orange;
         }
     }
-    
+
 
     private void Decide()
     {
@@ -396,7 +393,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
             phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
         }
 
-        
+
         switch (phasePicker)
         {
             case 0:
@@ -411,7 +408,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
                 currentState = BossState.Attack3;
                 break;
         }
-        
+
     }
 
     public void updateHealthBar()
@@ -419,7 +416,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
         healthText.text = currentHealth + " / " + maxHealth;
         healthbar.value = (float)currentHealth / (float)maxHealth;
     }
-    
+
     IEnumerator updateDamageText()
     {
         damageText.text = ("DMG: " + gameManager.instance.playerDamageOut.ToString());
@@ -437,7 +434,7 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
         //Show the damage text
         StartCoroutine(updateDamageText());
 
-        currentHealth -= amount;        
+        currentHealth -= amount;
 
 
         if (currentHealth <= 0)
@@ -451,6 +448,9 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
             RecticleBehaviour.OffHover();
+
+            int currencyDrop = GetCurrencyDrop();
+            gameManager.instance.addCurrency(currencyDrop);
 
             if (exitPortal != null)
             {
@@ -509,5 +509,10 @@ public class BossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 
         model.material.color = originalColor;
         isFroze = false;
+    }
+
+    private int GetCurrencyDrop()
+    {
+        return Random.Range(minCurrencyDrop, maxCurrencyDrop + 1);
     }
 }

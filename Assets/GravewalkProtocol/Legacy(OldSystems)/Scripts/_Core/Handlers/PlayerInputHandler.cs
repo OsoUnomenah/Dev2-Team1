@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Networking;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
-using System.Collections.Generic;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -23,11 +19,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
-    [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
+    [Range(0.5f, 5.0f)][SerializeField] private float dashCd = 1.0f;
     [Range(1.0f, 30f)][SerializeField] float dashSpeed;
     [Range(1.0f, 200f)][SerializeField] float dashAttackSpeed;
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
     [Range(0, 30)][SerializeField] int dashFOVMod;
+
+    [Header("Freeze Weapon Effect")]
+    [SerializeField] private float gunFreezeChance = 0.25f;
+    [SerializeField] private float gunFreezeCooldown = 0.15f;
+    [SerializeField] private float meleeFreezeCooldown = 3f;
+    [SerializeField] private float defaultFreezeDuration = 2f;
+
+    private float nextGunFreezeTime;
+    private float nextMeleeFreezeTime;
 
     [Header("Crouch Config")]
     [SerializeField] private float crouchSpeed = 1.5f;
@@ -72,17 +77,22 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float aoeDelay = 0.5f;
     [SerializeField] private float dashAttackDelay = 0.5f;
     [SerializeField] public bool dashAttackTriggered;
-    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] public LayerMask enemyLayer;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
     [SerializeField] BaseSoundSO _dash;
+    [SerializeField] BaseSoundSO jumpSound;
+    [SerializeField] BaseSoundSO landSound;
+    [SerializeField] BaseSoundSO crouchSound;
+    [SerializeField] BaseSoundSO standSound;
     [SerializeField] private BaseSoundSO _dryFire;
     [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
     [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
 
     private float footstepTimer;
+    private bool wasGrounded;
     private StatHandler playerStats;
     private bool isFrozenByBoss;
     private Coroutine freezeRoutine;
@@ -432,11 +442,28 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
         crouchRequested = true;
+
+        if (!isCrouching && AudioManager.instance != null && crouchSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                crouchSound,
+                gameManager.instance.player
+            );
+        }
     }
 
     private void OnCrouchCanceled(InputAction.CallbackContext context)
     {
         crouchRequested = false;
+
+        if (isCrouching && CanStandUp() &&
+    AudioManager.instance != null && standSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                standSound,
+                gameManager.instance.player
+            );
+        }
     }
 
     private IEnumerator Dash()
@@ -445,8 +472,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashTimer = 0f;
 
         Physics.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            enemyLayer,
+            LayerMask.GetMask("Player"),
+            LayerMask.GetMask("Enemy"),
             true);
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
@@ -472,8 +499,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
         Physics.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            enemyLayer,
+            LayerMask.GetMask("Player"),
+            LayerMask.GetMask("Enemy"),
             false);
 
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
@@ -601,6 +628,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             JumpTriggered = true;
 
+            if (AudioManager.instance != null && jumpSound != null)
+            {
+                AudioManager.instance.PlaySoundFromSource(
+                    jumpSound,
+                    gameManager.instance.player
+                );
+            }
+
             if (turnOnDebug)
             {
                 Debug.Log("Jump Performed");
@@ -722,7 +757,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             recoil = 0;
         }
-       
+
 
         // Debug.Log("Shoot interaction" + context.interaction);
 
@@ -731,12 +766,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             timer = 0;
             gameManager.instance.canShoot = false;
 
-            
+
             if (context.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
             {
                 if (gameManager.instance.playerWeaponManager.Type == true && gameManager.instance.canMelee)
                 {
-                    
+
                     gameManager.instance.isMeleeing = true;
                     gameManager.instance.playerWeaponManager.PlayMeleeHeavyAttack();
 
@@ -749,7 +784,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     {
                         gameManager.instance.playerWeaponManager.Timer = 2.0f;
                         StartCoroutine(KatanaDashAttack());
-   
+
                     }
                 }
             }
@@ -774,35 +809,46 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 Quaternion.LookRotation(hit.normal)
                             );
                         }
-                        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
-                        {
-                            //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
-                            //infact most should still run the IDamage thing below,
-                            //but might have to change damage values or something in here first
-                            //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
-                            //personally I'll 
-                            case AbilityStats.ability.fire:
-                                //probably use a IFire interface that works like IDamage but makes them set fire
-                                break;
-                            case AbilityStats.ability.freeze:
-                                //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
-                                break;
-                            case AbilityStats.ability.toxic:
-                                //probably use a IToxic interface that works like IDamage but makes them become toxic
-                                break;
-                            case AbilityStats.ability.magent:
-                                //good luck lol idk
-                                break;
-                            case AbilityStats.ability.crystal:
-                                //I got this one
-                                break;
-                            case AbilityStats.ability.lightning:
-                                //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
-                                break;
+                        //switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                        //{
+                        //    //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                        //    //infact most should still run the IDamage thing below,
+                        //    //but might have to change damage values or something in here first
+                        //    //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                        //    //personally I'll 
+                        //    case AbilityStats.ability.fire:
+                        //        //probably use a IFire interface that works like IDamage but makes them set fire
+                        //        break;
+                        //    case AbilityStats.ability.freeze:
+                        //        //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
+                        //        break;
+                        //    case AbilityStats.ability.toxic:
+                        //        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                        //        break;
+                        //    case AbilityStats.ability.magent:
+                        //        //good luck lol idk
+                        //        break;
+                        //    case AbilityStats.ability.crystal:
+                        //        //I got this one
+                        //        break;
+                        //    case AbilityStats.ability.lightning:
+                        //        //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                        //        break;
 
-                        }
+                        //}
+
+
+
                         
+                        TryApplyWeaponFreeze(hit.collider, false);
+
+
                         IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+
+                        if (dmg != null)
+                        {
+                            dmg = hit.collider.GetComponentInChildren<IDamage>();
+                        }
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                         {
@@ -826,7 +872,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                         }
                     }
                 }
-                else if(gameManager.instance.canMelee)
+                else if (gameManager.instance.canMelee)
                 {
                     PlayCurrentWeaponShootSound();
                     gameManager.instance.isMeleeing = true;
@@ -905,7 +951,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
 
-       
+
     }
     IEnumerator fireCooldown(float cd)
     {
@@ -927,8 +973,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility4 = true;
     }
-  
-    
+
+
 
     //this is now a Ability button instead of ADS
     private void OnADSCanceled(InputAction.CallbackContext context)
@@ -1086,6 +1132,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
+    private void HandleLandingSound()
+    {
+        bool isGrounded = gameManager.instance.characterController.isGrounded;
+
+        if (!wasGrounded && isGrounded)
+        {
+            if (AudioManager.instance != null && landSound != null)
+            {
+                AudioManager.instance.PlaySoundFromSource(landSound, gameManager.instance.player);
+            }
+        }
+        wasGrounded = isGrounded;
+    }
+
     IEnumerator HeavyAttackAOE()
     {
         // Debug.Log("Heavy attack aoe");
@@ -1093,7 +1153,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         PlayCurrentWeaponShootSound();
 
-        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, enemyLayer);
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
 
         foreach (Collider others in hits)
         {
@@ -1109,7 +1169,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     IEnumerator KatanaDashAttack()
     {
 
-     
+
         yield return new WaitForSeconds(dashAttackDelay);
 
         PlayCurrentWeaponShootSound();
@@ -1121,6 +1181,127 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
     }
+
+    private bool CurrentAbilityIsFreeze(out AbilityStats freezeStats)
+    {
+        freezeStats = null;
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.abilities == null)
+        {
+            return false;
+        }
+
+        if (weaponManager.abilitySlot < 0 || weaponManager.abilitySlot >= weaponManager.abilities.Count)
+        {
+            return false;
+        }
+
+        freezeStats = weaponManager.abilities[weaponManager.abilitySlot];
+
+        if (freezeStats == null)
+        {
+            return false;
+        }
+
+        return freezeStats.abilityType == AbilityStats.ability.freeze;
+    }
+
+    private IFreeze FindFreezeTarget(Collider hitCollider)
+    {
+        IFreeze freezeTarget = hitCollider.GetComponent<IFreeze>();
+
+        if (freezeTarget != null)
+        {
+            return freezeTarget;
+        }
+
+        freezeTarget = hitCollider.GetComponentInParent<IFreeze>();
+
+        if (freezeTarget != null)
+        {
+            return freezeTarget;
+        }
+
+        return hitCollider.GetComponentInChildren<IFreeze>();
+    }
+
+    private IShatterable FindShatterTarget(Collider hitCollider)
+    {
+        IShatterable shatterable = hitCollider.GetComponent<IShatterable>();
+
+        if (shatterable != null)
+        {
+            return shatterable;
+        }
+
+        shatterable = hitCollider.GetComponentInParent<IShatterable>();
+
+        if (shatterable != null)
+        {
+            return shatterable;
+        }
+
+        return hitCollider.GetComponentInChildren<IShatterable>();
+    }
+
+    public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
+    {
+        if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))
+        {
+            return;
+        }
+
+        float freezeDuration = freezeStats.effectTimer > 0
+            ? freezeStats.effectTimer
+            : defaultFreezeDuration;
+
+        if (isMelee)
+        {
+            if (Time.time < nextMeleeFreezeTime)
+            {
+                return;
+            }
+
+            nextMeleeFreezeTime = Time.time + meleeFreezeCooldown;
+        }
+        else
+        {
+            if (Time.time < nextGunFreezeTime)
+            {
+                return;
+            }
+
+            if (UnityEngine.Random.value > gunFreezeChance)
+            {
+                return;
+            }
+
+            nextGunFreezeTime = Time.time + gunFreezeCooldown;
+        }
+
+        IFreeze freezeTarget = FindFreezeTarget(hitCollider);
+
+        if (freezeTarget != null)
+        {
+            freezeTarget.freeze(freezeDuration);
+        }
+    }
+
+    public bool TryShatterFrozenTarget(Collider hitCollider)
+    {
+        IShatterable shatterable = FindShatterTarget(hitCollider);
+
+        if (shatterable != null && shatterable.IsFrozen)
+        {
+            shatterable.Shatter();
+            return true;
+        }
+
+        return false;
+    }
+
 
     public void FreezePlayer(float duration)
     {

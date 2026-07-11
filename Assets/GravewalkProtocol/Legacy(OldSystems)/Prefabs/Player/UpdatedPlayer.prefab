@@ -210,8 +210,10 @@ MonoBehaviour:
   bouncePad: {fileID: 8405657338730397385, guid: 71d43a5100017964f9b53c511ccc72db, type: 3}
   fireLevel: 0
   freezeLevel: 0
-  bounceLevel: 0
-  zoomLevel: 0
+  magnetLevel: 0
+  toxicLevel: 0
+  crystalLevel: 0
+  lightningLevel: 0
   abilitySlot: 0
   Modifiers: []
 --- !u!1 &4468424467714139017
@@ -999,7 +1001,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: dashCd
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: _sprint
@@ -1046,6 +1048,10 @@ PrefabInstance:
       value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: gunFreezeChance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: interactorSource
       value: 
       objectReference: {fileID: 4531488486862561097}
@@ -1074,8 +1080,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5548598031466446652}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: meleeFreezeCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: footstepBaseInterval
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: defaultFreezeDuration
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

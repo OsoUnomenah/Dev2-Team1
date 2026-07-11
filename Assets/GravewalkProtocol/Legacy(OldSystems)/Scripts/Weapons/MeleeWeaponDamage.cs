@@ -6,25 +6,52 @@ public class MeleeWeaponDamage : MonoBehaviour
     [SerializeField] CapsuleCollider dmgTrigger;
     [SerializeField] Animator animator;
 
+    float timer = 0f;
+    float waitTime;
+
     private void Update()
     {
-        
-        if (gameManager.instance.isMeleeing == true)
+        timer += Time.deltaTime;
+
+        if(gameManager.instance == null || gameManager.instance.playerWeaponManager == null)
+        {
+            return;
+        }
+
+        waitTime = gameManager.instance.playerWeaponManager.Timer;
+
+        if (gameManager.instance.isMeleeing == true && timer > waitTime)
         {
             dmgTrigger.enabled = true;
-        }
-        else
-        {
-            dmgTrigger.enabled = false;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        timer = 0;
         if (other.CompareTag("Enemy"))
         {
+            dmgTrigger.enabled = false;
+            Debug.Log("Attempted to deal damage");
 
-            IDamage dmg = other.GetComponent<IDamage>();
+            if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(other))
+            {
+                return;
+            }
+
+            gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(other, true);
+
+            IDamage dmg = other.GetComponentInParent<IDamage>();
+
+            if (dmg == null)
+            {
+                dmg = other.GetComponentInChildren<IDamage>();
+            }
+
+            if (dmg == null)
+            {
+                return;
+            }
 
             int bonusDamage = 0;
 

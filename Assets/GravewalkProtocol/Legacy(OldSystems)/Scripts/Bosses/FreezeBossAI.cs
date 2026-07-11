@@ -15,6 +15,8 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     [Header("Boss Stats")]
     [SerializeField] private int maxHealth = 300;
     [SerializeField] private int xpGive = 100;
+    [SerializeField] private int minCurrencyDrop = 10;
+    [SerializeField] private int maxCurrencyDrop = 25;
     [SerializeField] private Renderer model;
 
     [Header("UI")]
@@ -54,6 +56,22 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     [SerializeField] private float spikeMoveTime = 0.5f;
     [SerializeField] private float spikeHoldTime = 1.5f;
 
+    [Header("Movement / Tracking")]
+    [SerializeField] private bool followPlayer = true;
+    [SerializeField] private float moveSpeed = 2.5f;
+    [SerializeField] private float stopDistance = 6f;
+    [SerializeField] private float turnSpeed = 8f;
+    [SerializeField] private bool stopMovingWhileAttacking = true;
+
+    [Header("Boss Freeze Resistance")]
+    [SerializeField] private float bossFreezeChance = 0.25f;
+    [SerializeField] private float bossFreezeDuration = 0.75f;
+    [SerializeField] private float bossFreezeCoolDown = 5f;
+
+    private float nextBossFreezeTime;
+
+    private bool isPerformingAttack;
+
     private int currentHealth;
     private bool playerInTrigger;
     private bool isDead;
@@ -61,6 +79,7 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     private Coroutine bossLoopRoutine;
     private BossAttack lastAttack;
     private Transform player;
+    private Coroutine freezeRoutine;
 
     private Color originalColor;
 
@@ -103,6 +122,26 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         gameManager.instance.updateGameGoal(1);
     }
 
+    private void Update()
+    {
+        if (isDead || isFrozen || !playerInTrigger || player == null)
+        {
+            return;
+        }
+
+        FacePlayer();
+
+        if (followPlayer)
+        {
+            if (stopMovingWhileAttacking && isPerformingAttack)
+            {
+                return;
+            }
+
+            MoveTowardPlayer();
+        }
+    }
+
     public void TriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player"))
@@ -130,6 +169,8 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
 
                 yield return StartCoroutine(AttackWarning());
 
+                isPerformingAttack = true;
+
                 switch (chosenAttack)
                 {
                     case BossAttack.WallSmash:
@@ -144,6 +185,8 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
                         yield return StartCoroutine(FloorSpikeAttack());
                         break;
                 }
+
+                isPerformingAttack = false;
 
                 lastAttack = chosenAttack;
             }
@@ -379,6 +422,9 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         gameManager.instance.addXp(xpGive);
         RecticleBehaviour.OffHover();
 
+        int currencyDrop = GetCurrencyDrop();
+        gameManager.instance.addCurrency(currencyDrop);
+
         if (exitPortal != null)
         {
             exitPortal.SetActive(true);
@@ -438,8 +484,43 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
             return;
         }
 
+        if(Time.time < nextBossFreezeTime)
+        {
+            return;
+        }
+
+        if(UnityEngine.Random.value > bossFreezeChance)
+        {
+            return;
+        }
+
+        nextBossFreezeTime = Time.time + bossFreezeCoolDown;
+
+        if(freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+        }
+
+        freezeRoutine = StartCoroutine(BossFreezeRoutine());
+    }
+
+    private IEnumerator BossFreezeRoutine()
+    {
         isFrozen = true;
-        StartCoroutine(FreezeHandler(duration));
+
+        if (model != null)
+        {
+            model.material.color = Color.cyan;
+        }
+
+        yield return new WaitForSeconds(bossFreezeDuration);
+
+        if (model != null)
+        {
+            model.material.color = originalColor;
+        }
+
+        isFrozen = false;
     }
 
     private IEnumerator FreezeHandler(float duration)
@@ -459,6 +540,41 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         isFrozen = false;
     }
 
+    private void FacePlayer()
+    {
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0.01f)
+        {
+            return;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            turnSpeed * Time.deltaTime
+        );
+    }
+
+    private void MoveTowardPlayer()
+    {
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        if (distance <= stopDistance)
+        {
+            return;
+        }
+
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f;
+        direction.Normalize();
+
+        transform.position += direction * moveSpeed * Time.deltaTime;
+    }
+
     public void Interact()
     {
         // Boss does not need interaction behavior right now.
@@ -472,5 +588,10 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     public void OnHoverExit()
     {
         RecticleBehaviour.OffHover();
+    }
+
+    private int GetCurrencyDrop()
+    {
+        return Random.Range(minCurrencyDrop, maxCurrencyDrop + 1);
     }
 }

@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Hammer
   weaponType: 1
   fullAuto: 0
-  damage: 30
+  damage: 35
   range: 3
   rate: 0
   recoil: 0
@@ -25,7 +25,6 @@ MonoBehaviour:
   ammoTimer: 0
   weaponPrefab: {fileID: 3112920000586998319, guid: 75e5438d927f742499e6f68878334484, type: 3}
   hitEffect: {fileID: 0}
-  weaponAnimator: {fileID: 0}
   shootSound: {fileID: 11400000, guid: d3161492be2acf44cb4c36bcc07b176f, type: 2}
   reloadSound: {fileID: 0}
   weaponPickupSound: {fileID: 0}
