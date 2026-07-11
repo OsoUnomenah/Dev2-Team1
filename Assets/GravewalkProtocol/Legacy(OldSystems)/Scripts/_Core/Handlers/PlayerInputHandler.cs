@@ -790,85 +790,111 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
                     PlayCurrentWeaponShootSound();
+
+                    // One trigger pull consumes one shell, regardless of pellet count.
                     gameManager.instance.playerWeaponManager.Ammo--;
 
-                    RaycastHit hit;
-                    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
-                    {
-                        Debug.Log(hit.collider.name);
+                    PlayerWeaponManager weaponManager =
+                        gameManager.instance.playerWeaponManager;
 
-                        if (gameManager.instance.playerWeaponManager.HitEffect != null)
-                        {
-                            // Spawns the effect exactly where the raycast hit, facing away from the surface
-                            Instantiate(
-                                gameManager.instance.playerWeaponManager.HitEffect,
-                                hit.point,
-                                Quaternion.LookRotation(hit.normal)
+                    int pelletCount = weaponManager.UsesPellets
+                        ? Mathf.Max(1, weaponManager.PelletCount)
+                        : 1;
+                    Debug.Log(
+                            "SHOTGUN DEBUG | Weapon: " + weaponManager.CurrentWeaponName +
+                            " | UsesPellets: " + weaponManager.UsesPellets +
+                            " | PelletCount: " + pelletCount +
+                            " | Horizontal: " + weaponManager.HorizontalSpread +
+                            " | Vertical: " + weaponManager.VerticalSpread
                             );
-                        }
 
-                        if(gameManager.instance.playerWeaponManager.abilities.Count > 0)
+                    for (int pelletIndex = 0; pelletIndex < pelletCount; pelletIndex++)
+                    {
+
+                        Vector3 shotDirection = GetPelletDirection(
+                                pelletIndex,
+                                pelletCount,
+                                weaponManager.HorizontalSpread,
+                                weaponManager.VerticalSpread,
+                                weaponManager.UsesPellets
+                                );
+
+                        RaycastHit hit;
+
+                        if (Physics.Raycast(
+                            Camera.main.transform.position,
+                            shotDirection,
+                            out hit,
+                            weaponManager.Range,
+                            ~ignoreSource))
                         {
-                            switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+
+                            if (weaponManager.HitEffect != null)
                             {
-                                //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
-                                //infact most should still run the IDamage thing below,
-                                //but might have to change damage values or something in here first
-                                //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
-                                //personally I'll 
-                                case AbilityStats.ability.fire:
-                                    //probably use a IFire interface that works like IDamage but makes them set fire
-                                    break;
-                                case AbilityStats.ability.freeze:
-                                    //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
-                                    break;
-                                case AbilityStats.ability.toxic:
-                                    //probably use a IToxic interface that works like IDamage but makes them become toxic
-                                    break;
-                                case AbilityStats.ability.magent:
-                                    //good luck lol idk
-                                    break;
-                                case AbilityStats.ability.crystal:
-                                    //I got this one
-                                    break;
-                                case AbilityStats.ability.lightning:
-                                    //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
-                                    break;
-
-                            }
-                        }
-
-
-
-                        TryApplyWeaponFreeze(hit.collider, false);
-
-
-                        IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
-
-                        if (dmg != null)
-                        {
-                            dmg = hit.collider.GetComponentInChildren<IDamage>();
-                        }
-
-                        if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
-                        {
-                            int bonusDamage = 0;
-
-                            StatHandler stats = gameManager.instance.playerStatHandler;
-
-                            if (stats != null)
-                            {
-                                bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                                Instantiate(
+                                    weaponManager.HitEffect,
+                                    hit.point,
+                                    Quaternion.LookRotation(hit.normal)
+                                );
                             }
 
-                            int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                            if (weaponManager.abilities.Count > 0)
+                            {
+                                switch (weaponManager
+                                    .abilities[weaponManager.abilitySlot]
+                                    .abilityType)
+                                {
+                                    case AbilityStats.ability.fire:
+                                        break;
 
-                            dmg.takeDamage(finalDamage);
+                                    case AbilityStats.ability.freeze:
+                                        break;
 
-                            // if (turnOnDebug)
-                            //  {
-                            //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
-                            // }
+                                    case AbilityStats.ability.toxic:
+                                        break;
+
+                                    case AbilityStats.ability.magent:
+                                        break;
+
+                                    case AbilityStats.ability.crystal:
+                                        break;
+
+                                    case AbilityStats.ability.lightning:
+                                        break;
+                                }
+                            }
+
+                            TryApplyWeaponFreeze(hit.collider, false);
+
+                            IDamage dmg =
+                                hit.collider.GetComponentInChildren<IDamage>();
+
+                            if (dmg == null)
+                            {
+                                dmg = hit.collider.GetComponentInParent<IDamage>();
+                            }
+
+                            if (dmg != null && weaponManager.Damage != 0)
+                            {
+                                int bonusDamage = 0;
+
+                                StatHandler stats =
+                                    gameManager.instance.playerStatHandler;
+
+                                if (stats != null)
+                                {
+                                    bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                                }
+
+                                int pelletBonusDamage = weaponManager.UsesPellets
+                                    ? Mathf.RoundToInt((float)bonusDamage / pelletCount)
+                                    : bonusDamage;
+
+                                int finalDamage =
+                                    weaponManager.Damage + pelletBonusDamage;
+
+                                dmg.takeDamage(finalDamage);
+                            }
                         }
                     }
                 }
@@ -887,7 +913,49 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             }
         }
+    }
 
+    private Vector3 GetPelletDirection(
+    int pelletIndex,
+    int pelletCount,
+    float horizontalSpread,
+    float verticalSpread,
+    bool useSpread)
+    {
+        Transform cameraTransform = Camera.main.transform;
+
+        if (!useSpread || pelletCount <= 1)
+        {
+            return cameraTransform.forward;
+        }
+
+        float horizontalPosition =
+            (float)pelletIndex / (pelletCount - 1);
+
+        horizontalPosition =
+            horizontalPosition * 2f - 1f;
+
+        float horizontalOffset =
+            horizontalPosition * horizontalSpread;
+
+        float verticalOffset =
+            UnityEngine.Random.Range(
+                -verticalSpread,
+                verticalSpread
+            );
+
+        Quaternion spreadRotation = Quaternion.Euler(
+            verticalOffset,
+            horizontalOffset,
+            0f
+        );
+
+        Vector3 localDirection =
+            spreadRotation * Vector3.forward;
+
+        return cameraTransform
+            .TransformDirection(localDirection)
+            .normalized;
     }
 
     private void OnShootCanceled(InputAction.CallbackContext context)

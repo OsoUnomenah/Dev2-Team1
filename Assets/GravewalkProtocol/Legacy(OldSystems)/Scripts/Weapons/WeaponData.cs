@@ -15,6 +15,22 @@ public class WeaponData : ScriptableObject
     [Header("Firing")]
     public bool fullAuto;
 
+    [Header("Shotgun")]
+    [Tooltip("Enable this weapon to fire multiple pellets per shot")]
+    public bool usesPellets;
+
+    [Min(1)]
+    [Tooltip("Number of pellets fired in buckshot")]
+    public int pelletCount = 8;
+
+    [Min(0f)]
+    [Tooltip("Max pellet spread to the left and right.")]
+    public float horizontalSpread = 15f;
+
+    [Min(0f)]
+    [Tooltip("Max pellet spread up and down.")]
+    public float verticalSpread = 1f;
+
     [Header("Stats")]
     public int damage;
     public float range;

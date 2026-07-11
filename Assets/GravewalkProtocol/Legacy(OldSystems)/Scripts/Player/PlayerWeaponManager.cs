@@ -9,6 +9,12 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private string currentWeaponName;
     [SerializeField] private List<string> currentWeaponMods = new List<string>();
 
+    [Header("Shotgun Settings")]
+    public bool UsesPellets;
+    public int PelletCount = 1;
+    public float HorizontalSpread;
+    public float VerticalSpread;
+
     // Weapon Settings
     public bool Type;
     public int Damage;
@@ -88,6 +94,11 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         currentWeaponData = weaponData;
         currentWeaponName = weaponData.weaponName;
         currentWeaponMods = CopyModList(weaponMods);
+
+        UsesPellets = weaponData.usesPellets;
+        PelletCount = Mathf.Max(1, weaponData.pelletCount);
+        HorizontalSpread = weaponData.horizontalSpread;
+        VerticalSpread = weaponData.verticalSpread;
 
         Equip(
             weaponData.weaponType,

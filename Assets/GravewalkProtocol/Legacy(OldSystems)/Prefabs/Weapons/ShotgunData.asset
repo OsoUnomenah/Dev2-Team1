@@ -15,6 +15,10 @@ MonoBehaviour:
   weaponName: Shotgun
   weaponType: 0
   fullAuto: 0
+  usesPellets: 1
+  pelletCount: 15
+  horizontalSpread: 25
+  verticalSpread: 1
   damage: 50
   range: 10
   rate: 1
