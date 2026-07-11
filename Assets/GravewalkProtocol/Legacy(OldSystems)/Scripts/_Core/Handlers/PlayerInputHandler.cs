@@ -1137,7 +1137,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         PlayCurrentWeaponShootSound();
 
-        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.NameToLayer("Enemy"));
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
 
         foreach (Collider others in hits)
         {

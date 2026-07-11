@@ -920,6 +920,7 @@ GameObject:
   - component: {fileID: 1606140278298863133}
   - component: {fileID: 7704898313951790105}
   - component: {fileID: 1839416481784043419}
+  - component: {fileID: 3342997233064844796}
   m_Layer: 10
   m_Name: Lightning Boss
   m_TagString: Enemy
@@ -936,7 +937,7 @@ Transform:
   m_GameObject: {fileID: 3536459984583675870}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.47, y: 3.16, z: 24.07}
+  m_LocalPosition: {x: 10.47, y: 3.16, z: 22.66}
   m_LocalScale: {x: 3.0700002, y: 3.0700002, z: 3.0700002}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -965,7 +966,7 @@ MonoBehaviour:
   healthText: {fileID: 4389705831070417597}
   onScreenDMG: {fileID: 8253197445479468953}
   damageText: {fileID: 925609545740386845}
-  currentHealth: 500
+  currentHealth: 0
   sightRange: 20
   attackRange: 20
   hearingRange: 10
@@ -982,8 +983,8 @@ MonoBehaviour:
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
   _lightning: {fileID: 11400000, guid: 25610b23b205dec4f81461d80c4174cf, type: 2}
   bullet: {fileID: 0}
-  gunPivot: {fileID: 0}
-  shootPos: {fileID: 0}
+  gunPivot: {fileID: 6667958090657048808}
+  shootPos: {fileID: 6358703469907172762}
   gunRotateSpeed: 1
   shootRate: 0.1
   lightningStrikes: {fileID: 5119208560347199336, guid: cc64787ff3280eb40a14a30eab5a295f, type: 3}
@@ -994,7 +995,7 @@ MonoBehaviour:
   lightningDestroyTime: 0.3
   dashCount: 4
   trail: {fileID: 1606140278298863133}
-  dashAttackSpeed: 0.2
+  dashAttackSpeed: 0.5
   dashInterval: 0.5
   LDRotSpeed: 400
   ballLightning: {fileID: 677789411473899555, guid: ddd81e009d9273b4e8108b74f3e681b8, type: 3}
@@ -6000,6 +6001,33 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!54 &3342997233064844796
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3536459984583675870}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 1
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1 &3862249865332310405
 GameObject:
   m_ObjectHideFlags: 0
@@ -16162,7 +16190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6667958090657048808}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Gun Pivot
   m_TagString: BossGun
   m_Icon: {fileID: 0}

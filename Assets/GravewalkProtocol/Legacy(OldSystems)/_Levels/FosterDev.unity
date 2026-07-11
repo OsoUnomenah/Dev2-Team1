@@ -1310,21 +1310,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!4 &4149508307348536718 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6667958090657048808, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-  m_PrefabInstance: {fileID: 7286643173185852774}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4405079269417994492 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6358703469907172762, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-  m_PrefabInstance: {fileID: 7286643173185852774}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6056036113862810296 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3536459984583675870, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-  m_PrefabInstance: {fileID: 7286643173185852774}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7286643173185852774
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1373,41 +1358,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3094188763573994829, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: gunPivot
-      value: 
-      objectReference: {fileID: 4149508307348536718}
-    - target: {fileID: 3094188763573994829, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: shootPos
-      value: 
-      objectReference: {fileID: 4405079269417994492}
+    - target: {fileID: 1606140278298863133, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
+      propertyPath: m_Time
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3094188763573994829, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
       propertyPath: exitPortal
       value: 
       objectReference: {fileID: 929699259}
     - target: {fileID: 3094188763573994829, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: currentHealth
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3094188763573994829, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: dashAttackSpeed
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3200411304725766861, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: m_ProvidesContacts
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: _ball_lightning
+      value: 
+      objectReference: {fileID: 11400000, guid: c3020a09d7bbbb84aaf1ec1892941a4f, type: 2}
     - target: {fileID: 3862249865332310405, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
       propertyPath: m_Name
       value: Lightning Boss
-      objectReference: {fileID: 0}
-    - target: {fileID: 4312092364193057419, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 22.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 6155017840806676903, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      propertyPath: m_Layer
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9207440793802909533, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1420,38 +1385,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3536459984583675870, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8978401771491164926}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
---- !u!54 &8978401771491164926
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6056036113862810296}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 1
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

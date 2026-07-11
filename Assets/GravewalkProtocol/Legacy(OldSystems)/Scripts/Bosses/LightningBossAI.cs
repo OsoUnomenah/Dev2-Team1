@@ -42,6 +42,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
     [SerializeField] BaseSoundSO _lightning;
+    [SerializeField] BaseSoundSO _ball_lightning;
 
     [Header("Weapon")]
     // may need multiple types of bullets so make another one if need be
@@ -592,6 +593,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             randPos.y = transform.position.y;
 
             GameObject ball = Instantiate(ballLightning, randPos, Quaternion.Euler(0, Random.Range(0, 360), 0));
+            AudioManager.instance.PlaySoundFollowPosition(_ball_lightning, ball, ballDestroyTime);
             Destroy(ball, ballDestroyTime);
         }
     }
