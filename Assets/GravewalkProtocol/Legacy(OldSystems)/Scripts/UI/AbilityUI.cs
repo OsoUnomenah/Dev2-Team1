@@ -13,8 +13,10 @@ public class AbilityUI : MonoBehaviour
 
     [SerializeField] GameObject Fire;
     [SerializeField] GameObject Freeze;
-    [SerializeField] GameObject Bounce;
-    [SerializeField] GameObject Zoom;
+    [SerializeField] GameObject Magnet;
+    [SerializeField] GameObject Toxic;
+    [SerializeField] GameObject Crystal;
+    [SerializeField] GameObject Lightning;
 
     [SerializeField] GameObject num1;
     [SerializeField] GameObject num2;
@@ -40,24 +42,31 @@ public class AbilityUI : MonoBehaviour
         
     }
 
-    public void abilityAssign(int type)
+    public void abilityAssign(AbilityStats.ability type)
     {
         GameObject ability = null;
 
         switch (type)
         {
-            case 1:
+            case AbilityStats.ability.fire:
                 ability = Fire;
                 break;
-            case 2: 
+            case AbilityStats.ability.freeze: 
                 ability = Freeze; 
                 break;
-            case 3:
-                ability = Bounce;
+            case AbilityStats.ability.magent:
+                ability = Magnet;
                 break;
-            case 4:
-                ability = Zoom;
+            case AbilityStats.ability.toxic:
+                ability = Toxic;
                 break;
+            case AbilityStats.ability.crystal:
+                ability = Crystal;
+                break;
+            case AbilityStats.ability.lightning:
+                ability = Lightning;
+                break;
+
         }
 
         if (ability == null)

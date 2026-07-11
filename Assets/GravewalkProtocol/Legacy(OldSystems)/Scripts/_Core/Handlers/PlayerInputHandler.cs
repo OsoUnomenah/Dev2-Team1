@@ -23,11 +23,25 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
-    [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
+    [Range(0.5f, 5.0f)][SerializeField] private float dashCd = 1.0f;
     [Range(1.0f, 30f)][SerializeField] float dashSpeed;
     [Range(1.0f, 200f)][SerializeField] float dashAttackSpeed;
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
     [Range(0, 30)][SerializeField] int dashFOVMod;
+
+    [Header("Crouch Config")]
+    [SerializeField] private float crouchSpeed = 1.5f;
+    [SerializeField] private float crouchHeight = 1.0f;
+    [SerializeField] private float crouchTransitionSpeed = 10f;
+    [SerializeField] private float ceilingCheckRadius = 0.3f;
+    [SerializeField] private LayerMask ceilingMask;
+
+    private float standingHeight;
+    private Vector3 standingCenter;
+    private Vector3 standingCameraPosition;
+
+    private bool isCrouching;
+    private bool crouchRequested;
 
     private Vector3 dashVector;
     public Vector3 currentMovement;
@@ -58,17 +72,22 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float aoeDelay = 0.5f;
     [SerializeField] private float dashAttackDelay = 0.5f;
     [SerializeField] public bool dashAttackTriggered;
-    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] public LayerMask enemyLayer;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
     [SerializeField] BaseSoundSO _dash;
+    [SerializeField] BaseSoundSO jumpSound;
+    [SerializeField] BaseSoundSO landSound;
+    [SerializeField] BaseSoundSO crouchSound;
+    [SerializeField] BaseSoundSO standSound;
     [SerializeField] private BaseSoundSO _dryFire;
     [Range(.4f, 1f)][SerializeField] private float footstepBaseInterval;
     [Range(.4f, 1f)][SerializeField] private float footstepSprintInterval = 0.5f;
 
     private float footstepTimer;
+    private bool wasGrounded;
     private StatHandler playerStats;
     private bool isFrozenByBoss;
     private Coroutine freezeRoutine;
@@ -83,6 +102,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction rotateAction;
     private InputAction jumpAction;
     private InputAction dashAction;
+    private InputAction crouchAction;
     private InputAction interactAction;
     private InputAction shootAction;
     private InputAction reloadAction;
@@ -103,6 +123,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         jumpAction = playerActions.PlayerInput.Jump;
         dashAction = playerActions.PlayerInput.Sprint;
+        crouchAction = playerActions.PlayerInput.Crouch;
 
         interactAction = playerActions.PlayerInput.Interact;
 
@@ -118,6 +139,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        CharacterController controller = gameManager.instance.characterController;
+
+        standingHeight = controller.height;
+        standingCenter = controller.center;
+
+        standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
     }
 
     void Update()
@@ -134,6 +162,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
+        HandleCrouch();
         HandleMovement();
         HandleRotation();
         ApplyMovement();
@@ -166,6 +195,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAction.performed += OnDashPerformed;
         dashAction.canceled += OnDashCanceled;
 
+        crouchAction.performed += OnCrouchPerformed;
+        crouchAction.canceled += OnCrouchCanceled;
+
         interactAction.performed += OnInteractPerformed;
         interactAction.canceled += OnInteractCanceled;
 
@@ -195,6 +227,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         dashAction.performed -= OnDashPerformed;
         dashAction.canceled -= OnDashCanceled;
+
+        crouchAction.performed -= OnCrouchPerformed;
+        crouchAction.canceled -= OnCrouchCanceled;
 
         interactAction.performed -= OnInteractPerformed;
         interactAction.canceled -= OnInteractCanceled;
@@ -268,9 +303,162 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Vector3 worldDirection = CalculateWorldDirection();
 
-        currentSpeed = Mathf.Lerp(currentSpeed, walkSpeed, Time.deltaTime * acceleration);
+        float targetSpeed = isCrouching
+            ? crouchSpeed
+            : walkSpeed;
+
+        currentSpeed = Mathf.Lerp(
+            currentSpeed,
+            targetSpeed,
+            Time.deltaTime * acceleration
+        );
+
         currentMovement.x = worldDirection.x * currentSpeed;
         currentMovement.z = worldDirection.z * currentSpeed;
+    }
+
+    private void HandleCrouch()
+    {
+        if (crouchRequested)
+        {
+            isCrouching = true;
+        }
+        else if (isCrouching && CanStandUp())
+        {
+            isCrouching = false;
+        }
+
+        UpdateCrouchHeight();
+        UpdateCrouchCamera();
+    }
+
+    private void UpdateCrouchHeight()
+    {
+        CharacterController controller =
+            gameManager.instance.characterController;
+
+        float targetHeight = isCrouching
+            ? crouchHeight
+            : standingHeight;
+
+        Vector3 targetCenter = isCrouching
+            ? GetCrouchingCenter()
+            : standingCenter;
+
+        controller.height = Mathf.Lerp(
+            controller.height,
+            targetHeight,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+
+        controller.center = Vector3.Lerp(
+            controller.center,
+            targetCenter,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+    }
+
+    private Vector3 GetCrouchingCenter()
+    {
+        float heightDifference = standingHeight - crouchHeight;
+
+        return new Vector3(
+            standingCenter.x,
+            standingCenter.y - heightDifference * 0.5f,
+            standingCenter.z
+        );
+    }
+
+    private void UpdateCrouchCamera()
+    {
+        Transform playerCamera =
+            gameManager.instance.playerCamera.transform;
+
+        float heightDifference = standingHeight - crouchHeight;
+
+        Vector3 crouchingCameraPosition =
+            standingCameraPosition - new Vector3(
+                0f,
+                heightDifference * 0.5f,
+                0f
+            );
+
+        Vector3 targetPosition = isCrouching
+            ? crouchingCameraPosition
+            : standingCameraPosition;
+
+        playerCamera.localPosition = Vector3.Lerp(
+            playerCamera.localPosition,
+            targetPosition,
+            Time.deltaTime * crouchTransitionSpeed
+        );
+    }
+
+    private bool CanStandUp()
+    {
+        CharacterController controller =
+            gameManager.instance.characterController;
+
+        float radius = Mathf.Min(
+            controller.radius * 0.9f,
+            ceilingCheckRadius
+        );
+
+        Vector3 worldCenter =
+            transform.TransformPoint(standingCenter);
+
+        float halfHeight = Mathf.Max(
+            standingHeight * 0.5f,
+            radius
+        );
+
+        Vector3 bottomPoint =
+            worldCenter + Vector3.down * (halfHeight - radius);
+
+        Vector3 topPoint =
+            worldCenter + Vector3.up * (halfHeight - radius);
+
+        bool blocked = Physics.CheckCapsule(
+            bottomPoint,
+            topPoint,
+            radius,
+            ceilingMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        return !blocked;
+    }
+
+    private void OnCrouchPerformed(InputAction.CallbackContext context)
+    {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        crouchRequested = true;
+
+        if (!isCrouching && AudioManager.instance != null && crouchSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                crouchSound,
+                gameManager.instance.player
+            );
+        }
+    }
+
+    private void OnCrouchCanceled(InputAction.CallbackContext context)
+    {
+        crouchRequested = false;
+
+        if (isCrouching && CanStandUp() &&
+    AudioManager.instance != null && standSound != null)
+        {
+            AudioManager.instance.PlaySoundFromSource(
+                standSound,
+                gameManager.instance.player
+            );
+        }
     }
 
     private IEnumerator Dash()
@@ -279,8 +467,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashTimer = 0f;
 
         Physics.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            enemyLayer,
+            LayerMask.GetMask("Player"),
+            LayerMask.GetMask("Enemy"),
             true);
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
@@ -306,8 +494,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
         Physics.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            enemyLayer,
+            LayerMask.GetMask("Player"),
+            LayerMask.GetMask("Enemy"),
             false);
 
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
@@ -435,6 +623,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             JumpTriggered = true;
 
+            if (AudioManager.instance != null && jumpSound != null)
+            {
+                AudioManager.instance.PlaySoundFromSource(
+                    jumpSound,
+                    gameManager.instance.player
+                );
+            }
+
             if (turnOnDebug)
             {
                 Debug.Log("Jump Performed");
@@ -556,7 +752,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             recoil = 0;
         }
-
+       
 
         // Debug.Log("Shoot interaction" + context.interaction);
 
@@ -608,7 +804,34 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 Quaternion.LookRotation(hit.normal)
                             );
                         }
+                        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                        {
+                            //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                            //infact most should still run the IDamage thing below,
+                            //but might have to change damage values or something in here first
+                            //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                            //personally I'll 
+                            case AbilityStats.ability.fire:
+                                //probably use a IFire interface that works like IDamage but makes them set fire
+                                break;
+                            case AbilityStats.ability.freeze:
+                                //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
+                                break;
+                            case AbilityStats.ability.toxic:
+                                //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                break;
+                            case AbilityStats.ability.magent:
+                                //good luck lol idk
+                                break;
+                            case AbilityStats.ability.crystal:
+                                //I got this one
+                                break;
+                            case AbilityStats.ability.lightning:
+                                //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                break;
 
+                        }
+                        
                         IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
@@ -712,50 +935,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
 
-        Debug.LogError("Fired Ability Shot");
-        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
-        {
-            case 1:
-                if (gameManager.instance.allowedAbility1)
-                {
-                    // Debug.LogError("Fired Fire Shot");
-                    gameManager.instance.allowedAbility1 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown, gameManager.instance.firePos);
-                    StartCoroutine(fireCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.firePos].shootCooldown));
-                }
-                break;
-            case 2:
-                if (gameManager.instance.allowedAbility2)
-                {
-                    // Debug.LogError("Fired Freeze Shot");
-                    gameManager.instance.allowedAbility2 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown, gameManager.instance.freezePos);
-                    StartCoroutine(freezeCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.freezePos].shootCooldown));
-                }
-                break;
-            case 3:
-                if (gameManager.instance.allowedAbility3)
-                {
-                    // Debug.LogError("Fired Bounce Shot");
-                    gameManager.instance.allowedAbility3 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown, gameManager.instance.bouncePos);
-                    StartCoroutine(bounceCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].shootCooldown));
-                }
-                break;
-            case 4:
-                if (gameManager.instance.allowedAbility4)
-                {
-                    //  Debug.LogError("Fired Zoom Shot");
-                    gameManager.instance.allowedAbility4 = false;
-                    abilityShoot();
-                    gameManager.instance.greyedOut(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown, gameManager.instance.zoomPos);
-                    StartCoroutine(zoomCooldown(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.zoomPos].shootCooldown));
-                }
-                break;
-        }
+       
     }
     IEnumerator fireCooldown(float cd)
     {
@@ -774,29 +954,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
     IEnumerator zoomCooldown(float cd)
     {
-        yield return new WaitForSeconds(cd - (gameManager.instance.playerWeaponManager.zoomLevel * 1.5f));
+        yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility4 = true;
     }
-    private void abilityShoot()
-    {
-        AbilityStats currentAbility = gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot];
-
-        if (currentAbility == null || currentAbility.bullet == null)
-        {
-            return;
-        }
-
-        if (AudioManager.instance != null && currentAbility.throwSound != null)
-        {
-            AudioManager.instance.PlaySound(currentAbility.throwSound);
-        }
-
-        Instantiate(
-            currentAbility.bullet,
-            Camera.main.transform.position + Camera.main.transform.forward * 1.5f,
-            Quaternion.LookRotation(Camera.main.transform.forward)
-        );
-    }
+  
+    
 
     //this is now a Ability button instead of ADS
     private void OnADSCanceled(InputAction.CallbackContext context)
@@ -954,6 +1116,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
     }
 
+    private void HandleLandingSound()
+    {
+        bool isGrounded = gameManager.instance.characterController.isGrounded;
+
+        if(!wasGrounded && isGrounded)
+        {
+            if(AudioManager.instance != null && landSound != null)
+            {
+                AudioManager.instance.PlaySoundFromSource(landSound, gameManager.instance.player);
+            }
+        }
+        wasGrounded = isGrounded;
+    }
+
     IEnumerator HeavyAttackAOE()
     {
         // Debug.Log("Heavy attack aoe");
@@ -961,7 +1137,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         PlayCurrentWeaponShootSound();
 
-        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, enemyLayer);
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
 
         foreach (Collider others in hits)
         {

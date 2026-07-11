@@ -19,7 +19,7 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
     }
 
     public void PlaySound(BaseSoundSO sound)
@@ -40,7 +40,7 @@ public class AudioManager : MonoBehaviour
             sound.soundType == BaseSoundSO.SoundTypes.Music ? musicGroup : sfxGroup;
 
         AudioClip currSound = sound.clips[Random.Range(0, sound.clips.Length)];
-
+ 
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
 
@@ -81,7 +81,7 @@ public class AudioManager : MonoBehaviour
         AudioClip currSound = sound.clips[Random.Range(0, sound.clips.Length)];
 
         audioSource.outputAudioMixerGroup = sfxGroup;
-
+   
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
 
@@ -123,7 +123,7 @@ public class AudioManager : MonoBehaviour
         audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
         audioSource.minDistance = sound.fallOffDistMin;
         audioSource.maxDistance = sound.fallOffDistMax;
-
+        audioSource.loop = sound.loop;
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
 
@@ -142,6 +142,52 @@ public class AudioManager : MonoBehaviour
         }
 
         Destroy(soundObject, currSound.length);
+    }
+
+    public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration)
+    {
+        if (sound == null || noiseMaker == null)
+            return;
+
+        GameObject soundObject = new GameObject("Temp Audio");
+        AudioSource audioSource = soundObject.GetComponent<AudioSource>();
+
+        soundObject.transform.SetParent(noiseMaker.transform, false);
+
+        if (audioSource == null)
+        {
+            audioSource = soundObject.AddComponent<AudioSource>();
+        }
+
+        audioSource.outputAudioMixerGroup =
+            sound.soundType == BaseSoundSO.SoundTypes.Music ? musicGroup : sfxGroup;
+
+        AudioClip currSound = sound.clips[Random.Range(0, sound.clips.Length)];
+
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+        audioSource.minDistance = sound.fallOffDistMin;
+        audioSource.maxDistance = sound.fallOffDistMax;
+        audioSource.loop = sound.loop;
+
+        audioSource.clip = currSound;
+        audioSource.volume = sound.volume;
+
+        if (sound.randomizePitch == true)
+        {
+            audioSource.pitch = Random.Range(0.9f, 1.3f);
+        }
+        else
+        {
+            audioSource.pitch = sound.pitch;
+        }
+
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+
+        Destroy(soundObject, duration);
     }
 
     public void PlayUISound(BaseSoundSO sound, PointerEventData data)

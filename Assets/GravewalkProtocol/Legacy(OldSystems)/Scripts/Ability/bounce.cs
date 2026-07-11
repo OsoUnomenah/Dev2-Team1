@@ -23,15 +23,15 @@ public class bounce : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            gameManager.instance.playerInputHandler.
-                Bounce(gameManager.instance.playerWeaponManager.abilities//[]
-                [gameManager.instance.bouncePos].level);
-            Debug.LogError("Bounce Pad");
-            audSource.PlayOneShot(bounceNoise);
-        }
-        Debug.LogError("Fail Bounce Pad");
+        //if (other.CompareTag("Player"))
+        //{
+        //    gameManager.instance.playerInputHandler.
+        //        Bounce(gameManager.instance.playerWeaponManager.abilities//[]
+        //        [gameManager.instance.bouncePos].level);
+        //    Debug.LogError("Bounce Pad");
+        //    audSource.PlayOneShot(bounceNoise);
+        //}
+        //Debug.LogError("Fail Bounce Pad");
     }
    
 }

@@ -61,10 +61,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
     - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
-      propertyPath: weaponData
-      value: 
-      objectReference: {fileID: 11400000, guid: 5d66c170606ea3241964d40d5cab7420, type: 2}
-    - target: {fileID: 6683733107853138010, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: weaponName
       value: Sniper
       objectReference: {fileID: 0}
