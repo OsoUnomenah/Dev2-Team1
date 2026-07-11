@@ -1322,6 +1322,7 @@ GameObject:
   - component: {fileID: 3170974692573504563}
   - component: {fileID: 4092078242241298771}
   - component: {fileID: 2684608965082440774}
+  m_Layer: 10
   - component: {fileID: 5172496950867005007}
   m_Layer: 0
   m_Name: Crystal Boss
@@ -1396,7 +1397,7 @@ MonoBehaviour:
   _hit: {fileID: 11400000, guid: 18d4ca4ec298ea94b829f44e15a9bedf, type: 2}
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
   _slam: {fileID: 11400000, guid: 7c2012139fd7d964d98649672ba577eb, type: 2}
-  _laserStartUp: {fileID: 11400000, guid: 7c2012139fd7d964d98649672ba577eb, type: 2}
+  _laserStartUp: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
   bullet: {fileID: 0}
   armor: {fileID: 4307357292693805003}
   bomb: {fileID: 4579968672421019847, guid: 4b36170d8e4e36f458e977fdc6d33d3d, type: 3}
@@ -14524,7 +14525,7 @@ GameObject:
   - component: {fileID: 5889919093389286774}
   - component: {fileID: 7056342478722462490}
   - component: {fileID: 8380065418120890876}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14615,7 +14616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b416f62c9d0c16d48a7dc37274beb572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeadShot
-  enemy: {fileID: 0}
+  enemy: {fileID: 1666705403417863322}
 --- !u!65 &8380065418120890876
 BoxCollider:
   m_ObjectHideFlags: 0
