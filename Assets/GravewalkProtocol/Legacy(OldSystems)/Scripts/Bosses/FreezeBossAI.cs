@@ -15,6 +15,8 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     [Header("Boss Stats")]
     [SerializeField] private int maxHealth = 300;
     [SerializeField] private int xpGive = 100;
+    [SerializeField] private int minCurrencyDrop = 10;
+    [SerializeField] private int maxCurrencyDrop = 25;
     [SerializeField] private Renderer model;
 
     [Header("UI")]
@@ -412,6 +414,9 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         gameManager.instance.addXp(xpGive);
         RecticleBehaviour.OffHover();
 
+        int currencyDrop = GetCurrencyDrop();
+        gameManager.instance.addCurrency(currencyDrop);
+
         if (exitPortal != null)
         {
             exitPortal.SetActive(true);
@@ -540,5 +545,10 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     public void OnHoverExit()
     {
         RecticleBehaviour.OffHover();
+    }
+
+    private int GetCurrencyDrop()
+    {
+        return Random.Range(minCurrencyDrop, maxCurrencyDrop + 1);
     }
 }

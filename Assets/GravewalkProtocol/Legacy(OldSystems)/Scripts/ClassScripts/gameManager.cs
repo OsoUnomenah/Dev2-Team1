@@ -81,7 +81,11 @@ public class gameManager : MonoBehaviour
     [SerializeField] public int toxicPos = -1;
     [SerializeField] public int crystalPos = -1;
     [SerializeField] public int lightningPos = -1;
-   
+
+    [Header("Currency")]
+    [SerializeField] private int currentCurrency;
+    public int CurrentCurrency => currentCurrency;
+    public TMP_Text currencyText;
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -113,6 +117,7 @@ public class gameManager : MonoBehaviour
         CacheTimeScale();
         GetPlayerReferences();
         UpdateXPUI();
+        UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
         playerSpawnPos = GameObject.FindGameObjectWithTag("PlayerSpawnPos");
     }
@@ -343,8 +348,8 @@ public class gameManager : MonoBehaviour
         //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
         UpdateObjectiveTextUI();
-       
-        if(gameGoalCount <= 0)
+
+        if (gameGoalCount <= 0)
         {
             Debug.Log("Boss Degeated - Open Portal");
         }
@@ -449,8 +454,6 @@ public class gameManager : MonoBehaviour
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
     }
-    
-    
 
     public void NextLevel()
     {
@@ -463,4 +466,19 @@ public class gameManager : MonoBehaviour
             SceneManager.LoadScene(nextScene);
         }
     }
+
+    public void addCurrency(int amount)
+    {
+        currentCurrency += amount;
+        UpdateCurrencyUI();
+    }
+
+    private void UpdateCurrencyUI()
+    {
+        if (currencyText != null)
+        {
+            currencyText.text = "Currency: " + currentCurrency;
+        }
+    }
+
 }

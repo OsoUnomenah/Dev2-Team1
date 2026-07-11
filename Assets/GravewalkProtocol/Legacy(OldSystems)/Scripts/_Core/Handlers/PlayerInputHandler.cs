@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Networking;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
-using System.Collections.Generic;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -752,7 +748,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         {
             recoil = 0;
         }
-       
+
 
         // Debug.Log("Shoot interaction" + context.interaction);
 
@@ -761,12 +757,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             timer = 0;
             gameManager.instance.canShoot = false;
 
-            
+
             if (context.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
             {
                 if (gameManager.instance.playerWeaponManager.Type == true && gameManager.instance.canMelee)
                 {
-                    
+
                     gameManager.instance.isMeleeing = true;
                     gameManager.instance.playerWeaponManager.PlayMeleeHeavyAttack();
 
@@ -779,7 +775,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     {
                         gameManager.instance.playerWeaponManager.Timer = 2.0f;
                         StartCoroutine(KatanaDashAttack());
-   
+
                     }
                 }
             }
@@ -804,34 +800,34 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 Quaternion.LookRotation(hit.normal)
                             );
                         }
-                        switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
-                        {
-                            //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
-                            //infact most should still run the IDamage thing below,
-                            //but might have to change damage values or something in here first
-                            //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
-                            //personally I'll 
-                            case AbilityStats.ability.fire:
-                                //probably use a IFire interface that works like IDamage but makes them set fire
-                                break;
-                            case AbilityStats.ability.freeze:
-                                //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
-                                break;
-                            case AbilityStats.ability.toxic:
-                                //probably use a IToxic interface that works like IDamage but makes them become toxic
-                                break;
-                            case AbilityStats.ability.magent:
-                                //good luck lol idk
-                                break;
-                            case AbilityStats.ability.crystal:
-                                //I got this one
-                                break;
-                            case AbilityStats.ability.lightning:
-                                //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
-                                break;
+                        //switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                        //{
+                        //    //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                        //    //infact most should still run the IDamage thing below,
+                        //    //but might have to change damage values or something in here first
+                        //    //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                        //    //personally I'll 
+                        //    case AbilityStats.ability.fire:
+                        //        //probably use a IFire interface that works like IDamage but makes them set fire
+                        //        break;
+                        //    case AbilityStats.ability.freeze:
+                        //        //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
+                        //        break;
+                        //    case AbilityStats.ability.toxic:
+                        //        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                        //        break;
+                        //    case AbilityStats.ability.magent:
+                        //        //good luck lol idk
+                        //        break;
+                        //    case AbilityStats.ability.crystal:
+                        //        //I got this one
+                        //        break;
+                        //    case AbilityStats.ability.lightning:
+                        //        //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                        //        break;
 
-                        }
-                        
+                        //}
+
                         IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
@@ -856,7 +852,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                         }
                     }
                 }
-                else if(gameManager.instance.canMelee)
+                else if (gameManager.instance.canMelee)
                 {
                     PlayCurrentWeaponShootSound();
                     gameManager.instance.isMeleeing = true;
@@ -935,7 +931,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
 
-       
+
     }
     IEnumerator fireCooldown(float cd)
     {
@@ -957,8 +953,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility4 = true;
     }
-  
-    
+
+
 
     //this is now a Ability button instead of ADS
     private void OnADSCanceled(InputAction.CallbackContext context)
@@ -1120,9 +1116,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         bool isGrounded = gameManager.instance.characterController.isGrounded;
 
-        if(!wasGrounded && isGrounded)
+        if (!wasGrounded && isGrounded)
         {
-            if(AudioManager.instance != null && landSound != null)
+            if (AudioManager.instance != null && landSound != null)
             {
                 AudioManager.instance.PlaySoundFromSource(landSound, gameManager.instance.player);
             }
@@ -1153,7 +1149,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     IEnumerator KatanaDashAttack()
     {
 
-     
+
         yield return new WaitForSeconds(dashAttackDelay);
 
         PlayCurrentWeaponShootSound();
