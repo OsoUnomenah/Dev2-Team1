@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7134893463892777554}
   - component: {fileID: 4373128671858174261}
   - component: {fileID: 3582102016031598048}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3500886098434463203}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: OnScreenDMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,7 +390,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7769449667830751953}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 5057353559120497601}
   - component: {fileID: 4616835440696702447}
   - component: {fileID: 8185509451882117579}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -657,7 +657,8 @@ GameObject:
   - component: {fileID: 4180547269052349317}
   - component: {fileID: 2420593424073279259}
   - component: {fileID: 7771066763028409057}
-  m_Layer: 0
+  - component: {fileID: 4405213281929034437}
+  m_Layer: 10
   m_Name: Weakpoint 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -779,6 +780,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &4405213281929034437
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983491027197240818}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1275990286012218570
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,7 +912,7 @@ GameObject:
   - component: {fileID: 6115213423233215242}
   - component: {fileID: 2175470562709728786}
   - component: {fileID: 7319998254651895906}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -959,7 +987,7 @@ GameObject:
   - component: {fileID: 6319395999334756306}
   - component: {fileID: 1920159234777761909}
   - component: {fileID: 4785235724388877545}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1123,7 +1151,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2623917641777758100}
   - component: {fileID: 5302813293903812587}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1286,7 +1314,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8232499544689937157}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: OnScreenDMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1322,9 +1350,8 @@ GameObject:
   - component: {fileID: 3170974692573504563}
   - component: {fileID: 4092078242241298771}
   - component: {fileID: 2684608965082440774}
-  m_Layer: 10
   - component: {fileID: 5172496950867005007}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Crystal Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1373,6 +1400,8 @@ MonoBehaviour:
   maxHealth: 100
   attackDamage: 10
   xpGive: 100
+  minCurrencyDrop: 10
+  maxCurrencyDrop: 25
   model: {fileID: 4092078242241298771}
   bombSpawnArea: {fileID: 7181645299250857995}
   fallingBombSpawnArea: {fileID: 0}
@@ -1804,7 +1833,7 @@ GameObject:
   - component: {fileID: 7006746249874202262}
   - component: {fileID: 2931790364187343750}
   - component: {fileID: 847359486503316214}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: DamageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1940,7 +1969,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6543846602297751991}
   - component: {fileID: 669225710734241582}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2108,7 +2137,8 @@ GameObject:
   - component: {fileID: 8377351456759660568}
   - component: {fileID: 2394730373230977728}
   - component: {fileID: 5460561666801992839}
-  m_Layer: 0
+  - component: {fileID: 8999278367207921597}
+  m_Layer: 10
   m_Name: Weakpoint 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2230,6 +2260,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8999278367207921597
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129285826942890521}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2170131411906260240
 GameObject:
   m_ObjectHideFlags: 0
@@ -2332,7 +2389,7 @@ GameObject:
   - component: {fileID: 3317096045391574258}
   - component: {fileID: 7089544135644477964}
   - component: {fileID: 4279540955187926313}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyScreenUI (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2435,7 +2492,7 @@ GameObject:
   - component: {fileID: 5872120292500456789}
   - component: {fileID: 3718718087564449154}
   - component: {fileID: 6586559280950427153}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2790,7 +2847,7 @@ GameObject:
   - component: {fileID: 3035461656497795217}
   - component: {fileID: 1195913671206399603}
   - component: {fileID: 8737878319437468552}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: DamageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3019,7 +3076,8 @@ GameObject:
   - component: {fileID: 623953337837523086}
   - component: {fileID: 3451238399036232182}
   - component: {fileID: 1479927473020505549}
-  m_Layer: 0
+  - component: {fileID: 3655235455776750089}
+  m_Layer: 10
   m_Name: Weakpoint 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3141,6 +3199,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &3655235455776750089
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3650375030750211179}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3716776016796974486
 GameObject:
   m_ObjectHideFlags: 0
@@ -3272,7 +3357,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3188168332966248880}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3310,7 +3395,7 @@ GameObject:
   - component: {fileID: 2821157889974679597}
   - component: {fileID: 5762325855303072483}
   - component: {fileID: 4969048827094448503}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: DamageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3445,7 +3530,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 221692388667674824}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3484,7 +3569,7 @@ GameObject:
   - component: {fileID: 4099573503367055614}
   - component: {fileID: 5800731192830524148}
   - component: {fileID: 6245191169697778068}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyScreenUI (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8630,7 +8715,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4585234700120677787}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: OnScreenDMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8935,7 +9020,7 @@ GameObject:
   - component: {fileID: 7718353470875076273}
   - component: {fileID: 6845317951401231633}
   - component: {fileID: 2320032561082937323}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Armor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14115,7 +14200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6904035721247385937}
   - component: {fileID: 1321690715740708952}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14206,7 +14291,7 @@ GameObject:
   - component: {fileID: 9130237497966496060}
   - component: {fileID: 1325512462529228202}
   - component: {fileID: 323732851463827338}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14525,6 +14610,7 @@ GameObject:
   - component: {fileID: 5889919093389286774}
   - component: {fileID: 7056342478722462490}
   - component: {fileID: 8380065418120890876}
+  - component: {fileID: 4568031133370216906}
   m_Layer: 10
   m_Name: Face
   m_TagString: Untagged
@@ -14638,6 +14724,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &4568031133370216906
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4947825583873414665}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5065414716230632990
 GameObject:
   m_ObjectHideFlags: 0
@@ -14724,7 +14837,7 @@ GameObject:
   - component: {fileID: 4247728745237968404}
   - component: {fileID: 1471768298404928069}
   - component: {fileID: 1689596914979331293}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15039,7 +15152,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3037634597719998399}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: OnScreenDMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15073,7 +15186,7 @@ GameObject:
   - component: {fileID: 2039827326044318173}
   - component: {fileID: 4086265389288418190}
   - component: {fileID: 5856534662687527819}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15149,7 +15262,7 @@ GameObject:
   - component: {fileID: 3323227149075089621}
   - component: {fileID: 34286021754698311}
   - component: {fileID: 6844177087467820390}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyScreenUI (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15252,7 +15365,7 @@ GameObject:
   - component: {fileID: 4714889852251530690}
   - component: {fileID: 1823294467317334742}
   - component: {fileID: 5837444885580783397}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15327,7 +15440,7 @@ GameObject:
   - component: {fileID: 8562304486565069177}
   - component: {fileID: 8947532898969709404}
   - component: {fileID: 1648204492504561899}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15678,7 +15791,7 @@ GameObject:
   - component: {fileID: 7804490353565627505}
   - component: {fileID: 4746643608947264095}
   - component: {fileID: 4467777213061156473}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15848,7 +15961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8799300265071311247}
   - component: {fileID: 8757722379288463570}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyHPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15941,7 +16054,8 @@ GameObject:
   - component: {fileID: 5373832458577500103}
   - component: {fileID: 119008036260609890}
   - component: {fileID: 8754848225791434516}
-  m_Layer: 0
+  - component: {fileID: 8610216840630480591}
+  m_Layer: 10
   m_Name: Weakpoint 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16063,6 +16177,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &8610216840630480591
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577868314215847572}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7035483771451377507
 GameObject:
   m_ObjectHideFlags: 0
@@ -16345,7 +16486,7 @@ GameObject:
   - component: {fileID: 7207555683324817384}
   - component: {fileID: 8917814803285738486}
   - component: {fileID: 8488684764484009903}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: EnemyScreenUI (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16954,7 +17095,7 @@ GameObject:
   - component: {fileID: 3128785126889511723}
   - component: {fileID: 2070696834400369589}
   - component: {fileID: 3856205980314170480}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: DamageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17274,7 +17415,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4792716025046537494}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17438,7 +17579,7 @@ GameObject:
   - component: {fileID: 3107326849693490262}
   - component: {fileID: 7434367582852372780}
   - component: {fileID: 3016780977488075281}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
