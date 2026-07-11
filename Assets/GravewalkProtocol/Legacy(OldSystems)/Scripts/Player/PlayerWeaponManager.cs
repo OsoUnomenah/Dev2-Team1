@@ -208,6 +208,11 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             {
                 weaponAnimator.SetBool("pickedUp", true);
             }
+
+            if (abilities != null && abilitySlot >= 0 && abilitySlot < abilities.Count)
+            {
+                ApplyAbilityEffectToCurrentWeapon(abilities[abilitySlot]);
+            }
         }
     }
 
@@ -288,39 +293,53 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     void abilityEquip(AbilityStats stats)
     {
-        if (stats == null || stats.model == null || abilityModel == null)
+        if (stats == null)
         {
             return;
         }
 
-        MeshFilter abilityMeshFilter = abilityModel.GetComponent<MeshFilter>();
-        MeshFilter statsMeshFilter = stats.model.GetComponent<MeshFilter>();
-        MeshRenderer abilityMeshRenderer = abilityModel.GetComponent<MeshRenderer>();
-        MeshRenderer statsMeshRenderer = stats.model.GetComponent<MeshRenderer>();
-
-        if (abilityMeshFilter != null && statsMeshFilter != null)
+        // Do not show the ability orb/model in the player's hand.
+        if (abilityModel != null)
         {
-            abilityMeshFilter.sharedMesh = statsMeshFilter.sharedMesh;
+            abilityModel.SetActive(false);
         }
 
-        if (abilityMeshRenderer != null && statsMeshRenderer != null)
+        ApplyAbilityEffectToCurrentWeapon(stats);
+    }
+
+    private void ApplyAbilityEffectToCurrentWeapon(AbilityStats stats)
+    {
+        if (activeEffect != null)
         {
-            abilityMeshRenderer.sharedMaterial = statsMeshRenderer.sharedMaterial;
+            Destroy(activeEffect.gameObject);
+            activeEffect = null;
+        }
+
+        if (stats == null || stats.loopedEffect == null)
+        {
+            return;
+        }
+
+        if (weaponCurrent == null)
+        {
+            return;
         }
 
         effect = stats.loopedEffect;
 
-        if (activeEffect != null)
+        Transform effectParent = weaponCurrent.transform;
+
+        Transform weaponEffectSocket = weaponCurrent.transform.Find("EffectSocket");
+
+        if (weaponEffectSocket != null)
         {
-            Destroy(activeEffect.gameObject);
+            effectParent = weaponEffectSocket;
         }
 
-        if (effect != null && effectSocket != null)
-        {
-            activeEffect = Instantiate(effect, effectSocket);
-            activeEffect.transform.localPosition = Vector3.zero;
-            activeEffect.transform.localRotation = Quaternion.identity;
-        }
+        activeEffect = Instantiate(effect, effectParent);
+        activeEffect.transform.localPosition = Vector3.zero;
+        activeEffect.transform.localRotation = Quaternion.identity;
+        activeEffect.Play();
     }
 
     void abilitySwitch()

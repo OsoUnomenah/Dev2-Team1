@@ -25,6 +25,15 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
     [Range(0, 30)][SerializeField] int dashFOVMod;
 
+    [Header("Freeze Weapon Effect")]
+    [SerializeField] private float gunFreezeChance = 0.25f;
+    [SerializeField] private float gunFreezeCooldown = 0.15f;
+    [SerializeField] private float meleeFreezeCooldown = 3f;
+    [SerializeField] private float defaultFreezeDuration = 2f;
+
+    private float nextGunFreezeTime;
+    private float nextMeleeFreezeTime;
+
     [Header("Crouch Config")]
     [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float crouchHeight = 1.0f;
@@ -828,7 +837,18 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
                         //}
 
+
+
+                        
+                        TryApplyWeaponFreeze(hit.collider, false);
+
+
                         IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+
+                        if (dmg != null)
+                        {
+                            dmg = hit.collider.GetComponentInChildren<IDamage>();
+                        }
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                         {
@@ -1161,6 +1181,127 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
     }
+
+    private bool CurrentAbilityIsFreeze(out AbilityStats freezeStats)
+    {
+        freezeStats = null;
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.abilities == null)
+        {
+            return false;
+        }
+
+        if (weaponManager.abilitySlot < 0 || weaponManager.abilitySlot >= weaponManager.abilities.Count)
+        {
+            return false;
+        }
+
+        freezeStats = weaponManager.abilities[weaponManager.abilitySlot];
+
+        if (freezeStats == null)
+        {
+            return false;
+        }
+
+        return freezeStats.abilityType == AbilityStats.ability.freeze;
+    }
+
+    private IFreeze FindFreezeTarget(Collider hitCollider)
+    {
+        IFreeze freezeTarget = hitCollider.GetComponent<IFreeze>();
+
+        if (freezeTarget != null)
+        {
+            return freezeTarget;
+        }
+
+        freezeTarget = hitCollider.GetComponentInParent<IFreeze>();
+
+        if (freezeTarget != null)
+        {
+            return freezeTarget;
+        }
+
+        return hitCollider.GetComponentInChildren<IFreeze>();
+    }
+
+    private IShatterable FindShatterTarget(Collider hitCollider)
+    {
+        IShatterable shatterable = hitCollider.GetComponent<IShatterable>();
+
+        if (shatterable != null)
+        {
+            return shatterable;
+        }
+
+        shatterable = hitCollider.GetComponentInParent<IShatterable>();
+
+        if (shatterable != null)
+        {
+            return shatterable;
+        }
+
+        return hitCollider.GetComponentInChildren<IShatterable>();
+    }
+
+    public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
+    {
+        if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))
+        {
+            return;
+        }
+
+        float freezeDuration = freezeStats.effectTimer > 0
+            ? freezeStats.effectTimer
+            : defaultFreezeDuration;
+
+        if (isMelee)
+        {
+            if (Time.time < nextMeleeFreezeTime)
+            {
+                return;
+            }
+
+            nextMeleeFreezeTime = Time.time + meleeFreezeCooldown;
+        }
+        else
+        {
+            if (Time.time < nextGunFreezeTime)
+            {
+                return;
+            }
+
+            if (UnityEngine.Random.value > gunFreezeChance)
+            {
+                return;
+            }
+
+            nextGunFreezeTime = Time.time + gunFreezeCooldown;
+        }
+
+        IFreeze freezeTarget = FindFreezeTarget(hitCollider);
+
+        if (freezeTarget != null)
+        {
+            freezeTarget.freeze(freezeDuration);
+        }
+    }
+
+    public bool TryShatterFrozenTarget(Collider hitCollider)
+    {
+        IShatterable shatterable = FindShatterTarget(hitCollider);
+
+        if (shatterable != null && shatterable.IsFrozen)
+        {
+            shatterable.Shatter();
+            return true;
+        }
+
+        return false;
+    }
+
 
     public void FreezePlayer(float duration)
     {
