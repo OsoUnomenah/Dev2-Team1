@@ -61,6 +61,13 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     [SerializeField] private float turnSpeed = 8f;
     [SerializeField] private bool stopMovingWhileAttacking = true;
 
+    [Header("Boss Freeze Resistance")]
+    [SerializeField] private float bossFreezeChance = 0.25f;
+    [SerializeField] private float bossFreezeDuration = 0.75f;
+    [SerializeField] private float bossFreezeCoolDown = 5f;
+
+    private float nextBossFreezeTime;
+
     private bool isPerformingAttack;
 
     private int currentHealth;
@@ -70,6 +77,7 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     private Coroutine bossLoopRoutine;
     private BossAttack lastAttack;
     private Transform player;
+    private Coroutine freezeRoutine;
 
     private Color originalColor;
 
@@ -471,8 +479,43 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
             return;
         }
 
+        if(Time.time < nextBossFreezeTime)
+        {
+            return;
+        }
+
+        if(UnityEngine.Random.value > bossFreezeChance)
+        {
+            return;
+        }
+
+        nextBossFreezeTime = Time.time + bossFreezeCoolDown;
+
+        if(freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+        }
+
+        freezeRoutine = StartCoroutine(BossFreezeRoutine());
+    }
+
+    private IEnumerator BossFreezeRoutine()
+    {
         isFrozen = true;
-        StartCoroutine(FreezeHandler(duration));
+
+        if (model != null)
+        {
+            model.material.color = Color.cyan;
+        }
+
+        yield return new WaitForSeconds(bossFreezeDuration);
+
+        if (model != null)
+        {
+            model.material.color = originalColor;
+        }
+
+        isFrozen = false;
     }
 
     private IEnumerator FreezeHandler(float duration)

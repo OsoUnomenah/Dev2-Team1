@@ -7,11 +7,18 @@ public class MeleeWeaponDamage : MonoBehaviour
     [SerializeField] Animator animator;
 
     float timer = 0f;
-    float waitTime = gameManager.instance.playerWeaponManager.Timer;
+    float waitTime;
 
     private void Update()
     {
         timer += Time.deltaTime;
+
+        if(gameManager.instance == null || gameManager.instance.playerWeaponManager == null)
+        {
+            return;
+        }
+
+        waitTime = gameManager.instance.playerWeaponManager.Timer;
 
         if (gameManager.instance.isMeleeing == true && timer > waitTime)
         {
@@ -27,7 +34,24 @@ public class MeleeWeaponDamage : MonoBehaviour
             dmgTrigger.enabled = false;
             Debug.Log("Attempted to deal damage");
 
-            IDamage dmg = other.GetComponentInChildren<IDamage>();
+            if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(other))
+            {
+                return;
+            }
+
+            gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(other, true);
+
+            IDamage dmg = other.GetComponentInParent<IDamage>();
+
+            if (dmg == null)
+            {
+                dmg = other.GetComponentInChildren<IDamage>();
+            }
+
+            if (dmg == null)
+            {
+                return;
+            }
 
             int bonusDamage = 0;
 

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
+public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 {
     
     [SerializeField] private int maxHealth = 100;
@@ -61,6 +61,11 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     private ZombieState currentState;
 
     Color originalColor;
+
+    public bool IsFrozen
+    {
+        get { return isFroze; }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -220,25 +225,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
         if (currentHealth <= 0)
         {
-            currentState = ZombieState.Dead;
-            isDead = true;
-
-            if (agent != null)
-                agent.isStopped = true;
-
-            AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
-
-            gameManager.instance.addXp(xpGive);
-
-            // ✅ NEW: wave system tracking (no Find calls)
-            if (WaveManager.instance != null)
-            {
-                WaveManager.instance.OnEnemyKilled();
-            }
-
-            RecticleBehaviour.OffHover();
-            isDead = true;
-            Destroy(gameObject);
+            Die();
         }
         else
         {
@@ -246,6 +233,33 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
             AudioManager.instance.PlaySoundAtPosition(_hit, gameObject);
             StartCoroutine(flashRed());
         }
+    }
+
+    private void Die()
+    {
+        currentState = ZombieState.Dead;
+        isDead = true;
+
+        if (agent != null)
+        {
+            agent.isStopped = true;
+        }
+
+        if (AudioManager.instance != null && _dead != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
+        }
+
+        gameManager.instance.addXp(xpGive);
+
+        if (WaveManager.instance != null)
+        {
+            WaveManager.instance.OnEnemyKilled();
+        }
+
+        RecticleBehaviour.OffHover();
+
+        Destroy(gameObject);
     }
 
     IEnumerator flashRed()
@@ -292,5 +306,19 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
         model.material.color = originalColor;
         isFroze = false;
         agent.isStopped = false;
+    }
+
+    public bool isFrozen
+    {
+        get { return isFrozen; }
+    }
+    public void Shatter()
+    {
+        if(isDead)
+        {
+            return;
+        }
+
+        Die();
     }
 }
