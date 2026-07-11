@@ -827,6 +827,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                             out hit,
                             weaponManager.Range,
                             ~ignoreSource))
+                        }
+                        IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                        if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                         {
 
                             if (weaponManager.HitEffect != null)
@@ -836,7 +839,45 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                     hit.point,
                                     Quaternion.LookRotation(hit.normal)
                                 );
+                                //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                                //infact most should still run the IDamage thing below,
+                                //but might have to change damage values or something in here first
+                                //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                                //personally I'll 
+                                case AbilityStats.ability.fire:
+                                    //probably use a IFire interface that works like IDamage but makes them set fire
+                                    break;
+                                case AbilityStats.ability.freeze:
+                                    TryApplyWeaponFreeze(hit.collider, false);
+                                    break;
+                                case AbilityStats.ability.toxic:
+                                    //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                    break;
+                                case AbilityStats.ability.magent:
+                                    //good luck lol idk
+                                    break;
+                                case AbilityStats.ability.crystal:
+                                    CrystalShot(dmg, hit);
+                                    break;
+                                case AbilityStats.ability.lightning:
+                                    //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                    break;
+
                             }
+                        }
+                       
+
+                        if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
+                        {
+                            int bonusDamage = 0;
+
+                            StatHandler stats = gameManager.instance.playerStatHandler;
+
+                            if (stats != null)
+                            {
+                                bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                            }
+                            
 
                             if (weaponManager.abilities.Count > 0)
                             {
@@ -846,6 +887,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 {
                                     case AbilityStats.ability.fire:
                                         break;
+                            int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                            if (gameManager.instance.playerStatHandler.crystalBar == 10)
+                            {
+                                gameManager.instance.playerStatHandler.crystalBar = 0;
+                                finalDamage *= 3;
+                            }
 
                                     case AbilityStats.ability.freeze:
                                         break;
@@ -962,7 +1009,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         // cancel logic for button release if needed
     }
-
+    private void CrystalShot(IDamage dmg, RaycastHit hit)
+    {
+        if (dmg != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+        }
+    }
 
     private void OnReloadPerformed(InputAction.CallbackContext context)
     {
@@ -1314,6 +1367,25 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
 
+    public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
+    {
+        if(gameManager.instance.playerWeaponManager.abilities.Count == 0)
+        {
+            return;
+        }
+        if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal
+            && hitCollider.GetComponent<IDamage>() != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+            if(gameManager.instance.playerStatHandler.crystalBar == 10)
+            {
+                multiplier = 3;
+                gameManager.instance.playerStatHandler.crystalBar = 0;
+                return;
+            }
+        }
+        multiplier = 1;
+    }
     public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
     {
         if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))

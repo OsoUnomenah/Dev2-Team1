@@ -38,8 +38,9 @@ public class MeleeWeaponDamage : MonoBehaviour
             {
                 return;
             }
-
+            int multiplier = 0;
             gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(other, true);
+            gameManager.instance.playerInputHandler.TryApplyWeaponCrystal(other, ref multiplier);
 
             IDamage dmg = other.GetComponentInParent<IDamage>();
 
@@ -67,7 +68,7 @@ public class MeleeWeaponDamage : MonoBehaviour
                 bonusDamage += Mathf.RoundToInt(stats.modDamage);
             }
 
-            dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage + bonusDamage);
+            dmg.takeDamage((gameManager.instance.playerWeaponManager.Damage + bonusDamage) * multiplier);
         }
     }
 }
