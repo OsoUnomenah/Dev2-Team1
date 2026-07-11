@@ -23,7 +23,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Header("Movement Config")]
     [Range(3.0f, 20.0f)][SerializeField] private float walkSpeed = 3.0f;
     [Range(10.0f, 80.0f)][SerializeField] private float acceleration = 10.0f;
-    [Range(1.0f, 5.0f)][SerializeField] private float dashCd = 1.0f;
+    [Range(0.5f, 5.0f)][SerializeField] private float dashCd = 1.0f;
     [Range(1.0f, 30f)][SerializeField] float dashSpeed;
     [Range(1.0f, 200f)][SerializeField] float dashAttackSpeed;
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
@@ -467,8 +467,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashTimer = 0f;
 
         Physics.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            LayerMask.NameToLayer("Enemy"),
+            LayerMask.GetMask("Player"),
+            LayerMask.GetMask("Enemy"),
             true);
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
@@ -494,8 +494,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
         Physics.IgnoreLayerCollision(
-            LayerMask.NameToLayer("Player"),
-            LayerMask.NameToLayer("Enemy"),
+            LayerMask.GetMask("Player"),
+            LayerMask.GetMask("Enemy"),
             false);
 
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;

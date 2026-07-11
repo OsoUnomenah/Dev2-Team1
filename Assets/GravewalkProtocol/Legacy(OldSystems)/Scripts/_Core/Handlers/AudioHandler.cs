@@ -19,7 +19,7 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
     }
 
     public void PlaySound(BaseSoundSO sound)
