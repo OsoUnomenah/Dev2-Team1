@@ -3,6 +3,8 @@ using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.UI;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -86,6 +88,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float chargedShotCooldownTimer;
 
     private float normalCameraFOV;
+
+    [Header("Charged Shot UI")]
+    [SerializeField] private GameObject sniperChargePanel;
+    [SerializeField] private Slider sniperChargeSlider;
+    [SerializeField] private TMP_Text sniperChargeText;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
@@ -174,6 +181,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             ShootTimer();
             HandleReload();
+            HandleChargedShot();
+            UpdateChargedShotUI();
             return;
         }
 
@@ -187,6 +196,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         ShootTimer();
         HandleReload();
         HandleChargedShot();
+        UpdateChargedShotUI();
     }
 
     public void takeDamage(int amount)
@@ -1088,6 +1098,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     private void EndChargedShot()
     {
+        gameManager.instance.canShoot = false;
         PlayerWeaponManager weaponManager =
             gameManager.instance.playerWeaponManager;
 
@@ -1556,14 +1567,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             weaponManager.ChargeTime
         );
 
-        float chargePercent = GetChargePercent();
+        //float chargePercent = GetChargePercent();
 
-        gameManager.instance.playerCamera.fieldOfView =
-            Mathf.Lerp(
-                normalCameraFOV,
-                weaponManager.ChargedZoomFOV,
-                chargePercent
-            );
+       // gameManager.instance.playerCamera.fieldOfView =
+           // Mathf.Lerp(
+           //     normalCameraFOV,
+            //    weaponManager.ChargedZoomFOV,
+            //    chargePercent
+           // );
     }
 
     private float GetChargePercent()
@@ -1590,10 +1601,64 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         if (isChargingShot)
         {
+            gameManager.instance.canShoot = true;
             return;
         }
 
         isChargingShot = true;
         currentChargeTime = 0f;
+    }
+
+    private void UpdateChargedShotUI()
+    {
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+            return;
+
+        // Only show this UI for charged weapons
+        if (!weaponManager.UsesChargedShot)
+        {
+            sniperChargePanel.SetActive(false);
+            return;
+        }
+
+        // Show panel while charging or recharging
+        if (isChargingShot)
+        {
+            sniperChargePanel.SetActive(true);
+        }
+        else
+        {
+            sniperChargePanel.SetActive(false);
+            return;
+        }
+
+        if (isChargingShot)
+        {
+            float chargePercent = currentChargeTime / weaponManager.ChargeTime;
+            chargePercent = Mathf.Clamp01(chargePercent);
+
+            sniperChargeSlider.value = chargePercent;
+
+            if (chargePercent >= 1f)
+            {
+                sniperChargeText.text = "CRITICAL READY";
+            }
+            else
+            {
+                sniperChargeText.text = "CHARGING";
+            }
+        }
+        else
+        {
+            float rechargePercent =
+                1f - (chargedShotCooldownTimer / weaponManager.ChargeCooldown);
+
+            rechargePercent = Mathf.Clamp01(rechargePercent);
+
+            sniperChargeSlider.value = rechargePercent;
+            sniperChargeText.text = "RECHARGING";
+        }
     }
 }

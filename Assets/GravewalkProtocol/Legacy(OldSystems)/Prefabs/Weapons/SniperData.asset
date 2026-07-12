@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caec2ee46b2365f4b9098ae065941701, type: 3}
   m_Name: SniperData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  weaponName: Shotgun
+  weaponName: Sniper
   weaponType: 0
   fullAuto: 0
   usesPellets: 0
