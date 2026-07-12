@@ -20,7 +20,6 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] private float rolledRate;
     [SerializeField] private float rolledRecoil;
     [SerializeField] private float rolledTimer;
-    [SerializeField] private float ads;
     [SerializeField] private int rolledAmmo;
     [SerializeField] private int rolledMaxAmmo;
     [SerializeField] private float rolledAmmoTimer;
@@ -253,7 +252,6 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             rolledAmmo,
             rolledMaxAmmo,
             rolledAmmoTimer,
-            ads,
             modDescriptions
         );
 
