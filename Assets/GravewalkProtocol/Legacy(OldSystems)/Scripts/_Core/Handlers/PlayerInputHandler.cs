@@ -907,62 +907,63 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 );
                             }
 
-                            //if (weaponManager.abilities.Count > 0)
-                            //{
-                            //    switch (weaponManager
-                            //        .abilities[weaponManager.abilitySlot]
-                            //        .abilityType)
-                            //    {
-                            //        case AbilityStats.ability.fire:
-                            //            break;
-
-                            //        case AbilityStats.ability.freeze:
-                            //            break;
-
-                            //        case AbilityStats.ability.toxic:
-                            //            break;
-
-                            //        case AbilityStats.ability.magent:
-                            //            break;
-
-                            //        case AbilityStats.ability.crystal:
-                            //            break;
-
-                            //        case AbilityStats.ability.lightning:
-                            //            break;
-                            //    }
-                            //}
-
-                            TryApplyWeaponFreeze(hit.collider, false);
-
-                            IDamage dmg =
-                                hit.collider.GetComponentInChildren<IDamage>();
-
-                            if (dmg == null)
+                            IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
-                                dmg = hit.collider.GetComponentInParent<IDamage>();
+                                switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                                {
+                                    //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                                    //infact most should still run the IDamage thing below,
+                                    //but might have to change damage values or something in here first
+                                    //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                                    //personally I'll 
+                                    case AbilityStats.ability.fire:
+                                        //probably use a IFire interface that works like IDamage but makes them set fire
+                                        break;
+                                    case AbilityStats.ability.freeze:
+                                        TryApplyWeaponFreeze(hit.collider, false);
+                                        break;
+                                    case AbilityStats.ability.toxic:
+                                        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                        break;
+                                    case AbilityStats.ability.magent:
+                                        //good luck lol idk
+                                        break;
+                                    case AbilityStats.ability.crystal:
+                                        CrystalShot(dmg, hit);
+                                        break;
+                                    case AbilityStats.ability.lightning:
+                                        //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                        break;
+
+                                }
                             }
 
-                            if (dmg != null && weaponManager.Damage != 0)
+                            if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                             {
                                 int bonusDamage = 0;
 
-                                StatHandler stats =
-                                    gameManager.instance.playerStatHandler;
+                                StatHandler stats = gameManager.instance.playerStatHandler;
 
                                 if (stats != null)
                                 {
                                     bonusDamage = Mathf.RoundToInt(stats.modDamage);
                                 }
 
-                                int pelletBonusDamage = weaponManager.UsesPellets
-                                    ? Mathf.RoundToInt((float)bonusDamage / pelletCount)
-                                    : bonusDamage;
 
-                                int finalDamage =
-                                    weaponManager.Damage + pelletBonusDamage;
+                                int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                                if (gameManager.instance.playerStatHandler.crystalBar == 10)
+                                {
+                                    gameManager.instance.playerStatHandler.crystalBar = 0;
+                                    finalDamage *= 3;
+                                }
 
                                 dmg.takeDamage(finalDamage);
+
+                                // if (turnOnDebug)
+                                //  {
+                                //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
+                                // }
                             }
                         }
                     }
@@ -977,18 +978,18 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
                 }
 
-                //if (turnOnDebug)
-                //{
-                //     Debug.Log("ShotFired!");
-                //}
+                    //if (turnOnDebug)
+                    //{
+                    //     Debug.Log("ShotFired!");
+                    //}
 
 
-                    
-                
 
+
+
+                }
             }
-        }
-    }
+         }
 
     private Vector3 GetPelletDirection(
     int pelletIndex,
@@ -1032,20 +1033,19 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             .TransformDirection(localDirection)
             .normalized;
     }
-
+    
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
 
-        PlayerWeaponManager weaponManager =
-            gameManager.instance.playerWeaponManager;
+       
 
-        if (weaponManager == null)
+        if (gameManager.instance.playerWeaponManager == null)
         {
             return;
         }
 
-        if (!weaponManager.UsesChargedShot)
+        if (!gameManager.instance.playerWeaponManager.UsesChargedShot)
         {
             return;
         }
@@ -1141,17 +1141,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void EndChargedShot()
     {
         gameManager.instance.canShoot = false;
-        PlayerWeaponManager weaponManager =
-            gameManager.instance.playerWeaponManager;
+        
 
         isChargingShot = false;
         currentChargeTime = 0f;
 
-        chargedShotCooldownTimer =
-            weaponManager.ChargeCooldown;
-
-        gameManager.instance.playerCamera.fieldOfView =
-            normalCameraFOV;
+        chargedShotCooldownTimer = gameManager.instance.playerWeaponManager.ChargeCooldown;
     }
 
 
@@ -1599,7 +1594,32 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
-
+    private void CrystalShot(IDamage dmg, RaycastHit hit)
+    {
+        if (dmg != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+        }
+    }
+    public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
+    {
+        if (gameManager.instance.playerWeaponManager.abilities.Count == 0)
+        {
+            return;
+        }
+        if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal
+            && hitCollider.GetComponent<IDamage>() != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+            if (gameManager.instance.playerStatHandler.crystalBar == 10)
+            {
+                multiplier = 3;
+                gameManager.instance.playerStatHandler.crystalBar = 0;
+                return;
+            }
+        }
+        multiplier = 1;
+    }
     public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
     {
         if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))

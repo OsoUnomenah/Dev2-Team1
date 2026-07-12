@@ -251,12 +251,15 @@ public class gameManager : MonoBehaviour
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
     }
+    private void chargeUI()
+    {
+    }
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
         if (instance.playerWeaponManager.abilities.Count == 4)
         {
-            Debug.LogError("Does not Run");
+           // Debug.LogError("Does not Run");
             return;
         }
         {
