@@ -14,7 +14,7 @@ using UnityEngine.UI;
 //5. create logic for perform and cancelled methods(will need to make methods)
 // extra note if turnondebug is set to true will show debug messages 
 
-public class PlayerInputHandler : MonoBehaviour, IDamage
+public class PlayerInputHandler : MonoBehaviour
 {
     [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
@@ -202,12 +202,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleReload();
         HandleChargedShot();
         UpdateChargedShotUI();
-    }
-
-    public void takeDamage(int amount)
-    {
-
-
     }
 
     void OnEnable()
