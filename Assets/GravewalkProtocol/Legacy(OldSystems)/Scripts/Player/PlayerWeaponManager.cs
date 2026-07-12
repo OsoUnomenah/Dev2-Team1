@@ -34,6 +34,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int MaxAmmo;
     public float BaseAmmoTimer;
     public float AmmoTimer;
+    public float Ads;
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
@@ -249,6 +250,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         ShootSound = shootSound;
         ReloadSound = reloadSound;
         HitEffect = hitEffect;
+        Ads = ads;
 
         if (weaponCurrent != null)
         {

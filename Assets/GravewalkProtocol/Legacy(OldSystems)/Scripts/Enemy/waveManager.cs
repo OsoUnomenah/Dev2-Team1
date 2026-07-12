@@ -21,6 +21,11 @@ public class WaveManager : MonoBehaviour
 
     private gameManager gm;
 
+    [Header("Drops")]
+    [SerializeField] private List<GameObject> drops;
+    [Range(1, 100)][SerializeField] int dropChance;
+   
+
     private bool waveSystemStarted = false;
     private bool spawningWave = false;
 
@@ -146,5 +151,18 @@ public class WaveManager : MonoBehaviour
 
         if (waveText != null)
             waveText.gameObject.SetActive(false);
+    }
+
+    public void Drop(Transform enemyPos)
+    {
+        int roll = Random.Range(1, 100);
+        Debug.Log("Roll " + roll);
+        if (roll <= dropChance)
+        {
+            GameObject item = drops[Random.Range(0, drops.Count - 1)];
+            Debug.Log("Dropping " + item);
+            enemyPos.position -= new Vector3(0, 0.6f, 0);
+            Instantiate(item, enemyPos.position, Quaternion.Euler(0, Random.Range(0, 360), 0));
+        }
     }
 }

@@ -15,6 +15,16 @@ MonoBehaviour:
   weaponName: Pistol
   weaponType: 0
   fullAuto: 0
+  usesPellets: 0
+  pelletCount: 8
+  horizontalSpread: 15
+  verticalSpread: 1
+  usesChargedShot: 0
+  chargeTime: 2
+  chargeCooldown: 2
+  maxChargeMultiplier: 2
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 35
   damage: 10
   range: 50
   rate: 0
@@ -23,6 +33,7 @@ MonoBehaviour:
   ammo: 10
   maxAmmo: 10
   ammoTimer: 2
+  ads: 20
   weaponPrefab: {fileID: 6418376403914927428, guid: 40509b50e6ed28c42adcbf775c4d3a8b, type: 3}
   hitEffect: {fileID: 0}
   shootSound: {fileID: 11400000, guid: 53d9f88ecbdbbc149987b0cae22557df, type: 2}

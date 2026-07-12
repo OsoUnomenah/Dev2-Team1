@@ -64,6 +64,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         rolledAmmo = weaponData.ammo;
         rolledMaxAmmo = weaponData.maxAmmo;
         rolledAmmoTimer = weaponData.ammoTimer;
+        ads = weaponData.ads;
     }
 
     public void RollChestWeaponMods()
