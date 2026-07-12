@@ -38,9 +38,9 @@ public class MeleeWeaponDamage : MonoBehaviour
         {
             MeleeSwing();
         }
-        else if (isBlocking && !isAttacking && weaponManager.CurrentWeaponName == "Hammer")
+        else if (isBlocking && !isAttacking)
         {
-            HammerBlock();
+            MeleeBlock();
         }
     }
 
@@ -84,7 +84,7 @@ public class MeleeWeaponDamage : MonoBehaviour
         }
     }
 
-    private void HammerBlock()
+    private void MeleeBlock()
     {
         if (stats == null)
             return;
