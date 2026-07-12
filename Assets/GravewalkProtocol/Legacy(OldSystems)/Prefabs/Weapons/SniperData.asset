@@ -24,7 +24,7 @@ MonoBehaviour:
   chargeCooldown: 1
   maxChargeMultiplier: 2
   criticalMultiplier: 1.5
-  chargedZoomFOV: 35
+  chargedZoomFOV: 10
   damage: 75
   range: 150
   rate: 1

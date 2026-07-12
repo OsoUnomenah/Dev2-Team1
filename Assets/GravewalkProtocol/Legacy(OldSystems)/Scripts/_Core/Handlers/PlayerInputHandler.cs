@@ -167,6 +167,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
         fov = gameManager.instance.playerCamera.fieldOfView;
+        normalCameraFOV =
+        gameManager.instance.playerCamera.fieldOfView;
 
         sniperChargePanel = gameManager.instance.sniperChargePanel;
         sniperChargeSlider = gameManager.instance.sniperChargeSlider;
