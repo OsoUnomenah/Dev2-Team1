@@ -210,6 +210,7 @@ public class gameManager : MonoBehaviour
             Debug.Log("PlayerWeaponManager: " + playerWeaponManager);
             Debug.Log("PlayerCamera: " + playerCamera);
             Debug.Log("PlayerPosition: " + playerTransform.position);
+            
         }
     }
 
@@ -219,6 +220,14 @@ public class gameManager : MonoBehaviour
         //change xpGain value in inspector to adjust rate.
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
+
+        if (gameDebug) {
+            Debug.DrawRay(
+        playerCamera.transform.position,
+        playerCamera.transform.forward * instance.playerWeaponManager.Range,
+        Color.red);
+    }
+
     }
     public void slotFiller()
     {

@@ -308,7 +308,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Vector3 worldDirection = CalculateWorldDirection();
 
-        float targetSpeed = isCrouching
+        float targetSpeed = (isCrouching || gameManager.instance.isAiming)
             ? crouchSpeed
             : walkSpeed;
 
@@ -796,6 +796,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
                     {
                         Debug.Log(hit.collider.name);
+                       
 
                         if (gameManager.instance.playerWeaponManager.HitEffect != null)
                         {
@@ -806,8 +807,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 Quaternion.LookRotation(hit.normal)
                             );
                         }
-
-                        if(gameManager.instance.playerWeaponManager.abilities.Count > 0)
+                        IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                        if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                         {
                             switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
                             {
@@ -820,7 +821,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                     //probably use a IFire interface that works like IDamage but makes them set fire
                                     break;
                                 case AbilityStats.ability.freeze:
-                                    //already a IFreeze Interface so you would just need to apply shattering to enemies and make it work here
+                                    TryApplyWeaponFreeze(hit.collider, false);
                                     break;
                                 case AbilityStats.ability.toxic:
                                     //probably use a IToxic interface that works like IDamage but makes them become toxic
@@ -829,7 +830,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                     //good luck lol idk
                                     break;
                                 case AbilityStats.ability.crystal:
-                                    //I got this one
+                                    CrystalShot(dmg, hit);
                                     break;
                                 case AbilityStats.ability.lightning:
                                     //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
@@ -837,18 +838,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
                             }
                         }
-
-
-
-                        TryApplyWeaponFreeze(hit.collider, false);
-
-
-                        IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
-
-                        if (dmg != null)
-                        {
-                            dmg = hit.collider.GetComponentInChildren<IDamage>();
-                        }
+                       
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                         {
@@ -860,8 +850,14 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                             {
                                 bonusDamage = Mathf.RoundToInt(stats.modDamage);
                             }
+                            
 
                             int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                            if (gameManager.instance.playerStatHandler.crystalBar == 10)
+                            {
+                                gameManager.instance.playerStatHandler.crystalBar = 0;
+                                finalDamage *= 3;
+                            }
 
                             dmg.takeDamage(finalDamage);
 
@@ -894,7 +890,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         // cancel logic for button release if needed
     }
-
+    private void CrystalShot(IDamage dmg, RaycastHit hit)
+    {
+        if (dmg != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+        }
+    }
 
     private void OnReloadPerformed(InputAction.CallbackContext context)
     {
@@ -931,8 +933,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         }
     }
-
-    //this is now a Ability button instead of ADS
+    float range;
+    float adsRecoil;
+    float fov;
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
@@ -949,9 +952,28 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 iAct.Interact();
             }
         }
+        range = gameManager.instance.playerWeaponManager.Range;
+        adsRecoil = gameManager.instance.playerWeaponManager.Recoil;
+        fov = gameManager.instance.playerCamera.fieldOfView;
 
+        if (!gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
+        {
+            gameManager.instance.isAiming = true;
+            gameManager.instance.playerWeaponManager.Range = range * 1.4f;
+            gameManager.instance.playerWeaponManager.Recoil = adsRecoil - 0.2f;
+            gameManager.instance.playerCamera.fieldOfView = fov + gameManager.instance.playerWeaponManager.ADS;
+        }
 
-
+    }
+    private void OnADSCanceled(InputAction.CallbackContext context)
+    {
+        if (gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
+        {
+            gameManager.instance.isAiming = false;
+            gameManager.instance.playerWeaponManager.Range = range;
+            gameManager.instance.playerWeaponManager.Recoil = adsRecoil;
+            gameManager.instance.playerCamera.fieldOfView = fov;
+        }
     }
     IEnumerator fireCooldown(float cd)
     {
@@ -974,17 +996,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         gameManager.instance.allowedAbility4 = true;
     }
 
-
-
-    //this is now a Ability button instead of ADS
-    private void OnADSCanceled(InputAction.CallbackContext context)
-    {
-        gameManager.instance.isAiming = false;
-        //if (gameManager.instance.gameDebug)
-        //{
-        //     Debug.Log("Stopped Aiming Down Sights!");
-        //}
-    }
+   
 
 
 
@@ -1246,6 +1258,25 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
 
+    public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
+    {
+        if(gameManager.instance.playerWeaponManager.abilities.Count == 0)
+        {
+            return;
+        }
+        if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal
+            && hitCollider.GetComponent<IDamage>() != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+            if(gameManager.instance.playerStatHandler.crystalBar == 10)
+            {
+                multiplier = 3;
+                gameManager.instance.playerStatHandler.crystalBar = 0;
+                return;
+            }
+        }
+        multiplier = 1;
+    }
     public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
     {
         if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))
