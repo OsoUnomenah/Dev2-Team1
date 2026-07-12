@@ -15,6 +15,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float HorizontalSpread;
     public float VerticalSpread;
 
+    [Header("Charged Shot Settings")]
+    public bool UsesChargedShot;
+    public float ChargeTime;
+    public float ChargeCooldown;
+    public float MaxChargeMultiplier;
+    public float CriticalMultiplier;
+    public float ChargedZoomFOV;
+
     // Weapon Settings
     public bool Type;
     public int Damage;
@@ -95,10 +103,19 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         currentWeaponName = weaponData.weaponName;
         currentWeaponMods = CopyModList(weaponMods);
 
+        // Shotgun
         UsesPellets = weaponData.usesPellets;
         PelletCount = Mathf.Max(1, weaponData.pelletCount);
         HorizontalSpread = weaponData.horizontalSpread;
         VerticalSpread = weaponData.verticalSpread;
+
+        // Sniper 
+        UsesChargedShot = weaponData.usesChargedShot;
+        ChargeTime = weaponData.chargeTime;
+        ChargeCooldown = weaponData.chargeCooldown;
+        MaxChargeMultiplier = weaponData.maxChargeMultiplier;
+        CriticalMultiplier = weaponData.criticalMultiplier;
+        ChargedZoomFOV = weaponData.chargedZoomFOV;
 
         Equip(
             weaponData.weaponType,

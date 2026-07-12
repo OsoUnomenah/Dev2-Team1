@@ -31,6 +31,30 @@ public class WeaponData : ScriptableObject
     [Tooltip("Max pellet spread up and down.")]
     public float verticalSpread = 1f;
 
+    [Header("Charged Shot")]
+    [Tooltip("Makes this weapon charge while the fire button is held.")]
+    public bool usesChargedShot;
+
+    [Min(0.1f)]
+    [Tooltip("Time required to reach full charge.")]
+    public float chargeTime = 2f;
+
+    [Min(0f)]
+    [Tooltip("Delay after firing before the weapon can charge again.")]
+    public float chargeCooldown = 2f;
+
+    [Min(1f)]
+    [Tooltip("Damage multiplier at full charge before critical damage.")]
+    public float maxChargeMultiplier = 2f;
+
+    [Min(1f)]
+    [Tooltip("Additional multiplier when fired at full charge.")]
+    public float criticalMultiplier = 1.5f;
+
+    [UnityEngine.Range(10f, 100f)]
+    [Tooltip("Camera field of view while fully charged.")]
+    public float chargedZoomFOV = 35f;
+
     [Header("Stats")]
     public int damage;
     public float range;

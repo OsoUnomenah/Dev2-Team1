@@ -15,6 +15,16 @@ MonoBehaviour:
   weaponName: Shotgun
   weaponType: 0
   fullAuto: 0
+  usesPellets: 0
+  pelletCount: 8
+  horizontalSpread: 15
+  verticalSpread: 1
+  usesChargedShot: 1
+  chargeTime: 2
+  chargeCooldown: 1
+  maxChargeMultiplier: 2
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 35
   damage: 75
   range: 150
   rate: 1

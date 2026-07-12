@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -79,6 +80,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] public bool dashAttackTriggered;
     [SerializeField] public LayerMask enemyLayer;
 
+    [Header("Charged Shot Runtime")]
+    [SerializeField] private bool isChargingShot;
+    [SerializeField] private float currentChargeTime;
+    [SerializeField] private float chargedShotCooldownTimer;
+
+    private float normalCameraFOV;
+
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
     [SerializeField] BaseSoundSO _footsteps;
@@ -151,6 +159,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         standingCenter = controller.center;
 
         standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
+
+        normalCameraFOV = gameManager.instance.playerCamera.fieldOfView;
     }
 
     void Update()
@@ -176,6 +186,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleJumping();
         ShootTimer();
         HandleReload();
+        HandleChargedShot();
     }
 
     public void takeDamage(int amount)
@@ -724,6 +735,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             return;
         }
 
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager.UsesChargedShot && chargedShotCooldownTimer > 0f)
+        {
+            return;
+        }
+
         // No weapon equipped / invalid weapon = no sound.
         if (gameManager.instance.playerWeaponManager.Damage <= 0
             || gameManager.instance.playerWeaponManager.Range <= 0)
@@ -789,12 +807,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             {
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
+
+                    if (weaponManager.UsesChargedShot)
+                    {
+                        BeginChargedShot();
+                        return;
+                    }
                     PlayCurrentWeaponShootSound();
 
                     // One trigger pull consumes one shell, regardless of pellet count.
                     gameManager.instance.playerWeaponManager.Ammo--;
-
-                    PlayerWeaponManager weaponManager =
+                    _ =
                         gameManager.instance.playerWeaponManager;
 
                     int pelletCount = weaponManager.UsesPellets
@@ -961,6 +984,121 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
+
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+        {
+            return;
+        }
+
+        if (!weaponManager.UsesChargedShot)
+        {
+            return;
+        }
+
+        if (!isChargingShot)
+        {
+            return;
+        }
+
+        FireChargedShot();
+    }
+
+    private void FireChargedShot()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        float chargePercent = GetChargePercent();
+
+        float chargeMultiplier = Mathf.Lerp(
+            1f,
+            weaponManager.MaxChargeMultiplier,
+            chargePercent
+        );
+
+        int bonusDamage = 0;
+
+        StatHandler stats =
+            gameManager.instance.playerStatHandler;
+
+        if (stats != null)
+        {
+            bonusDamage = Mathf.RoundToInt(stats.modDamage);
+        }
+
+        int finalDamage = Mathf.RoundToInt(
+            (weaponManager.Damage + bonusDamage) *
+            chargeMultiplier
+        );
+
+        bool fullyCharged = chargePercent >= 0.99f;
+
+        if (fullyCharged)
+        {
+            finalDamage = Mathf.RoundToInt(
+                finalDamage *
+                weaponManager.CriticalMultiplier
+            );
+
+            Debug.Log("FULL CHARGE CRITICAL: " + finalDamage);
+        }
+
+        PlayCurrentWeaponShootSound();
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(
+            Camera.main.transform.position,
+            Camera.main.transform.forward,
+            out hit,
+            weaponManager.Range,
+            ~ignoreSource))
+        {
+            if (weaponManager.HitEffect != null)
+            {
+                Instantiate(
+                    weaponManager.HitEffect,
+                    hit.point,
+                    Quaternion.LookRotation(hit.normal)
+                );
+            }
+
+            TryApplyWeaponFreeze(hit.collider, false);
+
+            IDamage damageTarget =
+                hit.collider.GetComponentInChildren<IDamage>();
+
+            if (damageTarget == null)
+            {
+                damageTarget =
+                    hit.collider.GetComponentInParent<IDamage>();
+            }
+
+            if (damageTarget != null)
+            {
+                damageTarget.takeDamage(finalDamage);
+            }
+        }
+
+        EndChargedShot();
+    }
+
+    private void EndChargedShot()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        isChargingShot = false;
+        currentChargeTime = 0f;
+
+        chargedShotCooldownTimer =
+            weaponManager.ChargeCooldown;
+
+        gameManager.instance.playerCamera.fieldOfView =
+            normalCameraFOV;
     }
 
 
@@ -1388,5 +1526,74 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         yield return new WaitForSeconds(duration);
 
         isFrozenByBoss = false;
+    }
+
+    private void HandleChargedShot()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+        {
+            return;
+        }
+
+        if (chargedShotCooldownTimer > 0f)
+        {
+            chargedShotCooldownTimer -= Time.deltaTime;
+        }
+
+        if (!isChargingShot)
+        {
+            return;
+        }
+
+        currentChargeTime += Time.deltaTime;
+
+        currentChargeTime = Mathf.Clamp(
+            currentChargeTime,
+            0f,
+            weaponManager.ChargeTime
+        );
+
+        float chargePercent = GetChargePercent();
+
+        gameManager.instance.playerCamera.fieldOfView =
+            Mathf.Lerp(
+                normalCameraFOV,
+                weaponManager.ChargedZoomFOV,
+                chargePercent
+            );
+    }
+
+    private float GetChargePercent()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.ChargeTime <= 0f)
+        {
+            return 0f;
+        }
+
+        return Mathf.Clamp01(
+            currentChargeTime / weaponManager.ChargeTime
+        );
+    }
+
+    private void BeginChargedShot()
+    {
+        if (chargedShotCooldownTimer > 0f)
+        {
+            return;
+        }
+
+        if (isChargingShot)
+        {
+            return;
+        }
+
+        isChargingShot = true;
+        currentChargeTime = 0f;
     }
 }
