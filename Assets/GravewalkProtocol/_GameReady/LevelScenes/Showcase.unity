@@ -11390,6 +11390,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5709770916032647435, guid: d92ee62d254e3f8478035ee35fa5992a, type: 3}
+      propertyPath: availableRules.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7524989403116109289, guid: d92ee62d254e3f8478035ee35fa5992a, type: 3}
       propertyPath: m_Name
       value: LevelBuilder
@@ -16161,7 +16165,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6062825741830356874}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 58.5, y: 3.52, z: 77.45}
   m_LocalScale: {x: 1.5038, y: 1.5038, z: 1.5038}
   m_ConstrainProportionsScale: 0
@@ -16170,7 +16174,7 @@ Transform:
   - {fileID: 3965426252095963607}
   - {fileID: 6072678391755410920}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &8428299020932161069
 MonoBehaviour:
   m_ObjectHideFlags: 0
