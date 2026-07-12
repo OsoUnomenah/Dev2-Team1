@@ -20,6 +20,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] private float rolledRate;
     [SerializeField] private float rolledRecoil;
     [SerializeField] private float rolledTimer;
+    [SerializeField] private float ads;
     [SerializeField] private int rolledAmmo;
     [SerializeField] private int rolledMaxAmmo;
     [SerializeField] private float rolledAmmoTimer;
@@ -252,6 +253,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             rolledAmmo,
             rolledMaxAmmo,
             rolledAmmoTimer,
+            ads,
             modDescriptions
         );
 
@@ -288,6 +290,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
+        if (weaponManager.CurrentWeaponData == weaponData)
+            return;
+
         if (model != null && highLight != null)
         {
             model.material = highLight;

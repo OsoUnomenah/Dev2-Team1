@@ -1191,7 +1191,7 @@ GameObject:
   - component: {fileID: 5432049648457211812}
   m_Layer: 0
   m_Name: Freeze Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1237,6 +1237,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FreezeBossAI
   maxHealth: 300
   xpGive: 100
+  minCurrencyDrop: 10
+  maxCurrencyDrop: 25
   model: {fileID: 4092078242241298771}
   healthbar: {fileID: 9136654929108959313}
   healthText: {fileID: 8793385005982733516}
@@ -1274,6 +1276,14 @@ MonoBehaviour:
   spikeRiseHeight: 4
   spikeMoveTime: 0.5
   spikeHoldTime: 1.5
+  followPlayer: 1
+  moveSpeed: 2.5
+  stopDistance: 6
+  turnSpeed: 8
+  stopMovingWhileAttacking: 1
+  bossFreezeChance: 0.25
+  bossFreezeDuration: 0.75
+  bossFreezeCoolDown: 5
 --- !u!23 &4092078242241298771
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13750,7 +13760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b416f62c9d0c16d48a7dc37274beb572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeadShot
-  enemy: {fileID: 1552161082871557743}
+  enemy: {fileID: 1666705403417863322}
 --- !u!65 &8380065418120890876
 BoxCollider:
   m_ObjectHideFlags: 0

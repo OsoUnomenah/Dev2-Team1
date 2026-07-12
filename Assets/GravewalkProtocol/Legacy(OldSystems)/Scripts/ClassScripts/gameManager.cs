@@ -8,6 +8,11 @@ using UnityEngine.UI;
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
+    [SerializeField] GameObject levelBuilder;
+    [SerializeField] LevelBuilder lb; 
+    [SerializeField] bool levelStarted = false;
+    public GameObject playerSpawnPos;
+    [SerializeField] public bool isDead = false; 
 
     [SerializeField] public bool gameDebug;
     public TMP_Text objectiveText;
@@ -25,11 +30,13 @@ public class gameManager : MonoBehaviour
     [Range(1, 100)][SerializeField] public float level;
     [Range(1, 1000)][SerializeField] public float maxLevel;
     [Range(1, 1000)][SerializeField] public float xp;
+    
     public float currentXP;
     public float xpSource;
     [SerializeField] public float xpToNextLevel;
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
+    
 
     [Header("Ability Proc Config")]
     [SerializeField] private float baseAbilityProcChance = 0.10f;
@@ -74,7 +81,11 @@ public class gameManager : MonoBehaviour
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
 
-    public GameObject playerSpawnPos;
+
+    [Header("Charged Shot UI")]
+    [SerializeField] public GameObject sniperChargePanel;
+    [SerializeField] public Slider sniperChargeSlider;
+    [SerializeField] public TMP_Text sniperChargeText;
 
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
@@ -108,6 +119,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
+    public bool isProceduralLevel;
 
     [Header("Win Config")]
     public Button nextLevelButton;
@@ -126,18 +138,74 @@ public class gameManager : MonoBehaviour
         abilityProcChance = baseAbilityProcChance;
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        playerSpawnPos = GameObject.FindGameObjectWithTag("PlayerSpawnPos");
+        if(isProceduralLevel)
+        {
+            InitLevelBuilder();
+        }
+        
+
     }
 
     private void Start()
     {
+        
         if (nextLevelButton != null)
         {
             nextLevelButton.onClick.AddListener(NextLevel);
         }
-        //set player initial spawn point
-        //playerTransform.position = playerSpawnPoint.transform.position;
+
         menuWin.SetActive(false);
+
+        ChooseLevel();
+
+    }
+
+    public void InitLevelBuilder()
+    {
+        playerSpawnPos = GameObject.Find("PlayerSpawnPos");
+        levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+        lb = levelBuilder.GetComponent<LevelBuilder>();
+
+    }
+
+    public void ChooseLevel()
+    {
+        if (!levelStarted)
+        {
+            StartNewLevel();
+            
+        }
+        else
+        {
+            RestartLevel();
+        }
+
+    }
+
+    public void StartNewLevel()
+    {
+        //If first time starting a levl in this scene, generate a random level
+        //Generate Random Level for current scene
+        if (levelBuilder != null)
+        {
+
+            levelBuilder.GetComponent<LevelBuilder>().GenerateRandom();
+            levelStarted = true;
+            if (lb.GetStartRoomCenterPos() != Vector3.zero)
+            {
+                playerSpawnPos.transform.position = lb.GetStartRoomCenterPos();
+                player.transform.position = playerSpawnPos.transform.position;
+            }
+        }
+    }
+
+    public void RestartLevel()
+    {
+        if (levelBuilder != null)
+        {
+            levelBuilder.GetComponent<LevelBuilder>().GenerateFromSeed();
+        }
+
     }
 
     private void InitGM()
@@ -161,6 +229,12 @@ public class gameManager : MonoBehaviour
         playerTransform = player.GetComponent<Transform>();
         playerInteract = player.GetComponent<Players>();
 
+        sniperChargePanel = GameObject.FindGameObjectWithTag("SniperChargePanel");
+        sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
+        sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
+        sniperChargePanel.SetActive(false);
+
+
 
         if (gameDebug)
         {
@@ -172,7 +246,10 @@ public class gameManager : MonoBehaviour
             Debug.Log("PlayerCamera: " + playerCamera);
             Debug.Log("PlayerPosition: " + playerTransform.position);
         }
+
+        
     }
+   
 
     // Update is called once per frame
     void Update()
@@ -181,12 +258,15 @@ public class gameManager : MonoBehaviour
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
     }
+    private void chargeUI()
+    {
+    }
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
         if (instance.playerWeaponManager.abilities.Count == 4)
         {
-            Debug.LogError("Does not Run");
+           // Debug.LogError("Does not Run");
             return;
         }
         {
@@ -467,10 +547,14 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
-        characterController.transform.position = gameManager.instance.playerSpawnPos.transform.position;
+        isDead = false;
+        player.transform.position = playerSpawnPos.transform.position;
+        playerInputHandler.enabled = true;
+
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
+        
     }
 
     public void NextLevel()

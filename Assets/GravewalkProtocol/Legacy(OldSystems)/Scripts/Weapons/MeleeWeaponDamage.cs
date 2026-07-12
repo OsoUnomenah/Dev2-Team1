@@ -1,49 +1,134 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class MeleeWeaponDamage : MonoBehaviour
 {
-    [SerializeField] CapsuleCollider dmgTrigger;
+    [Header("Components")]
     [SerializeField] Animator animator;
+    [SerializeField] Transform hitPoint1;
+    [SerializeField] Transform hitPoint2;
 
-    float timer = 0f;
-    float waitTime = gameManager.instance.playerWeaponManager.Timer;
+    [Header("Adjustments")]
+    [Range(0f, 4f)][SerializeField] float hitRadius;
+
+    private PlayerWeaponManager weaponManager;
+    private StatHandler stats;
+    private LayerMask enemyLayer;
+
+    private bool isAttacking;
+    private bool isBlocking;
+    private bool defenseAdded;
+    private readonly HashSet<IDamage> hitEnemies = new();
+
+    private void Start()
+    {
+        weaponManager = gameManager.instance.playerWeaponManager;
+        stats = gameManager.instance.playerStatHandler;
+        enemyLayer = LayerMask.GetMask("Enemy");
+    }
 
     private void Update()
     {
-        timer += Time.deltaTime;
-
-        if (gameManager.instance.isMeleeing == true && timer > waitTime)
+        if (gameManager.instance == null || gameManager.instance.playerInputHandler == null)
+            return;
+        
+        if (isAttacking && !isBlocking)
         {
-            dmgTrigger.enabled = true;
+            MeleeSwing();
+        }
+        else if (isBlocking && !isAttacking && weaponManager.CurrentWeaponName == "Hammer")
+        {
+            HammerBlock();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void MeleeSwing()
     {
-        timer = 0;
-        if (other.CompareTag("Enemy"))
-        {
-            dmgTrigger.enabled = false;
-            Debug.Log("Attempted to deal damage");
+ 
+        Collider[] hits = Physics.OverlapCapsule(hitPoint1.position, hitPoint2.position, hitRadius, enemyLayer);
 
-            IDamage dmg = other.GetComponentInChildren<IDamage>();
+        foreach (Collider hit in hits)
+        {
+            IDamage dmg = hit.GetComponentInParent<IDamage>();
+
+           if(dmg == null)
+                continue;
+
+            if (hitEnemies.Contains(dmg))
+                continue;
+
+            hitEnemies.Add(dmg);
+
+            if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(hit))
+            {
+                return;
+            }
+
+            gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(hit, true);
 
             int bonusDamage = 0;
 
+            if (stats != null)
+               bonusDamage = Mathf.RoundToInt(stats.modDamage);
+
             if (gameManager.instance.playerInputHandler.dashAttackTriggered)
             {
-                bonusDamage += 85;
+                // one shot normal enemies
+                int x = 100 - weaponManager.Damage;
+                bonusDamage += x;
             }
 
-            StatHandler stats = gameManager.instance.playerStatHandler;
-
-            if (stats != null)
-            {
-                bonusDamage += Mathf.RoundToInt(stats.modDamage);
-            }
-
-            dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage + bonusDamage);
+            dmg.takeDamage(weaponManager.Damage + bonusDamage);
         }
     }
+
+    private void HammerBlock()
+    {
+        if (stats == null)
+            return;
+
+        if (!defenseAdded)
+        {
+            stats.modDefense += 100;
+            defenseAdded = true;
+        }
+
+        if (!gameManager.instance.playerInputHandler.isCrouching)
+        {
+            animator.SetBool("isBlocking", false);
+            isBlocking = false;
+            stats.modDefense -= 100;
+            defenseAdded = false;
+        }
+    }
+
+    // --animator based functions--
+    private void OnAttackBegin()
+    {
+        hitEnemies.Clear();
+        // Debug.Log("Start damage frames");
+        isAttacking = true;
+    }
+
+    private void OnAttackEnd()
+    {
+        isAttacking = false;
+    }
+
+    private void OnBlockBegin()
+    {
+        isBlocking = true;
+    }
+    // ----------------------------
+
+    //void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawSphere(hitPoint1.position, hitRadius);
+    //    Gizmos.DrawSphere(hitPoint2.position, hitRadius);
+    //}
 }
+
+
