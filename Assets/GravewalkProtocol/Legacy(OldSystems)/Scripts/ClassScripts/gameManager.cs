@@ -19,6 +19,9 @@ public class gameManager : MonoBehaviour
 
     public GameEvent onPlayerHealthChange;
 
+    public GameObject reticle;
+    public GameObject shotgunReticle;
+
     [Header("XP Config")]
     public Slider xpBar;
     public Slider reloadBar;
@@ -267,9 +270,19 @@ public class gameManager : MonoBehaviour
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
         chargeUI();
-        
-        
+
+        if(instance.playerWeaponManager.CurrentWeaponData != null && instance.playerWeaponManager.CurrentWeaponData.usesPellets)
+        {
+            instance.reticle.SetActive(false);
+            instance.shotgunReticle.SetActive(true);
+        }
+        else if(instance.shotgunReticle.activeSelf)
+        {
+            instance.reticle.SetActive(true);
+            instance.shotgunReticle.SetActive(false);
+        }
     }
+    
     private bool isRecharging = false;
     float rechargerTimer;
 
