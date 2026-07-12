@@ -907,31 +907,31 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                 );
                             }
 
-                            if (weaponManager.abilities.Count > 0)
-                            {
-                                switch (weaponManager
-                                    .abilities[weaponManager.abilitySlot]
-                                    .abilityType)
-                                {
-                                    case AbilityStats.ability.fire:
-                                        break;
+                            //if (weaponManager.abilities.Count > 0)
+                            //{
+                            //    switch (weaponManager
+                            //        .abilities[weaponManager.abilitySlot]
+                            //        .abilityType)
+                            //    {
+                            //        case AbilityStats.ability.fire:
+                            //            break;
 
-                                    case AbilityStats.ability.freeze:
-                                        break;
+                            //        case AbilityStats.ability.freeze:
+                            //            break;
 
-                                    case AbilityStats.ability.toxic:
-                                        break;
+                            //        case AbilityStats.ability.toxic:
+                            //            break;
 
-                                    case AbilityStats.ability.magent:
-                                        break;
+                            //        case AbilityStats.ability.magent:
+                            //            break;
 
-                                    case AbilityStats.ability.crystal:
-                                        break;
+                            //        case AbilityStats.ability.crystal:
+                            //            break;
 
-                                    case AbilityStats.ability.lightning:
-                                        break;
-                                }
-                            }
+                            //        case AbilityStats.ability.lightning:
+                            //            break;
+                            //    }
+                            //}
 
                             TryApplyWeaponFreeze(hit.collider, false);
 
