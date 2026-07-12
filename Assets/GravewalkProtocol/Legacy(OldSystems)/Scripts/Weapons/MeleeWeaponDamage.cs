@@ -29,6 +29,9 @@ public class MeleeWeaponDamage : MonoBehaviour
 
     private void Update()
     {
+        if (gameManager.instance == null || gameManager.instance.playerInputHandler == null)
+            return;
+
         if (isAttacking)
         {
             MeleeSwing();
@@ -51,6 +54,13 @@ public class MeleeWeaponDamage : MonoBehaviour
                 continue;
 
             hitEnemies.Add(dmg);
+
+            if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(hit))
+            {
+                return;
+            }
+
+            gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(hit, true);
 
             int bonusDamage = 0;
 
