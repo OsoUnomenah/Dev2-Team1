@@ -18,6 +18,8 @@ public class MeleeWeaponDamage : MonoBehaviour
     private LayerMask enemyLayer;
 
     private bool isAttacking;
+    private bool isBlocking;
+    private bool defenseAdded;
     private readonly HashSet<IDamage> hitEnemies = new();
 
     private void Start()
@@ -31,10 +33,14 @@ public class MeleeWeaponDamage : MonoBehaviour
     {
         if (gameManager.instance == null || gameManager.instance.playerInputHandler == null)
             return;
-
-        if (isAttacking)
+        
+        if (isAttacking && !isBlocking)
         {
             MeleeSwing();
+        }
+        else if (isBlocking && !isAttacking && weaponManager.CurrentWeaponName == "Hammer")
+        {
+            HammerBlock();
         }
     }
 
@@ -78,11 +84,31 @@ public class MeleeWeaponDamage : MonoBehaviour
         }
     }
 
+    private void HammerBlock()
+    {
+        if (stats == null)
+            return;
+
+        if (!defenseAdded)
+        {
+            stats.modDefense += 100;
+            defenseAdded = true;
+        }
+
+        if (!gameManager.instance.playerInputHandler.isCrouching)
+        {
+            animator.SetBool("isBlocking", false);
+            isBlocking = false;
+            stats.modDefense -= 100;
+            defenseAdded = false;
+        }
+    }
+
     // --animator based functions--
     private void OnAttackBegin()
     {
         hitEnemies.Clear();
-        Debug.Log("Start damage frames");
+        // Debug.Log("Start damage frames");
         isAttacking = true;
     }
 
@@ -90,14 +116,19 @@ public class MeleeWeaponDamage : MonoBehaviour
     {
         isAttacking = false;
     }
+
+    private void OnBlockBegin()
+    {
+        isBlocking = true;
+    }
     // ----------------------------
 
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(hitPoint1.position, hitRadius);
-        Gizmos.DrawSphere(hitPoint2.position, hitRadius);
-    }
+    //void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawSphere(hitPoint1.position, hitRadius);
+    //    Gizmos.DrawSphere(hitPoint2.position, hitRadius);
+    //}
 }
 
 
