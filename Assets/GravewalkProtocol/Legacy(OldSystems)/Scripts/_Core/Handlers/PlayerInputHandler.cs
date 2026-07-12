@@ -83,9 +83,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] public LayerMask enemyLayer;
 
     [Header("Charged Shot Runtime")]
-    [SerializeField] private bool isChargingShot;
+    [SerializeField] public bool isChargingShot;
     [SerializeField] private float currentChargeTime;
-    [SerializeField] private float chargedShotCooldownTimer;
+    [SerializeField] public float chargedShotCooldownTimer;
 
     private float normalCameraFOV;
 
@@ -1232,7 +1232,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             timer += Time.deltaTime;
             gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
                      gameManager.instance.playerCamera.fieldOfView,
-                     fov - 30,
+                     fov - gameManager.instance.playerWeaponManager.Ads,
                      timer / duration);
 
             gameManager.instance.playerWeaponManager.weaponHolder.transform.position = Vector3.Lerp(
@@ -1242,7 +1242,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             yield return null;
         }
-        gameManager.instance.playerCamera.fieldOfView = fov - 30;
+        gameManager.instance.playerCamera.fieldOfView = fov - gameManager.instance.playerWeaponManager.Ads;
         gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position;
         
     }
@@ -1775,7 +1775,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         // Only show this UI for charged weapons
         if (!weaponManager.UsesChargedShot)
         {
-            sniperChargePanel.SetActive(false);
+            //sniperChargePanel.SetActive(false);
             return;
         }
 
@@ -1786,7 +1786,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
         else
         {
-            sniperChargePanel.SetActive(false);
+            
             return;
         }
 
