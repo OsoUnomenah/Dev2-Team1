@@ -1459,6 +1459,50 @@ public class PlayerInputHandler : MonoBehaviour
         wasGrounded = isGrounded;
     }
 
+    private void ApplyMeleeDamageToTarget(Collider target, bool includeDashBonus)
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        if (TryShatterFrozenTarget(target))
+        {
+            return;
+        }
+
+        TryApplyWeaponFreeze(target, true);
+
+        IDamage dmg = target.GetComponentInParent<IDamage>();
+
+        if (dmg == null)
+        {
+            dmg = target.GetComponentInChildren<IDamage>();
+        }
+
+        if (dmg == null)
+        {
+            return;
+        }
+
+        int bonusDamage = 0;
+
+        StatHandler stats = gameManager.instance.playerStatHandler;
+
+        if (stats != null)
+        {
+            bonusDamage += Mathf.RoundToInt(stats.modDamage);
+        }
+
+        if (includeDashBonus && dashAttackTriggered)
+        {
+            int dashBonus = 100 - gameManager.instance.playerWeaponManager.Damage;
+            bonusDamage += dashBonus;
+        }
+
+        dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage + bonusDamage);
+    }
+
     IEnumerator HeavyAttackAOE()
     {
         // Debug.Log("Heavy attack aoe");
@@ -1470,12 +1514,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         foreach (Collider others in hits)
         {
-            IDamage dmg = others.GetComponent<IDamage>();
-
-            if (dmg != null)
-            {
-                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
-            }
+            ApplyMeleeDamageToTarget(others, false);
         }
     }
 
@@ -1492,12 +1531,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         foreach (Collider others in hits)
         {
-            IDamage dmg = others.GetComponent<IDamage>();
-
-            if (dmg != null)
-            {
-                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
-            }
+            ApplyMeleeDamageToTarget(others, true);
         }
 
         dashAttackTriggered = false;
