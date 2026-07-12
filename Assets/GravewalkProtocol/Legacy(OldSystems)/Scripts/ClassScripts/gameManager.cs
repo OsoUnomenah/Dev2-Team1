@@ -134,16 +134,16 @@ public class gameManager : MonoBehaviour
 
     }
 
-   
-
     private void Start()
     {
+        
         if (nextLevelButton != null)
         {
             nextLevelButton.onClick.AddListener(NextLevel);
         }
 
         menuWin.SetActive(false);
+        sniperChargePanel.SetActive(false);
 
         ChooseLevel();
 
@@ -229,7 +229,10 @@ public class gameManager : MonoBehaviour
             Debug.Log("PlayerCamera: " + playerCamera);
             Debug.Log("PlayerPosition: " + playerTransform.position);
         }
+
+        
     }
+   
 
     // Update is called once per frame
     void Update()
