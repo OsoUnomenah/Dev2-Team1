@@ -151,6 +151,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         standingCenter = controller.center;
 
         standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
+        fov = gameManager.instance.playerCamera.fieldOfView;
     }
 
     void Update()
@@ -936,6 +937,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     float range;
     float adsRecoil;
     float fov;
+    private Coroutine adsInCoroutine;
+    private Coroutine adsOutCoroutine;
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
@@ -954,26 +957,82 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
         range = gameManager.instance.playerWeaponManager.Range;
         adsRecoil = gameManager.instance.playerWeaponManager.Recoil;
-        fov = gameManager.instance.playerCamera.fieldOfView;
+        
 
         if (!gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
         {
-            gameManager.instance.isAiming = true;
+            if(adsOutCoroutine != null)
+            {
+                StopCoroutine(adsOutCoroutine);
+            }
             gameManager.instance.playerWeaponManager.Range = range * 1.4f;
             gameManager.instance.playerWeaponManager.Recoil = adsRecoil - 0.2f;
-            gameManager.instance.playerCamera.fieldOfView = fov + gameManager.instance.playerWeaponManager.ADS;
+            adsInCoroutine = StartCoroutine(AdsIn());
+            gameManager.instance.isAiming = true;
         }
 
+    }
+    IEnumerator AdsIn()
+    {
+        float timer = 0f;
+        float duration = 0.3f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
+                     gameManager.instance.playerCamera.fieldOfView,
+                     fov - 30,
+                     timer / duration);
+
+            gameManager.instance.playerWeaponManager.weaponHolder.transform.position = Vector3.Lerp(
+                gameManager.instance.playerWeaponManager.weaponHolder.transform.position,
+                gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position,
+                timer / duration);
+
+            yield return null;
+        }
+        gameManager.instance.playerCamera.fieldOfView = fov - 30;
+        gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position;
+        
     }
     private void OnADSCanceled(InputAction.CallbackContext context)
     {
         if (gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
         {
-            gameManager.instance.isAiming = false;
+            if (adsInCoroutine != null)
+            {
+                StopCoroutine(adsInCoroutine);
+            }
             gameManager.instance.playerWeaponManager.Range = range;
             gameManager.instance.playerWeaponManager.Recoil = adsRecoil;
-            gameManager.instance.playerCamera.fieldOfView = fov;
+            adsOutCoroutine = StartCoroutine(AdsOut());
+
+            gameManager.instance.isAiming = false;
         }
+    }
+    IEnumerator AdsOut()
+    {
+        float timer = 0f;
+        float duration = 0.3f;
+        while (timer < duration)
+        {
+            
+            timer += Time.deltaTime;
+            gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
+                     gameManager.instance.playerCamera.fieldOfView,
+                     fov,
+                     timer / duration);
+
+            gameManager.instance.playerWeaponManager.weaponHolder.transform.position = Vector3.Lerp(
+                gameManager.instance.playerWeaponManager.weaponHolder.transform.position,
+                gameManager.instance.playerWeaponManager.nonADSWeaponHolder.transform.position,
+                timer / duration);
+
+            yield return null;
+        }
+        gameManager.instance.playerCamera.fieldOfView = fov;
+        gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.nonADSWeaponHolder.transform.position;
+
     }
     IEnumerator fireCooldown(float cd)
     {

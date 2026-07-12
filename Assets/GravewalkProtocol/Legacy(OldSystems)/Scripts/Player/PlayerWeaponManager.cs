@@ -26,7 +26,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public GameObject HitEffect;
     public Animator weaponAnimator;
 
-    [SerializeField] private Transform weaponHolder;
+    [SerializeField] public Transform weaponHolder;
+    [SerializeField] public Transform adsWeaponHolder;
+    [SerializeField] public Transform nonADSWeaponHolder;
     private GameObject weaponCurrent;
 
     // Ability Stuff
@@ -79,6 +81,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int maxAmmo,
         float ammoTimer,
         float ads,
+
         List<string> weaponMods = null
         )
     {
@@ -102,10 +105,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             ammo,
             maxAmmo,
             ammoTimer,
-            ads,
             weaponData.shootSound,
             weaponData.reloadSound,
-            weaponData.hitEffect
+            weaponData.hitEffect,
+            ads
         );
 
         if (UpgradeUI.instance != null)
@@ -170,10 +173,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int ammo,
         int maxAmmo,
         float ammoTimer,
-        float ads,
         BaseSoundSO shootSound,
         BaseSoundSO reloadSound,
-        GameObject hitEffect)
+        GameObject hitEffect,
+        float ads)
     {
         Type = type;
         Damage = damage;
