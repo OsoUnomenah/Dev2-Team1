@@ -37,6 +37,16 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private float nextGunFreezeTime;
     private float nextMeleeFreezeTime;
 
+    [Header("Lightning Weapon Effect")]
+    [SerializeField] private GameObject chainLightning;
+    [Range(0f, 1f)][SerializeField] private float chainSpeed;
+    [Range(1, 20)][SerializeField] private int chainDmg;
+    
+    private float lightningCdTimer;
+
+   
+   
+
     [Header("Crouch Config")]
     [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float crouchHeight = 1.0f;
@@ -461,19 +471,19 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         return !blocked;
     }
- 
+
     private void OnCrouchPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
         {
             return;
         }
-        
+
         crouchRequested = true;
 
-        if (gameManager.instance.playerWeaponManager.CurrentWeaponData.weaponName == "Hammer")
+        if (gameManager.instance.playerWeaponManager.Type == true)
             // Debug.Log("Tried Block");
-            gameManager.instance.playerWeaponManager.PlayHammerBlock();
+            gameManager.instance.playerWeaponManager.PlayMeleeBlock();
 
         if (!isCrouching && AudioManager.instance != null && crouchSound != null)
         {
@@ -506,7 +516,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         int playerLayer = LayerMask.NameToLayer("Player");
         int enemyLayer = LayerMask.NameToLayer("Enemy");
 
-        Physics.IgnoreLayerCollision(playerLayer,enemyLayer,true);
+        Physics.IgnoreLayerCollision(playerLayer, enemyLayer, true);
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
 
@@ -530,7 +540,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             yield return null;
         }
 
-        Physics.IgnoreLayerCollision(playerLayer,enemyLayer,false);
+        Physics.IgnoreLayerCollision(playerLayer, enemyLayer, false);
 
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
         gameManager.instance.isDashing = false;
@@ -938,6 +948,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                                         break;
                                     case AbilityStats.ability.lightning:
                                         //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                        StartCoroutine(ChainLightning(hit.collider));
                                         break;
 
                                 }
@@ -979,18 +990,18 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     gameManager.instance.playerWeaponManager.PlayMeleeLightAttack();
                 }
 
-                    //if (turnOnDebug)
-                    //{
-                    //     Debug.Log("ShotFired!");
-                    //}
+                //if (turnOnDebug)
+                //{
+                //     Debug.Log("ShotFired!");
+                //}
 
 
 
 
 
-                }
             }
-         }
+        }
+    }
 
     private Vector3 GetPelletDirection(
     int pelletIndex,
@@ -1034,12 +1045,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             .TransformDirection(localDirection)
             .normalized;
     }
-    
+
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
 
-       
+
 
         if (gameManager.instance.playerWeaponManager == null)
         {
@@ -1142,7 +1153,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private void EndChargedShot()
     {
         gameManager.instance.canShoot = false;
-        
+
 
         isChargingShot = false;
         currentChargeTime = 0f;
@@ -1209,11 +1220,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
         range = gameManager.instance.playerWeaponManager.Range;
         adsRecoil = gameManager.instance.playerWeaponManager.Recoil;
-        
+
 
         if (!gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
         {
-            if(adsOutCoroutine != null)
+            if (adsOutCoroutine != null)
             {
                 StopCoroutine(adsOutCoroutine);
             }
@@ -1245,7 +1256,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
         gameManager.instance.playerCamera.fieldOfView = fov - gameManager.instance.playerWeaponManager.Ads;
         gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position;
-        
+
     }
     private void OnADSCanceled(InputAction.CallbackContext context)
     {
@@ -1268,7 +1279,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         float duration = 0.3f;
         while (timer < duration)
         {
-            
+
             timer += Time.deltaTime;
             gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
                      gameManager.instance.playerCamera.fieldOfView,
@@ -1331,6 +1342,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
 
         timer += Time.deltaTime;
+        lightningCdTimer += Time.deltaTime;
 
         if (timer >= gameManager.instance.playerWeaponManager.Timer)
         {
@@ -1494,17 +1506,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAttackTriggered = true;
 
         yield return new WaitForSeconds(0.5f);
-        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
-
-        foreach (Collider others in hits)
-        {
-            IDamage dmg = others.GetComponent<IDamage>();
-
-            if (dmg != null)
-            {
-                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
-            }
-        }
 
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
@@ -1705,12 +1706,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         //float chargePercent = GetChargePercent();
 
-       // gameManager.instance.playerCamera.fieldOfView =
-           // Mathf.Lerp(
-           //     normalCameraFOV,
-            //    weaponManager.ChargedZoomFOV,
-            //    chargePercent
-           // );
+        // gameManager.instance.playerCamera.fieldOfView =
+        // Mathf.Lerp(
+        //     normalCameraFOV,
+        //    weaponManager.ChargedZoomFOV,
+        //    chargePercent
+        // );
     }
 
     private float GetChargePercent()
@@ -1765,7 +1766,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         }
         else
         {
-            
+
             return;
         }
 
@@ -1794,6 +1795,52 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             sniperChargeSlider.value = rechargePercent;
             sniperChargeText.text = "RECHARGING";
+        }
+    }
+
+    IEnumerator ChainLightning(Collider col)
+    {
+        if (gameManager.instance.playerWeaponManager.abilities.Count == 0 ||
+            lightningCdTimer < gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].effectTimer)
+        {
+            yield break;
+        }
+
+        if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.lightning
+            && col.GetComponent<IDamage>() != null)
+        {
+           // Debug.Log("Chaining the lightning");
+            lightningCdTimer = 0;
+
+            Collider[] hits = Physics.OverlapSphere(col.transform.position, 20f, enemyLayer);
+
+            GameObject cL = Instantiate(chainLightning, col.transform.position, Quaternion.identity);
+
+            foreach (Collider hit in hits)
+            {
+                IDamage dmg = hit.GetComponentInParent<IDamage>();
+
+                if (col != hit)
+                {
+                    yield return StartCoroutine(ChainTheLightning(hit, cL));
+                }
+
+                dmg?.takeDamage(chainDmg);
+            }
+
+            Destroy(cL);
+        }
+    }
+
+    IEnumerator ChainTheLightning(Collider nextPos, GameObject cL)
+    {
+        float timer = 0f;
+
+        while (timer < chainSpeed)
+        {
+            timer += Time.deltaTime;
+            cL.transform.position = Vector3.Lerp(cL.transform.position, nextPos.transform.position, chainSpeed / timer);
+            yield return null;
         }
     }
 }
