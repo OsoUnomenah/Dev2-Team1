@@ -546,6 +546,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7646c876ff4afaf478ebd994b55a31c4, type: 3}
+--- !u!1001 &1182180522
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.420962
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.811436
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3472488264446540247, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: m_Name
+      value: Upgrade Pickup
+      objectReference: {fileID: 0}
+    - target: {fileID: 7194559048639955777, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
+      propertyPath: abilityPickupSound
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c2bdd2de8ff4524584958ecbe3bba4f, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c8e3aa665c74a084ea0e939d9345ddd1, type: 3}
 --- !u!224 &1299435561 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5124478230448249279, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
@@ -926,6 +987,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ad33d58a66ab154a89c9e88255601e5, type: 3}
+--- !u!1001 &1971367062
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.720823
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 19.63582
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 865581647248225698, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799096760755582049, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: _healthPickup
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c2bdd2de8ff4524584958ecbe3bba4f, type: 2}
+    - target: {fileID: 3472488264446540247, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+      propertyPath: m_Name
+      value: HealthPickup
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
 --- !u!1001 &2006546506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1085,3 +1207,5 @@ SceneRoots:
   - {fileID: 83753892}
   - {fileID: 1679020008}
   - {fileID: 53631334}
+  - {fileID: 1971367062}
+  - {fileID: 1182180522}

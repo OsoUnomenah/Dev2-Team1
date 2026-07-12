@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(BaseSoundSO sound)
     {
-        if (sound == null)
+        if (sound == null || sound.clips.Length == 0)
             return;
 
         GameObject soundObject = new GameObject("Temp Audio");
@@ -66,7 +66,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySoundFromSource(BaseSoundSO sound, GameObject noiseMaker)
     {
-        if(sound == null || noiseMaker == null)
+        if(sound == null || noiseMaker == null || sound.clips.Length == 0)
             return;
 
         AudioSource audioSource = noiseMaker.GetComponent<AudioSource>();
@@ -103,7 +103,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySoundAtPosition(BaseSoundSO sound, GameObject noiseMaker)
     {
-        if (sound == null || noiseMaker == null)
+        if (sound == null || noiseMaker == null || sound.clips.Length == 0)
             return;
 
         GameObject soundObject = new GameObject("Temp Audio");
@@ -148,7 +148,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration = 0.1f)
     {
-        if (sound == null || noiseMaker == null)
+        if (sound == null || noiseMaker == null || sound.clips.Length == 0)
             return;
 
         GameObject soundObject = new GameObject("Temp Audio");
@@ -199,7 +199,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayUISound(BaseSoundSO sound, PointerEventData data)
     {
-        if (sound == null || data == null)
+        if (sound == null || data == null || sound.clips.Length == 0)
             return;
 
         // Route to correct mixer group based on sound type
