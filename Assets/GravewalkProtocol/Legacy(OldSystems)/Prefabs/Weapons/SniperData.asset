@@ -16,16 +16,16 @@ MonoBehaviour:
   weaponType: 0
   fullAuto: 0
   usesPellets: 0
-  pelletCount: 8
-  horizontalSpread: 15
-  verticalSpread: 1
+  pelletCount: 1
+  horizontalSpread: 0
+  verticalSpread: 0
   usesChargedShot: 1
   chargeTime: 2
-  chargeCooldown: 1
-  maxChargeMultiplier: 2
+  chargeCooldown: 8.8
+  maxChargeMultiplier: 3.57
   criticalMultiplier: 1.5
   chargedZoomFOV: 10
-  damage: 75
+  damage: 10
   range: 150
   rate: 1
   recoil: 1
@@ -33,6 +33,7 @@ MonoBehaviour:
   ammo: 5
   maxAmmo: 5
   ammoTimer: 2
+  ads: 40
   weaponPrefab: {fileID: 3824886265503906123, guid: 9aefcc7ecaa49344580758e509515108, type: 3}
   hitEffect: {fileID: 0}
   shootSound: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}

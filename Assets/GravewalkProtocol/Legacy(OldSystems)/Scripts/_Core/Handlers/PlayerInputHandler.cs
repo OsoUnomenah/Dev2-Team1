@@ -48,7 +48,7 @@ public class PlayerInputHandler : MonoBehaviour
     private Vector3 standingCenter;
     private Vector3 standingCameraPosition;
 
-    private bool isCrouching;
+    public bool isCrouching;
     private bool crouchRequested;
 
     private Vector3 dashVector;
@@ -83,9 +83,9 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] public LayerMask enemyLayer;
 
     [Header("Charged Shot Runtime")]
-    [SerializeField] private bool isChargingShot;
+    [SerializeField] public bool isChargingShot;
     [SerializeField] private float currentChargeTime;
-    [SerializeField] private float chargedShotCooldownTimer;
+    [SerializeField] public float chargedShotCooldownTimer;
 
     private float normalCameraFOV;
 
@@ -455,15 +455,19 @@ public class PlayerInputHandler : MonoBehaviour
 
         return !blocked;
     }
-
+ 
     private void OnCrouchPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
         {
             return;
         }
-
+        
         crouchRequested = true;
+
+        if (gameManager.instance.playerWeaponManager.CurrentWeaponData.weaponName == "Hammer")
+            // Debug.Log("Tried Block");
+            gameManager.instance.playerWeaponManager.PlayHammerBlock();
 
         if (!isCrouching && AudioManager.instance != null && crouchSound != null)
         {
@@ -901,62 +905,63 @@ public class PlayerInputHandler : MonoBehaviour
                                 );
                             }
 
-                            //if (weaponManager.abilities.Count > 0)
-                            //{
-                            //    switch (weaponManager
-                            //        .abilities[weaponManager.abilitySlot]
-                            //        .abilityType)
-                            //    {
-                            //        case AbilityStats.ability.fire:
-                            //            break;
-
-                            //        case AbilityStats.ability.freeze:
-                            //            break;
-
-                            //        case AbilityStats.ability.toxic:
-                            //            break;
-
-                            //        case AbilityStats.ability.magent:
-                            //            break;
-
-                            //        case AbilityStats.ability.crystal:
-                            //            break;
-
-                            //        case AbilityStats.ability.lightning:
-                            //            break;
-                            //    }
-                            //}
-
-                            TryApplyWeaponFreeze(hit.collider, false);
-
-                            IDamage dmg =
-                                hit.collider.GetComponentInChildren<IDamage>();
-
-                            if (dmg == null)
+                            IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
-                                dmg = hit.collider.GetComponentInParent<IDamage>();
+                                switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                                {
+                                    //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                                    //infact most should still run the IDamage thing below,
+                                    //but might have to change damage values or something in here first
+                                    //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                                    //personally I'll 
+                                    case AbilityStats.ability.fire:
+                                        //probably use a IFire interface that works like IDamage but makes them set fire
+                                        break;
+                                    case AbilityStats.ability.freeze:
+                                        TryApplyWeaponFreeze(hit.collider, false);
+                                        break;
+                                    case AbilityStats.ability.toxic:
+                                        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                        break;
+                                    case AbilityStats.ability.magent:
+                                        //good luck lol idk
+                                        break;
+                                    case AbilityStats.ability.crystal:
+                                        CrystalShot(dmg, hit);
+                                        break;
+                                    case AbilityStats.ability.lightning:
+                                        //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                        break;
+
+                                }
                             }
 
-                            if (dmg != null && weaponManager.Damage != 0)
+                            if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                             {
                                 int bonusDamage = 0;
 
-                                StatHandler stats =
-                                    gameManager.instance.playerStatHandler;
+                                StatHandler stats = gameManager.instance.playerStatHandler;
 
                                 if (stats != null)
                                 {
                                     bonusDamage = Mathf.RoundToInt(stats.modDamage);
                                 }
 
-                                int pelletBonusDamage = weaponManager.UsesPellets
-                                    ? Mathf.RoundToInt((float)bonusDamage / pelletCount)
-                                    : bonusDamage;
 
-                                int finalDamage =
-                                    weaponManager.Damage + pelletBonusDamage;
+                                int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                                if (gameManager.instance.playerStatHandler.crystalBar == 10)
+                                {
+                                    gameManager.instance.playerStatHandler.crystalBar = 0;
+                                    finalDamage *= 3;
+                                }
 
                                 dmg.takeDamage(finalDamage);
+
+                                // if (turnOnDebug)
+                                //  {
+                                //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
+                                // }
                             }
                         }
                     }
@@ -965,24 +970,21 @@ public class PlayerInputHandler : MonoBehaviour
                 {
                     PlayCurrentWeaponShootSound();
                     gameManager.instance.isMeleeing = true;
-
                     gameManager.instance.playerWeaponManager.PlayMeleeLightAttack();
-                    StartCoroutine(LightAttack());
-
                 }
 
-                //if (turnOnDebug)
-                //{
-                //     Debug.Log("ShotFired!");
-                //}
+                    //if (turnOnDebug)
+                    //{
+                    //     Debug.Log("ShotFired!");
+                    //}
 
 
-                    
-                
 
+
+
+                }
             }
-        }
-    }
+         }
 
     private Vector3 GetPelletDirection(
     int pelletIndex,
@@ -1026,20 +1028,19 @@ public class PlayerInputHandler : MonoBehaviour
             .TransformDirection(localDirection)
             .normalized;
     }
-
+    
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
 
-        PlayerWeaponManager weaponManager =
-            gameManager.instance.playerWeaponManager;
+       
 
-        if (weaponManager == null)
+        if (gameManager.instance.playerWeaponManager == null)
         {
             return;
         }
 
-        if (!weaponManager.UsesChargedShot)
+        if (!gameManager.instance.playerWeaponManager.UsesChargedShot)
         {
             return;
         }
@@ -1135,17 +1136,12 @@ public class PlayerInputHandler : MonoBehaviour
     private void EndChargedShot()
     {
         gameManager.instance.canShoot = false;
-        PlayerWeaponManager weaponManager =
-            gameManager.instance.playerWeaponManager;
+        
 
         isChargingShot = false;
         currentChargeTime = 0f;
 
-        chargedShotCooldownTimer =
-            weaponManager.ChargeCooldown;
-
-        gameManager.instance.playerCamera.fieldOfView =
-            normalCameraFOV;
+        chargedShotCooldownTimer = gameManager.instance.playerWeaponManager.ChargeCooldown;
     }
 
 
@@ -1231,7 +1227,7 @@ public class PlayerInputHandler : MonoBehaviour
             timer += Time.deltaTime;
             gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
                      gameManager.instance.playerCamera.fieldOfView,
-                     fov - 30,
+                     fov - gameManager.instance.playerWeaponManager.Ads,
                      timer / duration);
 
             gameManager.instance.playerWeaponManager.weaponHolder.transform.position = Vector3.Lerp(
@@ -1241,7 +1237,7 @@ public class PlayerInputHandler : MonoBehaviour
 
             yield return null;
         }
-        gameManager.instance.playerCamera.fieldOfView = fov - 30;
+        gameManager.instance.playerCamera.fieldOfView = fov - gameManager.instance.playerWeaponManager.Ads;
         gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position;
         
     }
@@ -1463,26 +1459,6 @@ public class PlayerInputHandler : MonoBehaviour
         wasGrounded = isGrounded;
     }
 
-    IEnumerator LightAttack()
-    {
-        // Debug.Log("Heavy attack aoe");
-        yield return new WaitForSeconds(aoeDelay);
-
-        PlayCurrentWeaponShootSound();
-
-        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
-
-        foreach (Collider others in hits)
-        {
-            IDamage dmg = others.GetComponent<IDamage>();
-
-            if (dmg != null)
-            {
-                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
-            }
-        }
-    }
-
     IEnumerator HeavyAttackAOE()
     {
         // Debug.Log("Heavy attack aoe");
@@ -1505,8 +1481,6 @@ public class PlayerInputHandler : MonoBehaviour
 
     IEnumerator KatanaDashAttack()
     {
-
-
         yield return new WaitForSeconds(dashAttackDelay);
 
         PlayCurrentWeaponShootSound();
@@ -1593,7 +1567,32 @@ public class PlayerInputHandler : MonoBehaviour
 
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
-
+    private void CrystalShot(IDamage dmg, RaycastHit hit)
+    {
+        if (dmg != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+        }
+    }
+    public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
+    {
+        if (gameManager.instance.playerWeaponManager.abilities.Count == 0)
+        {
+            return;
+        }
+        if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal
+            && hitCollider.GetComponent<IDamage>() != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+            if (gameManager.instance.playerStatHandler.crystalBar == 10)
+            {
+                multiplier = 3;
+                gameManager.instance.playerStatHandler.crystalBar = 0;
+                return;
+            }
+        }
+        multiplier = 1;
+    }
     public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
     {
         if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))
@@ -1749,7 +1748,7 @@ public class PlayerInputHandler : MonoBehaviour
         // Only show this UI for charged weapons
         if (!weaponManager.UsesChargedShot)
         {
-            sniperChargePanel.SetActive(false);
+            //sniperChargePanel.SetActive(false);
             return;
         }
 
@@ -1760,7 +1759,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
         else
         {
-            sniperChargePanel.SetActive(false);
+            
             return;
         }
 

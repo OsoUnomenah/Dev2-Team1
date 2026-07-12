@@ -15,6 +15,16 @@ MonoBehaviour:
   weaponName: Rifle
   weaponType: 0
   fullAuto: 1
+  usesPellets: 0
+  pelletCount: 8
+  horizontalSpread: 15
+  verticalSpread: 1
+  usesChargedShot: 0
+  chargeTime: 2
+  chargeCooldown: 2
+  maxChargeMultiplier: 2
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 35
   damage: 25
   range: 75
   rate: 150
@@ -23,6 +33,7 @@ MonoBehaviour:
   ammo: 30
   maxAmmo: 30
   ammoTimer: 2
+  ads: 30
   weaponPrefab: {fileID: 2163901082907539163, guid: ac9ca24722d7f1c4cab6d09e13ffe15a, type: 3}
   hitEffect: {fileID: 0}
   shootSound: {fileID: 11400000, guid: a81a8565f0a59f64297e962b8c8dba03, type: 2}

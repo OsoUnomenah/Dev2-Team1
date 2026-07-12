@@ -27,7 +27,7 @@ public class BallLightning : MonoBehaviour
     IEnumerator FollowPlayer()
     {
         isFollowing = true;
-        Debug.Log("Follow started");
+        //Debug.Log("Follow started");
         float timer = 0f;
         float moveTime = 1f;
         Vector3 playerPos = gameManager.instance.player.transform.position;

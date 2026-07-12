@@ -64,6 +64,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         rolledAmmo = weaponData.ammo;
         rolledMaxAmmo = weaponData.maxAmmo;
         rolledAmmoTimer = weaponData.ammoTimer;
+        ads = weaponData.ads;
     }
 
     public void RollChestWeaponMods()
@@ -290,6 +291,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
+        if (weaponManager.CurrentWeaponData == weaponData)
+            return;
+
         if (model != null && highLight != null)
         {
             model.material = highLight;

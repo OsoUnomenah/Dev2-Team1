@@ -80,6 +80,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] public GameObject sniperChargePanel;
     [SerializeField] public Slider sniperChargeSlider;
     [SerializeField] public TMP_Text sniperChargeText;
+    [SerializeField] public GameObject sniperRechargeText;
 
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
@@ -113,6 +114,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
+    public bool isProceduralLevel;
 
     [Header("Win Config")]
     public Button nextLevelButton;
@@ -130,7 +132,11 @@ public class gameManager : MonoBehaviour
         UpdateXPUI();
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        //InitLevelBuilder();
+        if(isProceduralLevel)
+        {
+            InitLevelBuilder();
+        }
+        
 
     }
 
@@ -245,13 +251,39 @@ public class gameManager : MonoBehaviour
         //change xpGain value in inspector to adjust rate.
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
+        chargeUI();
+    }
+    private bool isRecharging = false;
+    float rechargerTimer;
+    private void chargeUI()
+    {
+        
+        if(!instance.playerInputHandler.isChargingShot && instance.playerInputHandler.chargedShotCooldownTimer > 0)
+        {
+            if (!isRecharging)
+            {
+                isRecharging = true;
+                rechargerTimer = instance.playerInputHandler.chargedShotCooldownTimer;
+                sniperChargePanel.SetActive(true);
+                sniperRechargeText.SetActive(true);
+            }
+            float chargePercent = instance.playerInputHandler.chargedShotCooldownTimer / rechargerTimer  ;
+            chargePercent = Mathf.Clamp01(chargePercent);
+            sniperChargeSlider.value = chargePercent;
+        }
+        else
+        {
+            isRecharging = false;
+           sniperChargePanel.SetActive(false);
+            sniperRechargeText.SetActive(false);
+        }
     }
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
         if (instance.playerWeaponManager.abilities.Count == 4)
         {
-            Debug.LogError("Does not Run");
+           // Debug.LogError("Does not Run");
             return;
         }
         {
