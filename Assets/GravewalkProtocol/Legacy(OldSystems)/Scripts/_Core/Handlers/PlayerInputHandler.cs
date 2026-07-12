@@ -1268,20 +1268,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         gameManager.instance.allowedAbility4 = true;
     }
 
-
-
-    //this is now a Ability button instead of ADS
-    private void OnADSCanceled(InputAction.CallbackContext context)
-    {
-        gameManager.instance.isAiming = false;
-        //if (gameManager.instance.gameDebug)
-        //{
-        //     Debug.Log("Stopped Aiming Down Sights!");
-        //}
-    }
-
-
-
     private void ShootTimer()
     {
         if (gameManager.instance.isReloading)
