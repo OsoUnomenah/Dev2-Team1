@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3344705210655267, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
+      propertyPath: m_TagString
+      value: SniperChargePanel
+      objectReference: {fileID: 0}
     - target: {fileID: 2064903956731605870, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -140,6 +144,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3462874837349403581, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680262563468522054, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
@@ -234,6 +242,18 @@ PrefabInstance:
     - target: {fileID: 6495270772103173070, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8378455512468740062, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
+      propertyPath: sniperChargeText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8378455512468740062, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
+      propertyPath: sniperChargePanel
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8378455512468740062, guid: 80e59d4c28d8e924aaf00668b31d7ec0, type: 3}
+      propertyPath: sniperChargeSlider
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

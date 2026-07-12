@@ -143,7 +143,6 @@ public class gameManager : MonoBehaviour
         }
 
         menuWin.SetActive(false);
-        sniperChargePanel.SetActive(false);
 
         ChooseLevel();
 
@@ -217,6 +216,12 @@ public class gameManager : MonoBehaviour
         playerCamera = player.GetComponentInChildren<Camera>();
         playerTransform = player.GetComponent<Transform>();
         playerInteract = player.GetComponent<Players>();
+
+        sniperChargePanel = GameObject.FindGameObjectWithTag("SniperChargePanel");
+        sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
+        sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
+        sniperChargePanel.SetActive(false);
+
 
 
         if (gameDebug)
