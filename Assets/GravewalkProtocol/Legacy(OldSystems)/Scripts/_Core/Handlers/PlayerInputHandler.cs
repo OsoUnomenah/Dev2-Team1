@@ -232,6 +232,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         interactAction.performed += OnInteractPerformed;
         interactAction.canceled += OnInteractCanceled;
 
+        shootAction.started += OnShootStarted;
         shootAction.performed += OnShootPerformed;
         shootAction.canceled += OnShootCanceled;
         reloadAction.performed += OnReloadPerformed;
@@ -265,6 +266,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         interactAction.performed -= OnInteractPerformed;
         interactAction.canceled -= OnInteractCanceled;
 
+        shootAction.started -= OnShootStarted;
         shootAction.performed -= OnShootPerformed;
         shootAction.canceled -= OnShootCanceled;
 
@@ -734,6 +736,40 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         // }
     }
 
+    private void OnShootStarted(InputAction.CallbackContext context)
+    {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        if (gameManager.instance.isPaused ||
+            gameManager.instance.isLevelingUp)
+        {
+            return;
+        }
+
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+        {
+            return;
+        }
+
+        if (!weaponManager.UsesChargedShot)
+        {
+            return;
+        }
+
+        if (chargedShotCooldownTimer > 0f)
+        {
+            return;
+        }
+
+        BeginChargedShot();
+    }
+
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
 
@@ -752,7 +788,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
 
-        if (weaponManager.UsesChargedShot && chargedShotCooldownTimer > 0f)
+        if (weaponManager.UsesChargedShot)
         {
             return;
         }
@@ -823,11 +859,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
 
-                    if (weaponManager.UsesChargedShot)
-                    {
-                        BeginChargedShot();
-                        return;
-                    }
                     PlayCurrentWeaponShootSound();
 
                     // One trigger pull consumes one shell, regardless of pellet count.
@@ -1707,7 +1738,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         if (isChargingShot)
         {
-            gameManager.instance.canShoot = true;
             return;
         }
 
