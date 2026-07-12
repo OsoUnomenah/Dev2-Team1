@@ -64,7 +64,7 @@ public class WeaponData : ScriptableObject
     public int ammo;
     public int maxAmmo;
     public float ammoTimer;
-
+    public float ads;
     [Header("Visuals")]
     public GameObject weaponPrefab;
     public GameObject hitEffect;
