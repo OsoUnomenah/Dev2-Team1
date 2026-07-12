@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7904175253424778660}
   m_Layer: 5
   m_Name: SniperPanel
-  m_TagString: Untagged
+  m_TagString: SniperChargePanel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10402,7 +10402,6 @@ MonoBehaviour:
   playerWeaponManager: {fileID: 0}
   playerTransform: {fileID: 0}
   playerInteract: {fileID: 0}
-  playerSpawnPos: {fileID: 0}
   sniperChargePanel: {fileID: 3344705210655267}
   sniperChargeSlider: {fileID: 6678996427796879162}
   sniperChargeText: {fileID: 2566103265286011884}
@@ -10429,6 +10428,7 @@ MonoBehaviour:
   enemyDamageOut: 0
   playerDamageOut: 0
   runZone: 1
+  isProceduralLevel: 0
   nextLevelButton: {fileID: 0}
   Modifiers: 
 --- !u!1 &7197401784136523943
