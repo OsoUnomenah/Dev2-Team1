@@ -98,6 +98,16 @@ MonoBehaviour:
   currentWeaponData: {fileID: 0}
   currentWeaponName: 
   currentWeaponMods: []
+  UsesPellets: 0
+  PelletCount: 1
+  HorizontalSpread: 0
+  VerticalSpread: 0
+  UsesChargedShot: 0
+  ChargeTime: 0
+  ChargeCooldown: 0
+  MaxChargeMultiplier: 0
+  CriticalMultiplier: 0
+  ChargedZoomFOV: 0
   Type: 0
   Damage: 0
   Range: 50
@@ -113,6 +123,8 @@ MonoBehaviour:
   HitEffect: {fileID: 0}
   weaponAnimator: {fileID: 0}
   weaponHolder: {fileID: 2320348336943760968}
+  adsWeaponHolder: {fileID: 4339864964970912979}
+  nonADSWeaponHolder: {fileID: 5945151925514421546}
   abilityModel: {fileID: 3393864554297846777}
   effect: {fileID: 0}
   effectSocket: {fileID: 3060477094045713861}
@@ -153,6 +165,37 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.69099426, y: -0.44599998, z: 1.4469986}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2928583361981866575}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &981682504489535119
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4339864964970912979}
+  m_Layer: 0
+  m_Name: ADS
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4339864964970912979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981682504489535119}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: -0.28, z: 0.998}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2928583361981866575}
@@ -493,6 +536,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2320348336943760968}
+  - {fileID: 4339864964970912979}
+  - {fileID: 5945151925514421546}
   - {fileID: 3060477094045713861}
   - {fileID: 1944886552264635602}
   - {fileID: 1410810780034644905}
@@ -602,6 +647,37 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &6536541074883929182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5945151925514421546}
+  m_Layer: 0
+  m_Name: NonADS
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5945151925514421546
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6536541074883929182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.71, y: -0.48, z: 1.39}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2928583361981866575}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6743649480609530769
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,6 +744,9 @@ MonoBehaviour:
   modJumps: 0
   GE_OnPlayerHealthChanged: {fileID: 11400000, guid: 472fbe100f33ae74c910983e954c9259, type: 2}
   GE_OnPlayerStaminaChanged: {fileID: 11400000, guid: 47ca334dc78a4934b8ee27b5e59a90bb, type: 2}
+  spawnSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  deathSoundDelay: 1.5
 --- !u!1 &8266962410216003956
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,6 +799,17 @@ MonoBehaviour:
   dashAttackSpeed: 200
   dashTime: 0.05
   dashFOVMod: 0
+  gunFreezeChance: 0.25
+  gunFreezeCooldown: 0.15
+  meleeFreezeCooldown: 3
+  defaultFreezeDuration: 2
+  crouchSpeed: 1.5
+  crouchHeight: 1
+  crouchTransitionSpeed: 10
+  ceilingCheckRadius: 0.3
+  ceilingMask:
+    serializedVersion: 2
+    m_Bits: 0
   currentMovement: {x: 0, y: 0, z: 0}
   currentSpeed: 0
   mouseSensitivity: 0.3
@@ -738,9 +828,19 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
+  isChargingShot: 0
+  currentChargeTime: 0
+  chargedShotCooldownTimer: 0
+  sniperChargePanel: {fileID: 0}
+  sniperChargeSlider: {fileID: 0}
+  sniperChargeText: {fileID: 0}
   _shoot: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
   _footsteps: {fileID: 11400000, guid: 03493be87f5eab645b1caba8b7b91ca4, type: 2}
   _dash: {fileID: 0}
+  jumpSound: {fileID: 0}
+  landSound: {fileID: 0}
+  crouchSound: {fileID: 0}
+  standSound: {fileID: 0}
   _dryFire: {fileID: 0}
   footstepBaseInterval: 0.5
   footstepSprintInterval: 0.6

@@ -10397,6 +10397,9 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   playerInteract: {fileID: 0}
   playerSpawnPos: {fileID: 0}
+  sniperChargePanel: {fileID: 3344705210655267}
+  sniperChargeSlider: {fileID: 6678996427796879162}
+  sniperChargeText: {fileID: 2566103265286011884}
   abilityUI: {fileID: 0}
   allowedAbility1: 1
   allowedAbility2: 1
