@@ -30,7 +30,6 @@ public class StatHandler : MonoBehaviour, IDamage
     [Range(0, 1000)][SerializeField] public float damage;
     [Range(0, 1000)][SerializeField] public float modDamage;
     public float currentDamage;
-    public int crystalBar;
 
     [Header("Defense")]
     [Range(0, 100)][SerializeField] public float defense;
