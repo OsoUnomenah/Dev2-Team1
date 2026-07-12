@@ -147,10 +147,10 @@ public class gameManager : MonoBehaviour
         UpdateXPUI();
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-       // if(isProceduralLevel)
-       // {
-       //     InitLevelBuilder();
-       // }
+        if(isProceduralLevel)
+        {
+            InitLevelBuilder();
+        }
         
         runStartTime = Time.time;
     }
@@ -169,13 +169,13 @@ public class gameManager : MonoBehaviour
 
     }
 
-    //public void InitLevelBuilder()
-   // {
-   //     playerSpawnPos = GameObject.Find("PlayerSpawnPos");
-    //    levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
-     //   lb = levelBuilder.GetComponent<LevelBuilder>();
+    public void InitLevelBuilder()
+    {
+       playerSpawnPos = GameObject.Find("PlayerSpawnPos");
+       levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+       lb = levelBuilder.GetComponent<LevelBuilder>();
 
-   // }
+    }
 
     public void ChooseLevel()
     {
