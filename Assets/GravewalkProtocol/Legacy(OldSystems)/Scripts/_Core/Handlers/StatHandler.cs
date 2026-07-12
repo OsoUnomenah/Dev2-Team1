@@ -45,14 +45,21 @@ public class StatHandler : MonoBehaviour, IDamage
     public GameEvent GE_OnPlayerHurt;
 
 
-
     [Header("Player Life Audio")]
     [SerializeField] private BaseSoundSO hurtSound;
     [SerializeField] private BaseSoundSO spawnSound;
     [SerializeField] private BaseSoundSO deathSound;
     [SerializeField] private float deathSoundDelay = 1.5f;
 
-    
+    [Header("Death Presentation")]
+    [SerializeField] private Transform playerBody;
+    [SerializeField] private Transform playerCamera;
+    [SerializeField] private float deathFallDuration = 1f;
+    [SerializeField] private float deathMenuDelay = 1.5f;
+    [SerializeField] private float deathTiltAngle = 75f;
+    [SerializeField] private Vector3 deathCameraDrop = new Vector3(0f, -0.6f, 0f);
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -64,6 +71,16 @@ public class StatHandler : MonoBehaviour, IDamage
         modJumps = 1;
 
         PlaySpawnSound();
+
+        if (playerBody == null && gameManager.instance != null && gameManager.instance.player != null)
+        {
+            playerBody = gameManager.instance.player.transform;
+        }
+
+        if (playerCamera == null && gameManager.instance != null && gameManager.instance.playerCamera != null)
+        {
+            playerCamera = gameManager.instance.playerCamera.transform;
+        }
     }
 
     private void PlaySpawnSound()
@@ -193,12 +210,20 @@ public class StatHandler : MonoBehaviour, IDamage
         if (stats.currentHealth <= 0)
         {
             stats.currentHealth = 0;
-            StartCoroutine(PlayerDeathRoutine());
-            gameManager.instance.youLose();
 
-        }else
+            if (GE_OnPlayerHealthChanged != null)
+            {
+                GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
+            }
+
+            StartCoroutine(PlayerDeathRoutine());
+        }
+        else
         {
-           GE_OnPlayerHurt.Raise(this, this);
+            if (GE_OnPlayerHurt != null)
+            {
+                GE_OnPlayerHurt.Raise(this, this);
+            }
         }
     }
 
@@ -216,6 +241,11 @@ public class StatHandler : MonoBehaviour, IDamage
             gameManager.instance.playerInputHandler.enabled = false;
         }
 
+        if (gameManager.instance.characterController != null)
+        {
+            gameManager.instance.characterController.enabled = false;
+        }
+
         if (AudioManager.instance != null && deathSound != null)
         {
             AudioManager.instance.PlaySoundFromSource(
@@ -224,8 +254,58 @@ public class StatHandler : MonoBehaviour, IDamage
             );
         }
 
-        yield return new WaitForSeconds(deathSoundDelay);
+        yield return StartCoroutine(DeathFallPresentation());
 
+        yield return new WaitForSeconds(deathMenuDelay);
+
+        gameManager.instance.youLose();
+    }
+
+    private IEnumerator DeathFallPresentation()
+    {
+        if (playerBody == null)
+        {
+            yield break;
+        }
+
+        Quaternion startRotation = playerBody.rotation;
+        Quaternion endRotation = startRotation * Quaternion.Euler(0f, 0f, deathTiltAngle);
+
+        Vector3 cameraStartPosition = Vector3.zero;
+        Vector3 cameraEndPosition = Vector3.zero;
+
+        bool hasCamera = playerCamera != null;
+
+        if (hasCamera)
+        {
+            cameraStartPosition = playerCamera.localPosition;
+            cameraEndPosition = cameraStartPosition + deathCameraDrop;
+        }
+
+        float timer = 0f;
+
+        while (timer < deathFallDuration)
+        {
+            timer += Time.deltaTime;
+            float percent = timer / deathFallDuration;
+            percent = Mathf.SmoothStep(0f, 1f, percent);
+
+            playerBody.rotation = Quaternion.Slerp(startRotation, endRotation, percent);
+
+            if (hasCamera)
+            {
+                playerCamera.localPosition = Vector3.Lerp(cameraStartPosition, cameraEndPosition, percent);
+            }
+
+            yield return null;
+        }
+
+        playerBody.rotation = endRotation;
+
+        if (hasCamera)
+        {
+            playerCamera.localPosition = cameraEndPosition;
+        }
     }
 
     public void Heal(float amount)
