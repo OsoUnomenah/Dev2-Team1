@@ -12,9 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caec2ee46b2365f4b9098ae065941701, type: 3}
   m_Name: SniperData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  weaponName: Shotgun
+  weaponName: Sniper
   weaponType: 0
   fullAuto: 0
+  usesPellets: 0
+  pelletCount: 8
+  horizontalSpread: 15
+  verticalSpread: 1
+  usesChargedShot: 1
+  chargeTime: 2
+  chargeCooldown: 1
+  maxChargeMultiplier: 2
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 10
   damage: 75
   range: 150
   rate: 1

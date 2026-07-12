@@ -1,14 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR.Haptics;
-using UnityEngine.UIElements;
-using UnityEngine.UI;
-using System.Threading;
-using NUnit.Framework.Internal;
 
 public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigger
 {
@@ -17,6 +11,8 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int attackDamage = 10;
     [SerializeField] int xpGive = 100;
+    [SerializeField] private int minCurrencyDrop = 10;
+    [SerializeField] private int maxCurrencyDrop = 25;
     [SerializeField] Renderer model;
     private NavMeshAgent agent0;
     public UnityEngine.UI.Slider healthbar;
@@ -603,7 +599,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         if (other.CompareTag("Player"))
         {
             PlayerInTrigger = true;
-           // model.material.color = Color.orange;
+            // model.material.color = Color.orange;
         }
     }
 
@@ -687,6 +683,9 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             gameManager.instance.addXp(xpGive);
             RecticleBehaviour.OffHover();
 
+            int currencyDrop = GetCurrencyDrop();
+            gameManager.instance.addCurrency(currencyDrop);
+
             if (exitPortal != null)
             {
                 exitPortal.SetActive(true);
@@ -745,5 +744,9 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         model.material.color = originalColor;
         isFroze = false;
     }
-}
 
+    private int GetCurrencyDrop()
+    {
+        return Random.Range(minCurrencyDrop, maxCurrencyDrop + 1);
+    }
+}

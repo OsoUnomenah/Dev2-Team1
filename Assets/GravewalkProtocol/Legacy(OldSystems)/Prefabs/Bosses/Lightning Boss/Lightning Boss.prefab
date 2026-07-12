@@ -961,6 +961,8 @@ MonoBehaviour:
   maxHealth: 500
   attackDamage: 15
   xpGive: 100
+  minCurrencyDrop: 10
+  maxCurrencyDrop: 25
   model: {fileID: 7726352203123859119}
   healthbar: {fileID: 8108966358930695813}
   healthText: {fileID: 4389705831070417597}
@@ -982,6 +984,7 @@ MonoBehaviour:
   _hit: {fileID: 11400000, guid: 18d4ca4ec298ea94b829f44e15a9bedf, type: 2}
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
   _lightning: {fileID: 11400000, guid: 25610b23b205dec4f81461d80c4174cf, type: 2}
+  _ball_lightning: {fileID: 0}
   bullet: {fileID: 0}
   gunPivot: {fileID: 6667958090657048808}
   shootPos: {fileID: 6358703469907172762}
@@ -1083,10 +1086,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.5055778
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0.0007306326}
 --- !u!96 &1606140278298863133
 TrailRenderer:
   serializedVersion: 4
