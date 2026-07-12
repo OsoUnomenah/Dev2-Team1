@@ -254,6 +254,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         int currencyDrop = GetCurrencyDrop();
         gameManager.instance.addCurrency(currencyDrop);
 
+        WaveManager.instance.Drop(transform);
+
         if (WaveManager.instance != null)
         {
             WaveManager.instance.OnEnemyKilled();
