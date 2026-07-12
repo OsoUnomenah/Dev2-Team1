@@ -942,12 +942,18 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     gameManager.instance.isMeleeing = true;
 
                     gameManager.instance.playerWeaponManager.PlayMeleeLightAttack();
+                    StartCoroutine(LightAttack());
+
                 }
 
                 //if (turnOnDebug)
                 //{
                 //     Debug.Log("ShotFired!");
                 //}
+
+
+                    
+                
 
             }
         }
@@ -1432,6 +1438,26 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         wasGrounded = isGrounded;
     }
 
+    IEnumerator LightAttack()
+    {
+        // Debug.Log("Heavy attack aoe");
+        yield return new WaitForSeconds(aoeDelay);
+
+        PlayCurrentWeaponShootSound();
+
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
+
+        foreach (Collider others in hits)
+        {
+            IDamage dmg = others.GetComponent<IDamage>();
+
+            if (dmg != null)
+            {
+                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
+            }
+        }
+    }
+
     IEnumerator HeavyAttackAOE()
     {
         // Debug.Log("Heavy attack aoe");
@@ -1463,6 +1489,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAttackTriggered = true;
 
         yield return new WaitForSeconds(0.5f);
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
+
+        foreach (Collider others in hits)
+        {
+            IDamage dmg = others.GetComponent<IDamage>();
+
+            if (dmg != null)
+            {
+                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
+            }
+        }
 
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
