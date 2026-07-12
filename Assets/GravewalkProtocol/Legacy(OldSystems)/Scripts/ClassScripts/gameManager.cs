@@ -255,6 +255,7 @@ public class gameManager : MonoBehaviour
     }
     private bool isRecharging = false;
     float rechargerTimer;
+
     private void chargeUI()
     {
         
@@ -271,10 +272,10 @@ public class gameManager : MonoBehaviour
             chargePercent = Mathf.Clamp01(chargePercent);
             sniperChargeSlider.value = chargePercent;
         }
-        else
+        else if (!instance.playerInputHandler.isChargingShot)
         {
             isRecharging = false;
-           sniperChargePanel.SetActive(false);
+            sniperChargePanel.SetActive(false);
             sniperRechargeText.SetActive(false);
         }
     }

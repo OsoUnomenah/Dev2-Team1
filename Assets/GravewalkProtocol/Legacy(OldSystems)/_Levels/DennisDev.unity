@@ -310,6 +310,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4076257722663198098, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: isChargingShot
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4076257722663198098, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: sniperChargeText
       value: 
       objectReference: {fileID: 871570064}
