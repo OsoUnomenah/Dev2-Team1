@@ -113,6 +113,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
+    public bool isProceduralLevel;
 
     [Header("Win Config")]
     public Button nextLevelButton;
@@ -130,7 +131,11 @@ public class gameManager : MonoBehaviour
         UpdateXPUI();
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        InitLevelBuilder();
+        if(isProceduralLevel)
+        {
+            InitLevelBuilder();
+        }
+        
 
     }
 
