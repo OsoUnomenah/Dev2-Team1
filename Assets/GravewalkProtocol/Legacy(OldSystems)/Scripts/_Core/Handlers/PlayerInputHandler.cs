@@ -112,7 +112,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private bool isFrozenByBoss;
     private Coroutine freezeRoutine;
 
-
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
 
 
@@ -128,6 +127,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private InputAction reloadAction;
     private InputAction adsAction;
     private InputAction pauseAction;
+    private InputAction shopAction;
 
     [Header("GlobalVariables")]
     public bool DashTriggered { get; private set; }
@@ -152,6 +152,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         adsAction = playerActions.PlayerInput.ADS;
 
         pauseAction = playerActions.PlayerInput.Pause;
+
+        shopAction = playerActions.PlayerInput.Shop;
 
     }
 
@@ -242,6 +244,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         pauseAction.performed += OnPausePerformed;
         pauseAction.canceled += OnPauseCanceled;
+
+        shopAction.performed += OnShopPerformed;
+        shopAction.canceled += OnShopCanceled;
     }
 
     void OnDisable()
@@ -272,10 +277,20 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         pauseAction.performed -= OnPausePerformed;
         pauseAction.canceled -= OnPauseCanceled;
+
+        shopAction.performed -= OnShopPerformed;
+        shopAction.canceled -= OnShopCanceled;
     }
 
     private void OnPausePerformed(InputAction.CallbackContext context)
     {
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>();
+
+        if (shop != null && shop.IsShopOpen())
+        {
+            return;
+        }
+
         gameManager.instance.PauseGame();
     }
 
@@ -884,6 +899,21 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     for (int pelletIndex = 0; pelletIndex < pelletCount; pelletIndex++)
                     {
 
+                        if (gameManager.instance.playerWeaponManager.HitEffect != null)
+                        {
+                            // Spawns the effect exactly where the raycast hit, facing away from the surface
+                            Instantiate(
+                                gameManager.instance.playerWeaponManager.HitEffect,
+                                hit.point,
+                                Quaternion.LookRotation(hit.normal)
+                            );
+                        }
+
+                        TryTriggerAbility(hit);
+
+                        IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+
+                        if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                         Vector3 shotDirection = GetPelletDirection(
                                 pelletIndex,
                                 pelletCount,
@@ -1675,6 +1705,156 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         isFrozenByBoss = false;
     }
 
+    private bool HasActiveAbility()
+    {
+        return gameManager.instance.playerWeaponManager != null
+            && gameManager.instance.playerWeaponManager.abilities != null
+            && gameManager.instance.playerWeaponManager.abilities.Count > 0
+            && gameManager.instance.playerWeaponManager.abilitySlot >= 0
+            && gameManager.instance.playerWeaponManager.abilitySlot < gameManager.instance.playerWeaponManager.abilities.Count;
+    }
+
+    private bool RollAbilityProc()
+    {
+        return UnityEngine.Random.value <= gameManager.instance.abilityProcChance;
+    }
+
+    private void TryTriggerAbility(RaycastHit hit)
+    {
+        if (!HasActiveAbility())
+            return;
+
+        AbilityStats activeAbility =
+            gameManager.instance.playerWeaponManager.abilities[
+                gameManager.instance.playerWeaponManager.abilitySlot
+            ];
+
+        if (activeAbility == null)
+            return;
+
+        if (!RollAbilityProc())
+            return;
+
+        switch (activeAbility.abilityType)
+        {
+            case AbilityStats.ability.fire:
+                TryApplyFire(hit);
+                break;
+
+            case AbilityStats.ability.freeze:
+                TryApplyFreeze(hit);
+                break;
+
+            case AbilityStats.ability.toxic:
+                TryApplyToxic(hit);
+                break;
+
+            case AbilityStats.ability.magent:
+                TryApplyMagnet(hit);
+                break;
+
+            case AbilityStats.ability.crystal:
+                TryApplyCrystal(hit);
+                break;
+
+            case AbilityStats.ability.lightning:
+                TryApplyLightning(hit);
+                break;
+        }
+    }
+
+    private void TryApplyFreeze(RaycastHit hit)
+    {
+        IFreeze freezable = hit.collider.GetComponentInChildren<IFreeze>();
+
+        if (freezable != null)
+        {
+            freezable.freeze(2f);
+
+            if (turnOnDebug)
+            {
+                Debug.Log("Freeze proc triggered.");
+            }
+        }
+    }
+
+    private void TryApplyFire(RaycastHit hit)
+    {
+        if (turnOnDebug)
+        {
+            Debug.Log("Fire proc triggered.");
+        }
+
+        // Example for later:
+        // IFire burnable = hit.collider.GetComponentInChildren<IFire>();
+        // if (burnable != null)
+        // {
+        //     burnable.ApplyFire(3f, Mathf.RoundToInt(gameManager.instance.abilityDamageBonus));
+        // }
+    }
+
+    private void TryApplyToxic(RaycastHit hit)
+    {
+        if (turnOnDebug)
+        {
+            Debug.Log("Toxic proc triggered.");
+        }
+
+        // Example for later:
+        // IToxic toxicTarget = hit.collider.GetComponentInChildren<IToxic>();
+        // if (toxicTarget != null)
+        // {
+        //     toxicTarget.ApplyToxic(4f, Mathf.RoundToInt(gameManager.instance.abilityDamageBonus));
+        // }
+    }
+
+    private void TryApplyMagnet(RaycastHit hit)
+    {
+        if (turnOnDebug)
+        {
+            Debug.Log("Magnet proc triggered.");
+        }
+
+        // Add your magnet effect logic here later.
+    }
+
+    private void TryApplyCrystal(RaycastHit hit)
+    {
+        if (turnOnDebug)
+        {
+            Debug.Log("Crystal proc triggered.");
+        }
+
+        // Add your crystal effect logic here later.
+    }
+
+    private void TryApplyLightning(RaycastHit hit)
+    {
+        if (turnOnDebug)
+        {
+            Debug.Log("Lightning proc triggered.");
+        }
+
+        // Add your lightning effect logic here later.
+    }
+
+    private void OnShopPerformed(InputAction.CallbackContext context)
+    {
+        Debug.Log("Shop Action Triggered");
+
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>();
+
+        if (shop == null)
+            return;
+
+        if (gameManager.instance.isPaused && !shop.IsShopOpen())
+            return;
+
+        shop.ToggleShop();
+    }
+
+    private void OnShopCanceled(InputAction.CallbackContext context)
+    {
     private void HandleChargedShot()
     {
         PlayerWeaponManager weaponManager =

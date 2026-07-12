@@ -26,7 +26,6 @@ public class gameManager : MonoBehaviour
     public TMP_Text xpBoostText;
     private TMP_Text xpBOrig;
 
-
     [Header("Level Config")]
     [Range(1, 100)][SerializeField] public float level;
     [Range(1, 1000)][SerializeField] public float maxLevel;
@@ -38,6 +37,13 @@ public class gameManager : MonoBehaviour
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
     
+
+    [Header("Ability Proc Config")]
+    [SerializeField] private float baseAbilityProcChance = 0.10f;
+    [SerializeField] private float abilityProcChancePerUpgrade = 0.02f;
+    [SerializeField] private float maxAbilityProcChance = 0.75f;
+    public float abilityProcChance;
+    public float abilityDamageBonus = 0f;
 
     [Header("Menu Config")]
     [SerializeField] GameObject menuActive;
@@ -129,6 +135,7 @@ public class gameManager : MonoBehaviour
         CacheTimeScale();
         GetPlayerReferences();
         UpdateXPUI();
+        abilityProcChance = baseAbilityProcChance;
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
         if(isProceduralLevel)
@@ -437,6 +444,13 @@ public class gameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>();
+
+        if (shop != null && shop.IsShopOpen())
+        {
+            return;
+        }
+
         if (menuActive == null)
         {
             if (LevelUpUI.Instance != null)
@@ -474,8 +488,12 @@ public class gameManager : MonoBehaviour
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        menuActive.SetActive(false);
-        menuActive = null;
+
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+            menuActive = null;
+        }
     }
 
     public void WinGame()
@@ -557,6 +575,16 @@ public class gameManager : MonoBehaviour
         UpdateCurrencyUI();
     }
 
+    public bool SpendCurrency(int amount)
+    {
+        if (currentCurrency < amount)
+            return false;
+
+        currentCurrency -= amount;
+        UpdateCurrencyUI();
+        return true;
+    }
+
     private void UpdateCurrencyUI()
     {
         if (currencyText != null)
@@ -565,4 +593,15 @@ public class gameManager : MonoBehaviour
         }
     }
 
+    public void IncreaseAbilityProcChance()
+    {
+        abilityProcChance += abilityProcChancePerUpgrade;
+        abilityProcChance = Mathf.Clamp(abilityProcChance, 0f, maxAbilityProcChance);
+        UpgradeUI.instance.RefreshAllUI();
+    }
+
+    public float GetAbilityProcChancePercent()
+    {
+        return abilityProcChance * 100f;
+    }
 }
