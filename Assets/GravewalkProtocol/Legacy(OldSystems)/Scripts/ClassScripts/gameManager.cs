@@ -132,10 +132,10 @@ public class gameManager : MonoBehaviour
         UpdateXPUI();
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        if(isProceduralLevel)
-        {
-            InitLevelBuilder();
-        }
+       // if(isProceduralLevel)
+       // {
+       //     InitLevelBuilder();
+       // }
         
 
     }
