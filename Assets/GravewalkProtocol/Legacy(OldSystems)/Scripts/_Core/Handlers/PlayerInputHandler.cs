@@ -540,6 +540,7 @@ public class PlayerInputHandler : MonoBehaviour
             gameManager.instance.isDashing = true;
             gameManager.instance.dashTriggered = true;
             StartCoroutine(Dash());
+            gameManager.instance.playerStatHandler.HandleStamina();
         }
 
         gameManager.instance.dashTriggered = false;

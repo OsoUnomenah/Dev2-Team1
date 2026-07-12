@@ -82,6 +82,7 @@ public class MeleeWeaponDamage : MonoBehaviour
 
             dmg.takeDamage(weaponManager.Damage + bonusDamage);
         }
+        gameManager.instance.playerStatHandler.HandleStamina();
     }
 
     private void HammerBlock()
