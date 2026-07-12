@@ -82,6 +82,10 @@ public class AudioManager : MonoBehaviour
    
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+        audioSource.minDistance = sound.fallOffDistMin;
+        audioSource.maxDistance = sound.fallOffDistMax;
 
         if (sound.randomizePitch == true)
         {
@@ -142,7 +146,7 @@ public class AudioManager : MonoBehaviour
         Destroy(soundObject, currSound.length);
     }
 
-    public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration)
+    public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration = 0.1f)
     {
         if (sound == null || noiseMaker == null)
             return;
@@ -178,6 +182,11 @@ public class AudioManager : MonoBehaviour
         else
         {
             audioSource.pitch = sound.pitch;
+        }
+
+        if (duration == 0.1f)
+        {
+            duration = currSound.length;
         }
 
         if (!audioSource.isPlaying)

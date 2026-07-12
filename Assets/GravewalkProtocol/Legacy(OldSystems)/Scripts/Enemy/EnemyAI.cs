@@ -31,6 +31,16 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     [Header("Audio")]
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
+    [SerializeField] BaseSoundSO _grunts;
+    [SerializeField] BaseSoundSO _attack;
+    [SerializeField] BaseSoundSO _footsteps;
+    [Range(5f, 25f)][SerializeField] float gruntRateMax;
+    [Range(1f, 20f)][SerializeField] float gruntRateMin;
+    [Range(0.01f, 2f)][SerializeField] float footStepInterval;
+
+    private float footstepTimer;
+    private float gruntRate;
+    private float gruntTimer;
 
     [Header("Currency")]
     [SerializeField] private int minCurrencyDrop = 1;
@@ -82,7 +92,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         wanderTime = wanderTimer;
         // gameManager.instance.updateGameGoal(1);
 
-
+        gruntRate = Random.Range(gruntRateMin, gruntRateMax);
     }
 
     private void Update()
@@ -131,8 +141,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
                         currentState = ZombieState.Chase;
                     }
                     break;
-
             }
+            PlayGrunt();
+            HandleFootsteps();
         }
         else
         {
@@ -168,6 +179,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             lastHeardPosition = noisePosition;
             heardNoise = true;
 
+            AudioManager.instance.PlaySoundFollowPosition(_grunts, gameObject);
+
             Debug.Log("Zombie heard noise");
         }
     }
@@ -181,6 +194,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             Debug.Log("Zombie Attack");
 
             IDamage damageable = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
+
+            AudioManager.instance.PlaySoundAtPosition(_attack, gameObject);
 
             if (damageable != null)
             {
@@ -335,5 +350,35 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         Debug.Log("SHATTER CALLED ON: " + gameObject.name);
 
         Die();
+    }
+
+    private void PlayGrunt()
+    {
+        gruntTimer += Time.deltaTime;
+
+        if (gruntTimer > gruntRate)
+        {
+            gruntTimer = 0;
+            AudioManager.instance.PlaySoundFollowPosition(_grunts, gameObject);
+        }
+    }
+
+    private void HandleFootsteps()
+    {
+        if (currentState != ZombieState.Chase && currentState != ZombieState.Wander)
+        {
+            footstepTimer = 0;
+            return;
+        }
+
+
+        footstepTimer += Time.deltaTime;
+
+        if (footstepTimer >= footStepInterval)
+        {
+            AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
+            footstepTimer = 0;
+        }
+
     }
 }
