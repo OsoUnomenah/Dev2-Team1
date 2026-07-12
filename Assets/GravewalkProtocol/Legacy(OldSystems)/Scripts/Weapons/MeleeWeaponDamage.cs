@@ -1,73 +1,103 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class MeleeWeaponDamage : MonoBehaviour
 {
-    [SerializeField] CapsuleCollider dmgTrigger;
+    [Header("Components")]
     [SerializeField] Animator animator;
+    [SerializeField] Transform hitPoint1;
+    [SerializeField] Transform hitPoint2;
 
-    float timer = 0f;
-    float waitTime;
+    [Header("Adjustments")]
+    [Range(0f, 4f)][SerializeField] float hitRadius;
+
+    private PlayerWeaponManager weaponManager;
+    private StatHandler stats;
+    private LayerMask enemyLayer;
+
+    private bool isAttacking;
+    private readonly HashSet<IDamage> hitEnemies = new();
+
+    private void Start()
+    {
+        weaponManager = gameManager.instance.playerWeaponManager;
+        stats = gameManager.instance.playerStatHandler;
+        enemyLayer = LayerMask.GetMask("Enemy");
+    }
 
     private void Update()
     {
-        timer += Time.deltaTime;
-
-        if(gameManager.instance == null || gameManager.instance.playerWeaponManager == null)
-        {
+        if (gameManager.instance == null || gameManager.instance.playerInputHandler == null)
             return;
-        }
 
-        waitTime = gameManager.instance.playerWeaponManager.Timer;
-
-        if (gameManager.instance.isMeleeing == true && timer > waitTime)
+        if (isAttacking)
         {
-            dmgTrigger.enabled = true;
+            MeleeSwing();
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void MeleeSwing()
     {
-        timer = 0;
-        if (other.CompareTag("Enemy"))
+ 
+        Collider[] hits = Physics.OverlapCapsule(hitPoint1.position, hitPoint2.position, hitRadius, enemyLayer);
+
+        foreach (Collider hit in hits)
         {
-            dmgTrigger.enabled = false;
-            Debug.Log("Attempted to deal damage");
+            IDamage dmg = hit.GetComponentInParent<IDamage>();
 
-            if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(other))
+           if(dmg == null)
+                continue;
+
+            if (hitEnemies.Contains(dmg))
+                continue;
+
+            hitEnemies.Add(dmg);
+
+            if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(hit))
             {
                 return;
             }
 
-            gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(other, true);
-
-            IDamage dmg = other.GetComponentInParent<IDamage>();
-
-            if (dmg == null)
-            {
-                dmg = other.GetComponentInChildren<IDamage>();
-            }
-
-            if (dmg == null)
-            {
-                return;
-            }
+            gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(hit, true);
 
             int bonusDamage = 0;
 
+            if (stats != null)
+               bonusDamage = Mathf.RoundToInt(stats.modDamage);
+
             if (gameManager.instance.playerInputHandler.dashAttackTriggered)
             {
-                bonusDamage += 85;
+                // one shot normal enemies
+                int x = 100 - weaponManager.Damage;
+                bonusDamage += x;
             }
 
-            StatHandler stats = gameManager.instance.playerStatHandler;
-
-            if (stats != null)
-            {
-                bonusDamage += Mathf.RoundToInt(stats.modDamage);
-            }
-
-            dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage + bonusDamage);
+            dmg.takeDamage(weaponManager.Damage + bonusDamage);
         }
     }
+
+    // --animator based functions--
+    private void OnAttackBegin()
+    {
+        hitEnemies.Clear();
+        Debug.Log("Start damage frames");
+        isAttacking = true;
+    }
+
+    private void OnAttackEnd()
+    {
+        isAttacking = false;
+    }
+    // ----------------------------
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(hitPoint1.position, hitRadius);
+        Gizmos.DrawSphere(hitPoint2.position, hitRadius);
+    }
 }
+
+
