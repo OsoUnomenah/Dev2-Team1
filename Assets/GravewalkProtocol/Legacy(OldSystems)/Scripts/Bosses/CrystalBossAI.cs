@@ -317,6 +317,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         {
             armor.SetActive(true);
             isArmored = true;
+            canDamage = false;
             timer = -100;
         }
         if (!PlayerInTrigger)
@@ -347,10 +348,13 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
             StartCoroutine(armorCooldown());
         }
     }
+    bool canDamage = true;
     IEnumerator armorCooldown()
     {
+        canDamage = true;
         yield return new WaitForSeconds(15f);
         isArmored = false;
+        
     }
     bool canBomb = true;
     IEnumerator BombCooldown()
@@ -520,7 +524,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     [SerializeField] BoxCollider BossRoom;
     public void TriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !PlayerInTrigger)
         {
             PlayerInTrigger = true;
             model.material.color = Color.orange;
@@ -585,6 +589,11 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
 
     public void takeDamage(int amount)
     {
+        if(canDamage == false)
+        {
+            return;
+        }
+
         //Set the damage to display on the damage text
         gameManager.instance.playerDamageOut = amount;
 

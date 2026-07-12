@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEngine.UI;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -25,6 +28,15 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [Range(0.05f, 0.5f)][SerializeField] float dashTime;
     [Range(0, 30)][SerializeField] int dashFOVMod;
 
+    [Header("Freeze Weapon Effect")]
+    [SerializeField] private float gunFreezeChance = 0.25f;
+    [SerializeField] private float gunFreezeCooldown = 0.15f;
+    [SerializeField] private float meleeFreezeCooldown = 3f;
+    [SerializeField] private float defaultFreezeDuration = 2f;
+
+    private float nextGunFreezeTime;
+    private float nextMeleeFreezeTime;
+
     [Header("Crouch Config")]
     [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float crouchHeight = 1.0f;
@@ -36,7 +48,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     private Vector3 standingCenter;
     private Vector3 standingCameraPosition;
 
-    private bool isCrouching;
+    public bool isCrouching;
     private bool crouchRequested;
 
     private Vector3 dashVector;
@@ -69,6 +81,18 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     [SerializeField] private float dashAttackDelay = 0.5f;
     [SerializeField] public bool dashAttackTriggered;
     [SerializeField] public LayerMask enemyLayer;
+
+    [Header("Charged Shot Runtime")]
+    [SerializeField] private bool isChargingShot;
+    [SerializeField] private float currentChargeTime;
+    [SerializeField] private float chargedShotCooldownTimer;
+
+    private float normalCameraFOV;
+
+    [Header("Charged Shot UI")]
+    [SerializeField] private GameObject sniperChargePanel;
+    [SerializeField] private Slider sniperChargeSlider;
+    [SerializeField] private TMP_Text sniperChargeText;
 
     [Header("Audio")]
     [SerializeField] BaseSoundSO _shoot;
@@ -144,6 +168,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         standingCenter = controller.center;
 
         standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
+        fov = gameManager.instance.playerCamera.fieldOfView;
+        normalCameraFOV =
+        gameManager.instance.playerCamera.fieldOfView;
+
+        sniperChargePanel = gameManager.instance.sniperChargePanel;
+        sniperChargeSlider = gameManager.instance.sniperChargeSlider;
+        sniperChargeText = gameManager.instance.sniperChargeText;
     }
 
     void Update()
@@ -157,6 +188,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
             ShootTimer();
             HandleReload();
+            HandleChargedShot();
+            UpdateChargedShotUI();
             return;
         }
 
@@ -169,6 +202,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleJumping();
         ShootTimer();
         HandleReload();
+        HandleChargedShot();
+        UpdateChargedShotUI();
     }
 
     public void takeDamage(int amount)
@@ -199,6 +234,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         interactAction.performed += OnInteractPerformed;
         interactAction.canceled += OnInteractCanceled;
 
+        shootAction.started += OnShootStarted;
         shootAction.performed += OnShootPerformed;
         shootAction.canceled += OnShootCanceled;
         reloadAction.performed += OnReloadPerformed;
@@ -235,6 +271,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         interactAction.performed -= OnInteractPerformed;
         interactAction.canceled -= OnInteractCanceled;
 
+        shootAction.started -= OnShootStarted;
         shootAction.performed -= OnShootPerformed;
         shootAction.canceled -= OnShootCanceled;
 
@@ -439,15 +476,19 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         return !blocked;
     }
-
+ 
     private void OnCrouchPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
         {
             return;
         }
-
+        
         crouchRequested = true;
+
+        if (gameManager.instance.playerWeaponManager.CurrentWeaponData.weaponName == "Hammer")
+            // Debug.Log("Tried Block");
+            gameManager.instance.playerWeaponManager.PlayHammerBlock();
 
         if (!isCrouching && AudioManager.instance != null && crouchSound != null)
         {
@@ -477,10 +518,10 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         float startTime = Time.time;
         dashTimer = 0f;
 
-        Physics.IgnoreLayerCollision(
-            LayerMask.GetMask("Player"),
-            LayerMask.GetMask("Enemy"),
-            true);
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+
+        Physics.IgnoreLayerCollision(playerLayer,enemyLayer,true);
 
         gameManager.instance.playerCamera.fieldOfView += dashFOVMod;
 
@@ -504,10 +545,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             yield return null;
         }
 
-        Physics.IgnoreLayerCollision(
-            LayerMask.GetMask("Player"),
-            LayerMask.GetMask("Enemy"),
-            false);
+        Physics.IgnoreLayerCollision(playerLayer,enemyLayer,false);
 
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
         gameManager.instance.isDashing = false;
@@ -717,6 +755,40 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         // }
     }
 
+    private void OnShootStarted(InputAction.CallbackContext context)
+    {
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        if (gameManager.instance.isPaused ||
+            gameManager.instance.isLevelingUp)
+        {
+            return;
+        }
+
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+        {
+            return;
+        }
+
+        if (!weaponManager.UsesChargedShot)
+        {
+            return;
+        }
+
+        if (chargedShotCooldownTimer > 0f)
+        {
+            return;
+        }
+
+        BeginChargedShot();
+    }
+
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
 
@@ -730,6 +802,13 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         if (gameManager.instance.playerWeaponManager == null)
         {
             //Debug.Log("Can't find the weapon manager");
+            return;
+        }
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager.UsesChargedShot)
+        {
             return;
         }
 
@@ -798,13 +877,27 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
             {
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
-                    PlayCurrentWeaponShootSound();
-                    gameManager.instance.playerWeaponManager.Ammo--;
 
-                    RaycastHit hit;
-                    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
+                    PlayCurrentWeaponShootSound();
+
+                    // One trigger pull consumes one shell, regardless of pellet count.
+                    gameManager.instance.playerWeaponManager.Ammo--;
+                    _ =
+                        gameManager.instance.playerWeaponManager;
+
+                    int pelletCount = weaponManager.UsesPellets
+                        ? Mathf.Max(1, weaponManager.PelletCount)
+                        : 1;
+                    Debug.Log(
+                            "SHOTGUN DEBUG | Weapon: " + weaponManager.CurrentWeaponName +
+                            " | UsesPellets: " + weaponManager.UsesPellets +
+                            " | PelletCount: " + pelletCount +
+                            " | Horizontal: " + weaponManager.HorizontalSpread +
+                            " | Vertical: " + weaponManager.VerticalSpread
+                            );
+
+                    for (int pelletIndex = 0; pelletIndex < pelletCount; pelletIndex++)
                     {
-                        Debug.Log(hit.collider.name);
 
                         if (gameManager.instance.playerWeaponManager.HitEffect != null)
                         {
@@ -821,24 +914,91 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                         IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
 
                         if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
+                        Vector3 shotDirection = GetPelletDirection(
+                                pelletIndex,
+                                pelletCount,
+                                weaponManager.HorizontalSpread,
+                                weaponManager.VerticalSpread,
+                                weaponManager.UsesPellets
+                                );
+
+                        RaycastHit hit;
+
+                        if (Physics.Raycast(
+                            Camera.main.transform.position,
+                            shotDirection,
+                            out hit,
+                            weaponManager.Range,
+                            ~ignoreSource))
                         {
-                            int bonusDamage = 0;
 
-                            StatHandler stats = gameManager.instance.playerStatHandler;
-
-                            if (stats != null)
+                            if (weaponManager.HitEffect != null)
                             {
-                                bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                                Instantiate(
+                                    weaponManager.HitEffect,
+                                    hit.point,
+                                    Quaternion.LookRotation(hit.normal)
+                                );
                             }
 
-                            int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                            IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
+                            {
+                                switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
+                                {
+                                    //Examples for IDamage are right below here, you may need to make your bullets deal damage too,
+                                    //infact most should still run the IDamage thing below,
+                                    //but might have to change damage values or something in here first
+                                    //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
+                                    //personally I'll 
+                                    case AbilityStats.ability.fire:
+                                        //probably use a IFire interface that works like IDamage but makes them set fire
+                                        break;
+                                    case AbilityStats.ability.freeze:
+                                        TryApplyWeaponFreeze(hit.collider, false);
+                                        break;
+                                    case AbilityStats.ability.toxic:
+                                        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                        break;
+                                    case AbilityStats.ability.magent:
+                                        //good luck lol idk
+                                        break;
+                                    case AbilityStats.ability.crystal:
+                                        CrystalShot(dmg, hit);
+                                        break;
+                                    case AbilityStats.ability.lightning:
+                                        //chain lightning, probably also use a ILightning interface but may have to rework the enemies a bit to be able to actually chain the lightning together
+                                        break;
 
-                            dmg.takeDamage(finalDamage);
+                                }
+                            }
 
-                            // if (turnOnDebug)
-                            //  {
-                            //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
-                            // }
+                            if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
+                            {
+                                int bonusDamage = 0;
+
+                                StatHandler stats = gameManager.instance.playerStatHandler;
+
+                                if (stats != null)
+                                {
+                                    bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                                }
+
+
+                                int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                                if (gameManager.instance.playerStatHandler.crystalBar == 10)
+                                {
+                                    gameManager.instance.playerStatHandler.crystalBar = 0;
+                                    finalDamage *= 3;
+                                }
+
+                                dmg.takeDamage(finalDamage);
+
+                                // if (turnOnDebug)
+                                //  {
+                                //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
+                                // }
+                            }
                         }
                     }
                 }
@@ -846,23 +1006,178 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 {
                     PlayCurrentWeaponShootSound();
                     gameManager.instance.isMeleeing = true;
-
                     gameManager.instance.playerWeaponManager.PlayMeleeLightAttack();
                 }
 
-                //if (turnOnDebug)
-                //{
-                //     Debug.Log("ShotFired!");
-                //}
+                    //if (turnOnDebug)
+                    //{
+                    //     Debug.Log("ShotFired!");
+                    //}
 
+
+
+
+
+                }
             }
+         }
+
+    private Vector3 GetPelletDirection(
+    int pelletIndex,
+    int pelletCount,
+    float horizontalSpread,
+    float verticalSpread,
+    bool useSpread)
+    {
+        Transform cameraTransform = Camera.main.transform;
+
+        if (!useSpread || pelletCount <= 1)
+        {
+            return cameraTransform.forward;
         }
 
-    }
+        float horizontalPosition =
+            (float)pelletIndex / (pelletCount - 1);
 
+        horizontalPosition =
+            horizontalPosition * 2f - 1f;
+
+        float horizontalOffset =
+            horizontalPosition * horizontalSpread;
+
+        float verticalOffset =
+            UnityEngine.Random.Range(
+                -verticalSpread,
+                verticalSpread
+            );
+
+        Quaternion spreadRotation = Quaternion.Euler(
+            verticalOffset,
+            horizontalOffset,
+            0f
+        );
+
+        Vector3 localDirection =
+            spreadRotation * Vector3.forward;
+
+        return cameraTransform
+            .TransformDirection(localDirection)
+            .normalized;
+    }
+    
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
+
+       
+
+        if (gameManager.instance.playerWeaponManager == null)
+        {
+            return;
+        }
+
+        if (!gameManager.instance.playerWeaponManager.UsesChargedShot)
+        {
+            return;
+        }
+
+        if (!isChargingShot)
+        {
+            return;
+        }
+
+        FireChargedShot();
+    }
+
+    private void FireChargedShot()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        float chargePercent = GetChargePercent();
+
+        float chargeMultiplier = Mathf.Lerp(
+            1f,
+            weaponManager.MaxChargeMultiplier,
+            chargePercent
+        );
+
+        int bonusDamage = 0;
+
+        StatHandler stats =
+            gameManager.instance.playerStatHandler;
+
+        if (stats != null)
+        {
+            bonusDamage = Mathf.RoundToInt(stats.modDamage);
+        }
+
+        int finalDamage = Mathf.RoundToInt(
+            (weaponManager.Damage + bonusDamage) *
+            chargeMultiplier
+        );
+
+        bool fullyCharged = chargePercent >= 0.99f;
+
+        if (fullyCharged)
+        {
+            finalDamage = Mathf.RoundToInt(
+                finalDamage *
+                weaponManager.CriticalMultiplier
+            );
+
+            Debug.Log("FULL CHARGE CRITICAL: " + finalDamage);
+        }
+
+        PlayCurrentWeaponShootSound();
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(
+            Camera.main.transform.position,
+            Camera.main.transform.forward,
+            out hit,
+            weaponManager.Range,
+            ~ignoreSource))
+        {
+            if (weaponManager.HitEffect != null)
+            {
+                Instantiate(
+                    weaponManager.HitEffect,
+                    hit.point,
+                    Quaternion.LookRotation(hit.normal)
+                );
+            }
+
+            TryApplyWeaponFreeze(hit.collider, false);
+
+            IDamage damageTarget =
+                hit.collider.GetComponentInChildren<IDamage>();
+
+            if (damageTarget == null)
+            {
+                damageTarget =
+                    hit.collider.GetComponentInParent<IDamage>();
+            }
+
+            if (damageTarget != null)
+            {
+                damageTarget.takeDamage(finalDamage);
+            }
+        }
+
+        EndChargedShot();
+    }
+
+    private void EndChargedShot()
+    {
+        gameManager.instance.canShoot = false;
+        
+
+        isChargingShot = false;
+        currentChargeTime = 0f;
+
+        chargedShotCooldownTimer = gameManager.instance.playerWeaponManager.ChargeCooldown;
     }
 
 
@@ -901,8 +1216,11 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         }
     }
-
-    //this is now a Ability button instead of ADS
+    float range;
+    float adsRecoil;
+    float fov;
+    private Coroutine adsInCoroutine;
+    private Coroutine adsOutCoroutine;
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
@@ -919,8 +1237,83 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 iAct.Interact();
             }
         }
+        range = gameManager.instance.playerWeaponManager.Range;
+        adsRecoil = gameManager.instance.playerWeaponManager.Recoil;
+        
 
+        if (!gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
+        {
+            if(adsOutCoroutine != null)
+            {
+                StopCoroutine(adsOutCoroutine);
+            }
+            gameManager.instance.playerWeaponManager.Range = range * 1.4f;
+            gameManager.instance.playerWeaponManager.Recoil = adsRecoil - 0.2f;
+            adsInCoroutine = StartCoroutine(AdsIn());
+            gameManager.instance.isAiming = true;
+        }
 
+    }
+    IEnumerator AdsIn()
+    {
+        float timer = 0f;
+        float duration = 0.3f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
+                     gameManager.instance.playerCamera.fieldOfView,
+                     fov - 30,
+                     timer / duration);
+
+            gameManager.instance.playerWeaponManager.weaponHolder.transform.position = Vector3.Lerp(
+                gameManager.instance.playerWeaponManager.weaponHolder.transform.position,
+                gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position,
+                timer / duration);
+
+            yield return null;
+        }
+        gameManager.instance.playerCamera.fieldOfView = fov - 30;
+        gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.adsWeaponHolder.transform.position;
+        
+    }
+    private void OnADSCanceled(InputAction.CallbackContext context)
+    {
+        if (gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
+        {
+            if (adsInCoroutine != null)
+            {
+                StopCoroutine(adsInCoroutine);
+            }
+            gameManager.instance.playerWeaponManager.Range = range;
+            gameManager.instance.playerWeaponManager.Recoil = adsRecoil;
+            adsOutCoroutine = StartCoroutine(AdsOut());
+
+            gameManager.instance.isAiming = false;
+        }
+    }
+    IEnumerator AdsOut()
+    {
+        float timer = 0f;
+        float duration = 0.3f;
+        while (timer < duration)
+        {
+            
+            timer += Time.deltaTime;
+            gameManager.instance.playerCamera.fieldOfView = Mathf.Lerp(
+                     gameManager.instance.playerCamera.fieldOfView,
+                     fov,
+                     timer / duration);
+
+            gameManager.instance.playerWeaponManager.weaponHolder.transform.position = Vector3.Lerp(
+                gameManager.instance.playerWeaponManager.weaponHolder.transform.position,
+                gameManager.instance.playerWeaponManager.nonADSWeaponHolder.transform.position,
+                timer / duration);
+
+            yield return null;
+        }
+        gameManager.instance.playerCamera.fieldOfView = fov;
+        gameManager.instance.playerWeaponManager.weaponHolder.transform.position = gameManager.instance.playerWeaponManager.nonADSWeaponHolder.transform.position;
 
     }
     IEnumerator fireCooldown(float cd)
@@ -943,20 +1336,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         yield return new WaitForSeconds(cd);
         gameManager.instance.allowedAbility4 = true;
     }
-
-
-
-    //this is now a Ability button instead of ADS
-    private void OnADSCanceled(InputAction.CallbackContext context)
-    {
-        gameManager.instance.isAiming = false;
-        //if (gameManager.instance.gameDebug)
-        //{
-        //     Debug.Log("Stopped Aiming Down Sights!");
-        //}
-    }
-
-
 
     private void ShootTimer()
     {
@@ -1138,8 +1517,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
     IEnumerator KatanaDashAttack()
     {
-
-
         yield return new WaitForSeconds(dashAttackDelay);
 
         PlayCurrentWeaponShootSound();
@@ -1147,10 +1524,167 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAttackTriggered = true;
 
         yield return new WaitForSeconds(0.5f);
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
+
+        foreach (Collider others in hits)
+        {
+            IDamage dmg = others.GetComponent<IDamage>();
+
+            if (dmg != null)
+            {
+                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
+            }
+        }
 
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;
     }
+
+    private bool CurrentAbilityIsFreeze(out AbilityStats freezeStats)
+    {
+        freezeStats = null;
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.abilities == null)
+        {
+            return false;
+        }
+
+        if (weaponManager.abilitySlot < 0 || weaponManager.abilitySlot >= weaponManager.abilities.Count)
+        {
+            return false;
+        }
+
+        freezeStats = weaponManager.abilities[weaponManager.abilitySlot];
+
+        if (freezeStats == null)
+        {
+            return false;
+        }
+
+        return freezeStats.abilityType == AbilityStats.ability.freeze;
+    }
+
+    private IFreeze FindFreezeTarget(Collider hitCollider)
+    {
+        IFreeze freezeTarget = hitCollider.GetComponent<IFreeze>();
+
+        if (freezeTarget != null)
+        {
+            return freezeTarget;
+        }
+
+        freezeTarget = hitCollider.GetComponentInParent<IFreeze>();
+
+        if (freezeTarget != null)
+        {
+            return freezeTarget;
+        }
+
+        return hitCollider.GetComponentInChildren<IFreeze>();
+    }
+
+    private IShatterable FindShatterTarget(Collider hitCollider)
+    {
+        IShatterable shatterable = hitCollider.GetComponent<IShatterable>();
+
+        if (shatterable != null)
+        {
+            return shatterable;
+        }
+
+        shatterable = hitCollider.GetComponentInParent<IShatterable>();
+
+        if (shatterable != null)
+        {
+            return shatterable;
+        }
+
+        return hitCollider.GetComponentInChildren<IShatterable>();
+    }
+    private void CrystalShot(IDamage dmg, RaycastHit hit)
+    {
+        if (dmg != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+        }
+    }
+    public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
+    {
+        if (gameManager.instance.playerWeaponManager.abilities.Count == 0)
+        {
+            return;
+        }
+        if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal
+            && hitCollider.GetComponent<IDamage>() != null)
+        {
+            gameManager.instance.playerStatHandler.crystalBar += 1;
+            if (gameManager.instance.playerStatHandler.crystalBar == 10)
+            {
+                multiplier = 3;
+                gameManager.instance.playerStatHandler.crystalBar = 0;
+                return;
+            }
+        }
+        multiplier = 1;
+    }
+    public void TryApplyWeaponFreeze(Collider hitCollider, bool isMelee)
+    {
+        if (!CurrentAbilityIsFreeze(out AbilityStats freezeStats))
+        {
+            return;
+        }
+
+        float freezeDuration = freezeStats.effectTimer > 0
+            ? freezeStats.effectTimer
+            : defaultFreezeDuration;
+
+        if (isMelee)
+        {
+            if (Time.time < nextMeleeFreezeTime)
+            {
+                return;
+            }
+
+            nextMeleeFreezeTime = Time.time + meleeFreezeCooldown;
+        }
+        else
+        {
+            if (Time.time < nextGunFreezeTime)
+            {
+                return;
+            }
+
+            if (UnityEngine.Random.value > gunFreezeChance)
+            {
+                return;
+            }
+
+            nextGunFreezeTime = Time.time + gunFreezeCooldown;
+        }
+
+        IFreeze freezeTarget = FindFreezeTarget(hitCollider);
+
+        if (freezeTarget != null)
+        {
+            freezeTarget.freeze(freezeDuration);
+        }
+    }
+
+    public bool TryShatterFrozenTarget(Collider hitCollider)
+    {
+        IShatterable shatterable = FindShatterTarget(hitCollider);
+
+        if (shatterable != null && shatterable.IsFrozen)
+        {
+            shatterable.Shatter();
+            return true;
+        }
+
+        return false;
+    }
+
 
     public void FreezePlayer(float duration)
     {
@@ -1320,6 +1854,128 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     }
 
     private void OnShopCanceled(InputAction.CallbackContext context)
+    { }
+
+    private void HandleChargedShot()
     {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+        {
+            return;
+        }
+
+        if (chargedShotCooldownTimer > 0f)
+        {
+            chargedShotCooldownTimer -= Time.deltaTime;
+        }
+
+        if (!isChargingShot)
+        {
+            return;
+        }
+
+        currentChargeTime += Time.deltaTime;
+
+        currentChargeTime = Mathf.Clamp(
+            currentChargeTime,
+            0f,
+            weaponManager.ChargeTime
+        );
+
+        //float chargePercent = GetChargePercent();
+
+       // gameManager.instance.playerCamera.fieldOfView =
+           // Mathf.Lerp(
+           //     normalCameraFOV,
+            //    weaponManager.ChargedZoomFOV,
+            //    chargePercent
+           // );
+    }
+
+    private float GetChargePercent()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.ChargeTime <= 0f)
+        {
+            return 0f;
+        }
+
+        return Mathf.Clamp01(
+            currentChargeTime / weaponManager.ChargeTime
+        );
+    }
+
+    private void BeginChargedShot()
+    {
+        if (chargedShotCooldownTimer > 0f)
+        {
+            return;
+        }
+
+        if (isChargingShot)
+        {
+            return;
+        }
+
+        isChargingShot = true;
+        currentChargeTime = 0f;
+    }
+
+    private void UpdateChargedShotUI()
+    {
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null)
+            return;
+
+        // Only show this UI for charged weapons
+        if (!weaponManager.UsesChargedShot)
+        {
+            sniperChargePanel.SetActive(false);
+            return;
+        }
+
+        // Show panel while charging or recharging
+        if (isChargingShot)
+        {
+            sniperChargePanel.SetActive(true);
+        }
+        else
+        {
+            sniperChargePanel.SetActive(false);
+            return;
+        }
+
+        if (isChargingShot)
+        {
+            float chargePercent = currentChargeTime / weaponManager.ChargeTime;
+            chargePercent = Mathf.Clamp01(chargePercent);
+
+            sniperChargeSlider.value = chargePercent;
+
+            if (chargePercent >= 1f)
+            {
+                sniperChargeText.text = "CRITICAL READY";
+            }
+            else
+            {
+                sniperChargeText.text = "CHARGING";
+            }
+        }
+        else
+        {
+            float rechargePercent =
+                1f - (chargedShotCooldownTimer / weaponManager.ChargeCooldown);
+
+            rechargePercent = Mathf.Clamp01(rechargePercent);
+
+            sniperChargeSlider.value = rechargePercent;
+            sniperChargeText.text = "RECHARGING";
+        }
+
     }
 }

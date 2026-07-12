@@ -8,6 +8,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private string currentWeaponName;
     [SerializeField] private List<string> currentWeaponMods = new List<string>();
 
+    [Header("Shotgun Settings")]
+    public bool UsesPellets;
+    public int PelletCount = 1;
+    public float HorizontalSpread;
+    public float VerticalSpread;
+
+    [Header("Charged Shot Settings")]
+    public bool UsesChargedShot;
+    public float ChargeTime;
+    public float ChargeCooldown;
+    public float MaxChargeMultiplier;
+    public float CriticalMultiplier;
+    public float ChargedZoomFOV;
+
     // Weapon Settings
     public bool Type;
     public int Damage;
@@ -25,7 +39,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public GameObject HitEffect;
     public Animator weaponAnimator;
 
-    [SerializeField] private Transform weaponHolder;
+    [SerializeField] public Transform weaponHolder;
+    [SerializeField] public Transform adsWeaponHolder;
+    [SerializeField] public Transform nonADSWeaponHolder;
     private GameObject weaponCurrent;
 
     // Ability Stuff
@@ -52,8 +68,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int abilitySlot;
 
     // Animation hashes
-    private int lightAttack = Animator.StringToHash("isHitting");
+    private readonly int lightAttack = Animator.StringToHash("isHitting");
     private readonly int heavyAttack = Animator.StringToHash("heavyHit");
+    private readonly int hammerBlock = Animator.StringToHash("isBlocking");
 
     [Header("Don't touch unless debugging")]
     [SerializeField] private List<string> Modifiers = new List<string>();
@@ -77,6 +94,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int ammo,
         int maxAmmo,
         float ammoTimer,
+        float ads,
+
         List<string> weaponMods = null
         )
     {
@@ -88,6 +107,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         currentWeaponData = weaponData;
         currentWeaponName = weaponData.weaponName;
         currentWeaponMods = CopyModList(weaponMods);
+
+        // Shotgun
+        UsesPellets = weaponData.usesPellets;
+        PelletCount = Mathf.Max(1, weaponData.pelletCount);
+        HorizontalSpread = weaponData.horizontalSpread;
+        VerticalSpread = weaponData.verticalSpread;
+
+        // Sniper 
+        UsesChargedShot = weaponData.usesChargedShot;
+        ChargeTime = weaponData.chargeTime;
+        ChargeCooldown = weaponData.chargeCooldown;
+        MaxChargeMultiplier = weaponData.maxChargeMultiplier;
+        CriticalMultiplier = weaponData.criticalMultiplier;
+        ChargedZoomFOV = weaponData.chargedZoomFOV;
 
         Equip(
             weaponData.weaponType,
@@ -102,7 +135,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             ammoTimer,
             weaponData.shootSound,
             weaponData.reloadSound,
-            weaponData.hitEffect
+            weaponData.hitEffect,
+            ads
         );
 
         if (UpgradeUI.instance != null)
@@ -172,6 +206,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     BaseSoundSO shootSound,
     BaseSoundSO reloadSound,
     GameObject hitEffect)
+        bool type,
+        int damage,
+        float range,
+        float rate,
+        float recoil,
+        float timer,
+        GameObject weaponPrefab,
+        int ammo,
+        int maxAmmo,
+        float ammoTimer,
+        BaseSoundSO shootSound,
+        BaseSoundSO reloadSound,
+        GameObject hitEffect,
+        float ads)
     {
         Type = type;
         Damage = damage;
@@ -196,6 +244,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         MaxAmmo = maxAmmo + bonusMaxAmmo;
         Ammo = Mathf.Min(ammo + bonusMaxAmmo, MaxAmmo);
 
+        Ammo = ammo;
+        MaxAmmo = maxAmmo;
         BaseAmmoTimer = ammoTimer;
 
         float reloadBonus = 0f;
@@ -227,6 +277,16 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             {
                 weaponAnimator.SetBool("pickedUp", true);
             }
+
+            if (abilities != null && abilitySlot >= 0 && abilitySlot < abilities.Count)
+            {
+                ApplyAbilityEffectToCurrentWeapon(abilities[abilitySlot]);
+            }
+        }
+
+        if (UpgradeUI.instance != null)
+        {
+            UpgradeUI.instance.RefreshAllUI();
         }
 
         if (UpgradeUI.instance != null)
@@ -312,39 +372,53 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     void abilityEquip(AbilityStats stats)
     {
-        if (stats == null || stats.model == null || abilityModel == null)
+        if (stats == null)
         {
             return;
         }
 
-        MeshFilter abilityMeshFilter = abilityModel.GetComponent<MeshFilter>();
-        MeshFilter statsMeshFilter = stats.model.GetComponent<MeshFilter>();
-        MeshRenderer abilityMeshRenderer = abilityModel.GetComponent<MeshRenderer>();
-        MeshRenderer statsMeshRenderer = stats.model.GetComponent<MeshRenderer>();
-
-        if (abilityMeshFilter != null && statsMeshFilter != null)
+        // Do not show the ability orb/model in the player's hand.
+        if (abilityModel != null)
         {
-            abilityMeshFilter.sharedMesh = statsMeshFilter.sharedMesh;
+            abilityModel.SetActive(false);
         }
 
-        if (abilityMeshRenderer != null && statsMeshRenderer != null)
+        ApplyAbilityEffectToCurrentWeapon(stats);
+    }
+
+    private void ApplyAbilityEffectToCurrentWeapon(AbilityStats stats)
+    {
+        if (activeEffect != null)
         {
-            abilityMeshRenderer.sharedMaterial = statsMeshRenderer.sharedMaterial;
+            Destroy(activeEffect.gameObject);
+            activeEffect = null;
+        }
+
+        if (stats == null || stats.loopedEffect == null)
+        {
+            return;
+        }
+
+        if (weaponCurrent == null)
+        {
+            return;
         }
 
         effect = stats.loopedEffect;
 
-        if (activeEffect != null)
+        Transform effectParent = weaponCurrent.transform;
+
+        Transform weaponEffectSocket = weaponCurrent.transform.Find("EffectSocket");
+
+        if (weaponEffectSocket != null)
         {
-            Destroy(activeEffect.gameObject);
+            effectParent = weaponEffectSocket;
         }
 
-        if (effect != null && effectSocket != null)
-        {
-            activeEffect = Instantiate(effect, effectSocket);
-            activeEffect.transform.localPosition = Vector3.zero;
-            activeEffect.transform.localRotation = Quaternion.identity;
-        }
+        activeEffect = Instantiate(effect, effectParent);
+        activeEffect.transform.localPosition = Vector3.zero;
+        activeEffect.transform.localRotation = Quaternion.identity;
+        activeEffect.Play();
     }
 
     void abilitySwitch()
@@ -388,6 +462,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             return;
 
         weaponAnimator.SetBool(heavyAttack, true);
+    }
+
+    public void PlayHammerBlock()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(hammerBlock, true);
     }
 
     public void ResetMeleeAnimationTriggers()

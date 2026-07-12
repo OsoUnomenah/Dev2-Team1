@@ -90,6 +90,7 @@ public class UpgradeShopUI : MonoBehaviour
 
         ApplyUpgrade(selectedUpgrade.type);
 
+
         selectedUpgrade.level++;
         selectedUpgrade.currentCost += selectedUpgrade.costIncreasePerPurchase;
 

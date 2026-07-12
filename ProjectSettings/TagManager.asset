@@ -21,6 +21,8 @@ TagManager:
   - PlayerSpawnPos
   - PlayerSpawnPoint
   - Portal
+  - LevelBuilder
+  - SniperChargePanel
   layers:
   - Default
   - TransparentFX
