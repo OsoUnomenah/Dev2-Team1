@@ -320,12 +320,10 @@ public class ToxicBossAI : MonoBehaviour
 
         yield return new WaitForSeconds(attackWindupTime);
 
-        /*
-         * Toxic Slam damage will be added next.
-         *
-         * This is where we will use Physics.OverlapSphere
-         * to find and damage the player.
-         */
+       //Toxic Slam damage will be added next.
+       //This is where we will use Physics.OverlapSphere
+       //to find and damage the player.
+         
 
         if (showDebugMessages)
         {
@@ -357,10 +355,8 @@ public class ToxicBossAI : MonoBehaviour
 
         yield return new WaitForSeconds(attackWindupTime);
 
-        /*
-         * The toxic projectile will be created here
-         * after we build the ToxicProjectile script and prefab.
-         */
+        //The toxic projectile will be created here
+        //after we build the ToxicProjectile script and prefab.
 
         if (showDebugMessages)
         {
@@ -391,10 +387,10 @@ public class ToxicBossAI : MonoBehaviour
 
         yield return new WaitForSeconds(attackWindupTime);
 
-        /*
-         * The toxic gas cloud will be created here
-         * after we build the ToxicGasCloud script and prefab.
-         */
+        
+         // The toxic gas cloud will be created here
+         //after we build the ToxicGasCloud script and prefab.
+         
 
         if (showDebugMessages)
         {
