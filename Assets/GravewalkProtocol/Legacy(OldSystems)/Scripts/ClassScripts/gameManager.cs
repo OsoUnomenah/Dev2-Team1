@@ -9,11 +9,10 @@ public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
     [SerializeField] GameObject levelBuilder;
+    [SerializeField] LevelBuilder lb; 
     [SerializeField] bool levelStarted = false;
     public GameObject playerSpawnPos;
-
-
-
+    [SerializeField] public bool isDead = false; 
 
     [SerializeField] public bool gameDebug;
     public TMP_Text objectiveText;
@@ -126,9 +125,11 @@ public class gameManager : MonoBehaviour
         UpdateXPUI();
         UpdateCurrencyUI();
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+        InitLevelBuilder();
 
     }
+
+   
 
     private void Start()
     {
@@ -139,7 +140,15 @@ public class gameManager : MonoBehaviour
 
         menuWin.SetActive(false);
 
-        StartNewLevel();
+        ChooseLevel();
+
+    }
+
+    public void InitLevelBuilder()
+    {
+        playerSpawnPos = GameObject.Find("PlayerSpawnPos");
+        levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+        lb = levelBuilder.GetComponent<LevelBuilder>();
 
     }
 
@@ -166,6 +175,11 @@ public class gameManager : MonoBehaviour
 
             levelBuilder.GetComponent<LevelBuilder>().GenerateRandom();
             levelStarted = true;
+            if (lb.GetStartRoomCenterPos() != Vector3.zero)
+            {
+                playerSpawnPos.transform.position = lb.GetStartRoomCenterPos();
+                player.transform.position = playerSpawnPos.transform.position;
+            }
         }
     }
 
@@ -175,7 +189,6 @@ public class gameManager : MonoBehaviour
         {
             levelBuilder.GetComponent<LevelBuilder>().GenerateFromSeed();
         }
-
 
     }
 
@@ -504,10 +517,14 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
+        isDead = false;
         player.transform.position = playerSpawnPos.transform.position;
+        playerInputHandler.enabled = true;
+
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
+        
     }
 
     public void NextLevel()

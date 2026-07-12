@@ -17,13 +17,13 @@ MonoBehaviour:
   roomTemplates:
   - name: Showcase Room
     numberOfRooms: 1
-    roomWidthMin: 64
-    roomWidthMax: 64
-    roomLengthMin: 64
-    roomLengthMax: 64
-    layoutTexture: {fileID: 2800000, guid: 9c001585b2e7fd843a71e618feac0e67, type: 3}
+    roomWidthMin: 32
+    roomWidthMax: 32
+    roomLengthMin: 32
+    roomLengthMax: 32
+    layoutTexture: {fileID: 0}
   doorDistanceFromEdge: 1
   minHallwayLength: 3
   maxHallwayLength: 5
-  maxRoomCount: 1
+  maxRoomCount: 10
   minRoomDistance: 1

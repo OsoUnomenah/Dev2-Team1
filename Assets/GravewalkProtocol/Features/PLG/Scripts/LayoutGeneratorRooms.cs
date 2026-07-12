@@ -10,6 +10,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
     [SerializeField] RoomLevelLayoutConfiguration levelConfig;
 
     [SerializeField] GameObject levelLayoutDisplay;
+    [SerializeField] float levelLayoutDisplayHieght;
     [SerializeField] List<Hallway> openDoorways;
 
     Random random;
@@ -123,7 +124,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
         levelLayoutDisplay.transform.localScale = new Vector3(level.Width * scale, level.Length * scale, 1);
         float xPos = level.Width * scale / 2.0f - scale;
         float zPos = level.Length * scale / 2.0f - scale;
-        Vector3 levelCenterPosition = new Vector3(xPos, 0.1f, zPos);
+        Vector3 levelCenterPosition = new Vector3(xPos, levelLayoutDisplayHieght, zPos);
         levelLayoutDisplay.transform.position = levelCenterPosition;
         layoutTexture.FillWithColor(Color.black);
 

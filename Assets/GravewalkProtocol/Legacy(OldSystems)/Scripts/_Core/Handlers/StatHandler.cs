@@ -1,7 +1,5 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
+using UnityEngine;
 
 public class StatHandler : MonoBehaviour, IDamage
 {
@@ -44,13 +42,17 @@ public class StatHandler : MonoBehaviour, IDamage
     [Header("Events")]
     public GameEvent GE_OnPlayerHealthChanged;
     public GameEvent GE_OnPlayerStaminaChanged;
+    public GameEvent GE_OnPlayerHurt;
+
+
 
     [Header("Player Life Audio")]
+    [SerializeField] private BaseSoundSO hurtSound;
     [SerializeField] private BaseSoundSO spawnSound;
     [SerializeField] private BaseSoundSO deathSound;
     [SerializeField] private float deathSoundDelay = 1.5f;
 
-    private bool isDead;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -105,6 +107,7 @@ public class StatHandler : MonoBehaviour, IDamage
             && gameManager.instance.playerInputHandler.currentSpeed != 0)
         {
             currentStamina -= dashCost;
+            
         }
 
         if (gameManager.instance.isDashing)
@@ -153,14 +156,14 @@ public class StatHandler : MonoBehaviour, IDamage
     }
 
 
-
-
     public void takeDamage(int amount)
     {
-        if (isDead)
+        if (gameManager.instance.isDead)
         {
             return;
         }
+
+        //Assuming this is giving I frames to prevent damge when dashing?
         if (gameManager.instance.isDashing)
         {
             return;
@@ -177,9 +180,10 @@ public class StatHandler : MonoBehaviour, IDamage
         int finalDamage = Mathf.Max(1, amount - defenseBonus);
 
         stats.currentHealth -= Mathf.Clamp(finalDamage, 0, maxHealth);
-
-        //Raise Event to update health UI and trigger any other responses to health change
         GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
+
+
+
 
         if (gameManager.instance.gameDebug)
         {
@@ -190,17 +194,22 @@ public class StatHandler : MonoBehaviour, IDamage
         {
             stats.currentHealth = 0;
             StartCoroutine(PlayerDeathRoutine());
+            gameManager.instance.youLose();
+
+        }else
+        {
+           GE_OnPlayerHurt.Raise(this, this);
         }
     }
 
     private IEnumerator PlayerDeathRoutine()
     {
-        if (isDead)
+        if (gameManager.instance.isDead)
         {
             yield break;
         }
 
-        isDead = true;
+        gameManager.instance.isDead = true;
 
         if (gameManager.instance.playerInputHandler != null)
         {
@@ -217,7 +226,6 @@ public class StatHandler : MonoBehaviour, IDamage
 
         yield return new WaitForSeconds(deathSoundDelay);
 
-        gameManager.instance.youLose();
     }
 
     public void Heal(float amount)
@@ -242,6 +250,14 @@ public class StatHandler : MonoBehaviour, IDamage
         gameManager.instance.playerHealFlash.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         gameManager.instance.playerHealFlash.SetActive(false);
+    }
+
+    public void PlaySoundHurtPlayer()
+    {
+        AudioManager.instance.PlaySoundFromSource(
+                hurtSound,
+                gameManager.instance.player
+            );
     }
 
 }
