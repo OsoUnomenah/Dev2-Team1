@@ -167,7 +167,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         standingCameraPosition = gameManager.instance.playerCamera.transform.localPosition;
         fov = gameManager.instance.playerCamera.fieldOfView;
-        normalCameraFOV = gameManager.instance.playerCamera.fieldOfView;
     }
 
     void Update()
@@ -1108,8 +1107,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         chargedShotCooldownTimer =
             weaponManager.ChargeCooldown;
 
-        //gameManager.instance.playerCamera.fieldOfView =
-           // normalCameraFOV;
+        gameManager.instance.playerCamera.fieldOfView =
+            normalCameraFOV;
     }
 
 
