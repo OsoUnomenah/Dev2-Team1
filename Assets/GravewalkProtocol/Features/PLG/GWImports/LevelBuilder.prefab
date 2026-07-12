@@ -68026,7 +68026,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 0bda8c2bfa6b4084bb7114017f4e1069, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 67e798a377dff8f4eab6c56a2888900e, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &2112240622748654586
 GameObject:
@@ -119936,6 +119936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelConfig: {fileID: 11400000, guid: af99ea056799c6b44a02cfed3ccea3a5, type: 2}
   levelLayoutDisplay: {fileID: 4829360386344972097}
+  levelLayoutDisplayHieght: 500
 --- !u!1 &3851963250113357192
 GameObject:
   m_ObjectHideFlags: 0
@@ -151191,9 +151192,7 @@ MonoBehaviour:
   layoutGenerator: {fileID: 2854539770597930571}
   levelTexture: {fileID: 2800000, guid: a1f89f00828c3274590f8ce366dc496e, type: 3}
   decoratedTexture: {fileID: 2800000, guid: 17512dcf3959ee0428686f521cf03a19, type: 3}
-  availableRules:
-  - rule: {fileID: 11400000, guid: f1378beb5aa38674382b51b55505702a, type: 2}
-    maxAvailability: 0
+  availableRules: []
 --- !u!1 &4826672329658547378
 GameObject:
   m_ObjectHideFlags: 0
@@ -151357,7 +151356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9068330711109704674
 Transform:
   m_ObjectHideFlags: 0
@@ -151367,7 +151366,7 @@ Transform:
   m_GameObject: {fileID: 4829360386344972097}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710677, y: -0, z: -0, w: 0.7071069}
-  m_LocalPosition: {x: 62, y: 0.1, z: 62}
+  m_LocalPosition: {x: 62, y: 500, z: 62}
   m_LocalScale: {x: 128, y: 128, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
