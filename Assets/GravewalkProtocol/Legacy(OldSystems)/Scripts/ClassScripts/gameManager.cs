@@ -70,6 +70,11 @@ public class gameManager : MonoBehaviour
 
     public GameObject playerSpawnPos;
 
+    [Header("Charged Shot UI")]
+    [SerializeField] public GameObject sniperChargePanel;
+    [SerializeField] public Slider sniperChargeSlider;
+    [SerializeField] public TMP_Text sniperChargeText;
+
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
     public bool allowedAbility2 = true;
