@@ -1,7 +1,5 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
+using UnityEngine;
 
 public class StatHandler : MonoBehaviour, IDamage
 {
@@ -40,6 +38,9 @@ public class StatHandler : MonoBehaviour, IDamage
     [Range(0f, 100f)][SerializeField] public float modSpeed;
     [Range(0, 100)][SerializeField] public int modJumps;
 
+    [Header("Weapon Mods")]
+    [Range(0f, 10f)][SerializeField] public float modReloadSpeed;
+
     [Header("Events")]
     public GameEvent GE_OnPlayerHealthChanged;
     public GameEvent GE_OnPlayerStaminaChanged;
@@ -73,9 +74,9 @@ public class StatHandler : MonoBehaviour, IDamage
 
     // Update is called once per frame
     void Update()
-    {   
+    {
         currentDamage = damage + modDamage;
-        
+
         HandleStamina();
 
     }
@@ -95,7 +96,7 @@ public class StatHandler : MonoBehaviour, IDamage
         dashCost = gameManager.instance.dashCost;
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
-    
+
     public void HandleStamina()
     {
         if (gameManager.instance.dashTriggered
@@ -140,7 +141,7 @@ public class StatHandler : MonoBehaviour, IDamage
                 gameManager.instance.canMelee = true;
             }
         }
-      
+
         GE_OnPlayerStaminaChanged.Raise(this, gameManager.instance.playerStatHandler);
     }
 
@@ -223,7 +224,7 @@ public class StatHandler : MonoBehaviour, IDamage
     {
         currentHealth += Mathf.Clamp(amount, 0, maxHealth);
         StartCoroutine(FlashHeal());
-        if(currentHealth > maxHealth){ currentHealth = maxHealth; }
+        if (currentHealth > maxHealth) { currentHealth = maxHealth; }
 
         //Raise Event to update health UI and trigger any other responses to health change
         GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
