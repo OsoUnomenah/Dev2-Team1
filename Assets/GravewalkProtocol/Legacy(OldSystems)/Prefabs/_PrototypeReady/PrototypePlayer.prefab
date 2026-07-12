@@ -119,7 +119,6 @@ MonoBehaviour:
   Ammo: 0
   MaxAmmo: 0
   AmmoTimer: 0
-  ADS: 0
   ShootSound: {fileID: 0}
   ReloadSound: {fileID: 0}
   HitEffect: {fileID: 0}
@@ -878,7 +877,6 @@ MonoBehaviour:
   damage: 0
   modDamage: 0
   currentDamage: 1
-  crystalBar: 0
   defense: 0
   currentDefense: 0
   modDefense: 0
@@ -1038,12 +1036,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877ba23b313608a449cff6bbf511a753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
-  turnOnDebug: 1
+  turnOnDebug: 0
   walkSpeed: 8
   acceleration: 20
   dashCd: 1
-  dashSpeed: 21.2
-  dashAttackSpeed: 200
+  dashSpeed: 1
+  dashAttackSpeed: 1
   dashTime: 0.05
   dashFOVMod: 0
   gunFreezeChance: 0.25
@@ -1085,8 +1083,8 @@ MonoBehaviour:
   _footsteps: {fileID: 11400000, guid: 03493be87f5eab645b1caba8b7b91ca4, type: 2}
   _dash: {fileID: 0}
   jumpSound: {fileID: 0}
-  landSound: {fileID: 0}
-  crouchSound: {fileID: 0}
+  landSound: {fileID: 11400000, guid: 61f09600958135d4a9cf0c5a13414909, type: 2}
+  crouchSound: {fileID: 11400000, guid: 6048873ea1cdbac4ea01b3d0060eb504, type: 2}
   standSound: {fileID: 0}
   _dryFire: {fileID: 0}
   footstepBaseInterval: 0.5

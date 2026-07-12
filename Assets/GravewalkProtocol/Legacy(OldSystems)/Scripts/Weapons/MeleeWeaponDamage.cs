@@ -63,7 +63,7 @@ public class MeleeWeaponDamage : MonoBehaviour
 
             if (gameManager.instance.playerInputHandler.TryShatterFrozenTarget(hit))
             {
-                return;
+                continue;
             }
 
             gameManager.instance.playerInputHandler.TryApplyWeaponFreeze(hit, true);

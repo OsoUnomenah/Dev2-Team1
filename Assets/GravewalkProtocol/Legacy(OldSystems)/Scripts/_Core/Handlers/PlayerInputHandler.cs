@@ -14,7 +14,7 @@ using UnityEngine.UI;
 //5. create logic for perform and cancelled methods(will need to make methods)
 // extra note if turnondebug is set to true will show debug messages 
 
-public class PlayerInputHandler : MonoBehaviour, IDamage
+public class PlayerInputHandler : MonoBehaviour
 {
     [Header("In-Game Debug")]
     [SerializeField] bool turnOnDebug;
@@ -212,12 +212,6 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         HandleReload();
         HandleChargedShot();
         UpdateChargedShotUI();
-    }
-
-    public void takeDamage(int amount)
-    {
-
-
     }
 
     void OnEnable()
@@ -1477,6 +1471,50 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         wasGrounded = isGrounded;
     }
 
+    private void ApplyMeleeDamageToTarget(Collider target, bool includeDashBonus)
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        if (TryShatterFrozenTarget(target))
+        {
+            return;
+        }
+
+        TryApplyWeaponFreeze(target, true);
+
+        IDamage dmg = target.GetComponentInParent<IDamage>();
+
+        if (dmg == null)
+        {
+            dmg = target.GetComponentInChildren<IDamage>();
+        }
+
+        if (dmg == null)
+        {
+            return;
+        }
+
+        int bonusDamage = 0;
+
+        StatHandler stats = gameManager.instance.playerStatHandler;
+
+        if (stats != null)
+        {
+            bonusDamage += Mathf.RoundToInt(stats.modDamage);
+        }
+
+        if (includeDashBonus && dashAttackTriggered)
+        {
+            int dashBonus = 100 - gameManager.instance.playerWeaponManager.Damage;
+            bonusDamage += dashBonus;
+        }
+
+        dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage + bonusDamage);
+    }
+
     IEnumerator HeavyAttackAOE()
     {
         // Debug.Log("Heavy attack aoe");
@@ -1488,12 +1526,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         foreach (Collider others in hits)
         {
-            IDamage dmg = others.GetComponent<IDamage>();
-
-            if (dmg != null)
-            {
-                dmg.takeDamage(gameManager.instance.playerWeaponManager.Damage);
-            }
+            ApplyMeleeDamageToTarget(others, false);
         }
     }
 
@@ -1506,6 +1539,12 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         dashAttackTriggered = true;
 
         yield return new WaitForSeconds(0.5f);
+        Collider[] hits = Physics.OverlapSphere(gameManager.instance.player.transform.position, heavyAttackRadius, LayerMask.GetMask("Enemy"));
+
+        foreach (Collider others in hits)
+        {
+            ApplyMeleeDamageToTarget(others, true);
+        }
 
         dashAttackTriggered = false;
         gameManager.instance.playerWeaponManager.Timer = gameManager.instance.playerWeaponManager.TimerOrig;

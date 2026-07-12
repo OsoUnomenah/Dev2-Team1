@@ -236,12 +236,18 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 
     private void Die()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         currentState = ZombieState.Dead;
         isDead = true;
 
         if (agent != null)
         {
             agent.isStopped = true;
+            agent.enabled = false;
         }
 
         if (AudioManager.instance != null && _dead != null)
@@ -249,15 +255,17 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
         }
 
-        gameManager.instance.addXp(xpGive);
+        if (gameManager.instance != null)
+        {
+            gameManager.instance.addXp(xpGive);
 
-        int currencyDrop = GetCurrencyDrop();
-        gameManager.instance.addCurrency(currencyDrop);
-
-        WaveManager.instance.Drop(transform);
+            int currencyDrop = GetCurrencyDrop();
+            gameManager.instance.addCurrency(currencyDrop);
+        }
 
         if (WaveManager.instance != null)
         {
+            WaveManager.instance.Drop(transform);
             WaveManager.instance.OnEnemyKilled();
         }
 
@@ -323,6 +331,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         {
             return;
         }
+
+        Debug.Log("SHATTER CALLED ON: " + gameObject.name);
 
         Die();
     }
