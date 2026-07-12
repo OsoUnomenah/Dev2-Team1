@@ -308,7 +308,7 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
     {
         Vector3 worldDirection = CalculateWorldDirection();
 
-        float targetSpeed = (isCrouching || gameManager.instance.isAiming)
+        float targetSpeed = isCrouching
             ? crouchSpeed
             : walkSpeed;
 
@@ -794,11 +794,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                     // One trigger pull consumes one shell, regardless of pellet count.
                     gameManager.instance.playerWeaponManager.Ammo--;
 
-                    RaycastHit hit;
-                    if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, gameManager.instance.playerWeaponManager.Range, ~ignoreSource))
-                    {
-                        Debug.Log(hit.collider.name);
-                       
+                    PlayerWeaponManager weaponManager =
+                        gameManager.instance.playerWeaponManager;
 
                     int pelletCount = weaponManager.UsesPellets
                         ? Mathf.Max(1, weaponManager.PelletCount)
@@ -1002,9 +999,8 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
 
         }
     }
-    float range;
-    float adsRecoil;
-    float fov;
+
+    //this is now a Ability button instead of ADS
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
@@ -1021,28 +1017,9 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
                 iAct.Interact();
             }
         }
-        range = gameManager.instance.playerWeaponManager.Range;
-        adsRecoil = gameManager.instance.playerWeaponManager.Recoil;
-        fov = gameManager.instance.playerCamera.fieldOfView;
 
-        if (!gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
-        {
-            gameManager.instance.isAiming = true;
-            gameManager.instance.playerWeaponManager.Range = range * 1.4f;
-            gameManager.instance.playerWeaponManager.Recoil = adsRecoil - 0.2f;
-            gameManager.instance.playerCamera.fieldOfView = fov + gameManager.instance.playerWeaponManager.ADS;
-        }
 
-    }
-    private void OnADSCanceled(InputAction.CallbackContext context)
-    {
-        if (gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
-        {
-            gameManager.instance.isAiming = false;
-            gameManager.instance.playerWeaponManager.Range = range;
-            gameManager.instance.playerWeaponManager.Recoil = adsRecoil;
-            gameManager.instance.playerCamera.fieldOfView = fov;
-        }
+
     }
     IEnumerator fireCooldown(float cd)
     {
@@ -1065,7 +1042,17 @@ public class PlayerInputHandler : MonoBehaviour, IDamage
         gameManager.instance.allowedAbility4 = true;
     }
 
-   
+
+
+    //this is now a Ability button instead of ADS
+    private void OnADSCanceled(InputAction.CallbackContext context)
+    {
+        gameManager.instance.isAiming = false;
+        //if (gameManager.instance.gameDebug)
+        //{
+        //     Debug.Log("Stopped Aiming Down Sights!");
+        //}
+    }
 
 
 

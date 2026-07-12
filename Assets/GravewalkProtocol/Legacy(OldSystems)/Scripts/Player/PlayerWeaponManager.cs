@@ -26,7 +26,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int Ammo;
     public int MaxAmmo;
     public float AmmoTimer;
-    public float ADS;
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
@@ -84,7 +83,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int ammo,
         int maxAmmo,
         float ammoTimer,
-        float ads,
         List<string> weaponMods = null
         )
     {
@@ -113,7 +111,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             ammo,
             maxAmmo,
             ammoTimer,
-            ads,
             weaponData.shootSound,
             weaponData.reloadSound,
             weaponData.hitEffect
@@ -181,7 +178,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         int ammo,
         int maxAmmo,
         float ammoTimer,
-        float ads,
         BaseSoundSO shootSound,
         BaseSoundSO reloadSound,
         GameObject hitEffect)
@@ -202,7 +198,6 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         Ammo = ammo;
         MaxAmmo = maxAmmo;
         AmmoTimer = ammoTimer;
-        ADS = ads;
         ShootSound = shootSound;
         ReloadSound = reloadSound;
         HitEffect = hitEffect;
