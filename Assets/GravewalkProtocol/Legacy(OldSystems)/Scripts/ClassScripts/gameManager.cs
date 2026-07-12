@@ -49,6 +49,13 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
 
+    [Header("Run Outcome UI")]
+    [SerializeField] private RunOutcomeUI runOutcomeUI;
+
+    [Header("Run Completion")]
+    [SerializeField] private int bossesNeededToWinRun = 7;
+    [SerializeField] private bool finalBossDefeated;
+
     [SerializeField] public GameObject playerDamageFlash;
     [SerializeField] public GameObject playerHealFlash;
     [SerializeField] public GameObject checkpointUI;
@@ -99,8 +106,16 @@ public class gameManager : MonoBehaviour
 
     [Header("Currency")]
     [SerializeField] private int currentCurrency;
+
     public int CurrentCurrency => currentCurrency;
     public TMP_Text currencyText;
+
+    [Header("Run Stats")]
+    [SerializeField] private int runKills;
+    [SerializeField] private int runBossesDefeated;
+    [SerializeField] private int runCurrencyEarned;
+    [SerializeField] private int runXpEarned;
+    private float runStartTime;
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -140,7 +155,7 @@ public class gameManager : MonoBehaviour
        //     InitLevelBuilder();
        // }
         
-
+        runStartTime = Time.time;
     }
 
     private void Start()
@@ -435,7 +450,7 @@ public class gameManager : MonoBehaviour
 
     public void addXp(int amount)
     {
-
+        runXpEarned += amount;
         currentXP += amount;
         UpdateXPUI();
     }
@@ -520,10 +535,20 @@ public class gameManager : MonoBehaviour
 
     public void WinGame()
     {
+        if (runOutcomeUI != null)
+        {
+            runOutcomeUI.ShowWinScreen();
+            return;
+        }
+
         statePause();
 
         menuActive = menuWin;
-        menuActive.SetActive(true);
+
+        if (menuActive != null)
+        {
+            menuActive.SetActive(true);
+        }
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
@@ -531,9 +556,20 @@ public class gameManager : MonoBehaviour
 
     public void youLose()
     {
+        if (runOutcomeUI != null)
+        {
+            runOutcomeUI.ShowLossScreen();
+            return;
+        }
+
         statePause();
+
         menuActive = menuLose;
-        menuActive.SetActive(true);
+
+        if (menuActive != null)
+        {
+            menuActive.SetActive(true);
+        }
     }
 
     public void back()
@@ -593,6 +629,7 @@ public class gameManager : MonoBehaviour
 
     public void addCurrency(int amount)
     {
+        runCurrencyEarned = +amount;
         currentCurrency += amount;
         UpdateCurrencyUI();
     }
@@ -605,4 +642,54 @@ public class gameManager : MonoBehaviour
         }
     }
 
+    public void AddRunKill()
+    {
+        runKills++;
+    }
+
+    public void AddRunBossDefeated()
+    {
+        runBossesDefeated++;
+    }
+
+    private string GetFormattedRunTime()
+    {
+        float runTime = Time.time - runStartTime;
+
+        int minutes = Mathf.FloorToInt(runTime / 60f);
+        int seconds = Mathf.FloorToInt(runTime % 60f);
+
+        return minutes.ToString("00") + ":" + seconds.ToString("00");
+    }
+
+    public string GetRunStatsText(string outcomeText)
+    {
+        string stats = "";
+
+        stats += "Outcome: " + outcomeText + "\n";
+        stats += "Time: " + GetFormattedRunTime() + "\n";
+        stats += "Kills: " + runKills + "\n";
+        stats += "Bosses Defeated: " + runBossesDefeated + "\n";
+        stats += "Currency Earned: " + runCurrencyEarned + "\n";
+        stats += "XP Earned: " + runXpEarned + "\n";
+        stats += "Final Level: " + level;
+
+        return stats;
+    }
+
+    public void RegisterBossDefeated()
+    {
+        AddRunBossDefeated();
+
+        if (runBossesDefeated >= bossesNeededToWinRun)
+        {
+            finalBossDefeated = true;
+            WinGame();
+        }
+        else
+        {
+            Debug.Log("Level boss defeated. Open portal to next level.");
+            //activate portal / unlock exit
+        }
+    }
 }

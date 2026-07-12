@@ -188,6 +188,16 @@ MonoBehaviour:
   currentWeaponData: {fileID: 0}
   currentWeaponName: 
   currentWeaponMods: []
+  UsesPellets: 0
+  PelletCount: 1
+  HorizontalSpread: 0
+  VerticalSpread: 0
+  UsesChargedShot: 0
+  ChargeTime: 0
+  ChargeCooldown: 0
+  MaxChargeMultiplier: 0
+  CriticalMultiplier: 0
+  ChargedZoomFOV: 0
   Type: 0
   Damage: 0
   Range: 50
@@ -198,11 +208,14 @@ MonoBehaviour:
   Ammo: 0
   MaxAmmo: 0
   AmmoTimer: 0
+  Ads: 0
   ShootSound: {fileID: 0}
   ReloadSound: {fileID: 0}
   HitEffect: {fileID: 0}
   weaponAnimator: {fileID: 0}
   weaponHolder: {fileID: 5840519488510536703}
+  adsWeaponHolder: {fileID: 0}
+  nonADSWeaponHolder: {fileID: 0}
   abilityModel: {fileID: 7746152867297857442}
   effect: {fileID: 0}
   effectSocket: {fileID: 4959700751784414776}
@@ -1016,6 +1029,10 @@ PrefabInstance:
       value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: chainDmg
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: dashTime
       value: 0.1
       objectReference: {fileID: 0}
@@ -1026,6 +1043,10 @@ PrefabInstance:
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: walkSpeed
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: chainSpeed
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: sprintSpeed
@@ -1039,6 +1060,10 @@ PrefabInstance:
       propertyPath: weaponManager
       value: 
       objectReference: {fileID: 4918395676718949796}
+    - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
+      propertyPath: chainLightning
+      value: 
+      objectReference: {fileID: 9018446454268854427, guid: edd3aafdae35ab149b46d71136812874, type: 3}
     - target: {fileID: 2277425000651203974, guid: a1bf54980dda8ab4584e57e0633bd951, type: 3}
       propertyPath: dashAttackDelay
       value: 1
