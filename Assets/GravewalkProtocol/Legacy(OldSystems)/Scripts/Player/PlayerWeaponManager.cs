@@ -69,8 +69,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int abilitySlot;
 
     // Animation hashes
-    private int lightAttack = Animator.StringToHash("isHitting");
+    private readonly int lightAttack = Animator.StringToHash("isHitting");
     private readonly int heavyAttack = Animator.StringToHash("heavyHit");
+    private readonly int hammerBlock = Animator.StringToHash("isBlocking");
 
     [Header("Don't touch unless debugging")]
     [SerializeField] private List<string> Modifiers = new List<string>();
@@ -419,6 +420,14 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             return;
 
         weaponAnimator.SetBool(heavyAttack, true);
+    }
+
+    public void PlayHammerBlock()
+    {
+        if (weaponAnimator == null)
+            return;
+
+        weaponAnimator.SetBool(hammerBlock, true);
     }
 
     public void ResetMeleeAnimationTriggers()

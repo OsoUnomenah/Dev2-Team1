@@ -86,6 +86,20 @@ MonoBehaviour:
   enemiesPerWave: 2
   enemiesPerPlayerLevel: 1
   waveText: {fileID: 0}
+  drops:
+  - {fileID: 2163901082907539163, guid: ac9ca24722d7f1c4cab6d09e13ffe15a, type: 3}
+  - {fileID: 3112920000586998319, guid: 75e5438d927f742499e6f68878334484, type: 3}
+  - {fileID: 6418376403914927428, guid: 40509b50e6ed28c42adcbf775c4d3a8b, type: 3}
+  - {fileID: 8655629924127046308, guid: 3403d90aca528fe42b9d28ea55a28d17, type: 3}
+  - {fileID: 3824886265503906123, guid: 9aefcc7ecaa49344580758e509515108, type: 3}
+  - {fileID: 3472488264446540247, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+  - {fileID: 8869053030028166981, guid: 3d1e7de392c971241ab13044e4cd8cbe, type: 3}
+  - {fileID: 8869053030028166981, guid: c125db30a259be84d8eea7fdfa0396d0, type: 3}
+  - {fileID: 8869053030028166981, guid: a30fddd7656cd984c95b6a51a41672e6, type: 3}
+  - {fileID: 8869053030028166981, guid: 61bc54cafad4124438500939824bb96e, type: 3}
+  - {fileID: 8869053030028166981, guid: bebd86e36a2d3e74c897fef030fb2c08, type: 3}
+  - {fileID: 8869053030028166981, guid: b872d645c0833d940a682ea801f4e638, type: 3}
+  dropChance: 20
 --- !u!1 &3358783084983957137
 GameObject:
   m_ObjectHideFlags: 0

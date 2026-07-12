@@ -291,6 +291,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
+        if (weaponManager.CurrentWeaponData == weaponData)
+            return;
+
         if (model != null && highLight != null)
         {
             model.material = highLight;
