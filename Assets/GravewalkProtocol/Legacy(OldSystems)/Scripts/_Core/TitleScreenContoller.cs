@@ -1,24 +1,96 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Required for loading scenes
+using UnityEngine.SceneManagement;
 
 public class TitleScreenController : MonoBehaviour
 {
-    // Update is called once per frame
-    void Update()
+    [Header("Scene Loading")]
+    [SerializeField] private string gameplaySceneName;
+    [SerializeField] private string creditsSceneName;
+    [SerializeField] private bool loadNextSceneIfGameplayNameEmpty = true;
+
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject mainMenuPanel;
+
+    [Header("Keyboard Shortcut")]
+    [SerializeField] private bool spaceStartsGame = true;
+
+
+    private void Awake()
     {
-        // Detects if the Spacebar key was pressed down this frame
-        if (Input.GetKeyDown(KeyCode.Space))
+        Time.timeScale = 1f;
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    private void Update()
+    {
+        if (spaceStartsGame && Input.GetKeyDown(KeyCode.Space))
         {
-            LoadGameplayScene();
+            StartGame();
         }
     }
 
-    void LoadGameplayScene()
+    public void StartGame()
     {
-        // Option A: Loads the next scene in the Build Settings order
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (!string.IsNullOrEmpty(gameplaySceneName))
+        {
+            SceneManager.LoadScene(gameplaySceneName);
+            return;
+        }
 
-        // Option B: Alternatively, you can load by exact scene name:
-        // SceneManager.LoadScene("YourGameplaySceneName");
+        if (loadNextSceneIfGameplayNameEmpty)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            return;
+        }
+
+        Debug.LogWarning("No gameplay scene name assigned on TitleScreenController.");
     }
+
+    public void OpenCredits()
+    {
+        if (!string.IsNullOrEmpty(creditsSceneName))
+        {
+            SceneManager.LoadScene(creditsSceneName);
+            return;
+        }
+
+        Debug.LogWarning("No credits scene name assigned on TitleScreenController.");
+    }
+
+    public void OpenSettings()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning("No settings panel assigned on TitleScreenController.");
+        }
+    }
+
+    public void ShowMainMenu()
+    {
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+
+        if (mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(true);
+        }
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+    }
+
 }

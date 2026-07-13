@@ -5,17 +5,20 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/TitleScreen.unity
     guid: b75d3daf3fb65c94bba320a2820baaf1
+  - enabled: 1
+    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/Showcase.unity
+    guid: 0570413f22f3b0d43b19fbf085ead88a
+  - enabled: 1
+    path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Credits.unity
+    guid: b8e1ec4f2d994b54fa1ce2a17ebf1c79
   - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype.unity
     guid: b66c3fc8571686144b33283abdbe30ad
   - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype2.unity
     guid: 039c8ad3fd77361478ef4adb7f779347
-  - enabled: 1
-    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/Showcase.unity
-    guid: 0570413f22f3b0d43b19fbf085ead88a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 9ea45904cfdff304cbc76e43e867f2f4, type: 3}
