@@ -23,7 +23,7 @@ MonoBehaviour:
     roomLengthMax: 25
     layoutTexture: {fileID: 0}
   - name: Spawn
-    numberOfRooms: 10
+    numberOfRooms: 1
     roomWidthMin: 10
     roomWidthMax: 12
     roomLengthMin: 10
