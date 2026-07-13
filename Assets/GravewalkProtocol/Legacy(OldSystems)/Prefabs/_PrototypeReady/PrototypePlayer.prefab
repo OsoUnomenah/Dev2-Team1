@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2678256190922270357}
   - component: {fileID: 7465071218172153930}
   - component: {fileID: 6587889728718223931}
+  - component: {fileID: 8902374347593763041}
   m_Layer: 3
   m_Name: PrototypePlayer
   m_TagString: Player
@@ -119,6 +120,7 @@ MonoBehaviour:
   Ammo: 0
   MaxAmmo: 0
   AmmoTimer: 0
+  Ads: 0
   ShootSound: {fileID: 0}
   ReloadSound: {fileID: 0}
   HitEffect: {fileID: 0}
@@ -131,6 +133,7 @@ MonoBehaviour:
   effectSocket: {fileID: 3060477094045713861}
   abilities: []
   bouncePad: {fileID: 8405657338730397385, guid: 71d43a5100017964f9b53c511ccc72db, type: 3}
+  magnetField: {fileID: 8902374347593763041}
   fireLevel: 0
   freezeLevel: 0
   magnetLevel: 0
@@ -139,6 +142,27 @@ MonoBehaviour:
   lightningLevel: 0
   abilitySlot: 0
   Modifiers: []
+--- !u!135 &8902374347593763041
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131547323069223787}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 12.32
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &485893944646111334
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1944886552264635602
 Transform:
   m_ObjectHideFlags: 0
@@ -345,6 +369,66 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3562779670713192025
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5352831966700501688}
+  - component: {fileID: 1192493354424350509}
+  m_Layer: 0
+  m_Name: MagnetRaycast
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5352831966700501688
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562779670713192025}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2928583361981866575}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &1192493354424350509
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3562779670713192025}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_UseReflectionProbes: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &3681529212228973785
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +557,148 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &4193808253812301768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8707632474580553669}
+  - component: {fileID: 7144654699289870635}
+  m_Layer: 0
+  m_Name: Player Bullet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8707632474580553669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193808253812301768}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.328}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5411738720619226375}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!96 &7144654699289870635
+TrailRenderer:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4193808253812301768}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Time: 0.5
+  m_PreviewTimeScale: 1
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0.09836197
+        value: 0.15277863
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: -1
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_MinVertexDistance: 0.1
+  m_Autodestruct: 0
+  m_Emitting: 1
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &4774370944032447909
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,7 +881,7 @@ GameObject:
   - component: {fileID: 2750021976863873786}
   - component: {fileID: 8210745206051119162}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Player Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -680,6 +906,7 @@ Transform:
   - {fileID: 3060477094045713861}
   - {fileID: 1944886552264635602}
   - {fileID: 1410810780034644905}
+  - {fileID: 5352831966700501688}
   m_Father: {fileID: 1308049019946134131}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &8794566544347492559
@@ -867,16 +1094,17 @@ MonoBehaviour:
   maxHealth: 0
   modHealth: 0
   stamina: 50
-  staminaRegen: 0
+  staminaRegen: 0.03
   currentStamina: 0
   maxStamina: 0
   modStamina: 0
-  dashLoss: 0
+  dashLoss: 1.9
   dashCost: 0
-  meleeLoss: 0
+  meleeLoss: 0.05
   damage: 0
   modDamage: 0
   currentDamage: 1
+  crystalBar: 0
   defense: 0
   currentDefense: 0
   modDefense: 0
@@ -889,6 +1117,12 @@ MonoBehaviour:
   spawnSound: {fileID: 11400000, guid: f788b15c3ebb90449b67aa334dc3f5d7, type: 2}
   deathSound: {fileID: 11400000, guid: 3ccc99eba8b734a47abb32b0f849a19c, type: 2}
   deathSoundDelay: 1.5
+  playerBody: {fileID: 0}
+  playerCamera: {fileID: 0}
+  deathFallDuration: 1
+  deathMenuDelay: 1.5
+  deathTiltAngle: 75
+  deathCameraDrop: {x: 0, y: -0.6, z: 0}
 --- !u!114 &3648690260561488579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1021,7 +1255,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8707632474580553669}
   m_Father: {fileID: 1308049019946134131}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4076257722663198098
@@ -1040,14 +1275,17 @@ MonoBehaviour:
   walkSpeed: 8
   acceleration: 20
   dashCd: 1
-  dashSpeed: 1
-  dashAttackSpeed: 1
+  dashSpeed: 7.6
+  dashAttackSpeed: 123
   dashTime: 0.05
   dashFOVMod: 0
   gunFreezeChance: 0.25
   gunFreezeCooldown: 0.15
   meleeFreezeCooldown: 3
   defaultFreezeDuration: 2
+  chainLightning: {fileID: 9018446454268854427, guid: edd3aafdae35ab149b46d71136812874, type: 3}
+  chainSpeed: 1
+  chainDmg: 11
   crouchSpeed: 1.5
   crouchHeight: 1
   crouchTransitionSpeed: 10
@@ -1055,6 +1293,7 @@ MonoBehaviour:
   ceilingMask:
     serializedVersion: 2
     m_Bits: 0
+  isCrouching: 0
   currentMovement: {x: 0, y: 0, z: 0}
   currentSpeed: 0
   mouseSensitivity: 0.3
@@ -1072,7 +1311,7 @@ MonoBehaviour:
   dashAttackTriggered: 0
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   isChargingShot: 0
   currentChargeTime: 0
   chargedShotCooldownTimer: 0
@@ -1094,6 +1333,9 @@ MonoBehaviour:
   jumpMax: 1
   jumpCount: 0
   canJump: 0
+  playerBullet: {fileID: 0}
+  curveTime: 0.3
+  bullet: {fileID: 4193808253812301768}
 --- !u!1 &8507492623722125183
 GameObject:
   m_ObjectHideFlags: 0
