@@ -59,12 +59,12 @@ public class LayoutGeneratorRooms : MonoBehaviour
         Room farthestRoom = borderRooms
             .OrderByDescending(room => Vector2.Distance(randomStartRoom.Area.center, room.Area.center))
             .FirstOrDefault();
-        farthestRoom.Type = RoomType.Exit;
+        farthestRoom.Type = RoomType.Hub;
         borderRooms.Remove(farthestRoom);
 
-        List<Room> treasureRooms = borderRooms.OrderBy(r => random.Next()).Take(3).ToList();
-        borderRooms.RemoveAll(room => treasureRooms.Contains(room));
-        treasureRooms.ForEach(room => room.Type = RoomType.Treasure);
+        List<Room> upgradeRooms = borderRooms.OrderBy(r => random.Next()).Take(3).ToList();
+        borderRooms.RemoveAll(room => upgradeRooms.Contains(room));
+        upgradeRooms.ForEach(room => room.Type = RoomType.Upgrade);
 
         List<Room> emptyRooms = level.Rooms.Where(room => room.Type.HasFlag(RoomType.Default)).ToList();
         Room bossRoom = emptyRooms
@@ -76,7 +76,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
         emptyRooms.Remove(bossRoom);
 
         emptyRooms = emptyRooms.OrderBy(room => random.Next()).ToList();
-        RoomType[] typesToAssign = { RoomType.Prison, RoomType.Library, RoomType.Kitchen };
+        RoomType[] typesToAssign = { RoomType.Key, RoomType.EnemySpawn, RoomType.Trap };
         List<Room> roomsToAssign = emptyRooms.Take(typesToAssign.Length).ToList();
         for (int i = 0; i < roomsToAssign.Count; i++)
         {

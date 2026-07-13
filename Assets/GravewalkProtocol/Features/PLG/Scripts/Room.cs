@@ -7,12 +7,12 @@ public enum RoomType
 {
     Default = 1,
     Start = 1 << 1,
-    Exit = 1 << 2,
+    Hub = 1 << 2,
     Boss = 1 << 3,
-    Treasure = 1 << 4,
-    Prison = 1 << 5,
-    Library = 1 << 6,
-    Kitchen = 1 << 7
+    Key = 1 << 4,
+    EnemySpawn = 1 << 5,
+    Trap = 1 << 6,
+    Upgrade = 1 << 7
 }
 
 public class Room

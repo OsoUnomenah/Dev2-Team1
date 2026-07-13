@@ -15,6 +15,16 @@ MonoBehaviour:
   weaponName: Katana
   weaponType: 1
   fullAuto: 0
+  usesPellets: 0
+  pelletCount: 8
+  horizontalSpread: 15
+  verticalSpread: 1
+  usesChargedShot: 0
+  chargeTime: 2
+  chargeCooldown: 2
+  maxChargeMultiplier: 2
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 35
   damage: 20
   range: 2
   rate: 0
@@ -23,8 +33,9 @@ MonoBehaviour:
   ammo: 0
   maxAmmo: 0
   ammoTimer: 0
+  ads: 0
   weaponPrefab: {fileID: 8404615001294286925, guid: e500d90ff10ecee429085e6647ebd2d3, type: 3}
   hitEffect: {fileID: 0}
   shootSound: {fileID: 11400000, guid: ddc44ae9319ae3543a011a8014522b37, type: 2}
   reloadSound: {fileID: 0}
-  weaponPickupSound: {fileID: 0}
+  weaponPickupSound: {fileID: 11400000, guid: e2ffb738a50610d4aa9fba9c128f149f, type: 2}

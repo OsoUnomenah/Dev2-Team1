@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(BaseSoundSO sound)
     {
-        if (sound == null)
+        if (sound == null || sound.clips.Length == 0)
             return;
 
         GameObject soundObject = new GameObject("Temp Audio");
@@ -66,7 +66,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySoundFromSource(BaseSoundSO sound, GameObject noiseMaker)
     {
-        if(sound == null || noiseMaker == null)
+        if(sound == null || noiseMaker == null || sound.clips.Length == 0)
             return;
 
         AudioSource audioSource = noiseMaker.GetComponent<AudioSource>();
@@ -82,6 +82,10 @@ public class AudioManager : MonoBehaviour
    
         audioSource.clip = currSound;
         audioSource.volume = sound.volume;
+        audioSource.spatialBlend = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
+        audioSource.minDistance = sound.fallOffDistMin;
+        audioSource.maxDistance = sound.fallOffDistMax;
 
         if (sound.randomizePitch == true)
         {
@@ -99,7 +103,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySoundAtPosition(BaseSoundSO sound, GameObject noiseMaker)
     {
-        if (sound == null || noiseMaker == null)
+        if (sound == null || noiseMaker == null || sound.clips.Length == 0)
             return;
 
         GameObject soundObject = new GameObject("Temp Audio");
@@ -142,9 +146,9 @@ public class AudioManager : MonoBehaviour
         Destroy(soundObject, currSound.length);
     }
 
-    public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration)
+    public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration = 0.1f)
     {
-        if (sound == null || noiseMaker == null)
+        if (sound == null || noiseMaker == null || sound.clips.Length == 0)
             return;
 
         GameObject soundObject = new GameObject("Temp Audio");
@@ -180,6 +184,11 @@ public class AudioManager : MonoBehaviour
             audioSource.pitch = sound.pitch;
         }
 
+        if (duration == 0.1f)
+        {
+            duration = currSound.length;
+        }
+
         if (!audioSource.isPlaying)
         {
             audioSource.Play();
@@ -190,7 +199,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayUISound(BaseSoundSO sound, PointerEventData data)
     {
-        if (sound == null || data == null)
+        if (sound == null || data == null || sound.clips.Length == 0)
             return;
 
         // Route to correct mixer group based on sound type
