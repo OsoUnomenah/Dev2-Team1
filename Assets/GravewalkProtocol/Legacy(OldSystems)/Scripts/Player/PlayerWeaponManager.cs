@@ -58,6 +58,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int crystalPos;
     private int lightningPos;
     [SerializeField] public GameObject bouncePad;
+    [SerializeField] public SphereCollider magnetField;
 
     // Ability Settings
     public int fireLevel;

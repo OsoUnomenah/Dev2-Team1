@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using TMPro;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -101,7 +103,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     [Header("Charged Shot UI")]
     [SerializeField] private GameObject sniperChargePanel;
-    [SerializeField] private Slider sniperChargeSlider;
+    [SerializeField] private UnityEngine.UI.Slider sniperChargeSlider;
     [SerializeField] private TMP_Text sniperChargeText;
 
     [Header("Audio")]
@@ -167,8 +169,8 @@ public class PlayerInputHandler : MonoBehaviour
 
     void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
         CharacterController controller = gameManager.instance.characterController;
 
@@ -183,6 +185,7 @@ public class PlayerInputHandler : MonoBehaviour
         sniperChargePanel = gameManager.instance.sniperChargePanel;
         sniperChargeSlider = gameManager.instance.sniperChargeSlider;
         sniperChargeText = gameManager.instance.sniperChargeText;
+        bullet.SetActive(false);
     }
 
     void Update()
@@ -778,7 +781,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         BeginChargedShot();
     }
-
+    public GameObject playerBullet;
     private void OnShootPerformed(InputAction.CallbackContext context)
     {
 
@@ -916,6 +919,11 @@ public class PlayerInputHandler : MonoBehaviour
                                 );
                             }
 
+                            Vector3 bulletEnd;
+                            Vector3 bulletStart;
+                            bulletStart = gameManager.instance.playerWeaponManager.weaponHolder.position;
+                            bulletEnd = hit.transform.position;
+
                             IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
                             if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
@@ -934,10 +942,7 @@ public class PlayerInputHandler : MonoBehaviour
                                         break;
                                     case AbilityStats.ability.toxic:
                                         //probably use a IToxic interface that works like IDamage but makes them become toxic
-                                        break;
-                                    case AbilityStats.ability.magent:
-                                        //good luck lol idk
-                                        break;
+                                        break;                                    
                                     case AbilityStats.ability.crystal:
                                         CrystalShot(dmg, hit);
                                         break;
@@ -948,10 +953,10 @@ public class PlayerInputHandler : MonoBehaviour
 
                                 }
                             }
-
-                            if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
-                            {
-                                int bonusDamage = 0;
+                            int bonusDamage = 0;
+                            int finalDamage = 0;
+                            
+                               
 
                                 StatHandler stats = gameManager.instance.playerStatHandler;
 
@@ -961,19 +966,33 @@ public class PlayerInputHandler : MonoBehaviour
                                 }
 
 
-                                int finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                                finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
                                 if (gameManager.instance.playerStatHandler.crystalBar == 10)
                                 {
                                     gameManager.instance.playerStatHandler.crystalBar = 0;
                                     finalDamage *= 3;
                                 }
-
-                                dmg.takeDamage(finalDamage);
-
+                                
                                 // if (turnOnDebug)
                                 //  {
                                 //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
                                 // }
+                            
+                            
+                            if (gameManager.instance.playerWeaponManager.abilities.Count > 0 && gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType
+                                == AbilityStats.ability.magent)
+                            {
+                                //good luck lol idk
+                                if (!gameManager.instance.playerWeaponManager.Type)
+                                {
+
+                                    MagnetAbility(bulletStart, bulletEnd, true, finalDamage, dmg);
+                                }
+
+                            }
+                            else if(dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)                               
+                            {
+                                dmg.takeDamage(finalDamage);
                             }
                         }
                     }
@@ -1040,7 +1059,84 @@ public class PlayerInputHandler : MonoBehaviour
             .TransformDirection(localDirection)
             .normalized;
     }
+    public float curveTime;
+    public GameObject bullet;
+    private void MagnetAbility(Vector3 startPos, Vector3 bulletEnd, bool isMagnet, int finalDmg, IDamage dmg)
+    {
+        if (isMagnet)
+        {
+            FindNearestEnemy(startPos, finalDmg, bulletEnd, dmg);
+        }
+        else
+        {
+            StartCoroutine(BulletToTarget(startPos, bulletEnd, finalDmg, dmg));
+        }
+    }
+    private Vector3 FindNearestEnemy(Vector3 startPos, int finalDmg, Vector3 bulletEnd, IDamage dmg)
+    {
+        Vector3 finalPos = bulletEnd;
+        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
 
+        Collider[] enemies = Physics.OverlapSphere(
+            gameManager.instance.player.transform.position,
+            gameManager.instance.playerWeaponManager.magnetField.radius,
+            enemyLayer
+        );
+        
+        IDamage closestDamageable = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (Collider enemy in enemies)
+        {
+            IDamage damageable = enemy.GetComponentInParent<IDamage>();
+
+            if (damageable == null)
+                continue;
+
+            float distance = (enemy.transform.position - gameManager.instance.player.transform.position).sqrMagnitude;
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestDamageable = damageable;
+                finalPos = enemy.transform.position;
+                Debug.Log("Closest target: " + damageable);
+            }
+        }
+        if (closestDamageable != null)
+        {
+            Debug.Log("Sending damage target: " + closestDamageable);
+            Debug.Log(closestDamageable.GetType());
+            StartCoroutine(BulletToTarget(startPos, finalPos, finalDmg, closestDamageable));
+        }
+        else
+        {
+            StartCoroutine(BulletToTarget(startPos, bulletEnd, finalDmg, dmg));
+        }
+            return finalPos;
+    }
+    IEnumerator BulletToTarget(Vector3 startPos, Vector3 bulletEnd, int finalDmg, IDamage dmg)
+    {
+        float timer = 0;
+        bullet.transform.position = startPos;
+        bullet.SetActive(true);
+        while (timer < curveTime)
+        {
+            timer += Time.deltaTime;
+
+            bullet.transform.position =
+                Vector3.Lerp(startPos, bulletEnd, timer / curveTime);
+
+            yield return null;
+        }
+        Debug.Log("Applying damage: " + finalDmg);
+        if (dmg != null)
+        {
+            dmg.takeDamage(finalDmg);
+        }
+        bullet.SetActive(false);
+        bullet.transform.position = startPos;
+    }
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
