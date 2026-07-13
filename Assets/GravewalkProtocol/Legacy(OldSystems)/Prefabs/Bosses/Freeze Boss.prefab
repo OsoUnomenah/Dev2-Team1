@@ -1082,7 +1082,7 @@ GameObject:
   - component: {fileID: 661307411345048127}
   - component: {fileID: 8813764044349690688}
   - component: {fileID: 1299987439740802359}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Freeze Boss
   m_TagString: Enemy
   m_Icon: {fileID: 0}

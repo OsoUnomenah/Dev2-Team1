@@ -1221,8 +1221,10 @@ MonoBehaviour:
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
   _grunts: {fileID: 11400000, guid: 86634d31ce0d5634384c85d08f140eda, type: 2}
   _attack: {fileID: 11400000, guid: 229b77ebcff36c545be45b681e216a32, type: 2}
+  _footsteps: {fileID: 0}
   gruntRateMax: 10
   gruntRateMin: 5
+  footStepInterval: 0.01
   minCurrencyDrop: 5
   maxCurrencyDrop: 10
   Modifiers: 

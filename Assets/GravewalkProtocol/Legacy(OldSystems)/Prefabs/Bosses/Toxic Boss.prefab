@@ -148,9 +148,9 @@ GameObject:
   - component: {fileID: 2529389347545064555}
   - component: {fileID: 8283412079821289654}
   - component: {fileID: 4869639300487167169}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Toxic Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

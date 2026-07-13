@@ -1244,7 +1244,7 @@ GameObject:
   - component: {fileID: 1299987439740802359}
   m_Layer: 10
   m_Name: Crystal Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1404,7 +1404,7 @@ MonoBehaviour:
   maxCurrencyDrop: 25
   model: {fileID: 4092078242241298771}
   bombSpawnArea: {fileID: 7181645299250857995}
-  fallingBombSpawnArea: {fileID: 0}
+  fallingBombSpawnArea: {fileID: 8813764044349690688}
   movementPos:
   - {fileID: 1275990286012218570}
   - {fileID: 417053867288944725}
@@ -1427,7 +1427,7 @@ MonoBehaviour:
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
   _slam: {fileID: 11400000, guid: 7c2012139fd7d964d98649672ba577eb, type: 2}
   _laserStartUp: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
-  bullet: {fileID: 0}
+  bullet: {fileID: 4579968672421019847, guid: 4b36170d8e4e36f458e977fdc6d33d3d, type: 3}
   armor: {fileID: 4307357292693805003}
   bomb: {fileID: 4579968672421019847, guid: 4b36170d8e4e36f458e977fdc6d33d3d, type: 3}
   fallingBomb: {fileID: 4319543548841353687, guid: 0cc7905d87d7deb43ac30df4d29a2667, type: 3}
