@@ -188,7 +188,7 @@ public class gameManager : MonoBehaviour
     {
         playerSpawnPos = GameObject.Find("PlayerSpawnPos");
         levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
-        //lb = levelBuilder.GetComponent<LevelBuilder>();
+        lb = levelBuilder.GetComponentInChildren<LevelBuilder>();
 
     }
 
