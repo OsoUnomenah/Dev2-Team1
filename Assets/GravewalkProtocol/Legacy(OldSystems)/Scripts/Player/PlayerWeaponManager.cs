@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
@@ -33,6 +32,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float TimerOrig;
     public int Ammo;
     public int MaxAmmo;
+    public float BaseAmmoTimer; //kw
     public float AmmoTimer;
     public float Ads;
     public BaseSoundSO ShootSound;
@@ -143,7 +143,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         if (UpgradeUI.instance != null)
         {
-            UpgradeUI.instance.ShowUpgradeNotification("Equipped " + currentWeaponName);
+            UpgradeUI.instance.ShowUpgradeNotification("Equipped " + currentWeaponName +
+                " | Reload Timer: " + AmmoTimer.ToString("0.00") + "s" //kw
+);
         }
 
         return true;
@@ -161,7 +163,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         info += currentWeaponName + "\n\n";
         info += "DMG: " + Damage + "\n";
         info += "Ammo: " + Ammo + " / " + MaxAmmo + "\n";
-        info += "Reload: " + AmmoTimer.ToString("0.00") + "s\n";
+        info += "Reload Timer: " + AmmoTimer.ToString("0.00") + "s\n"; //kw
         info += "Fire Delay: " + Timer.ToString("0.00") + "s\n";
         info += "Range: " + Mathf.RoundToInt(Range) + "\n";
 
@@ -221,9 +223,26 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         Timer = timer;
         TimerOrig = timer;
-        Ammo = ammo;
-        MaxAmmo = maxAmmo;
-        AmmoTimer = ammoTimer;
+
+        int bonusMaxAmmo = 0; //kw Start here
+        if (gameManager.instance != null)
+        {
+            bonusMaxAmmo = gameManager.instance.BonusMaxAmmo;
+        }
+
+        MaxAmmo = maxAmmo + bonusMaxAmmo;
+        Ammo = Mathf.Min(ammo + bonusMaxAmmo, MaxAmmo);
+
+        BaseAmmoTimer = ammoTimer;
+
+        float reloadBonus = 0f;
+        if (gameManager.instance != null && gameManager.instance.playerStatHandler != null)
+        {
+            reloadBonus = gameManager.instance.playerStatHandler.modReloadSpeed;
+        }
+
+        AmmoTimer = Mathf.Max(0.1f, BaseAmmoTimer - reloadBonus); //kw End here
+
         ShootSound = shootSound;
         ReloadSound = reloadSound;
         HitEffect = hitEffect;
@@ -252,6 +271,12 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
                 ApplyAbilityEffectToCurrentWeapon(abilities[abilitySlot]);
             }
         }
+
+        if (UpgradeUI.instance != null) //kw
+        {
+            UpgradeUI.instance.RefreshAllUI();
+        }
+
     }
 
     public void getStats(AbilityStats stats)

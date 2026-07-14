@@ -9,10 +9,10 @@ public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
     [SerializeField] GameObject levelBuilder;
-    [SerializeField] LevelBuilder lb; 
+    [SerializeField] LevelBuilder lb;
     [SerializeField] bool levelStarted = false;
     public GameObject playerSpawnPos;
-    [SerializeField] public bool isDead = false; 
+    [SerializeField] public bool isDead = false;
 
     [SerializeField] public bool gameDebug;
     public TMP_Text objectiveText;
@@ -34,13 +34,24 @@ public class gameManager : MonoBehaviour
     [Range(1, 100)][SerializeField] public float level;
     [Range(1, 1000)][SerializeField] public float maxLevel;
     [Range(1, 1000)][SerializeField] public float xp;
-    
+
     public float currentXP;
     public float xpSource;
     [SerializeField] public float xpToNextLevel;
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
-    
+
+    [Header("Ability Proc Config")] //kw
+    [SerializeField] private float baseAbilityProcChance = 0.10f;
+    [SerializeField] private float abilityProcChancePerUpgrade = 0.02f;
+    [SerializeField] private float maxAbilityProcChance = 0.75f;
+    public float abilityProcChance;
+    public float abilityDamageBonus = 0f;
+
+    [Header("Persistent Weapon Upgrades")] //kw
+    [SerializeField] private int bonusMaxAmmo;
+    public int BonusMaxAmmo => bonusMaxAmmo; //kw
+
 
     [Header("Menu Config")]
     [SerializeField] GameObject menuActive;
@@ -149,18 +160,19 @@ public class gameManager : MonoBehaviour
         GetPlayerReferences();
         UpdateXPUI();
         UpdateCurrencyUI();
+        abilityProcChance = baseAbilityProcChance; //kw
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        if(isProceduralLevel)
+        if (isProceduralLevel)
         {
             InitLevelBuilder();
         }
-        
+
         runStartTime = Time.time;
     }
 
     private void Start()
     {
-        
+
         if (nextLevelButton != null)
         {
             nextLevelButton.onClick.AddListener(NextLevel);
@@ -174,9 +186,9 @@ public class gameManager : MonoBehaviour
 
     public void InitLevelBuilder()
     {
-       playerSpawnPos = GameObject.Find("PlayerSpawnPos");
-       levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
-       lb = levelBuilder.GetComponent<LevelBuilder>();
+        playerSpawnPos = GameObject.Find("PlayerSpawnPos");
+        levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+        //lb = levelBuilder.GetComponent<LevelBuilder>();
 
     }
 
@@ -185,7 +197,7 @@ public class gameManager : MonoBehaviour
         if (!levelStarted)
         {
             StartNewLevel();
-            
+
         }
         else
         {
@@ -259,9 +271,9 @@ public class gameManager : MonoBehaviour
             Debug.Log("PlayerPosition: " + playerTransform.position);
         }
 
-        
+
     }
-   
+
 
     // Update is called once per frame
     void Update()
@@ -271,25 +283,25 @@ public class gameManager : MonoBehaviour
         PassiveXP();
         chargeUI();
 
-        if(instance.playerWeaponManager.CurrentWeaponData != null && instance.playerWeaponManager.CurrentWeaponData.usesPellets)
+        if (instance.playerWeaponManager.CurrentWeaponData != null && instance.playerWeaponManager.CurrentWeaponData.usesPellets)
         {
             instance.reticle.SetActive(false);
             instance.shotgunReticle.SetActive(true);
         }
-        else if(instance.shotgunReticle.activeSelf)
+        else if (instance.shotgunReticle.activeSelf)
         {
             instance.reticle.SetActive(true);
             instance.shotgunReticle.SetActive(false);
         }
     }
-    
+
     private bool isRecharging = false;
     float rechargerTimer;
 
     private void chargeUI()
     {
-        
-        if(!instance.playerInputHandler.isChargingShot && instance.playerInputHandler.chargedShotCooldownTimer > 0)
+
+        if (!instance.playerInputHandler.isChargingShot && instance.playerInputHandler.chargedShotCooldownTimer > 0)
         {
             if (!isRecharging)
             {
@@ -298,7 +310,7 @@ public class gameManager : MonoBehaviour
                 sniperChargePanel.SetActive(true);
                 sniperRechargeText.SetActive(true);
             }
-            float chargePercent = instance.playerInputHandler.chargedShotCooldownTimer / rechargerTimer  ;
+            float chargePercent = instance.playerInputHandler.chargedShotCooldownTimer / rechargerTimer;
             chargePercent = Mathf.Clamp01(chargePercent);
             sniperChargeSlider.value = chargePercent;
         }
@@ -314,7 +326,7 @@ public class gameManager : MonoBehaviour
         //fills the slots list that remembers where each bullet type is in
         if (instance.playerWeaponManager.abilities.Count == 4)
         {
-           // Debug.LogError("Does not Run");
+            // Debug.LogError("Does not Run");
             return;
         }
         {
@@ -492,6 +504,13 @@ public class gameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
+
+        if (shop != null && shop.IsShopOpen()) //kw
+        {
+            return;
+        }
+
         if (menuActive == null)
         {
             if (LevelUpUI.Instance != null)
@@ -612,7 +631,7 @@ public class gameManager : MonoBehaviour
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
-        
+
     }
 
     public void NextLevel()
@@ -632,6 +651,16 @@ public class gameManager : MonoBehaviour
         runCurrencyEarned = +amount;
         currentCurrency += amount;
         UpdateCurrencyUI();
+    }
+
+    public bool SpendCurrency(int amount) //kw
+    {
+        if (currentCurrency < amount)
+            return false;
+
+        currentCurrency -= amount;
+        UpdateCurrencyUI();
+        return true;
     }
 
     private void UpdateCurrencyUI()
@@ -692,4 +721,23 @@ public class gameManager : MonoBehaviour
             //activate portal / unlock exit
         }
     }
+
+    public void IncreaseAbilityProcChance() //kw
+    {
+        abilityProcChance += abilityProcChancePerUpgrade;
+        abilityProcChance = Mathf.Clamp(abilityProcChance, 0f, maxAbilityProcChance);
+        UpgradeUI.instance.RefreshAllUI();
+    }
+
+    public float GetAbilityProcChancePercent() //kw
+    {
+        return abilityProcChance * 100f;
+    }
+
+
+    public void AddMaxAmmoBonus(int amount) //kw
+    {
+        bonusMaxAmmo += amount;
+    }
+
 }

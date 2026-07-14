@@ -1,12 +1,8 @@
 using System;
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -43,11 +39,11 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private GameObject chainLightning;
     [Range(0f, 1f)][SerializeField] private float chainSpeed;
     [Range(1, 20)][SerializeField] private int chainDmg;
-    
+
     private float lightningCdTimer;
 
-   
-   
+
+
 
     [Header("Crouch Config")]
     [SerializeField] private float crouchSpeed = 1.5f;
@@ -140,6 +136,8 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction reloadAction;
     private InputAction adsAction;
     private InputAction pauseAction;
+    private InputAction shopAction; //kw
+
 
     [Header("GlobalVariables")]
     public bool DashTriggered { get; private set; }
@@ -164,6 +162,9 @@ public class PlayerInputHandler : MonoBehaviour
         adsAction = playerActions.PlayerInput.ADS;
 
         pauseAction = playerActions.PlayerInput.Pause;
+
+        shopAction = playerActions.PlayerInput.Shop; //kw
+
 
     }
 
@@ -249,6 +250,10 @@ public class PlayerInputHandler : MonoBehaviour
 
         pauseAction.performed += OnPausePerformed;
         pauseAction.canceled += OnPauseCanceled;
+
+        shopAction.performed += OnShopPerformed; //kw
+        shopAction.canceled += OnShopCanceled; //kw
+
     }
 
     void OnDisable()
@@ -279,10 +284,21 @@ public class PlayerInputHandler : MonoBehaviour
 
         pauseAction.performed -= OnPausePerformed;
         pauseAction.canceled -= OnPauseCanceled;
+
+        shopAction.performed -= OnShopPerformed; //kw
+        shopAction.canceled -= OnShopCanceled; //kw
+
     }
 
     private void OnPausePerformed(InputAction.CallbackContext context)
     {
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
+
+        if (shop != null && shop.IsShopOpen()) //kw
+        {
+            return;
+        }
+
         gameManager.instance.PauseGame();
     }
 
@@ -942,7 +958,7 @@ public class PlayerInputHandler : MonoBehaviour
                                         break;
                                     case AbilityStats.ability.toxic:
                                         //probably use a IToxic interface that works like IDamage but makes them become toxic
-                                        break;                                    
+                                        break;
                                     case AbilityStats.ability.crystal:
                                         CrystalShot(dmg, hit);
                                         break;
@@ -955,30 +971,30 @@ public class PlayerInputHandler : MonoBehaviour
                             }
                             int bonusDamage = 0;
                             int finalDamage = 0;
-                            
-                               
-
-                                StatHandler stats = gameManager.instance.playerStatHandler;
-
-                                if (stats != null)
-                                {
-                                    bonusDamage = Mathf.RoundToInt(stats.modDamage);
-                                }
 
 
-                                finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
-                                if (gameManager.instance.playerStatHandler.crystalBar == 10)
-                                {
-                                    gameManager.instance.playerStatHandler.crystalBar = 0;
-                                    finalDamage *= 3;
-                                }
-                                
-                                // if (turnOnDebug)
-                                //  {
-                                //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
-                                // }
-                            
-                            
+
+                            StatHandler stats = gameManager.instance.playerStatHandler;
+
+                            if (stats != null)
+                            {
+                                bonusDamage = Mathf.RoundToInt(stats.modDamage);
+                            }
+
+
+                            finalDamage = gameManager.instance.playerWeaponManager.Damage + bonusDamage;
+                            if (gameManager.instance.playerStatHandler.crystalBar == 10)
+                            {
+                                gameManager.instance.playerStatHandler.crystalBar = 0;
+                                finalDamage *= 3;
+                            }
+
+                            // if (turnOnDebug)
+                            //  {
+                            //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
+                            // }
+
+
                             if (gameManager.instance.playerWeaponManager.abilities.Count > 0 && gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType
                                 == AbilityStats.ability.magent)
                             {
@@ -990,7 +1006,7 @@ public class PlayerInputHandler : MonoBehaviour
                                 }
 
                             }
-                            else if(dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)                               
+                            else if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                             {
                                 dmg.takeDamage(finalDamage);
                             }
@@ -1082,7 +1098,7 @@ public class PlayerInputHandler : MonoBehaviour
             gameManager.instance.playerWeaponManager.magnetField.radius,
             enemyLayer
         );
-        
+
         IDamage closestDamageable = null;
         float closestDistance = Mathf.Infinity;
 
@@ -1113,7 +1129,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             StartCoroutine(BulletToTarget(startPos, bulletEnd, finalDmg, dmg));
         }
-            return finalPos;
+        return finalPos;
     }
     IEnumerator BulletToTarget(Vector3 startPos, Vector3 bulletEnd, int finalDmg, IDamage dmg)
     {
@@ -1945,7 +1961,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.lightning
             && col.GetComponent<IDamage>() != null)
         {
-           // Debug.Log("Chaining the lightning");
+            // Debug.Log("Chaining the lightning");
             lightningCdTimer = 0;
 
             Collider[] hits = Physics.OverlapSphere(col.transform.position, 20f, enemyLayer);
@@ -1979,4 +1995,29 @@ public class PlayerInputHandler : MonoBehaviour
             yield return null;
         }
     }
+
+    private bool RollAbilityProc() //kw
+    {
+        return UnityEngine.Random.value <= gameManager.instance.abilityProcChance;
+    }
+
+    private void OnShopPerformed(InputAction.CallbackContext context) //kw Start
+    {
+        Debug.Log("Shop Action Triggered");
+
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>();
+
+        if (shop == null)
+            return;
+
+        if (gameManager.instance.isPaused && !shop.IsShopOpen())
+            return;
+
+        shop.ToggleShop();
+    }
+
+    private void OnShopCanceled(InputAction.CallbackContext context)
+    {
+    } //kw End
+
 }
