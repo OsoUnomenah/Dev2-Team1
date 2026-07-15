@@ -79,6 +79,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] public float reloadTime;
     [SerializeField] public float reloadMax;
     [SerializeField] public TextMeshProUGUI interactText;
+    [SerializeField] public TextMeshProUGUI chestBuy;
     public bool isPaused;
     public bool isLevelingUp;
 
@@ -552,7 +553,10 @@ public class gameManager : MonoBehaviour
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        menuActive.SetActive(false);
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+        }
         menuActive = null;
     }
 

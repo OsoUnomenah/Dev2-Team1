@@ -119,6 +119,7 @@ MonoBehaviour:
   TimerOrig: 0
   Ammo: 0
   MaxAmmo: 0
+  BaseAmmoTimer: 0
   AmmoTimer: 0
   Ads: 0
   ShootSound: {fileID: 0}
@@ -766,10 +767,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1541.6
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 25
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1110,6 +1111,7 @@ MonoBehaviour:
   modDefense: 0
   modSpeed: 0
   modJumps: 0
+  modReloadSpeed: 0
   GE_OnPlayerHealthChanged: {fileID: 11400000, guid: 472fbe100f33ae74c910983e954c9259, type: 2}
   GE_OnPlayerStaminaChanged: {fileID: 11400000, guid: 47ca334dc78a4934b8ee27b5e59a90bb, type: 2}
   GE_OnPlayerHurt: {fileID: 11400000, guid: facdc04eaa0a4244cb1464d8c907718d, type: 2}
