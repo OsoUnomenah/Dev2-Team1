@@ -11985,7 +11985,7 @@ MonoBehaviour:
   enemyDamageOut: 0
   playerDamageOut: 0
   runZone: 1
-  isProceduralLevel: 0
+  isProceduralLevel: 1
   nextLevelButton: {fileID: 0}
   Modifiers: 
 --- !u!1 &4218951249394865469

@@ -119934,7 +119934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f39d6b0cb73f8f5488fbab500b2f98b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelConfig: {fileID: 11400000, guid: af99ea056799c6b44a02cfed3ccea3a5, type: 2}
+  levelConfig: {fileID: 11400000, guid: 2d70780f5ce973c44bbec0417a2e31c4, type: 2}
   levelLayoutDisplay: {fileID: 4829360386344972097}
   levelLayoutDisplayHieght: 500
 --- !u!1 &3851963250113357192
