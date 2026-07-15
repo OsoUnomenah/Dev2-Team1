@@ -7,6 +7,7 @@ using Random = System.Random;
 
 public class LayoutGeneratorRooms : MonoBehaviour
 {
+    [SerializeField] GameObject doorPrefab;
     [SerializeField] RoomLevelLayoutConfiguration levelConfig;
 
     [SerializeField] GameObject levelLayoutDisplay;
@@ -26,7 +27,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
         openDoorways = new List<Hallway>();
         level = new Level(levelConfig.Width, levelConfig.Length);
         
-        RoomTemplate startRoomTemplate = availableRooms.Keys.ElementAt(random.Next(0, availableRooms.Count));
+        RoomTemplate startRoomTemplate = availableRooms.Keys.ElementAt(0);
         RectInt roomRect = GetStartRoomRect(startRoomTemplate);
         Room room = CreateNewRoom(roomRect, startRoomTemplate);
         List<Hallway> hallways = room.CalculateAllPossibleDoorways(room.Area.width, room.Area.height, levelConfig.DoorDistanceFromEdge);
