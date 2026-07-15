@@ -318,7 +318,7 @@ PrefabInstance:
     - target: {fileID: 2854539770597930571, guid: d92ee62d254e3f8478035ee35fa5992a, type: 3}
       propertyPath: levelConfig
       value: 
-      objectReference: {fileID: 11400000, guid: e4692324bc6f57b45851e78fd53e0f16, type: 2}
+      objectReference: {fileID: 11400000, guid: ec046c59d4eec494592b49ac6665b82e, type: 2}
     - target: {fileID: 2854539770597930571, guid: d92ee62d254e3f8478035ee35fa5992a, type: 3}
       propertyPath: levelLayoutDisplayHieght
       value: 500
