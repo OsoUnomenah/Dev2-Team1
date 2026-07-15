@@ -12,6 +12,10 @@ public class gameManager : MonoBehaviour
     [SerializeField] LevelBuilder lb;
     [SerializeField] bool levelStarted = false;
     public GameObject playerSpawnPos;
+    public string hubLevel = "Hub";
+    public string industrialLevel = "Industrial";
+
+
     [SerializeField] public bool isDead = false;
 
     [SerializeField] public bool gameDebug;

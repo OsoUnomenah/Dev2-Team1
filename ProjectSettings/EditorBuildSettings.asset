@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/TitleScreen.unity
+    path: Assets/GravewalkProtocol/Features/TitleScreen.unity
     guid: b75d3daf3fb65c94bba320a2820baaf1
   - enabled: 1
     path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Hub.unity
@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/GravewalkProtocol/_GameReady/LevelScenes/LoadingScreen.unity
     guid: f140854703f1d38488363691d51bef0a
   - enabled: 1
+    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Industrial.unity
+    guid: cb438051603df264e952ee79088d7f5e
+  - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype2.unity
     guid: 039c8ad3fd77361478ef4adb7f779347
   m_configObjects:
