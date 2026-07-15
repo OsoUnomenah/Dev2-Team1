@@ -186,7 +186,10 @@ public class PlayerInputHandler : MonoBehaviour
         sniperChargePanel = gameManager.instance.sniperChargePanel;
         sniperChargeSlider = gameManager.instance.sniperChargeSlider;
         sniperChargeText = gameManager.instance.sniperChargeText;
-        bullet.SetActive(false);
+        if (bullet != null)
+        {
+            bullet.SetActive(false);
+        }
     }
 
     void Update()
