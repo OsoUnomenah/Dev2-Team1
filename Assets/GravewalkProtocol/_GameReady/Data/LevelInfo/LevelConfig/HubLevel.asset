@@ -15,7 +15,7 @@ MonoBehaviour:
   width: 64
   length: 64
   roomTemplates:
-  - name: Showcase Room
+  - name: HubRoom
     numberOfRooms: 1
     roomWidthMin: 32
     roomWidthMax: 32
