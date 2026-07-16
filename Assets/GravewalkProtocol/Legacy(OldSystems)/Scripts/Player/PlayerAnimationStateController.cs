@@ -2,9 +2,16 @@ using UnityEngine;
 
 public class PlayerAnimationStateController : MonoBehaviour
 {
-    [SerializeField] Animator animator;
+    [SerializeField] public Animator animator;
+
+    [Header("Animation Control")]
+    
 
     private PlayerWeaponManager weaponManager;
+
+    private int currentHits;
+    private float meleeTimer;
+    private bool isRestPos;
 
     // Hashes
     private readonly int recoil = Animator.StringToHash("applyRecoil");
@@ -14,6 +21,11 @@ public class PlayerAnimationStateController : MonoBehaviour
     private readonly int sniperUp = Animator.StringToHash("sniperPickedUp");
     private readonly int hammerUp = Animator.StringToHash("hammerPickedUp");
     private readonly int katanaUp = Animator.StringToHash("katanaPickedUp");
+    private readonly int lightAttackK = Animator.StringToHash("isHittingK");
+    private readonly int lightAttackHandler = Animator.StringToHash("katanaLA");
+    private readonly int heavyAttackK = Animator.StringToHash("heavyHitK");
+    private readonly int lightAttackH = Animator.StringToHash("isHittingH");
+    private readonly int heavyAttackH = Animator.StringToHash("heavyHitH");
 
     void Start()
     {
@@ -28,18 +40,27 @@ public class PlayerAnimationStateController : MonoBehaviour
             return;
         }
 
+
         HandleRecoil();
         HandleWeaponPickups();
+        HandleLightAttackChaining();
     }
 
     private void OnMeleeAttackBegin()
     {
+        isRestPos = false;
         gameManager.instance.animIsMeleeing = true;
     }
 
     private void OnMeleeAttackEnd()
     {
         gameManager.instance.animIsMeleeing = false;
+        currentHits += 1;
+    }
+
+    private void OnReturnToRestPos()
+    {
+        isRestPos = true;
     }
 
     private void HandleRecoil()
@@ -108,6 +129,73 @@ public class PlayerAnimationStateController : MonoBehaviour
         else
         {
             animator.SetBool(hammerUp, false);
+        }
+    }
+
+    public void PlayMeleeLightAttack()
+    {
+        if (animator == null)
+            return;
+
+        if (currentHits > 0)
+            animator.SetFloat(lightAttackHandler, 1);
+
+        if (weaponManager.CurrentWeaponName == "Katana")
+            animator.SetBool(lightAttackK, true);
+
+        if (weaponManager.CurrentWeaponName == "Hammer")
+            animator.SetBool(lightAttackH, true);
+    }
+
+    public void PlayMeleeHeavyAttack()
+    {
+        if (animator == null)
+            return;
+
+        if (weaponManager.CurrentWeaponName == "Katana")
+            animator.SetBool(heavyAttackK, true);
+
+        if (weaponManager.CurrentWeaponName == "Hammer")
+            animator.SetBool(heavyAttackH, true);
+    }
+
+    public void PlayMeleeBlock()
+    {
+        if (animator == null)
+            return;
+
+     //   animator.SetBool(meleeBlock, true);
+    }
+
+    public void ResetMeleeAnimationTriggers()
+    {
+        if (animator == null)
+            return;
+
+        if (weaponManager.CurrentWeaponName == "Katana")
+        {
+            animator.SetBool(lightAttackK, false);
+            animator.SetBool(heavyAttackK, false);
+        }
+
+        if (weaponManager.CurrentWeaponName == "Hammer")
+        {
+            animator.SetBool(lightAttackH, false);
+            animator.SetBool(heavyAttackH, false);
+        }
+
+        gameManager.instance.isMeleeing = false;
+    }
+
+    private void HandleLightAttackChaining()
+    {
+        if (!weaponManager.Type)
+            return; 
+
+        if (isRestPos && currentHits > 1)
+        {
+            currentHits = 0;
+            animator.SetFloat(lightAttackHandler, 0);
         }
     }
 }

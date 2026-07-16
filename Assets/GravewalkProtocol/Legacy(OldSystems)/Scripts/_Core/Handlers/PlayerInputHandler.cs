@@ -499,7 +499,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (gameManager.instance.playerWeaponManager.Type == true)
             // Debug.Log("Tried Block");
-            gameManager.instance.playerWeaponManager.PlayMeleeBlock();
+            gameManager.instance.playerAnimator.PlayMeleeBlock();
 
         if (!isCrouching && AudioManager.instance != null && crouchSound != null)
         {
@@ -870,11 +870,11 @@ public class PlayerInputHandler : MonoBehaviour
                 {
 
                     gameManager.instance.isMeleeing = true;
-                    gameManager.instance.playerWeaponManager.PlayMeleeHeavyAttack();
+                    gameManager.instance.playerAnimator.PlayMeleeHeavyAttack();
 
                     if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Hammer")
                     {
-                        Debug.Log("Hammer special");
+                        // Debug.Log("Hammer special");
                         StartCoroutine(HeavyAttackAOE());
                     }
                     else if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Katana")
@@ -1020,7 +1020,7 @@ public class PlayerInputHandler : MonoBehaviour
                 {
                     PlayCurrentWeaponShootSound();
                     gameManager.instance.isMeleeing = true;
-                    gameManager.instance.playerWeaponManager.PlayMeleeLightAttack();
+                    gameManager.instance.playerAnimator.PlayMeleeLightAttack();
                 }
 
                 //if (turnOnDebug)
@@ -1456,7 +1456,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             gameManager.instance.isShooting = false;
             gameManager.instance.canShoot = true;
-            gameManager.instance.playerWeaponManager.ResetMeleeAnimationTriggers();
+            gameManager.instance.playerAnimator.ResetMeleeAnimationTriggers();
         }
     }
 
