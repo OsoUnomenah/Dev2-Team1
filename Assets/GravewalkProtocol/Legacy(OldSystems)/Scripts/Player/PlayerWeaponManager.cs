@@ -38,7 +38,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
-    public Animator weaponAnimator;
+    public Animator playerAnimator;
 
     [SerializeField] public Transform weaponHolder;
     [SerializeField] public Transform adsWeaponHolder;
@@ -69,17 +69,17 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public int lightningLevel;
     public int abilitySlot;
 
-    // Animation hashes
-    private readonly int lightAttack = Animator.StringToHash("isHitting");
-    private readonly int heavyAttack = Animator.StringToHash("heavyHit");
-    private readonly int meleeBlock = Animator.StringToHash("isBlocking");
-
     [Header("Don't touch unless debugging")]
     [SerializeField] private List<string> Modifiers = new List<string>();
 
     public string CurrentWeaponName => currentWeaponName;
     public WeaponData CurrentWeaponData => currentWeaponData;
     public bool HasWeapon => currentWeaponData != null;
+
+    void Awake()
+    {
+        playerAnimator = gameManager.instance.playerAnimator.animator;
+    }
 
     void Update()
     {
@@ -255,16 +255,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         if (weaponPrefab != null && weaponHolder != null)
         {
-            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-            //weaponCurrent.transform.localPosition = Vector3.zero;
-            //weaponCurrent.transform.localRotation = Quaternion.identity;
-
-            weaponAnimator = weaponCurrent.GetComponent<Animator>();
-
-            if (weaponAnimator != null)
-            {
-                weaponAnimator.SetBool("pickedUp", true);
-            }
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);       
 
             if (abilities != null && abilitySlot >= 0 && abilitySlot < abilities.Count)
             {
@@ -430,39 +421,5 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityEquip(abilities[3]);
             abilitySlot = 3;
         }
-    }
-
-    public void PlayMeleeLightAttack()
-    {
-        if (weaponAnimator == null)
-            return;
-
-        weaponAnimator.SetBool(lightAttack, true);
-    }
-
-    public void PlayMeleeHeavyAttack()
-    {
-        if (weaponAnimator == null)
-            return;
-
-        weaponAnimator.SetBool(heavyAttack, true);
-    }
-
-    public void PlayMeleeBlock()
-    {
-        if (weaponAnimator == null)
-            return;
-
-        weaponAnimator.SetBool(meleeBlock, true);
-    }
-
-    public void ResetMeleeAnimationTriggers()
-    {
-        if (weaponAnimator == null)
-            return;
-
-        weaponAnimator.SetBool(lightAttack, false);
-        weaponAnimator.SetBool(heavyAttack, false);
-        gameManager.instance.isMeleeing = false;
     }
 }
