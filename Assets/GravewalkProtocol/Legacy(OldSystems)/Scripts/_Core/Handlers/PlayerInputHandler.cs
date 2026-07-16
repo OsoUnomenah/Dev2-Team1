@@ -886,9 +886,9 @@ public class PlayerInputHandler : MonoBehaviour
             {
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
-
+                    gameManager.instance.isShooting = true;
                     PlayCurrentWeaponShootSound();
-
+                    
                     // One trigger pull consumes one shell, regardless of pellet count.
                     gameManager.instance.playerWeaponManager.Ammo--;
                     _ =
@@ -1156,8 +1156,6 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
-
-
 
         if (gameManager.instance.playerWeaponManager == null)
         {
@@ -1453,6 +1451,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (timer >= gameManager.instance.playerWeaponManager.Timer)
         {
+            gameManager.instance.isShooting = false;
             gameManager.instance.canShoot = true;
             gameManager.instance.playerWeaponManager.ResetMeleeAnimationTriggers();
         }

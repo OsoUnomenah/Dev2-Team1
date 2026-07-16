@@ -34,7 +34,7 @@ MonoBehaviour:
   maxAmmo: 5
   ammoTimer: 2
   ads: 40
-  weaponPrefab: {fileID: 3824886265503906123, guid: 9aefcc7ecaa49344580758e509515108, type: 3}
+  weaponPrefab: {fileID: 3329529930087950654, guid: 77801c1ab8db9ee4a9b884f228727443, type: 3}
   hitEffect: {fileID: 0}
   shootSound: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
   reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}

@@ -255,9 +255,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         if (weaponPrefab != null && weaponHolder != null)
         {
-            weaponCurrent = Instantiate(weaponPrefab, weaponHolder);
-            weaponCurrent.transform.localPosition = Vector3.zero;
-            weaponCurrent.transform.localRotation = Quaternion.identity;
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            //weaponCurrent.transform.localPosition = Vector3.zero;
+            //weaponCurrent.transform.localRotation = Quaternion.identity;
 
             weaponAnimator = weaponCurrent.GetComponent<Animator>();
 
