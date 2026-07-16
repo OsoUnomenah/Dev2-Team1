@@ -7,7 +7,7 @@ public enum RoomType
 {
     Default = 1,
     Start = 1 << 1,
-    Hub = 1 << 2,
+    Heal = 1 << 2,
     Boss = 1 << 3,
     Key = 1 << 4,
     EnemySpawn = 1 << 5,

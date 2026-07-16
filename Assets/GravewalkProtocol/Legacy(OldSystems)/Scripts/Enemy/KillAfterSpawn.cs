@@ -12,6 +12,10 @@ public class KillAfterSpawn : MonoBehaviour
     IEnumerator DestroyAferSec()
     {
         yield return new WaitForSeconds(10f);
-        Destroy(gameObject);
+        if(gameObject != null)
+        {
+            Destroy(gameObject);
+        }
+        
     }
 }
