@@ -60,7 +60,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
         Room farthestRoom = borderRooms
             .OrderByDescending(room => Vector2.Distance(randomStartRoom.Area.center, room.Area.center))
             .FirstOrDefault();
-        farthestRoom.Type = RoomType.Hub;
+        farthestRoom.Type = RoomType.Boss;
         borderRooms.Remove(farthestRoom);
 
         List<Room> upgradeRooms = borderRooms.OrderBy(r => random.Next()).Take(3).ToList();
@@ -77,7 +77,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
         emptyRooms.Remove(bossRoom);
 
         emptyRooms = emptyRooms.OrderBy(room => random.Next()).ToList();
-        RoomType[] typesToAssign = { RoomType.Key, RoomType.EnemySpawn, RoomType.Trap };
+        RoomType[] typesToAssign = { RoomType.Key, RoomType.EnemySpawn, RoomType.Trap, RoomType.Heal };
         List<Room> roomsToAssign = emptyRooms.Take(typesToAssign.Length).ToList();
         for (int i = 0; i < roomsToAssign.Count; i++)
         {
@@ -115,7 +115,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
     }
 
     
-    void DrawLayout(Hallway selectedEntryway = null, RectInt roomCandidateRect = new RectInt(), bool isDebug = false) {
+    void DrawLayout(Hallway selectedEntryway = null, RectInt roomCandidateRect = new RectInt(), bool isDebug = true) {
         Renderer renderer = levelLayoutDisplay.GetComponent<Renderer>();
 
         Texture2D layoutTexture = (Texture2D) renderer.sharedMaterial.mainTexture;

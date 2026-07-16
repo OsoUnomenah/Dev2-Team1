@@ -100,6 +100,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
 
+    [SerializeField] public GameObject playerMiniMap;
+
 
     [Header("Charged Shot UI")]
     [SerializeField] public GameObject sniperChargePanel;
@@ -257,6 +259,8 @@ public class gameManager : MonoBehaviour
         playerTransform = player.GetComponent<Transform>();
         playerInteract = player.GetComponent<Players>();
 
+        playerMiniMap = GameObject.FindGameObjectWithTag("MiniMap");
+
         sniperChargePanel = GameObject.FindGameObjectWithTag("SniperChargePanel");
         sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
         sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
@@ -278,8 +282,6 @@ public class gameManager : MonoBehaviour
 
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         //change xpGain value in inspector to adjust rate.
@@ -552,8 +554,11 @@ public class gameManager : MonoBehaviour
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        menuActive.SetActive(false);
-        menuActive = null;
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+            menuActive = null;
+        }
     }
 
     public void WinGame()
@@ -743,5 +748,22 @@ public class gameManager : MonoBehaviour
     {
         bonusMaxAmmo += amount;
     }
+
+    public void DisableMiniMap()
+    {
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.SetActive(false);
+        }
+    }
+
+    public void EnableMiniMap()
+    {
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.SetActive(true);
+        }
+    }
+
 
 }

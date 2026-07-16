@@ -23,6 +23,7 @@ TagManager:
   - Portal
   - LevelBuilder
   - SniperChargePanel
+  - MiniMap
   layers:
   - Default
   - TransparentFX
