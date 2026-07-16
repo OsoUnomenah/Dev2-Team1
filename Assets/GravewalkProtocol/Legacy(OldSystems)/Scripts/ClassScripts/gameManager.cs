@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -81,6 +82,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] public float reloadMax;
     [SerializeField] public TextMeshProUGUI interactText;
     [SerializeField] public TextMeshProUGUI chestBuy;
+    [SerializeField] public TMP_Text currentWeaponModText;
     public bool isPaused;
     public bool isLevelingUp;
 

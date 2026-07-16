@@ -3349,7 +3349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -166, y: 0}
+  m_AnchoredPosition: {x: -1174, y: 0}
   m_SizeDelta: {x: 320, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3849318600004754840
@@ -11909,6 +11909,7 @@ MonoBehaviour:
   onPlayerHealthChange: {fileID: 11400000, guid: 472fbe100f33ae74c910983e954c9259, type: 2}
   reticle: {fileID: 539857628378311691}
   shotgunReticle: {fileID: 6162882954195091735}
+  currentWeaponUI: {fileID: 1245475350411053499}
   xpBar: {fileID: 892599878463810126}
   reloadBar: {fileID: 120962437934777994}
   xpText: {fileID: 9075911796597115538}
@@ -11943,6 +11944,7 @@ MonoBehaviour:
   reloadMax: 1
   interactText: {fileID: 8730320341004931407}
   chestBuy: {fileID: 7578587455471352067}
+  currentWeaponModText: {fileID: 7351499926157123974}
   isPaused: 0
   isLevelingUp: 0
   waveText: {fileID: 6576992789313567402}
@@ -11973,7 +11975,7 @@ MonoBehaviour:
   toxicPos: -1
   crystalPos: -1
   lightningPos: -1
-  currentCurrency: 20
+  currentCurrency: 1000
   currencyText: {fileID: 5878694392611118221}
   runKills: 0
   runBossesDefeated: 0
@@ -17220,7 +17222,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8565198510668528290
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25199,7 +25201,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -11.300049, y: 0}
+  m_AnchoredPosition: {x: -571, y: 0}
   m_SizeDelta: {x: 300, y: 230}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &6464716003789902462

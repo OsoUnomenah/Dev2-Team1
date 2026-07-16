@@ -603,11 +603,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 623600359}
   m_SourcePrefab: {fileID: 100100000, guid: 7646c876ff4afaf478ebd994b55a31c4, type: 3}
---- !u!1 &589336094 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1245475350411053499, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
-  m_PrefabInstance: {fileID: 942233154}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &623600354 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7593707487950258097, guid: 7646c876ff4afaf478ebd994b55a31c4, type: 3}
@@ -710,10 +705,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 53069564602045090, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -1174
-      objectReference: {fileID: 0}
     - target: {fileID: 1901575159316962232, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_Name
       value: UI
@@ -726,14 +717,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3566715782566199599, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
-      propertyPath: currentCurrency
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 3566715782566199599, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
-      propertyPath: currentWeaponUI
-      value: 
-      objectReference: {fileID: 589336094}
     - target: {fileID: 5924069113136013937, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -814,10 +797,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5982001449088238950, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6172193091009929291, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -833,10 +812,6 @@ PrefabInstance:
     - target: {fileID: 6479990685538397628, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7783640508872355836, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -571
       objectReference: {fileID: 0}
     - target: {fileID: 8595392605544865833, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_AnchorMax.y

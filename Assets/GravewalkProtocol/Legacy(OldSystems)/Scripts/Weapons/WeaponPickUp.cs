@@ -271,6 +271,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         }
 
         RecticleBehaviour.OffHover();
+        OnHoverExit();
 
         if (WeaponModHoverUI.Instance != null)
         {
@@ -312,6 +313,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         }
         if(gameManager.instance.playerWeaponManager.CurrentWeaponName != null)
         {
+            gameManager.instance.currentWeaponModText.text = weaponManager.GetCurrentWeaponInfoText();
             gameManager.instance.currentWeaponUI.gameObject.SetActive(true);
         }
     }
