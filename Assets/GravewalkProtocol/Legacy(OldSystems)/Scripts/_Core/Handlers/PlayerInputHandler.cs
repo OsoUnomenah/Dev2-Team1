@@ -874,7 +874,7 @@ public class PlayerInputHandler : MonoBehaviour
 
                     if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Hammer")
                     {
-                        Debug.Log("Hammer special");
+                        // Debug.Log("Hammer special");
                         StartCoroutine(HeavyAttackAOE());
                     }
                     else if (gameManager.instance.playerWeaponManager.CurrentWeaponName == "Katana")

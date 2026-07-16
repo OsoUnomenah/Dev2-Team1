@@ -76,7 +76,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public WeaponData CurrentWeaponData => currentWeaponData;
     public bool HasWeapon => currentWeaponData != null;
 
-    void Awake()
+    void Start()
     {
         playerAnimator = gameManager.instance.playerAnimator.animator;
     }

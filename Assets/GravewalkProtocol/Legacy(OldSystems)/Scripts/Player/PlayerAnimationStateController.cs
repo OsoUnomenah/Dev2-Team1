@@ -24,6 +24,8 @@ public class PlayerAnimationStateController : MonoBehaviour
     private readonly int lightAttackK = Animator.StringToHash("isHittingK");
     private readonly int lightAttackHandler = Animator.StringToHash("katanaLA");
     private readonly int heavyAttackK = Animator.StringToHash("heavyHitK");
+    private readonly int lightAttackH = Animator.StringToHash("isHittingH");
+    private readonly int heavyAttackH = Animator.StringToHash("heavyHitH");
 
     void Start()
     {
@@ -138,7 +140,11 @@ public class PlayerAnimationStateController : MonoBehaviour
         if (currentHits > 0)
             animator.SetFloat(lightAttackHandler, 1);
 
-        animator.SetBool(lightAttackK, true);
+        if (weaponManager.CurrentWeaponName == "Katana")
+            animator.SetBool(lightAttackK, true);
+
+        if (weaponManager.CurrentWeaponName == "Hammer")
+            animator.SetBool(lightAttackH, true);
     }
 
     public void PlayMeleeHeavyAttack()
@@ -146,7 +152,11 @@ public class PlayerAnimationStateController : MonoBehaviour
         if (animator == null)
             return;
 
-     //  animator.SetBool(heavyAttack, true);
+        if (weaponManager.CurrentWeaponName == "Katana")
+            animator.SetBool(heavyAttackK, true);
+
+        if (weaponManager.CurrentWeaponName == "Hammer")
+            animator.SetBool(heavyAttackH, true);
     }
 
     public void PlayMeleeBlock()
@@ -162,8 +172,18 @@ public class PlayerAnimationStateController : MonoBehaviour
         if (animator == null)
             return;
 
-        animator.SetBool(lightAttackK, false);
-        //animator.SetBool(heavyAttack, false);
+        if (weaponManager.CurrentWeaponName == "Katana")
+        {
+            animator.SetBool(lightAttackK, false);
+            animator.SetBool(heavyAttackK, false);
+        }
+
+        if (weaponManager.CurrentWeaponName == "Hammer")
+        {
+            animator.SetBool(lightAttackH, false);
+            animator.SetBool(heavyAttackH, false);
+        }
+
         gameManager.instance.isMeleeing = false;
     }
 

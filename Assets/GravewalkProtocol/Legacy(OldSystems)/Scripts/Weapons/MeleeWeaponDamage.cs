@@ -41,6 +41,11 @@ public class MeleeWeaponDamage : MonoBehaviour
         {
             MeleeBlock();
         }
+
+        if (!gameManager.instance.animIsMeleeing && hitEnemies.Count > 0)
+        {
+            hitEnemies.Clear();
+        }
     }
 
     private void MeleeSwing()
@@ -104,12 +109,12 @@ public class MeleeWeaponDamage : MonoBehaviour
         }
     }
 
-    //void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawSphere(hitPoint1.position, hitRadius);
-    //    Gizmos.DrawSphere(hitPoint2.position, hitRadius);
-    //}
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(hitPoint1.position, hitRadius);
+        Gizmos.DrawSphere(hitPoint2.position, hitRadius);
+    }
 }
 
 

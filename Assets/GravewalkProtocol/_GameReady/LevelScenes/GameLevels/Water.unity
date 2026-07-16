@@ -41896,7 +41896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorPrefab: {fileID: 0}
-  levelConfig: {fileID: 11400000, guid: e4692324bc6f57b45851e78fd53e0f16, type: 2}
+  levelConfig: {fileID: 11400000, guid: dbd66a65480a4f74d9c04da887e29afc, type: 2}
   levelLayoutDisplay: {fileID: 4829360385991635454}
   levelLayoutDisplayHieght: 500
 --- !u!114 &3258376050891231749
