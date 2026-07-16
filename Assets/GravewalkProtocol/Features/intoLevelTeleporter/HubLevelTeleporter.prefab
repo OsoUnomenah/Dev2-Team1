@@ -9700,11 +9700,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5792463530073067868}
   - component: {fileID: 5658748238469697400}
+  - component: {fileID: 3295882543056671980}
   - component: {fileID: 7226192870169871877}
   - component: {fileID: 5896883357379429414}
   - component: {fileID: 444318454953666601}
   m_Layer: 0
-  m_Name: IndustrialLevelTeleporter
+  m_Name: HubLevelTeleporter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9740,7 +9741,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e561a3ff77f15a24bb1a1d9b9a07de91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Portal
-  nextSceneName: Industrial
+  nextSceneName: Hub
+--- !u!114 &3295882543056671980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5116271206274672621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e2159ba7334b54ca8fb98f206b056b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KillAfterSpawn
 --- !u!198 &7226192870169871877
 ParticleSystem:
   m_ObjectHideFlags: 0
