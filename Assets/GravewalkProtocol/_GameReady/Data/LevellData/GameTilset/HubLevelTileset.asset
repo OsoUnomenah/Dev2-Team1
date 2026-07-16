@@ -15,13 +15,13 @@ MonoBehaviour:
   wallColor: {r: 0, g: 0, b: 0, a: 0}
   tiles:
   - variants:
-    - {fileID: 5019933606295758795, guid: f973a8ff8e81891488144dad0c73c259, type: 3}
+    - {fileID: 5019933606295758795, guid: 3ab199c45c561634aa95101c0920883c, type: 3}
   - variants:
-    - {fileID: 7206549597568670568, guid: e19bd3f5c502bbf4dab7f6c801593de0, type: 3}
+    - {fileID: 7206549597568670568, guid: 35902fc00b19db34fad7dc44954e635d, type: 3}
   - variants:
-    - {fileID: 7066490118331032347, guid: d4fcb8b4f9be2af4caac694929857674, type: 3}
+    - {fileID: 7066490118331032347, guid: 11f97e960edaa19428c46395c73f367b, type: 3}
   - variants:
-    - {fileID: 8657592870024965657, guid: cc7f641abfc7bf54698cd64ebbd6bbfd, type: 3}
+    - {fileID: 8657592870024965657, guid: 573586eb66fb7d34389aebef973163c3, type: 3}
   - variants:
     - {fileID: 6100084805423046654, guid: d34578bc3f1117a4babab1e011eb13aa, type: 3}
   - variants:

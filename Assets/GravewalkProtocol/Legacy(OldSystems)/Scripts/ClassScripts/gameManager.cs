@@ -103,7 +103,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
-
+    [SerializeField] public PlayerAnimationStateController playerAnimator;
+    [SerializeField] public GameObject playerMiniMap;
 
     [Header("Charged Shot UI")]
     [SerializeField] public GameObject sniperChargePanel;
@@ -148,6 +149,10 @@ public class gameManager : MonoBehaviour
     public bool isAiming;
     public int enemyDamageOut;
     public int playerDamageOut;
+
+    //animation variables
+    public bool animIsMeleeing;
+    public bool animIsBlocking;
 
     [Header("Roguelite Run Config")]
     public int runZone = 1;
@@ -260,6 +265,9 @@ public class gameManager : MonoBehaviour
         playerCamera = player.GetComponentInChildren<Camera>();
         playerTransform = player.GetComponent<Transform>();
         playerInteract = player.GetComponent<Players>();
+        playerAnimator = player.GetComponentInChildren<PlayerAnimationStateController>();
+
+        playerMiniMap = GameObject.FindGameObjectWithTag("MiniMap");
 
         sniperChargePanel = GameObject.FindGameObjectWithTag("SniperChargePanel");
         sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
@@ -282,8 +290,6 @@ public class gameManager : MonoBehaviour
 
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         //change xpGain value in inspector to adjust rate.
@@ -750,5 +756,22 @@ public class gameManager : MonoBehaviour
     {
         bonusMaxAmmo += amount;
     }
+
+    public void DisableMiniMap()
+    {
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.SetActive(false);
+        }
+    }
+
+    public void EnableMiniMap()
+    {
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.SetActive(true);
+        }
+    }
+
 
 }

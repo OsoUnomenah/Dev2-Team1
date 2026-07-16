@@ -29,12 +29,12 @@ MonoBehaviour:
   range: 50
   rate: 0
   recoil: 0.3
-  timer: 0
+  timer: 0.15
   ammo: 10
   maxAmmo: 10
   ammoTimer: 2
   ads: 20
-  weaponPrefab: {fileID: 6418376403914927428, guid: 40509b50e6ed28c42adcbf775c4d3a8b, type: 3}
+  weaponPrefab: {fileID: 38890664691828372, guid: 84aabe7013323c2458083ee9045a08a9, type: 3}
   hitEffect: {fileID: 0}
   shootSound: {fileID: 11400000, guid: 53d9f88ecbdbbc149987b0cae22557df, type: 2}
   reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
