@@ -25,6 +25,7 @@ public class gameManager : MonoBehaviour
 
     public GameObject reticle;
     public GameObject shotgunReticle;
+    public GameObject currentWeaponUI;
 
     [Header("XP Config")]
     public Slider xpBar;

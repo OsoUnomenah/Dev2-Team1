@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using Unity.VisualScripting;
 
 public class WeaponsChestInteract : MonoBehaviour, IInteract
 {
@@ -39,7 +40,13 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     public int amount;
     public BaseSoundSO noMoneySound;
 
+    [Header("Randomization")]
+    public int modCountMin;
+    public int modCountMax;
+    public int modRarityMin;
+    public int modRarityMax;
 
+    GameObject spawnedWeapon;
 
 
     private Material materialOg;
@@ -116,6 +123,10 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         PlayChestOpenSound();
 
         bool rewardGiven = false;
+        if (spawnedWeapon != null)
+        {
+            Destroy(spawnedWeapon);
+        }
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
         {
@@ -171,7 +182,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         Transform dropPoint = weaponDropPoint != null ? weaponDropPoint : transform;
 
-        GameObject spawnedWeapon = Instantiate(
+        spawnedWeapon = Instantiate(
         reward.weaponPrefab,
         dropPoint.position,
         dropPoint.rotation
@@ -181,7 +192,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         if (pickup != null)
         {
-            pickup.RollChestWeaponMods();
+            pickup.RollChestWeaponMods(modCountMin, modCountMax, modRarityMin, modRarityMax);
         }
         else
         {
