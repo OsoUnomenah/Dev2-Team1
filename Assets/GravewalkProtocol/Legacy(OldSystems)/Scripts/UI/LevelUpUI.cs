@@ -48,6 +48,10 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private TMP_Text optionText2;
     [SerializeField] private TMP_Text optionText3;
 
+    [SerializeField] private GameObject grey1;
+    [SerializeField] private GameObject grey2;
+    [SerializeField] private GameObject grey3;
+
     [Header("Level Up Settings")]
     [SerializeField] private float slowMotionScale = 0.25f; //so time slows down on lvl up and doesnt completely stop
     [SerializeField] private float choiceTime = 10f; //amount of time to select upgrade before game resumes
@@ -97,11 +101,32 @@ public class LevelUpUI : MonoBehaviour
         gameManager.instance.isLevelingUp = true;
 
         levelUpPanel.SetActive(true);
+        grey1.SetActive(true);
+        grey2.SetActive(true);
+        grey3.SetActive(true);
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
 
         RollOptions();
+        switch(gameManager.instance.levelUpSlots)
+        {
+            case 1:
+                optionButton1.gameObject.SetActive(true);
+                optionButton2.gameObject.SetActive(false);
+                optionButton3.gameObject.SetActive(false);
+                break;
+            case 2:
+                optionButton1.gameObject.SetActive(true);
+                optionButton2.gameObject.SetActive(true);
+                optionButton3.gameObject.SetActive(false);
+                break;
+            case 3:
+                optionButton1.gameObject.SetActive(true);
+                optionButton2.gameObject.SetActive(true);
+                optionButton3.gameObject.SetActive(true);
+                break;
+        }
         UpdateButtons();
 
         if(countdownRoutine != null)

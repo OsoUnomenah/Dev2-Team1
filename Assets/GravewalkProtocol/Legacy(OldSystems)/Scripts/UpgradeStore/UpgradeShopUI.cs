@@ -15,7 +15,8 @@ public class UpgradeShopUI : MonoBehaviour
         MaxHealthIncrease,
         MaxStaminaIncrease,
         MovementSpeedIncrease,
-        ReloadSpeedIncrease
+        ReloadSpeedIncrease,
+        LevelUpSlotIncrease
     }
 
     [System.Serializable]
@@ -183,6 +184,10 @@ public class UpgradeShopUI : MonoBehaviour
                     upgradeUI.RefreshAllUI();
                 }
                 break;
+            case UpgradeType.LevelUpSlotIncrease:
+                gameManager.instance.levelUpSlots += 1;
+                Debug.Log("Level Up Slots: " + gameManager.instance.levelUpSlots);
+                break;
         }
     }
 
@@ -209,6 +214,17 @@ public class UpgradeShopUI : MonoBehaviour
             {
                 upgrades[i].buyButton.interactable =
                     gameManager.instance.CurrentCurrency >= upgrades[i].currentCost;
+            }
+            if (upgrades[i].type == UpgradeType.LevelUpSlotIncrease &&
+                gameManager.instance.levelUpSlots >= 3)
+            {
+                upgrades[i].buyButton.GetComponentInChildren<TMP_Text>().text = "MAX";
+                upgrades[i].buyButton.interactable = false;
+            }
+            else
+            {
+                upgrades[i].buyButton.GetComponentInChildren<TMP_Text>().text = "Buy";
+                upgrades[i].buyButton.interactable = true;
             }
         }
     }
