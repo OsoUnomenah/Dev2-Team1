@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using Unity.VisualScripting;
 
 public class WeaponsChestInteract : MonoBehaviour, IInteract
 {
@@ -35,6 +36,17 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
     [SerializeField] private Renderer model;
     [SerializeField] private Material highlight;
 
+    [Header("Currency")]
+    public int amount;
+    public BaseSoundSO noMoneySound;
+
+    [Header("Randomization")]
+    public int modCountMin;
+    public int modCountMax;
+    public int modRarityMin;
+    public int modRarityMax;
+
+    GameObject spawnedWeapon;
 
 
     private Material materialOg;
@@ -67,12 +79,19 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
     public void Interact()
     {
+        if (amount > gameManager.instance.CurrentCurrency)
+        {
+            AudioManager.instance.PlaySoundAtPosition(noMoneySound, gameObject); 
+            return;
+        }
         if (isOpen || isMoving)
         {
-            gameManager.instance.interactText.gameObject.SetActive(false);
+            gameManager.instance.chestBuy.gameObject.SetActive(false);
             RecticleBehaviour.OffHover();
             return;
         }
+
+        gameManager.instance.SpendCurrency(amount);
 
         gameManager.instance.interactText.gameObject.SetActive(false);
         RecticleBehaviour.OffHover();
@@ -104,6 +123,10 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         PlayChestOpenSound();
 
         bool rewardGiven = false;
+        if (spawnedWeapon != null)
+        {
+            Destroy(spawnedWeapon);
+        }
 
         while (Quaternion.Angle(lidTransform.rotation, openRotation) > 0.1f)
         {
@@ -159,7 +182,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         Transform dropPoint = weaponDropPoint != null ? weaponDropPoint : transform;
 
-        GameObject spawnedWeapon = Instantiate(
+        spawnedWeapon = Instantiate(
         reward.weaponPrefab,
         dropPoint.position,
         dropPoint.rotation
@@ -169,7 +192,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         if (pickup != null)
         {
-            pickup.RollChestWeaponMods();
+            pickup.RollChestWeaponMods(modCountMin, modCountMax, modRarityMin, modRarityMax);
         }
         else
         {
@@ -204,71 +227,81 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
     private void TrySpawnEnemy()
     {
-        if (enemyPrefab == null || enemySpawnPoint == null)
-            return;
+    //    if (enemyPrefab == null || enemySpawnPoint == null)
+    //        return;
 
-        float roll = Random.Range(0f, 100f);
+    //    float roll = Random.Range(0f, 100f);
 
-        if (roll <= enemySpawnChance)
-        {
-            Instantiate(enemyPrefab, enemySpawnPoint.position, enemySpawnPoint.rotation);
-            Debug.Log("Unlucky Chest!!! Enemy spawned.");
-        }
+    //    if (roll <= enemySpawnChance)
+    //    {
+    //        Instantiate(enemyPrefab, enemySpawnPoint.position, enemySpawnPoint.rotation);
+    //        Debug.Log("Unlucky Chest!!! Enemy spawned.");
+    //    }
     }
 
     private void TrySpawnAbilityOrb()
     {
-        if (abilityOrbPrefabs == null || abilityOrbPrefabs.Length == 0)
-        {
-            return;
-        }
+        //if (abilityOrbPrefabs == null || abilityOrbPrefabs.Length == 0)
+        //{
+        //    return;
+        //}
 
-        float roll = Random.Range(0f, 100f);
+        //float roll = Random.Range(0f, 100f);
 
-        if (roll > abilityOrbDropChance)
-        {
-            return;
-        }
+        //if (roll > abilityOrbDropChance)
+        //{
+        //    return;
+        //}
 
-        Transform dropPoint = abilityDropPoint != null ? abilityDropPoint : weaponDropPoint;
+        //Transform dropPoint = abilityDropPoint != null ? abilityDropPoint : weaponDropPoint;
 
-        if (dropPoint == null)
-        {
-            dropPoint = transform;
-        }
+        //if (dropPoint == null)
+        //{
+        //    dropPoint = transform;
+        //}
 
-        GameObject orbPrefab = abilityOrbPrefabs[Random.Range(0, abilityOrbPrefabs.Length)];
+        //GameObject orbPrefab = abilityOrbPrefabs[Random.Range(0, abilityOrbPrefabs.Length)];
 
-        if (orbPrefab == null)
-        {
-            return;
-        }
+        //if (orbPrefab == null)
+        //{
+        //    return;
+        //}
 
-        Instantiate(orbPrefab, dropPoint.position, dropPoint.rotation);
+        //Instantiate(orbPrefab, dropPoint.position, dropPoint.rotation);
 
-        if (UpgradeUI.instance != null)
-        {
-            UpgradeUI.instance.ShowUpgradeNotification("Ability orb dropped");
-        }
+        //if (UpgradeUI.instance != null)
+        //{
+        //    UpgradeUI.instance.ShowUpgradeNotification("Ability orb dropped");
+        //}
 
-        Debug.Log("Weapon chest dropped an ability orb.");
+        //Debug.Log("Weapon chest dropped an ability orb.");
     }
 
     public void OnHoverEnter()
     {
+        gameManager.instance.chestBuy.text = "Press E to Buy (" + amount + "C)";
+
         if (isOpen)
         {
-            gameManager.instance.interactText.gameObject.SetActive(false);
+            gameManager.instance.chestBuy.gameObject.SetActive(false);
             RecticleBehaviour.OffHover();
             return;
         }
 
-        if (model != null && highlight != null)
+        if (amount > gameManager.instance.CurrentCurrency)
+        {
+            gameManager.instance.chestBuy.color = Color.red;
+        }
+        else
+        {
+            gameManager.instance.chestBuy.color = Color.black;
+        }
+        if (model != null && highlight != null && amount <= gameManager.instance.CurrentCurrency)
         {
             model.material = highlight;
         }
 
-        gameManager.instance.interactText.gameObject.SetActive(true);
+        gameManager.instance.chestBuy.gameObject.SetActive(true);
         RecticleBehaviour.OnHover(0);
     }
 
@@ -279,7 +312,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
             model.material = materialOg;
         }
 
-        gameManager.instance.interactText.gameObject.SetActive(false);
+        gameManager.instance.chestBuy.gameObject.SetActive(false);
         RecticleBehaviour.OffHover();
     }
 

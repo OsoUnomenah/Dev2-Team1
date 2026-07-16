@@ -6,17 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/TitleScreen.unity
+    path: Assets/GravewalkProtocol/Features/TitleScreen.unity
     guid: b75d3daf3fb65c94bba320a2820baaf1
   - enabled: 1
-    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/Showcase.unity
-    guid: 0570413f22f3b0d43b19fbf085ead88a
+    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Hub.unity
+    guid: d1c14fd8d479eec478753d61eeb09fe0
   - enabled: 1
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Credits.unity
     guid: b8e1ec4f2d994b54fa1ce2a17ebf1c79
-  - enabled: 0
-    path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype.unity
-    guid: b66c3fc8571686144b33283abdbe30ad
+  - enabled: 1
+    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/LoadingScreen.unity
+    guid: f140854703f1d38488363691d51bef0a
+  - enabled: 1
+    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Industrial.unity
+    guid: cb438051603df264e952ee79088d7f5e
   - enabled: 0
     path: Assets/GravewalkProtocol/Legacy(OldSystems)/_Levels/Prototype2.unity
     guid: 039c8ad3fd77361478ef4adb7f779347

@@ -67,7 +67,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         ads = weaponData.ads;
     }
 
-    public void RollChestWeaponMods()
+    public void RollChestWeaponMods(int CountMin, int CountMax, int RarityMin, int RarityMax)
     {
         if (hasGeneratedMod || weaponData == null)
         {
@@ -78,11 +78,11 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         modDescriptions.Clear();
         ResetRolledStatsFromData();
 
-        int modCount = Random.Range(1, 3);
+        int modCount = Random.Range(CountMin, CountMax); //1-3 noramly
 
         for (int i = 0; i < modCount; i++)
         {
-            ModRarity rarity = RollModRarity();
+            ModRarity rarity = RollModRarity(RarityMin, RarityMax);
             float rarityMultiplier = GetRarityMultiplier(rarity);
 
             int roll = Random.Range(0, 5);
@@ -143,9 +143,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         }
     }
 
-    private ModRarity RollModRarity()
+    private ModRarity RollModRarity(int min, int max)
     {
-        int roll = Random.Range(1, 101);
+        int roll = Random.Range(min, max); //1-101 normally
 
         if (roll <= 60)
         {
@@ -176,7 +176,7 @@ public class WeaponPickUp : MonoBehaviour, IInteract
             case ModRarity.Epic:
                 return 2f;
             case ModRarity.Legendary:
-                return 3f;
+                return 4f;
         }
 
         return 1f;
@@ -310,6 +310,10 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         {
             WeaponModHoverUI.Instance.ShowInfo(GetWeaponHoverText());
         }
+        if(gameManager.instance.playerWeaponManager.CurrentWeaponName != null)
+        {
+            gameManager.instance.currentWeaponUI.gameObject.SetActive(true);
+        }
     }
 
     public void OnHoverExit()
@@ -329,6 +333,10 @@ public class WeaponPickUp : MonoBehaviour, IInteract
         if (WeaponModHoverUI.Instance != null)
         {
             WeaponModHoverUI.Instance.HideInfo();
+        }
+        if (gameManager.instance.playerWeaponManager.CurrentWeaponName != null)
+        {
+            gameManager.instance.currentWeaponUI.gameObject.SetActive(false);
         }
     }
 }
