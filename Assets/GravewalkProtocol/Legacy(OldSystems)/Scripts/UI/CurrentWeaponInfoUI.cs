@@ -5,6 +5,7 @@ public class CurrentWeaponInfoUI : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text infoText;
+    public  TMP_Text infoText2 => infoText;
     [SerializeField] private PlayerWeaponManager weaponManager;
     private bool tabHeld = false;
     private void Start()
