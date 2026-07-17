@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -1729,12 +1730,30 @@ public class PlayerInputHandler : MonoBehaviour
 
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
+    private float crystalbaruinum;
     private void CrystalShot(IDamage dmg, RaycastHit hit)
     {
         if (dmg != null)
         {
             gameManager.instance.playerStatHandler.crystalBar += 1;
+
+            ParticleSystem crystalEffect = Instantiate(gameManager.instance.playerWeaponManager.crystalHit, hit.point, Quaternion.identity);
+            float effectScale = 0.5f;
+
+            if (gameManager.instance.playerWeaponManager.crystalHit != null && gameManager.instance.playerStatHandler.crystalBar > 9)
+            {
+                effectScale = 2f;              
+            }
+            crystalEffect.transform.localScale = Vector3.one * effectScale;
+
+            if (gameManager.instance.playerStatHandler.crystalBar > 9)
+            {
+                gameManager.instance.crystalBarUI.GetComponentInChildren<Slider>().value = 0 / 9f;
+                return;
+            }
+            gameManager.instance.crystalBarUI.GetComponentInChildren<Slider>().value = gameManager.instance.playerStatHandler.crystalBar / 9f;
         }
+
     }
     public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
     {

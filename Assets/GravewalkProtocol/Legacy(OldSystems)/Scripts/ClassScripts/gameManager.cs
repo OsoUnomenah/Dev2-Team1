@@ -66,6 +66,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
     public int levelUpSlots = 1;
+    public GameObject crystalBarUI;
 
     [Header("Run Outcome UI")]
     [SerializeField] private RunOutcomeUI runOutcomeUI;

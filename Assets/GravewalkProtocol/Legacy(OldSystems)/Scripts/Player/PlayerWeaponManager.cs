@@ -55,10 +55,11 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int freezePos;
     private int magnetPos;
     private int toxicPos;
-    private int crystalPos;
+    private int crystalPos = -100;
     private int lightningPos;
     [SerializeField] public GameObject bouncePad;
     [SerializeField] public SphereCollider magnetField;
+    public ParticleSystem crystalHit;
 
     // Ability Settings
     public int fireLevel;
@@ -79,6 +80,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     void Start()
     {
         playerAnimator = gameManager.instance.playerAnimator.animator;
+        gameManager.instance.crystalBarUI.SetActive(false);
     }
 
     void Update()
@@ -268,6 +270,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             UpgradeUI.instance.RefreshAllUI();
         }
 
+
     }
 
     public void getStats(AbilityStats stats)
@@ -358,7 +361,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityModel.SetActive(false);
         }
 
-        ApplyAbilityEffectToCurrentWeapon(stats);
+       
+
+            ApplyAbilityEffectToCurrentWeapon(stats);
     }
 
     private void ApplyAbilityEffectToCurrentWeapon(AbilityStats stats)
@@ -394,6 +399,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         activeEffect.transform.localPosition = Vector3.zero;
         activeEffect.transform.localRotation = Quaternion.identity;
         activeEffect.Play();
+
+
     }
 
     void abilitySwitch()
@@ -420,6 +427,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             abilityEquip(abilities[3]);
             abilitySlot = 3;
+        }
+
+        if (abilities.Count <= 0)
+        {
+            return;
+        }
+
+        if (abilities[abilitySlot].abilityName == "Crystal")
+        {
+            gameManager.instance.crystalBarUI.SetActive(true);
+        }
+        else
+        {
+            gameManager.instance.crystalBarUI.SetActive(false);
         }
     }
 }

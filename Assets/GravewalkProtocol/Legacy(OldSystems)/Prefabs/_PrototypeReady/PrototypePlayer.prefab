@@ -365,7 +365,7 @@ MonoBehaviour:
   ShootSound: {fileID: 0}
   ReloadSound: {fileID: 0}
   HitEffect: {fileID: 0}
-  weaponAnimator: {fileID: 0}
+  playerAnimator: {fileID: 0}
   weaponHolder: {fileID: 5263699388163223786}
   adsWeaponHolder: {fileID: 65771077528125073}
   nonADSWeaponHolder: {fileID: 794901986562867875}
@@ -375,6 +375,7 @@ MonoBehaviour:
   abilities: []
   bouncePad: {fileID: 8405657338730397385, guid: 71d43a5100017964f9b53c511ccc72db, type: 3}
   magnetField: {fileID: 4573178482530213371}
+  crystalHit: {fileID: 1945907912220827488, guid: 2bbdd69c0b43cf342b807bf6c1997b61, type: 3}
   fireLevel: 0
   freezeLevel: 0
   magnetLevel: 0
