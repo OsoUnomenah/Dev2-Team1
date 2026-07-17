@@ -606,6 +606,10 @@ PrefabInstance:
       propertyPath: steve
       value: 
       objectReference: {fileID: 2103693813}
+    - target: {fileID: 2835635450443743724, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: rotateAction.m_Name
+      value: Rotate
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

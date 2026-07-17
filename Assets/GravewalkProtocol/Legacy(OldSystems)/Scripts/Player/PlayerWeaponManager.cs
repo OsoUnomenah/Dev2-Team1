@@ -24,6 +24,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     // Weapon Settings
     public bool Type;
+    public bool FullAuto;
     public int Damage;
     public float Range;
     public float Rate;
@@ -123,6 +124,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         MaxChargeMultiplier = weaponData.maxChargeMultiplier;
         CriticalMultiplier = weaponData.criticalMultiplier;
         ChargedZoomFOV = weaponData.chargedZoomFOV;
+
+        FullAuto = weaponData.fullAuto;
 
         Equip(
             weaponData.weaponType,

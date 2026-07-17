@@ -121,6 +121,9 @@ public class PlayerInputHandler : MonoBehaviour
     private bool isFrozenByBoss;
     private Coroutine freezeRoutine;
 
+    private bool shootHeld;
+    private bool fullAutoShotRequested;
+
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
 
@@ -217,6 +220,7 @@ public class PlayerInputHandler : MonoBehaviour
         HandleFootsteps();
         HandleJumping();
         ShootTimer();
+        HandleFullAuto();
         HandleReload();
         HandleChargedShot();
         UpdateChargedShotUI();
@@ -291,6 +295,9 @@ public class PlayerInputHandler : MonoBehaviour
 
         shopAction.performed -= OnShopPerformed; //kw
         shopAction.canceled -= OnShopCanceled; //kw
+
+        shootHeld = false;
+        fullAutoShotRequested = false;
 
     }
 
@@ -767,8 +774,65 @@ public class PlayerInputHandler : MonoBehaviour
         // }
     }
 
+    private void HandleFullAuto()
+    {
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null )
+        {
+            shootHeld = false;
+            return;
+        }
+
+        if (!weaponManager.FullAuto)
+        {
+            return;
+        }
+
+        if (!shootAction.IsPressed())
+        {
+            shootHeld = false;
+            return;
+        }
+
+        if (weaponManager.Type)
+        {
+            return;
+        }
+
+        if (weaponManager.UsesChargedShot)
+        {
+            return;
+        }
+
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        if (gameManager.instance.isPaused ||
+            gameManager.instance.isLevelingUp ||
+            gameManager.instance.isReloading)
+        {
+            return;
+        }
+
+        if (!gameManager.instance.canShoot)
+        {
+            return;
+        }
+
+        fullAutoShotRequested = true;
+
+        OnShootPerformed(default);
+
+        fullAutoShotRequested = false;
+    }
+
     private void OnShootStarted(InputAction.CallbackContext context)
     {
+        shootHeld = true;
+
         if (isFrozenByBoss)
         {
             return;
@@ -885,7 +949,9 @@ public class PlayerInputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
+            else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction
+                     && !gameManager.instance.playerWeaponManager.FullAuto
+                     || fullAutoShotRequested)
             {
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
@@ -1181,6 +1247,7 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
         // cancel logic for button release if needed
+        shootHeld = false;
 
         if (gameManager.instance.playerWeaponManager == null)
         {
