@@ -50,11 +50,12 @@ public class MeleeWeaponDamage : MonoBehaviour
 
     private void MeleeSwing()
     {
- 
+        
         Collider[] hits = Physics.OverlapCapsule(hitPoint1.position, hitPoint2.position, hitRadius, enemyLayer);
 
         foreach (Collider hit in hits)
         {
+            //Debug.Log("Attempted damage");
             IDamage dmg = hit.GetComponentInParent<IDamage>();
 
            if(dmg == null)
