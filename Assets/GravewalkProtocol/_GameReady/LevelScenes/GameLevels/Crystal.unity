@@ -644,6 +644,10 @@ PrefabInstance:
       propertyPath: tileset
       value: 
       objectReference: {fileID: 11400000, guid: 549d4214ad8e7c94d8cace907f9ffc4b, type: 2}
+    - target: {fileID: 2807125121868461352, guid: 7a586d1bfdb433447895a6a91449e580, type: 3}
+      propertyPath: availableRules.Array.data[3].rule
+      value: 
+      objectReference: {fileID: 11400000, guid: 47dca3337c56d7c4c9a501d4f1097854, type: 2}
     - target: {fileID: 3325261261015450147, guid: 7a586d1bfdb433447895a6a91449e580, type: 3}
       propertyPath: m_LocalPosition.x
       value: 54.72332

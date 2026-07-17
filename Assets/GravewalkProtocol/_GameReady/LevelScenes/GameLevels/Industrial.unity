@@ -640,6 +640,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: IndustrialLevelBuilder
       objectReference: {fileID: 0}
+    - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
+      propertyPath: availableRules.Array.data[3].rule
+      value: 
+      objectReference: {fileID: 11400000, guid: cc45bb2be4b994a4fad8f95b641b9827, type: 2}
     - target: {fileID: 3780697596442776125, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: tileset
       value: 

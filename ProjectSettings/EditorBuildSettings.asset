@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Hub.unity
     guid: d1c14fd8d479eec478753d61eeb09fe0
   - enabled: 1
-    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Credits.unity
+    path: Assets/GravewalkProtocol/_GameReady/LevelScenes/Credits.unity
     guid: b8e1ec4f2d994b54fa1ce2a17ebf1c79
   - enabled: 1
     path: Assets/GravewalkProtocol/_GameReady/LevelScenes/LoadingScreen.unity

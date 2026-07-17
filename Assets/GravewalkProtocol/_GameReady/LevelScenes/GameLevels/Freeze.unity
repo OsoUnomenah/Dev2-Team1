@@ -676,6 +676,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5558742107720673721, guid: 36d60b9d44b13fe489b2a48bca2668bb, type: 3}
+      propertyPath: availableRules.Array.data[3].rule
+      value: 
+      objectReference: {fileID: 11400000, guid: 705659dc26649b446b52bbe900126a0c, type: 2}
     - target: {fileID: 6925099973430262339, guid: 36d60b9d44b13fe489b2a48bca2668bb, type: 3}
       propertyPath: m_Name
       value: FreezeLevelBuilder
