@@ -641,13 +641,33 @@ PrefabInstance:
       value: IndustrialLevelBuilder
       objectReference: {fileID: 0}
     - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
+      propertyPath: availableRules.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: availableRules.Array.data[3].rule
       value: 
-      objectReference: {fileID: 11400000, guid: cc45bb2be4b994a4fad8f95b641b9827, type: 2}
+      objectReference: {fileID: 11400000, guid: 89ecdb1ab1a063b408c5164697684b09, type: 2}
+    - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
+      propertyPath: availableRules.Array.data[4].rule
+      value: 
+      objectReference: {fileID: 11400000, guid: 3eaa41f91cfbc9f4a8bc1dfac1e7e000, type: 2}
+    - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
+      propertyPath: availableRules.Array.data[0].maxAvailability
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
+      propertyPath: availableRules.Array.data[4].maxAvailability
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3780697596442776125, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: tileset
       value: 
       objectReference: {fileID: 11400000, guid: d1e87b55ac5a9794cab1b5fd9123c0a1, type: 2}
+    - target: {fileID: 4355332469869014686, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
+      propertyPath: levelConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 76025f012dee45a4ca12c61f718e8813, type: 2}
     - target: {fileID: 6079430932956328309, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: m_LocalPosition.x
       value: 54.72332
