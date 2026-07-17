@@ -127,7 +127,7 @@ public class PlayerInputHandler : MonoBehaviour
     private PlayerActions playerActions; // Reference to the generated input actions class
 
     private InputAction moveAction;
-    private InputAction rotateAction;
+    public InputAction rotateAction;
     private InputAction jumpAction;
     private InputAction dashAction;
     private InputAction crouchAction;
