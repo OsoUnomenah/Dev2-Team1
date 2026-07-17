@@ -292,6 +292,7 @@ MonoBehaviour:
   healthPickup: {fileID: 3472488264446540247}
   healPercent: 0.25
   spinSpeed: 100
+  _healthPickup: {fileID: 0}
 --- !u!33 &6994511735543593016
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -368,7 +369,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 4
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4237071229362914486
 GameObject:

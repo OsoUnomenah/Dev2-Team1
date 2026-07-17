@@ -20,8 +20,8 @@ MonoBehaviour:
     width: 1
     height: 1
   fill:
-    array: 0300000000000000020000000600000001000000
+    array: 06000000
     width: 1
-    height: 5
+    height: 1
   centerHorizontally: 1
   centerVertically: 1

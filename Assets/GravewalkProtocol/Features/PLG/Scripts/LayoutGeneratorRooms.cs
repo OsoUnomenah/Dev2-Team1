@@ -7,7 +7,7 @@ using Random = System.Random;
 
 public class LayoutGeneratorRooms : MonoBehaviour
 {
-    [SerializeField] GameObject doorPrefab;
+    //[SerializeField] GameObject doorPrefab;
     [SerializeField] RoomLevelLayoutConfiguration levelConfig;
 
     [SerializeField] GameObject levelLayoutDisplay;
@@ -68,16 +68,16 @@ public class LayoutGeneratorRooms : MonoBehaviour
         upgradeRooms.ForEach(room => room.Type = RoomType.Upgrade);
 
         List<Room> emptyRooms = level.Rooms.Where(room => room.Type.HasFlag(RoomType.Default)).ToList();
-        Room bossRoom = emptyRooms
+        Room keyRoom = emptyRooms
             .OrderByDescending(room => Vector2.Distance(randomStartRoom.Area.center, room.Area.center))
             .OrderByDescending(room => room.Connectedness)
             .OrderByDescending(room => room.Area.width * room.Area.height)
             .FirstOrDefault();
-        bossRoom.Type = RoomType.Boss;
-        emptyRooms.Remove(bossRoom);
+        keyRoom.Type = RoomType.Key;
+        emptyRooms.Remove(keyRoom);
 
         emptyRooms = emptyRooms.OrderBy(room => random.Next()).ToList();
-        RoomType[] typesToAssign = { RoomType.Key, RoomType.EnemySpawn, RoomType.Trap, RoomType.Heal };
+        RoomType[] typesToAssign = { RoomType.EnemySpawn, RoomType.Trap, RoomType.Heal };
         List<Room> roomsToAssign = emptyRooms.Take(typesToAssign.Length).ToList();
         for (int i = 0; i < roomsToAssign.Count; i++)
         {

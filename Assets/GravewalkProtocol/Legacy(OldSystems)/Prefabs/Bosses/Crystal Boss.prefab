@@ -1262,6 +1262,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1081386211975996491}
   - {fileID: 2838126521481745015}
   - {fileID: 23775247085923408}
   - {fileID: 4446139360566860818}
@@ -17643,3 +17644,65 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &7783151462876470833
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 661307411345048127}
+    m_Modifications:
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.7328644
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7.895
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 9.434032
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085224121494846908, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+      propertyPath: m_Name
+      value: DefeatedBossTeleporter
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+--- !u!4 &1081386211975996491 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7134427500381600378, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+  m_PrefabInstance: {fileID: 7783151462876470833}
+  m_PrefabAsset: {fileID: 0}
