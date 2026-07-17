@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -907,6 +908,8 @@ public class PlayerInputHandler : MonoBehaviour
                             " | Vertical: " + weaponManager.VerticalSpread
                             );
 
+                    HashSet<IToxic> toxicTargetsHitThisShot = new HashSet<IToxic>();
+ 
                     for (int pelletIndex = 0; pelletIndex < pelletCount; pelletIndex++)
                     {
 
@@ -943,6 +946,9 @@ public class PlayerInputHandler : MonoBehaviour
                             bulletEnd = hit.transform.position;
 
                             IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            IToxic toxicTarget = FindToxicTarget(hit.collider);
+                            bool applyToxicAfterDamage = false;
+
                             if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
                                 switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
@@ -959,7 +965,7 @@ public class PlayerInputHandler : MonoBehaviour
                                         TryApplyWeaponFreeze(hit.collider, false);
                                         break;
                                     case AbilityStats.ability.toxic:
-                                        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                        applyToxicAfterDamage = true;
                                         break;
                                     case AbilityStats.ability.crystal:
                                         CrystalShot(dmg, hit);
@@ -991,6 +997,11 @@ public class PlayerInputHandler : MonoBehaviour
                                 finalDamage *= 3;
                             }
 
+                            if (toxicTarget != null && toxicTarget.IsToxic)
+                            {
+                                finalDamage = Mathf.RoundToInt(finalDamage * toxicTarget.ToxicDamageMultiplier);
+                            }
+
                             // if (turnOnDebug)
                             //  {
                             //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
@@ -1011,7 +1022,19 @@ public class PlayerInputHandler : MonoBehaviour
                             else if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                             {
                                 dmg.takeDamage(finalDamage);
+                                if (applyToxicAfterDamage && toxicTarget != null)
+                                {
+                                    toxicTargetsHitThisShot.Add(toxicTarget);
+                                }
                             }
+                        }
+                    }
+
+                    foreach (IToxic toxicTargetToApply in toxicTargetsHitThisShot)
+                    {
+                        if (toxicTargetToApply != null)
+                        {
+                            toxicTargetToApply.TryApplyToxic();
                         }
                     }
                 }
@@ -1828,6 +1851,53 @@ public class PlayerInputHandler : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         isFrozenByBoss = false;
+    }
+
+    private bool currentAbilityToxic(out AbilityStats toxicStats)
+    {
+        toxicStats = null;
+        if (gameManager.instance = null)
+        {
+            return false;
+        }
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+        if (weaponManager == null)
+        {
+            return false;
+        }
+        else if (weaponManager.abilities == null || weaponManager.abilities.Count == 0)
+        {
+            return false;
+        }
+        
+        toxicStats = weaponManager.abilities[weaponManager.abilitySlot];
+        return toxicStats != null && toxicStats.abilityType == AbilityStats.ability.toxic;
+    }
+
+    private IToxic FindToxicTarget(Collider hitCollider)
+    {
+        if (hitCollider == null)
+        {
+            return null;
+        }
+        
+        IToxic toxicTarget = hitCollider.GetComponent<IToxic>();
+        if (toxicTarget != null)
+        {
+            return toxicTarget;
+        }
+        return hitCollider.GetComponentInParent<IToxic>();
+    }
+
+    public void TryApplyWeaponToxic(Collider hitCollider)
+    {
+        IToxic toxicTarget = FindToxicTarget(hitCollider);
+        if (toxicTarget == null)
+        {
+            return;
+        }
+        toxicTarget.TryApplyToxic();
     }
 
     private void HandleChargedShot()
