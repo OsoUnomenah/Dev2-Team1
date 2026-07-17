@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BossSpawnRule
   m_EditorClassIdentifier: 
   roomTypes: 8
-  prefab: {fileID: 749273210973258661, guid: 8b997537085dff246ad44cf06b17f997, type: 3}
+  prefab: {fileID: 1552161082871557743, guid: 2955742a87dfa9e46afe5cc3523a718c, type: 3}
   prefabRotation: 180
   placement:
     array: 02000000
