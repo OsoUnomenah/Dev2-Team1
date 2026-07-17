@@ -76,6 +76,9 @@ public class Granny : MonoBehaviour, IInteract
 
     public void Interact()
     {
+        if (greeting == null)
+            return;
+
         NPCInteractionsUI.instance.StartDialogue(greeting);
     }
 

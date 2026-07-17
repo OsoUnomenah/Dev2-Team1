@@ -1354,6 +1354,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2027551110}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: steve
+      value: 
+      objectReference: {fileID: 2027551110}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: acceleration
       value: 0.31
       objectReference: {fileID: 0}
@@ -1362,7 +1366,15 @@ PrefabInstance:
       value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: steveLeanDist
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: hipsReturnTime
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: steveReturnTime
       value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
@@ -1371,6 +1383,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: trigAcceleration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: steveDisplaceTime
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
