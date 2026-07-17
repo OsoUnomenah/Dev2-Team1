@@ -33,7 +33,7 @@ public class NPCInteractionsUI : MonoBehaviour
     [SerializeField] Transform[] responsePos;
     [SerializeField] Button responseButtonPrefab;
 
-    private List<Transform> currButtons;
+    private List<Transform> currButtons = new();
     private DialogueNode currNode;
     public float textSpeed;
     private int index;
@@ -58,9 +58,21 @@ public class NPCInteractionsUI : MonoBehaviour
 
     public void StartDialogue(DialogueNode dialogue)
     {
-        if (responsePos == null)
+        if (dialogue == null)
         {
+            Debug.Log("null DialogueNode");
             return;
+        }
+
+        if (responsePos == null || responsePos.Length == 0)
+        {
+            Debug.Log("Null or empty responsePos");
+            return;
+        }
+
+        if (currButtons == null)
+        {
+            currButtons = new List<Transform>();
         }
 
         Cursor.visible = true;
@@ -73,15 +85,16 @@ public class NPCInteractionsUI : MonoBehaviour
 
         StartCoroutine(TypeLine());
 
-        if (currButtons.Count > 0 && currButtons != null)
+        if (currButtons != null && currButtons.Count > 0)
         {
             foreach (Transform pos in currButtons)
             {
-                Destroy(pos.gameObject);
+                if (pos != null)
+                    Destroy(pos.gameObject);
             }
-            currButtons.Clear();
         }
 
+        currButtons.Clear();
 
         index = 0;
         foreach (DialogueResponse response in currNode.responses)

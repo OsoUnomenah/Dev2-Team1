@@ -6,11 +6,11 @@ public class PlayerAnimationStateController : MonoBehaviour
     [SerializeField] public Animator animator;
 
     [Header("Animation Control")]
-    [Range(0f, 1f)][SerializeField] private float hipsDisplaceTime;
-    [Range(0f, 1f)][SerializeField] private float hipsReturnTime;
-    [Range(0f, 1f)][SerializeField] private float hipsLeanDist;
+    [Range(0f, 1f)][SerializeField] private float steveDisplaceTime = 0.1f;
+    [Range(0f, 1f)][SerializeField] private float steveReturnTime = 0.15f;
+    [Range(0f, 1f)][SerializeField] private float steveLeanDist = 0.01f;
     
-    [SerializeField] private Transform hips;
+    [SerializeField] private Transform steve;
 
     private PlayerWeaponManager weaponManager;
 
@@ -233,27 +233,27 @@ public class PlayerAnimationStateController : MonoBehaviour
 
     IEnumerator DashDisplacement()
     {
-        Vector3 hipOrigPos = hips.localPosition;
+        Vector3 hipOrigPos = steve.localPosition;
         Vector3 dashDir = transform.InverseTransformDirection(gameManager.instance.playerInputHandler.currentMovement);
-        Vector3 targetPos = hipOrigPos - dashDir * hipsLeanDist;
+        Vector3 targetPos = hipOrigPos - dashDir * steveLeanDist;
 
         float timer = 0f;
-        while (timer < hipsDisplaceTime)
+        while (timer < steveDisplaceTime)
         {
             timer += Time.deltaTime;
-            hips.localPosition = Vector3.Lerp(hipOrigPos, targetPos, timer / hipsDisplaceTime);
+            steve.localPosition = Vector3.Lerp(hipOrigPos, targetPos, timer / steveDisplaceTime);
             yield return null;
         }
 
         timer = 0f;
-        while (timer < hipsReturnTime)
+        while (timer < steveReturnTime)
         {
             timer += Time.deltaTime;
-            hips.localPosition = Vector3.Lerp(targetPos, hipOrigPos, timer / hipsReturnTime);
+            steve.localPosition = Vector3.Lerp(targetPos, hipOrigPos, timer / steveReturnTime);
             yield return null;
         }
         
-        hips.localPosition = hipOrigPos;
+        steve.localPosition = hipOrigPos;
         displacing = false;
     }
 }
