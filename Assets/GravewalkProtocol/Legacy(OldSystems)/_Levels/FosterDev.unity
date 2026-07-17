@@ -1039,6 +1039,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8a9984bda451f84d913a5e6d489cab5, type: 3}
+--- !u!4 &2027551110 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7026415171730192943, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+  m_PrefabInstance: {fileID: 2544777342834741427}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2544777342834741427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1248,8 +1253,24 @@ PrefabInstance:
       value: -5.894
       objectReference: {fileID: 0}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: hips
+      value: 
+      objectReference: {fileID: 2027551110}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: acceleration
       value: 0.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: hipsLeanDist
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: hipsReturnTime
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
+      propertyPath: hipsDisplaceTime
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2804567074278133799, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: trigAcceleration
