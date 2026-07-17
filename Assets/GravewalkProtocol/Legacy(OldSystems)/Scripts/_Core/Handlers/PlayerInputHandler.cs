@@ -558,6 +558,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         Physics.IgnoreLayerCollision(playerLayer, enemyLayer, false);
 
+        gameManager.instance.dashTriggered = false;
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
         gameManager.instance.isDashing = false;
     }
@@ -574,8 +575,6 @@ public class PlayerInputHandler : MonoBehaviour
             StartCoroutine(Dash());
             gameManager.instance.playerStatHandler.HandleStamina();
         }
-
-        gameManager.instance.dashTriggered = false;
     }
 
     private Vector3 CalculateWorldDirection()
