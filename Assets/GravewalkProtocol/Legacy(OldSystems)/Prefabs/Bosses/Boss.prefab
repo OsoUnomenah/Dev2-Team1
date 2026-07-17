@@ -10581,6 +10581,8 @@ MonoBehaviour:
   shootPos: {fileID: 0}
   gunRotateSpeed: 1
   shootRate: 0.34
+  minCurrencyDrop: 10
+  maxCurrencyDrop: 25
   Modifiers: 
   gun: {fileID: 5463625127657286603}
   jumpHeight: 51
