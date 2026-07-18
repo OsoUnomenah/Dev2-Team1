@@ -379,22 +379,20 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     {
         material.EnableKeyword("_EMISSION");
 
-        Color emissionColor = material.GetColor("_EmissionColor");
+        Color color = Color.white;
 
         float time = 0f;
         float duration = 1f;
 
         while (time < duration)
         {
-            float intensity = Mathf.Lerp(-10f, 0f, time / duration);
+            float intensity = Mathf.Lerp(0f, 10f, time / duration);
 
-            material.SetColor("_EmissionColor", emissionColor * Mathf.Pow(2, intensity));
+            material.SetColor("_EmissionColor", color * intensity);
 
             time += Time.deltaTime;
             yield return null;
         }
-
-        material.SetColor("_EmissionColor", emissionColor);
     }
     private void ArmorCheck()
     {
