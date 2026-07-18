@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9072c04bb8a00ae42953161e798a5b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHazardDamage
-  damageAmount: 10
+  damageAmount: 5
   damageCooldown: 1
 --- !u!135 &6246918203096914161
 SphereCollider:

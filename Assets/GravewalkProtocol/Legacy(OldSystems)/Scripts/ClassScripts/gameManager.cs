@@ -285,6 +285,8 @@ public class gameManager : MonoBehaviour
 
 
 
+
+
         if (gameDebug)
         {
             Debug.Log("Player: " + player);

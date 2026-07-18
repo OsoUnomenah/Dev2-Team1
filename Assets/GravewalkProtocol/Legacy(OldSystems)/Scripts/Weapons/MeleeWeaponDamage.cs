@@ -16,8 +16,6 @@ public class MeleeWeaponDamage : MonoBehaviour
     private StatHandler stats;
     private LayerMask enemyLayer;
 
-    private bool isAttacking;
-    private bool isBlocking;
     private bool defenseAdded;
     private readonly HashSet<IDamage> hitEnemies = new();
 
@@ -46,15 +44,22 @@ public class MeleeWeaponDamage : MonoBehaviour
         {
             hitEnemies.Clear();
         }
+
+        if (defenseAdded && !gameManager.instance.animIsBlocking)
+        {
+            stats.modDefense -= 100;
+            defenseAdded = false;
+        }
     }
 
     private void MeleeSwing()
     {
- 
+        
         Collider[] hits = Physics.OverlapCapsule(hitPoint1.position, hitPoint2.position, hitRadius, enemyLayer);
 
         foreach (Collider hit in hits)
         {
+            //Debug.Log("Attempted damage");
             IDamage dmg = hit.GetComponentInParent<IDamage>();
 
            if(dmg == null)
@@ -102,11 +107,15 @@ public class MeleeWeaponDamage : MonoBehaviour
 
         if (!gameManager.instance.playerInputHandler.isCrouching)
         {
-            //animator.SetBool("isBlocking", false);
-            isBlocking = false;
             stats.modDefense -= 100;
+            Debug.Log("Cancel Block");
+            
+            gameManager.instance.playerAnimator.animator.SetBool("blocking", false);
+            gameManager.instance.animIsBlocking = false;
             defenseAdded = false;
         }
+
+
     }
 
     void OnDrawGizmosSelected()

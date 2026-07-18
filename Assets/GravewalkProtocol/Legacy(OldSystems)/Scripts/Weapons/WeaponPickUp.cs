@@ -8,7 +8,6 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] private Renderer model;
     private Material materialOrig;
     [SerializeField] private Material highLight;
-    [SerializeField] private Animator animator;
 
     [Header("Generated Weapon Mods")]
     [SerializeField] private bool hasGeneratedMod;
