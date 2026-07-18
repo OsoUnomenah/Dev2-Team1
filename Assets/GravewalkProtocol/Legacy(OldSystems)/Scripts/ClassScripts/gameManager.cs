@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -339,7 +338,7 @@ public class gameManager : MonoBehaviour
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
-        if (instance.playerWeaponManager.abilities.Count == 4)
+        if (instance.playerWeaponManager.abilities.Count >= 6)
         {
             // Debug.LogError("Does not Run");
             return;
@@ -410,6 +409,13 @@ public class gameManager : MonoBehaviour
             case 3:
                 abilityUI.grey4.SetActive(true);
                 break;
+            case 4:
+                abilityUI.grey5.SetActive(true);
+                break;
+
+            case 5:
+                abilityUI.grey6.SetActive(true);
+                break;
         }
 
         yield return new WaitForSeconds(cd);
@@ -427,6 +433,13 @@ public class gameManager : MonoBehaviour
                 break;
             case 3:
                 abilityUI.grey4.SetActive(false);
+                break;
+            case 4:
+                abilityUI.grey5.SetActive(false);
+                break;
+
+            case 5:
+                abilityUI.grey6.SetActive(false);
                 break;
         }
 
