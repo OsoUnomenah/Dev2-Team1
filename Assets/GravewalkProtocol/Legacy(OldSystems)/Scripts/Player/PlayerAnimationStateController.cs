@@ -18,6 +18,7 @@ public class PlayerAnimationStateController : MonoBehaviour
     private bool isRestPos;
     private bool displacing;
     private WeaponData currWeapon;
+    private bool isBlocking;
 
 
 
@@ -36,6 +37,7 @@ public class PlayerAnimationStateController : MonoBehaviour
     private readonly int isMoving = Animator.StringToHash("isMoving");
     private readonly int jumped = Animator.StringToHash("jumped");
     private readonly int pickedUp = Animator.StringToHash("pickedUp");
+    private readonly int meleeBlock = Animator.StringToHash("blocking");
 
     void Start()
     {
@@ -71,6 +73,11 @@ public class PlayerAnimationStateController : MonoBehaviour
     private void OnReturnToRestPos()
     {
         isRestPos = true;
+    }
+
+    private void OnBlock()
+    {
+
     }
 
     private void HandleWeaponPickups()
@@ -168,7 +175,8 @@ public class PlayerAnimationStateController : MonoBehaviour
         if (animator == null)
             return;
 
-     //   animator.SetBool(meleeBlock, true);
+        gameManager.instance.animIsBlocking = true;
+        animator.SetBool(meleeBlock, true);
     }
 
     public void ResetMeleeAnimationTriggers()

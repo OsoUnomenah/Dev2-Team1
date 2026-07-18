@@ -16,8 +16,6 @@ public class MeleeWeaponDamage : MonoBehaviour
     private StatHandler stats;
     private LayerMask enemyLayer;
 
-    private bool isAttacking;
-    private bool isBlocking;
     private bool defenseAdded;
     private readonly HashSet<IDamage> hitEnemies = new();
 
@@ -45,6 +43,12 @@ public class MeleeWeaponDamage : MonoBehaviour
         if (!gameManager.instance.animIsMeleeing && hitEnemies.Count > 0)
         {
             hitEnemies.Clear();
+        }
+
+        if (defenseAdded && !gameManager.instance.animIsBlocking)
+        {
+            stats.modDefense -= 100;
+            defenseAdded = false;
         }
     }
 
@@ -103,11 +107,15 @@ public class MeleeWeaponDamage : MonoBehaviour
 
         if (!gameManager.instance.playerInputHandler.isCrouching)
         {
-            //animator.SetBool("isBlocking", false);
-            isBlocking = false;
             stats.modDefense -= 100;
+            Debug.Log("Cancel Block");
+            
+            gameManager.instance.playerAnimator.animator.SetBool("blocking", false);
+            gameManager.instance.animIsBlocking = false;
             defenseAdded = false;
         }
+
+
     }
 
     void OnDrawGizmosSelected()
