@@ -38,9 +38,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
     [SerializeField] BaseSoundSO _lightning;
-    [SerializeField] BaseSoundSO _grunts;
-
-    private float soundRate;
+    [SerializeField] BaseSoundSO _ball_lightning;
 
     [Header("Weapon")]
     // may need multiple types of bullets so make another one if need be
@@ -68,8 +66,9 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
     [Header("Dash Attack")]
     [SerializeField] int dashCount;
+    [SerializeField] TrailRenderer trail;
     [Range(0.1f, 2f)][SerializeField] float dashAttackSpeed;
-    [Range(0.01f, 3f)][SerializeField] float dashInterval;
+    [Range(0.01f, 1f)][SerializeField] float dashInterval;
     [Range(80, 500)][SerializeField] int LDRotSpeed;
 
     [Header("Ball Lightning")]
@@ -79,35 +78,13 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
 
     [Header("Cooldowns")]
-    [Range(1f, 30f)][SerializeField] float attack1Cd;
-    [Range(1f, 30f)][SerializeField] public float attack2Cd;
-    [Range(1f, 30f)][SerializeField] public float attack3Cd;
+    [Range(1f, 20f)][SerializeField] float attack1Cd;
+    [Range(1f, 20f)][SerializeField] public float attack2Cd;
+    [Range(1f, 20f)][SerializeField] public float attack3Cd;
 
     private bool canAttack1;
     private bool canAttack2;
     private bool canAttack3;
-
-    [Header("Animation")]
-    [SerializeField] Animator animator;
-    [SerializeField] private float jumpAnimDelay = 0.3f;
-
-    private bool moving;
-    private bool jumping;
-    private bool attack1On;
-    private bool attack2On;
-    private bool attack3On;
-    private bool dead = false;
-
-    private readonly int playerDetected = Animator.StringToHash("playerDetected");
-    private readonly int isMoving = Animator.StringToHash("isMoving");
-    private readonly int isJumping = Animator.StringToHash("jumped");
-    private readonly int attack1 = Animator.StringToHash("attack1");
-    private readonly int attack2 = Animator.StringToHash("attack2");
-    private readonly int attack3 = Animator.StringToHash("attack3");
-    private readonly int isDash = Animator.StringToHash("dash");
-
-    [Header("Audio")]
-
 
     [Header("Don't touch unless debugging")]
     [SerializeField] List<int> Modifiers;
@@ -157,7 +134,6 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             exitPortal.SetActive(false);
         }
 
-        animator = GetComponentInChildren<Animator>();
 
         currentHealth = maxHealth;
 
@@ -175,10 +151,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         canAttack1 = true;
         canAttack2 = true;
         canAttack3 = true;
-
-
-        if(ballLightningEffect != null)
-            ballLightningEffect.Stop();
+        ballLightningEffect.Stop();
     }
 
     private void Update()
@@ -211,6 +184,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             {
                 case BossState.Rest:
                     Rest();
+
                     break;
 
                 case BossState.Attack1:
@@ -233,13 +207,10 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             }
         }
         // Debug.Log("Movement" + allowedMovement);
-        if (!isAttack2 && !isAttack1 && !isAttack3)
+        if (!isAttack2)
         {
-            attack2On = false;
             Movement();
         }
-
-        HandleAnimations();
     }
     private void FacePlayer()
     {
@@ -266,25 +237,16 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
         if (movementPos[pathPicker].transform.position == transform.position)
         {
-            if (pathPicker == 0)
-            {
-                pathPicker = 3;
-            }
-            else
-            {
-                pathPicker %= 3;
-            }
+            pathPicker %= 1;
         }
 
         end = movementPos[pathPicker].transform.position;
 
-        AudioManager.instance.PlaySoundFromSource(_grunts, gameObject);
-
         int willJump = Random.Range(1, 3);
+
         StartCoroutine(Turn(end, willJump));
 
         allowedMovement = false;
-
     }
 
     IEnumerator Turn(UnityEngine.Vector3 end, int willJump)
@@ -304,16 +266,10 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         switch (willJump)
         {
             case 1:    //not jumping
-                if (jumping == true)
-                    break;
-
                 Debug.Log("walking");
                 StartCoroutine(Moving(transform.position, end));
                 break;
             case 2:    //jumping
-                if (moving == true)
-                    break;
-
                 Debug.Log("jumping");
                 StartCoroutine(Jumping(transform.position, end));
                 break;
@@ -321,8 +277,6 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
     }
     IEnumerator Moving(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
     {
-
-        moving = true;
         float moveTime = 2f;
         float time = 0f;
 
@@ -334,15 +288,13 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         }
         transform.position = endPos;
         allowedAttack = true;
-        moving = false;
     }
     [SerializeField] int jumpHeight;
     IEnumerator Jumping(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
     {
-        jumping = true;
-        float moveTime = 1.8f;
+        float moveTime = 2f;
         float time = 0f;
-        yield return new WaitForSeconds(jumpAnimDelay);
+
         while (time < moveTime)
         {
             time += Time.deltaTime;
@@ -355,7 +307,6 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         }
         transform.position = endPos;
         allowedAttack = true;
-        jumping = false;
     }
 
     private void Rest()
@@ -377,7 +328,6 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
     IEnumerator attack2Cooldown()
     {
         allowedMovement = true;
-        canAttack2 = false;
         yield return new WaitForSeconds(attack2Cd);
         canAttack2 = true;
     }
@@ -398,25 +348,17 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         }
         if (!isAttack1)
         {
-            timer = Random.Range(1000, 1500);
-            AudioManager.instance.PlaySoundFromSource(_grunts, gameObject);
+            timer = Random.Range(500, 1000);
             isAttack1 = true;
-
         }
 
 
         Debug.Log("Attack 1");
         //attacks go here
 
-        if (totalStrikes > numStrikes && isAttack1)
+        if (totalStrikes > numStrikes)
         {
-            attack1On = true;
             StartCoroutine(LightningStrikes());
-        }
-
-        if (totalStrikes == numStrikes)
-        {
-            attack1On = false;
         }
 
 
@@ -428,6 +370,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             }
 
             currentState = BossState.Rest;
+            timer = -100;
             isAttack1 = false;
             canAttack1 = false;
             StartCoroutine(attack1Cooldown());
@@ -442,7 +385,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
     {
         numStrikes++;
 
-        yield return new WaitForSeconds(0.2f);
+
         Vector3 ranPos = transform.position + Random.insideUnitSphere * strikesAttackArea;
         ranPos.y = transform.position.y + 10f;
 
@@ -474,6 +417,8 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
         Destroy(warning, lightningDestroyTime);
         Destroy(lightning, lightningDestroyTime);
+
+
     }
 
     bool isAttack2 = false;
@@ -486,18 +431,17 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         }
         if (!isAttack2)
         {
-            timer = 1800;
-            AudioManager.instance.PlaySoundFromSource(_grunts, gameObject);
+            timer = 1500;
             isAttack2 = true;
         }
         Debug.Log("Attack 2");
 
-        if (timer >= 1799.6)
+        if (timer >= 1000)
         {
             StartCoroutine(LightningDash());
         }
 
-
+        timer = -100;
         if (timer < 0)
         {
             if (gun != null)
@@ -505,9 +449,9 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
                 gun.SetActive(false);
             }
 
-            attack2On = false;
             currentState = BossState.Rest;
-            isAttack2 = false;
+            timer = -100;
+            canAttack2 = false;
             StartCoroutine(attack2Cooldown());
         }
 
@@ -517,10 +461,9 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
     IEnumerator LightningDash()
     {
-
+        trail.enabled = true;
         for (int i = 0; i < dashCount; i++)
         {
-
             GameObject lightningStrike = Instantiate(lightningStrikes, transform.position, Quaternion.Euler(0, Random.Range(0, 360), 0));
             AudioManager.instance.PlaySoundAtPosition(_lightning, gameObject);
             Destroy(lightningStrike, lightningDestroyTime);
@@ -543,29 +486,27 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
                 }
             }
 
-
             yield return new WaitForSeconds(dashInterval);
-            attack2On = false;
-
-
         }
+
+        trail.enabled = false;
 
         int ranMove = Random.Range(0, movementPos.Count - 1);
         Vector3 pos = movementPos[ranMove].transform.position;
 
         yield return StartCoroutine(MoveIndependent(pos, 2f));
+
+        isAttack2 = false;
     }
 
     IEnumerator MoveIndependent(Vector3 dest, float moveTime)
     {
-
         yield return StartCoroutine(TurnIndependent(dest));
-        attack2On = true;
+
         Vector3 startingPosition = transform.position;
 
-        //yield return new WaitForSeconds(0.2f);
-
         float time = 0f;
+
         while (time < moveTime)
         {
             time += Time.deltaTime;
@@ -574,13 +515,11 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
             yield return null;
         }
-        attack2On = false;
 
         if (transform.position != dest)
         {
             transform.position = dest;
         }
-
     }
 
     IEnumerator TurnIndependent(Vector3 end)
@@ -611,18 +550,14 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         }
         if (!isAttack3)
         {
-            timer = 1000;
-            AudioManager.instance.PlaySoundFromSource(_grunts, gameObject);
+            timer = Random.Range(500, 1000);
             isAttack3 = true;
         }
         Debug.Log("Attack 3");
 
-        if (timer >= 999.5)
-        {
-            attack3On = true;
-            StartCoroutine(BallLightning());
-        }
+        StartCoroutine(BallLightning());
 
+        timer = -1;
 
         if (timer < 0)
         {
@@ -632,6 +567,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             }
 
             currentState = BossState.Rest;
+            timer = -100;
             isAttack3 = false;
             canAttack3 = false;
             StartCoroutine(attack3Cooldown());
@@ -653,9 +589,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
             randPos.y = transform.position.y;
 
             GameObject ball = Instantiate(ballLightning, randPos, Quaternion.Euler(0, Random.Range(0, 360), 0));
-
-            attack3On = false;
-
+            AudioManager.instance.PlaySoundFollowPosition(_ball_lightning, ball, ballDestroyTime);
             Destroy(ball, ballDestroyTime);
         }
     }
@@ -666,8 +600,6 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         {
             PlayerInTrigger = true;
             // model.material.color = Color.orange;
-            AudioManager.instance.PlaySoundFromSource(_grunts, gameObject);
-            animator.SetBool(playerDetected, true);
         }
     }
 
@@ -680,12 +612,12 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         }
         else if (timer < -100)
         {
-            timer = 1200;
+            timer = Random.Range(1, 1500); //1200
         }
 
         timer -= 1;
 
-        if (timer < -99 && allowedAttack)
+        if (timer < -100 && allowedAttack)
         {
             phasePicker = Random.Range(1, 4);
 
@@ -739,16 +671,13 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
         currentHealth -= amount;
 
 
-        if (currentHealth <= 0 && !dead)
+        if (currentHealth <= 0)
         {
-            dead = true;
             currentState = BossState.Dead;
             if (agent0 != null)
                 agent0.isStopped = true;
-            animator.SetBool("dead", true);
+
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
-
-
 
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
@@ -762,65 +691,12 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
                 exitPortal.SetActive(true);
             }
 
-            StartCoroutine(DeathAnimation());
+            Destroy(gameObject);
         }
         else
         {
             AudioManager.instance.PlaySoundAtPosition(_hit, gameObject);
             StartCoroutine(flashRed());
-        }
-    }
-    IEnumerator DeathAnimation()
-    {
-        
-        yield return new WaitForSeconds(3f);
-        Destroy(gameObject);
-    }
-    private void HandleAnimations()
-    {
-        if (currentState == BossState.Attack1)
-        {
-            animator.SetBool(attack1, true);
-        }
-        else
-        {
-            animator.SetBool(attack1, false);
-        }
-
-        if (attack2On)
-        {
-            animator.SetBool(attack2, true);
-        }
-        else
-        {
-            animator.SetBool(attack2, false);
-        }
-
-        if (attack3On)
-        {
-            animator.SetBool(attack3, true);
-        }
-        else
-        {
-            animator.SetBool(attack3, false);
-        }
-
-        if (moving)
-        {
-            animator.SetBool(isMoving, true);
-        }
-        else
-        {
-            animator.SetBool(isMoving, false);
-        }
-
-        if (jumping)
-        {
-            animator.SetBool(isJumping, true);
-        }
-        else
-        {
-            animator.SetBool(isJumping, false);
         }
     }
 

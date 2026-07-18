@@ -6,14 +6,13 @@ public class BallLightning : MonoBehaviour
     [SerializeField] int damage;
     [SerializeField] float damageRate;
     [SerializeField] float moveSpeed;
-    [SerializeField] BaseSoundSO _electric;
 
     private bool isDamaging;
     private bool isFollowing;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        AudioManager.instance.PlaySoundFollowPosition(_electric, gameObject, 10f);
+        
     }
 
     // Update is called once per frame

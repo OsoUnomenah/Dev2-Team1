@@ -24,7 +24,6 @@ TagManager:
   - LevelBuilder
   - SniperChargePanel
   - MiniMap
-  - NPCInteractUI
   layers:
   - Default
   - TransparentFX
@@ -37,8 +36,8 @@ TagManager:
   - Prop
   - Ceiling
   - Enemy
-  - Covers
-  - BossCover
+  - 
+  - 
   - 
   - 
   - 

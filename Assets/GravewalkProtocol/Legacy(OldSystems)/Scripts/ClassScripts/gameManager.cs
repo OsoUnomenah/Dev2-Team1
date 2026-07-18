@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,14 +15,6 @@ public class gameManager : MonoBehaviour
     public GameObject playerSpawnPos;
     public string hubLevel = "Hub";
     public string industrialLevel = "Industrial";
-    public string waterLevel = "Water";
-    public string freezeLevel = "Freeze";
-    public string fireLevel = "Fire";
-    public string lightningLevel = "Lightning";
-    public string crystalLevel = "Crystal";
-    public string toxicLevel = "Toxic";
-
-
 
 
     [SerializeField] public bool isDead = false;
@@ -281,8 +274,6 @@ public class gameManager : MonoBehaviour
         sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
         sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
         sniperChargePanel.SetActive(false);
-
-
 
 
 

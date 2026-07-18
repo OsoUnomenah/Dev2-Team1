@@ -308,6 +308,7 @@ GameObject:
   - component: {fileID: 1988061271454627460}
   - component: {fileID: 8767352652102691153}
   - component: {fileID: 6244831163943074190}
+  - component: {fileID: 5026195902953521926}
   m_Layer: 0
   m_Name: HammerPickUp Variant
   m_TagString: Untagged
@@ -348,7 +349,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 1f66b9b2ee407154a8d96812546de532, type: 2}
   model: {fileID: 6815104060422289132}
   highLight: {fileID: 2100000, guid: c710cc6be0eb67b4a9cb8cb6d5fd1bfb, type: 2}
-  animator: {fileID: 0}
+  animator: {fileID: 5026195902953521926}
   hasGeneratedMod: 0
   modDescriptions: []
   rolledDamage: 0
@@ -376,6 +377,28 @@ MonoBehaviour:
   hitPoint1: {fileID: 7330050767739471254}
   hitPoint2: {fileID: 397442802132232693}
   hitRadius: 0.52
+--- !u!95 &5026195902953521926
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112920000586998319}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ff774e250bfa5c44b9dc2eb3ed5e5e37, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4210025329519461469
 GameObject:
   m_ObjectHideFlags: 0
