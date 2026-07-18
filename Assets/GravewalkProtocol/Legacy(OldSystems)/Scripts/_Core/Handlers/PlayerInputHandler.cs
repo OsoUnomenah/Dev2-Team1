@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -944,6 +945,12 @@ public class PlayerInputHandler : MonoBehaviour
                             bulletEnd = hit.transform.position;
 
                             IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            
+                            if(dmg == null)
+                            {
+
+                                dmg = hit.collider.GetComponentInParent<IDamage>();
+                            }
                             if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
                                 switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)

@@ -2053,6 +2053,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationStateController
   animator: {fileID: 8045951916300142840}
+  hipsDisplaceTime: 0
+  hipsReturnTime: 0
+  hipsLeanDist: 0
+  hips: {fileID: 7026415171730192943}
 --- !u!95 &8045951916300142840
 Animator:
   serializedVersion: 7

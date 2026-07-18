@@ -18,6 +18,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     [SerializeField] BoxCollider fallingBombSpawnArea;
     [SerializeField] List<GameObject> movementPos;
     [SerializeField] private int rotateSpeed;
+    [SerializeField] private Animator animator;
 
     private NavMeshAgent agent0;
     public UnityEngine.UI.Slider healthbar;
@@ -95,7 +96,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     }
 
     private BossState currentState;
-    int phasePicker;
+    int phasePicker = 1;
 
     UnityEngine.Vector3 playerDir;
 
@@ -144,12 +145,21 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     IEnumerator NeedArmor()
     {
         mustArmor = false;
+        if(armorRoutine)
+        {
+            yield break;
+        }
 
         yield return new WaitForSeconds(50f);
 
-        mustArmor = true;
+        if (!isArmored)
+        {
+            mustArmor = true;
+            armorRoutine = false;
+        }
     }
     private bool mustArmor = false;
+    bool armorRoutine = false;
     private void Update()
     {
 
@@ -165,6 +175,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         }
         if (mustArmor)
         {
+            armorRoutine = true;
             StartCoroutine(NeedArmor());
         }
 
@@ -214,6 +225,15 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
             transform.rotation,
             target,
             rotateSpeed * Time.deltaTime);
+        float angle = Quaternion.Angle(transform.rotation, target);
+        if (angle > 1f)
+        {
+            animator.SetBool("Mutant Walking", true);
+        }
+        else
+        {
+            animator.SetBool("Mutant Walking", false);
+        }
     }
     private bool allowedMovement = false;
     private bool allowedAttack = true;
@@ -242,14 +262,17 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         UnityEngine.Quaternion target;
         target = UnityEngine.Quaternion.LookRotation(dir);
 
+        
         while (UnityEngine.Quaternion.Angle(transform.rotation, target) > 1f)
         {
+            animator.SetBool("Mutant Walking", true);
             transform.rotation = UnityEngine.Quaternion.RotateTowards(
                 transform.rotation,
                 target,
                 rotateSpeed * Time.deltaTime);
             yield return null;
         }
+        animator.SetBool("Mutant Walking", false);
         switch (willJump)
         {
             case 1:    //not jumping
@@ -267,6 +290,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         float moveTime = 2f;
         float time = 0f;
 
+        animator.SetBool("Mutant Walking", true);
         while (time < moveTime)
         {
             time += Time.deltaTime;
@@ -275,13 +299,15 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         }
         transform.position = endPos;
         allowedAttack = true;
+
+        animator.SetBool("Mutant Walking", false);
     }
     [SerializeField] int jumpHeight;
     IEnumerator Jumping(UnityEngine.Vector3 startPos, UnityEngine.Vector3 endPos)
     {
         float moveTime = 2f;
         float time = 0f;
-
+        animator.SetBool("Mutant Jumping", true);
         while (time < moveTime)
         {
             time += Time.deltaTime;
@@ -292,33 +318,51 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
 
             yield return null;
         }
+        animator.SetBool("Mutant Jumping", false);
         transform.position = endPos;
         allowedAttack = true;
     }
 
     private void Rest()
     {
+
+       // animator.SetTrigger("Mutant Breathing Idle");
         if (PlayerInTrigger)
         {
             currentState = BossState.Decide;
         }
     }
     bool isArmored = false;
-
+    bool brokenArmor = false;
     private void ArmoredUp()
     {
         Debug.Log("Attack 2");
-        if (isArmored)
+        if (armor.activeSelf)
         {
+            Debug.Log("leave method");
             currentState = BossState.Decide;
             return;
         }
         if (!armor.activeSelf)
         {
-            armor.SetActive(true);
+            Debug.Log("does method again");
             isArmored = true;
             canDamage = false;
             timer = -100;
+            animator.SetTrigger("Mutant Flexing Muscles");
+            armor.SetActive(true);
+            weakpoint1.SetActive(true);
+            weakpoint1.GetComponent<Weakpoints>().activateWeakpoint();
+
+            weakpoint2.SetActive(true);
+            weakpoint2.GetComponent<Weakpoints>().activateWeakpoint();
+
+            weakpoint3.SetActive(true);
+            weakpoint3.GetComponent<Weakpoints>().activateWeakpoint();
+
+            weakpoint4.SetActive(true);
+            weakpoint4.GetComponent<Weakpoints>().activateWeakpoint();
+            
         }
         if (!PlayerInTrigger)
         {
@@ -332,18 +376,9 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     {
         if (!weakpoint1.activeSelf && !weakpoint2.activeSelf && !weakpoint3.activeSelf && !weakpoint4.activeSelf)
         {
+            //Add Armor
             armor.SetActive(false);
-            weakpoint1.SetActive(true);
-            weakpoint1.GetComponent<Weakpoints>().activateWeakpoint();
-
-            weakpoint2.SetActive(true);
-            weakpoint2.GetComponent<Weakpoints>().activateWeakpoint();
-
-            weakpoint3.SetActive(true);
-            weakpoint3.GetComponent<Weakpoints>().activateWeakpoint();
-
-            weakpoint4.SetActive(true);
-            weakpoint4.GetComponent<Weakpoints>().activateWeakpoint();
+           brokenArmor = true;
 
             StartCoroutine(armorCooldown());
         }
@@ -351,14 +386,16 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     bool canDamage = true;
     IEnumerator armorCooldown()
     {
+        timer = -100;
         canDamage = true;
         yield return new WaitForSeconds(15f);
         isArmored = false;
-        
+        brokenArmor = false;
     }
     bool canBomb = true;
     IEnumerator BombCooldown()
     {
+        timer = -100;
         allowedMovement = true;
         yield return new WaitForSeconds(16f);
         canBomb = true;
@@ -366,6 +403,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     bool canFallBomb = true;
     IEnumerator FallBombCooldown()
     {
+        timer = -100;
         allowedMovement = true;
         yield return new WaitForSeconds(18f);
         canFallBomb = true;
@@ -433,6 +471,8 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
                 }
                 for (int i = 0; i < skyBombs.Count; i++)
                 {
+
+                    animator.SetTrigger("Mutant Swiping");
                     skyBombs[i].transform.position = skyAreas2[i].transform.position;
                     skyBombs[i].SetActive(true);
                 }
@@ -465,16 +505,20 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
             return;
         }
         if (attacking)
-        {
+        {            
             if (!isBombing)
             {
+                if (!allowedMovement)
+                {
+                    animator.SetTrigger("Mutant Rise");
+                }
                 allowedMovement = false;
                 isBombing = true;
                 StartCoroutine(BombPlacer());
 
             }
             timer -= Time.deltaTime;
-            Debug.Log("Timer: " + timer);
+           // Debug.Log("Timer: " + timer);
 
         }
         else
@@ -538,25 +582,37 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         {
             Rest();
         }
-        else if (timer == -100)
+        else if (phasePicker != 0)
         {
             timer = Random.Range(300, 1200); //1200
         }
 
 
         timer -= 1;
-
-        if (timer < 0)
+        //Debug.Log(timer);
+        if (timer <= 0)
         {
             phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
-            //phasePicker = 3;
+                                             //phasePicker = 3;
+            if (phasePicker == 2 && isArmored)
+            {
+                while (phasePicker != 2)
+                {
+                    phasePicker = Random.Range(1, 4);
+                }
+            }
+        }
+        else
+        {
+            phasePicker = 0;
         }
         if (mustArmor)
         {
             phasePicker = 2;
+            mustArmor = false;
         }
 
-        switch (phasePicker)
+        switch (phasePicker )
         {
             case 0:
                 break;
@@ -628,13 +684,19 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
                 laser[i].SetActive(false);
             }
 
-            Destroy(gameObject);
         }
         else
         {
             AudioManager.instance.PlaySoundAtPosition(_hit, gameObject);
             StartCoroutine(flashRed());
         }
+    }
+    IEnumerator Dying()
+    {
+
+        animator.SetBool("Mutant Dying", true);
+        yield return new WaitForSeconds(2);
+
     }
 
     IEnumerator flashRed()
