@@ -484,7 +484,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
             );
 
             ToxicProjectile projectile =
-                projectileObject.GetComponent<ToxicProjectile>();
+                projectileObject.GetComponentInChildren<ToxicProjectile>();
 
             if (projectile != null)
             {

@@ -22,7 +22,7 @@ public class ToxicProjectile : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, lifetime);
+        Destroy(transform.root.gameObject, lifetime);
     }
 
     private void Update()
@@ -32,24 +32,27 @@ public class ToxicProjectile : MonoBehaviour
             return;
         }
 
-        transform.position +=
-            moveDirection * moveSpeed * Time.deltaTime;
+        transform.root.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 
-    public void Launch(Vector3 targetPosition, Transform projectileOwner)
+    public void Launch(
+     Vector3 targetPosition,
+     Transform projectileOwner)
     {
         owner = projectileOwner;
 
-        moveDirection =
-            (targetPosition - transform.position).normalized;
+        Transform projectileRoot = transform.root;
+
+        moveDirection = (targetPosition - projectileRoot.position).normalized;
 
         if (moveDirection.sqrMagnitude <= 0.001f)
         {
-            Destroy(gameObject);
+            Destroy(projectileRoot.gameObject);
             return;
         }
 
-        transform.rotation = Quaternion.LookRotation(moveDirection);
+        projectileRoot.rotation = Quaternion.LookRotation(moveDirection);
+
         hasBeenLaunched = true;
     }
 
@@ -60,27 +63,15 @@ public class ToxicProjectile : MonoBehaviour
             return;
         }
 
-        Debug.Log(
-            $"Toxic projectile touched: {other.name} | " +
-            $"Layer: {LayerMask.LayerToName(other.gameObject.layer)}",
-            other.gameObject
-        );
-
         if (hasHitSomething)
         {
             return;
         }
 
-        bool isValidLayer =
-            (collisionLayers.value & (1 << other.gameObject.layer)) != 0;
+        bool isValidLayer = (collisionLayers.value & (1 << other.gameObject.layer)) != 0;
 
         if (!isValidLayer)
         {
-            Debug.LogWarning(
-                $"Projectile ignored {other.name} because its layer is not selected.",
-                other.gameObject
-            );
-
             return;
         }
 
@@ -88,23 +79,13 @@ public class ToxicProjectile : MonoBehaviour
 
         if (damageable == null)
         {
-            Debug.LogWarning(
-                $"Projectile hit {other.name}, but no IDamage component was found in its parents.",
-                other.gameObject
-            );
-
             return;
         }
 
         hasHitSomething = true;
 
-        Debug.Log(
-            $"Projectile is dealing {damage} damage to {other.name}.",
-            other.gameObject
-        );
-
         damageable.takeDamage(damage);
 
-        Destroy(gameObject);
+        Destroy(transform.root.gameObject);
     }
 }
