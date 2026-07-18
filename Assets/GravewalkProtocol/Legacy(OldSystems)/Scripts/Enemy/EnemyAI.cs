@@ -1,16 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR.Haptics;
-using UnityEngine.UIElements;
-using UnityEngine.UI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
+public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 {
-    
+
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int attackDamage = 10;
     [SerializeField] int xpGive = 100;
@@ -35,8 +31,20 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     [Header("Audio")]
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
-   
+    [SerializeField] BaseSoundSO _grunts;
+    [SerializeField] BaseSoundSO _attack;
+    [SerializeField] BaseSoundSO _footsteps;
+    [Range(5f, 25f)][SerializeField] float gruntRateMax;
+    [Range(1f, 20f)][SerializeField] float gruntRateMin;
+    [Range(0.01f, 2f)][SerializeField] float footStepInterval;
 
+    private float footstepTimer;
+    private float gruntRate;
+    private float gruntTimer;
+
+    [Header("Currency")]
+    [SerializeField] private int minCurrencyDrop = 1;
+    [SerializeField] private int maxCurrencyDrop = 3;
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
@@ -62,6 +70,11 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
     Color originalColor;
 
+    public bool IsFrozen
+    {
+        get { return isFroze; }
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
@@ -77,19 +90,19 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
         currentState = ZombieState.Wander;
         wanderTime = wanderTimer;
-       // gameManager.instance.updateGameGoal(1);
+        // gameManager.instance.updateGameGoal(1);
 
-
+        gruntRate = Random.Range(gruntRateMin, gruntRateMax);
     }
 
     private void Update()
     {
-        
+
         if (currentState == ZombieState.Dead)
             return;
-        if(!isFroze)
+        if (!isFroze)
         {
-            
+
             if (player == null)
             {
                 currentState = ZombieState.Wander;
@@ -128,8 +141,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
                         currentState = ZombieState.Chase;
                     }
                     break;
-
             }
+            PlayGrunt();
+            HandleFootsteps();
         }
         else
         {
@@ -141,14 +155,14 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     {
         wanderTime += Time.deltaTime;
 
-        if(wanderTime >= wanderTimer)
+        if (wanderTime >= wanderTimer)
         {
             Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * wanderRadius;
 
             randomDirection += transform.position;
 
             NavMeshHit hit;
-            if(NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
             }
@@ -165,6 +179,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
             lastHeardPosition = noisePosition;
             heardNoise = true;
 
+            AudioManager.instance.PlaySoundFollowPosition(_grunts, gameObject);
+
             Debug.Log("Zombie heard noise");
         }
     }
@@ -178,6 +194,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
             Debug.Log("Zombie Attack");
 
             IDamage damageable = gameManager.instance.playerStatHandler.GetComponentInChildren<IDamage>();
+
+            AudioManager.instance.PlaySoundAtPosition(_attack, gameObject);
 
             if (damageable != null)
             {
@@ -196,7 +214,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
         healthText.text = currentHealth + " / " + maxHealth;
         healthbar.value = (float)currentHealth / (float)maxHealth;
     }
-    
+
     IEnumerator updateDamageText()
     {
         damageText.text = ("DMG: " + gameManager.instance.playerDamageOut.ToString());
@@ -220,25 +238,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
         if (currentHealth <= 0)
         {
-            currentState = ZombieState.Dead;
-            isDead = true;
 
-            if (agent != null)
-                agent.isStopped = true;
-
-            AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
-
-            gameManager.instance.addXp(xpGive);
-
-            // ✅ NEW: wave system tracking (no Find calls)
-            if (WaveManager.instance != null)
-            {
-                WaveManager.instance.OnEnemyKilled();
-            }
-
-            RecticleBehaviour.OffHover();
-            isDead = true;
-            Destroy(gameObject);
+            Die();
         }
         else
         {
@@ -248,13 +249,53 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
         }
     }
 
+    private void Die()
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        currentState = ZombieState.Dead;
+        isDead = true;
+
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.enabled = false;
+        }
+
+        if (AudioManager.instance != null && _dead != null)
+        {
+            AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
+        }
+
+        if (gameManager.instance != null)
+        {
+            gameManager.instance.addXp(xpGive);
+
+            int currencyDrop = GetCurrencyDrop();
+            gameManager.instance.addCurrency(currencyDrop);
+        }
+
+        if (WaveManager.instance != null)
+        {
+            WaveManager.instance.Drop(transform);
+            WaveManager.instance.OnEnemyKilled();
+        }
+
+        RecticleBehaviour.OffHover();
+
+        Destroy(gameObject);
+    }
+
     IEnumerator flashRed()
     {
         model.material.color = Color.red;
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
     }
-    
+
 
     IEnumerator flashGreen()
     {
@@ -286,11 +327,58 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze
     {
         model.material.color = Color.blue;
         agent.isStopped = true;
-        
+
         yield return new WaitForSeconds(duration);
 
         model.material.color = originalColor;
         isFroze = false;
         agent.isStopped = false;
+    }
+
+    private int GetCurrencyDrop()
+    {
+        return UnityEngine.Random.Range(minCurrencyDrop, maxCurrencyDrop + 1);
+    }
+
+    public void Shatter()
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        Debug.Log("SHATTER CALLED ON: " + gameObject.name);
+
+        Die();
+    }
+
+    private void PlayGrunt()
+    {
+        gruntTimer += Time.deltaTime;
+
+        if (gruntTimer > gruntRate)
+        {
+            gruntTimer = 0;
+            AudioManager.instance.PlaySoundFollowPosition(_grunts, gameObject);
+        }
+    }
+
+    private void HandleFootsteps()
+    {
+        if (currentState != ZombieState.Chase && currentState != ZombieState.Wander)
+        {
+            footstepTimer = 0;
+            return;
+        }
+
+
+        footstepTimer += Time.deltaTime;
+
+        if (footstepTimer >= footStepInterval)
+        {
+            AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
+            footstepTimer = 0;
+        }
+
     }
 }

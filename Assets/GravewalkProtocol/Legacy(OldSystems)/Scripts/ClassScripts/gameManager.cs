@@ -8,11 +8,32 @@ using UnityEngine.UI;
 public class gameManager : MonoBehaviour
 {
     public static gameManager instance;
+    [SerializeField] GameObject levelBuilder;
+    [SerializeField] LevelBuilder lb;
+    [SerializeField] bool levelStarted = false;
+    public GameObject playerSpawnPos;
+    public string hubLevel = "Hub";
+    public string industrialLevel = "Industrial";
+    public string waterLevel = "Water";
+    public string freezeLevel = "Freeze";
+    public string fireLevel = "Fire";
+    public string lightningLevel = "Lightning";
+    public string crystalLevel = "Crystal";
+    public string toxicLevel = "Toxic";
+
+
+
+
+    [SerializeField] public bool isDead = false;
 
     [SerializeField] public bool gameDebug;
     public TMP_Text objectiveText;
 
     public GameEvent onPlayerHealthChange;
+
+    public GameObject reticle;
+    public GameObject shotgunReticle;
+    public GameObject currentWeaponUI;
 
     [Header("XP Config")]
     public Slider xpBar;
@@ -26,11 +47,24 @@ public class gameManager : MonoBehaviour
     [Range(1, 100)][SerializeField] public float level;
     [Range(1, 1000)][SerializeField] public float maxLevel;
     [Range(1, 1000)][SerializeField] public float xp;
+
     public float currentXP;
     public float xpSource;
     [SerializeField] public float xpToNextLevel;
     [Range(0, 1)][SerializeField] public float xpGain;
     public float currentLevel;
+
+    [Header("Ability Proc Config")] //kw
+    [SerializeField] private float baseAbilityProcChance = 0.10f;
+    [SerializeField] private float abilityProcChancePerUpgrade = 0.02f;
+    [SerializeField] private float maxAbilityProcChance = 0.75f;
+    public float abilityProcChance;
+    public float abilityDamageBonus = 0f;
+
+    [Header("Persistent Weapon Upgrades")] //kw
+    [SerializeField] private int bonusMaxAmmo;
+    public int BonusMaxAmmo => bonusMaxAmmo; //kw
+
 
     [Header("Menu Config")]
     [SerializeField] GameObject menuActive;
@@ -38,6 +72,14 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
+    public int levelUpSlots = 1;
+
+    [Header("Run Outcome UI")]
+    [SerializeField] private RunOutcomeUI runOutcomeUI;
+
+    [Header("Run Completion")]
+    [SerializeField] private int bossesNeededToWinRun = 7;
+    [SerializeField] private bool finalBossDefeated;
 
     [SerializeField] public GameObject playerDamageFlash;
     [SerializeField] public GameObject playerHealFlash;
@@ -47,16 +89,18 @@ public class gameManager : MonoBehaviour
     [SerializeField] public float reloadTime;
     [SerializeField] public float reloadMax;
     [SerializeField] public TextMeshProUGUI interactText;
+    [SerializeField] public TextMeshProUGUI chestBuy;
+    [SerializeField] public TMP_Text currentWeaponModText;
     public bool isPaused;
     public bool isLevelingUp;
 
     public TMP_Text waveText;
 
     [Header("Sprint Config")]
-    public bool SprintTriggered;
-    public bool canSprint;
-    public bool isSprinting;
-    public int sprintCost;
+    public bool dashTriggered;
+    public bool canDash;
+    public bool isDashing;
+    public int dashCost;
 
     [Header("Player References")]
     [SerializeField] public GameObject player;
@@ -67,8 +111,14 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerWeaponManager playerWeaponManager;
     [SerializeField] public Transform playerTransform;
     [SerializeField] public Players playerInteract;
+    [SerializeField] public PlayerAnimationStateController playerAnimator;
+    [SerializeField] public GameObject playerMiniMap;
 
-    public GameObject playerSpawnPos;
+    [Header("Charged Shot UI")]
+    [SerializeField] public GameObject sniperChargePanel;
+    [SerializeField] public Slider sniperChargeSlider;
+    [SerializeField] public TMP_Text sniperChargeText;
+    [SerializeField] public GameObject sniperRechargeText;
 
     [SerializeField] public AbilityUI abilityUI;
     public bool allowedAbility1 = true;
@@ -77,10 +127,23 @@ public class gameManager : MonoBehaviour
     public bool allowedAbility4 = true;
     [SerializeField] public int firePos = -1;
     [SerializeField] public int freezePos = -1;
-    [SerializeField] public int bouncePos = -1;
-    [SerializeField] public int zoomPos = -1;
-    public GameObject pad;
-    public ParticleSystem bounceeffect;
+    [SerializeField] public int magnetPos = -1;
+    [SerializeField] public int toxicPos = -1;
+    [SerializeField] public int crystalPos = -1;
+    [SerializeField] public int lightningPos = -1;
+
+    [Header("Currency")]
+    [SerializeField] private int currentCurrency;
+
+    public int CurrentCurrency => currentCurrency;
+    public TMP_Text currencyText;
+
+    [Header("Run Stats")]
+    [SerializeField] private int runKills;
+    [SerializeField] private int runBossesDefeated;
+    [SerializeField] private int runCurrencyEarned;
+    [SerializeField] private int runXpEarned;
+    private float runStartTime;
 
     float timeScaleOrig;
     int gameGoalCount;
@@ -88,13 +151,20 @@ public class gameManager : MonoBehaviour
     public float recoil;
     public bool canShoot;
     public bool isShooting;
+    public bool isMeleeing;
+    public bool canMelee;
     public bool isReloading;
     public bool isAiming;
     public int enemyDamageOut;
     public int playerDamageOut;
 
+    //animation variables
+    public bool animIsMeleeing;
+    public bool animIsBlocking;
+
     [Header("Roguelite Run Config")]
     public int runZone = 1;
+    public bool isProceduralLevel;
 
     [Header("Win Config")]
     public Button nextLevelButton;
@@ -110,19 +180,77 @@ public class gameManager : MonoBehaviour
         CacheTimeScale();
         GetPlayerReferences();
         UpdateXPUI();
+        UpdateCurrencyUI();
+        abilityProcChance = baseAbilityProcChance; //kw
         abilityUI = FindAnyObjectByType<AbilityUI>();
-        playerSpawnPos = GameObject.FindGameObjectWithTag("PlayerSpawnPos");
+        if (isProceduralLevel)
+        {
+            InitLevelBuilder();
+        }
+
+        runStartTime = Time.time;
     }
 
     private void Start()
     {
+
         if (nextLevelButton != null)
         {
             nextLevelButton.onClick.AddListener(NextLevel);
         }
-        //set player initial spawn point
-        //playerTransform.position = playerSpawnPoint.transform.position;
+
         menuWin.SetActive(false);
+
+        ChooseLevel();
+
+    }
+
+    public void InitLevelBuilder()
+    {
+        playerSpawnPos = GameObject.Find("PlayerSpawnPos");
+        levelBuilder = GameObject.FindGameObjectWithTag("LevelBuilder");
+        lb = levelBuilder.GetComponentInChildren<LevelBuilder>();
+
+    }
+
+    public void ChooseLevel()
+    {
+        if (!levelStarted)
+        {
+            StartNewLevel();
+
+        }
+        else
+        {
+            RestartLevel();
+        }
+
+    }
+
+    public void StartNewLevel()
+    {
+        //If first time starting a levl in this scene, generate a random level
+        //Generate Random Level for current scene
+        if (levelBuilder != null)
+        {
+
+            levelBuilder.GetComponent<LevelBuilder>().GenerateRandom();
+            levelStarted = true;
+            if (lb.GetStartRoomCenterPos() != Vector3.zero)
+            {
+                playerSpawnPos.transform.position = lb.GetStartRoomCenterPos();
+                player.transform.position = playerSpawnPos.transform.position;
+            }
+        }
+    }
+
+    public void RestartLevel()
+    {
+        if (levelBuilder != null)
+        {
+            levelBuilder.GetComponent<LevelBuilder>().GenerateFromSeed();
+        }
+
     }
 
     private void InitGM()
@@ -145,6 +273,17 @@ public class gameManager : MonoBehaviour
         playerCamera = player.GetComponentInChildren<Camera>();
         playerTransform = player.GetComponent<Transform>();
         playerInteract = player.GetComponent<Players>();
+        playerAnimator = player.GetComponentInChildren<PlayerAnimationStateController>();
+
+        playerMiniMap = GameObject.FindGameObjectWithTag("MiniMap");
+
+        sniperChargePanel = GameObject.FindGameObjectWithTag("SniperChargePanel");
+        sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
+        sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
+        sniperChargePanel.SetActive(false);
+
+
+
 
 
         if (gameDebug)
@@ -157,21 +296,61 @@ public class gameManager : MonoBehaviour
             Debug.Log("PlayerCamera: " + playerCamera);
             Debug.Log("PlayerPosition: " + playerTransform.position);
         }
+
+
     }
 
-    // Update is called once per frame
     void Update()
     {
         //change xpGain value in inspector to adjust rate.
         //Need to be in update for level function until refactored to be event based instead of update based.
         PassiveXP();
+        chargeUI();
+
+        if (instance.playerWeaponManager.CurrentWeaponData != null && instance.playerWeaponManager.CurrentWeaponData.usesPellets)
+        {
+            instance.reticle.SetActive(false);
+            instance.shotgunReticle.SetActive(true);
+        }
+        else if (instance.shotgunReticle.activeSelf)
+        {
+            instance.reticle.SetActive(true);
+            instance.shotgunReticle.SetActive(false);
+        }
+    }
+
+    private bool isRecharging = false;
+    float rechargerTimer;
+
+    private void chargeUI()
+    {
+
+        if (!instance.playerInputHandler.isChargingShot && instance.playerInputHandler.chargedShotCooldownTimer > 0)
+        {
+            if (!isRecharging)
+            {
+                isRecharging = true;
+                rechargerTimer = instance.playerInputHandler.chargedShotCooldownTimer;
+                sniperChargePanel.SetActive(true);
+                sniperRechargeText.SetActive(true);
+            }
+            float chargePercent = instance.playerInputHandler.chargedShotCooldownTimer / rechargerTimer;
+            chargePercent = Mathf.Clamp01(chargePercent);
+            sniperChargeSlider.value = chargePercent;
+        }
+        else if (!instance.playerInputHandler.isChargingShot)
+        {
+            isRecharging = false;
+            sniperChargePanel.SetActive(false);
+            sniperRechargeText.SetActive(false);
+        }
     }
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
-        if (firePos != -1 && freezePos != -1 && bouncePos != -1 && zoomPos != -1)
+        if (instance.playerWeaponManager.abilities.Count == 4)
         {
-            Debug.LogError("Does not Run");
+            // Debug.LogError("Does not Run");
             return;
         }
         {
@@ -179,28 +358,40 @@ public class gameManager : MonoBehaviour
 
             if (slot == null) return;
 
-            if (slot.abilityType == 1)
+            if (slot.abilityType == AbilityStats.ability.fire)
             {
                 firePos = instance.playerWeaponManager.abilitySlot;
                 //Debug.LogError("FIRE");
                 return;
             }
-            if (slot.abilityType == 2)
+            if (slot.abilityType == AbilityStats.ability.freeze)
             {
                 freezePos = instance.playerWeaponManager.abilitySlot;
                 //Debug.LogError("FREEZE");
                 return;
             }
-            if (slot.abilityType == 3)
+            if (slot.abilityType == AbilityStats.ability.magent)
             {
-                bouncePos = instance.playerWeaponManager.abilitySlot;
-                //Debug.LogError("BOUNCE");
+                magnetPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("MAGNET");
                 return;
             }
-            if (slot.abilityType == 4)
+            if (slot.abilityType == AbilityStats.ability.toxic)
             {
-                zoomPos = instance.playerWeaponManager.abilitySlot;
-                //Debug.LogError("ZOOM");
+                toxicPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("TOXIC");
+                return;
+            }
+            if (slot.abilityType == AbilityStats.ability.crystal)
+            {
+                crystalPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("CRYSTAL");
+                return;
+            }
+            if (slot.abilityType == AbilityStats.ability.lightning)
+            {
+                lightningPos = instance.playerWeaponManager.abilitySlot;
+                //Debug.LogError("LIGHTNING");
                 return;
             }
             Debug.LogError("Found None");
@@ -295,7 +486,7 @@ public class gameManager : MonoBehaviour
 
     public void addXp(int amount)
     {
-
+        runXpEarned += amount;
         currentXP += amount;
         UpdateXPUI();
     }
@@ -328,8 +519,8 @@ public class gameManager : MonoBehaviour
         //Currently a kill all enemies goal, will be expanded on in the future
         gameGoalCount += amount;
         UpdateObjectiveTextUI();
-       
-        if(gameGoalCount <= 0)
+
+        if (gameGoalCount <= 0)
         {
             Debug.Log("Boss Degeated - Open Portal");
         }
@@ -337,6 +528,13 @@ public class gameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
+
+        if (shop != null && shop.IsShopOpen()) //kw
+        {
+            return;
+        }
+
         if (menuActive == null)
         {
             if (LevelUpUI.Instance != null)
@@ -374,16 +572,29 @@ public class gameManager : MonoBehaviour
         Time.timeScale = timeScaleOrig;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        menuActive.SetActive(false);
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+        }
         menuActive = null;
     }
 
     public void WinGame()
     {
+        if (runOutcomeUI != null)
+        {
+            runOutcomeUI.ShowWinScreen();
+            return;
+        }
+
         statePause();
 
         menuActive = menuWin;
-        menuActive.SetActive(true);
+
+        if (menuActive != null)
+        {
+            menuActive.SetActive(true);
+        }
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
@@ -391,9 +602,20 @@ public class gameManager : MonoBehaviour
 
     public void youLose()
     {
+        if (runOutcomeUI != null)
+        {
+            runOutcomeUI.ShowLossScreen();
+            return;
+        }
+
         statePause();
+
         menuActive = menuLose;
-        menuActive.SetActive(true);
+
+        if (menuActive != null)
+        {
+            menuActive.SetActive(true);
+        }
     }
 
     public void back()
@@ -429,26 +651,14 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
-        characterController.transform.position = gameManager.instance.playerSpawnPos.transform.position;
+        isDead = false;
+        player.transform.position = playerSpawnPos.transform.position;
+        playerInputHandler.enabled = true;
+
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
-    }
-    private bool isBounceDest = false;
-    public IEnumerator bounceDestroy()
-    {
-        if (!isBounceDest)
-        {
-            isBounceDest = true;
-            yield return new WaitForSeconds(gameManager.instance.playerWeaponManager.abilities[gameManager.instance.bouncePos].effectTimer);
-            Destroy(gameManager.instance.pad);
-            Destroy(gameManager.instance.bounceeffect);
-            isBounceDest = false;
-            gameManager.instance.allowedAbility3 = false;
-            instance.greyedOut(instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer, instance.bouncePos);
-            StartCoroutine(instance.playerInputHandler.bounceCooldown(gameManager.instance.playerWeaponManager.abilities[instance.bouncePos].effectTimer));
-        }
-        
+
     }
 
     public void NextLevel()
@@ -462,4 +672,116 @@ public class gameManager : MonoBehaviour
             SceneManager.LoadScene(nextScene);
         }
     }
+
+    public void addCurrency(int amount)
+    {
+        runCurrencyEarned = +amount;
+        currentCurrency += amount;
+        UpdateCurrencyUI();
+    }
+
+    public bool SpendCurrency(int amount) //kw
+    {
+        if (currentCurrency < amount)
+            return false;
+
+        currentCurrency -= amount;
+        UpdateCurrencyUI();
+        return true;
+    }
+
+    private void UpdateCurrencyUI()
+    {
+        if (currencyText != null)
+        {
+            currencyText.text = "Currency: " + currentCurrency;
+        }
+    }
+
+    public void AddRunKill()
+    {
+        runKills++;
+    }
+
+    public void AddRunBossDefeated()
+    {
+        runBossesDefeated++;
+    }
+
+    private string GetFormattedRunTime()
+    {
+        float runTime = Time.time - runStartTime;
+
+        int minutes = Mathf.FloorToInt(runTime / 60f);
+        int seconds = Mathf.FloorToInt(runTime % 60f);
+
+        return minutes.ToString("00") + ":" + seconds.ToString("00");
+    }
+
+    public string GetRunStatsText(string outcomeText)
+    {
+        string stats = "";
+
+        stats += "Outcome: " + outcomeText + "\n";
+        stats += "Time: " + GetFormattedRunTime() + "\n";
+        stats += "Kills: " + runKills + "\n";
+        stats += "Bosses Defeated: " + runBossesDefeated + "\n";
+        stats += "Currency Earned: " + runCurrencyEarned + "\n";
+        stats += "XP Earned: " + runXpEarned + "\n";
+        stats += "Final Level: " + level;
+
+        return stats;
+    }
+
+    public void RegisterBossDefeated()
+    {
+        AddRunBossDefeated();
+
+        if (runBossesDefeated >= bossesNeededToWinRun)
+        {
+            finalBossDefeated = true;
+            WinGame();
+        }
+        else
+        {
+            Debug.Log("Level boss defeated. Open portal to next level.");
+            //activate portal / unlock exit
+        }
+    }
+
+    public void IncreaseAbilityProcChance() //kw
+    {
+        abilityProcChance += abilityProcChancePerUpgrade;
+        abilityProcChance = Mathf.Clamp(abilityProcChance, 0f, maxAbilityProcChance);
+        UpgradeUI.instance.RefreshAllUI();
+    }
+
+    public float GetAbilityProcChancePercent() //kw
+    {
+        return abilityProcChance * 100f;
+    }
+
+
+    public void AddMaxAmmoBonus(int amount) //kw
+    {
+        bonusMaxAmmo += amount;
+    }
+
+    public void DisableMiniMap()
+    {
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.SetActive(false);
+        }
+    }
+
+    public void EnableMiniMap()
+    {
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.SetActive(true);
+        }
+    }
+
+
 }

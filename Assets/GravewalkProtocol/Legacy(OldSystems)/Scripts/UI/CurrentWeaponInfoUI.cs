@@ -5,8 +5,9 @@ public class CurrentWeaponInfoUI : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text infoText;
+    public  TMP_Text infoText2 => infoText;
     [SerializeField] private PlayerWeaponManager weaponManager;
-
+    private bool tabHeld = false;
     private void Start()
     {
         if (weaponManager == null)
@@ -31,10 +32,12 @@ public class CurrentWeaponInfoUI : MonoBehaviour
         {
             infoText.text = weaponManager.GetCurrentWeaponInfoText();
             panel.SetActive(true);
+            tabHeld = true;
         }
-        else
+        else if (tabHeld == true)
         {
             panel.SetActive(false);
+            tabHeld = false;
         }
     }
 }

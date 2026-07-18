@@ -48,7 +48,7 @@
                     "id": "9b64a38b-a17e-4a44-a09a-f483d9baf7d2",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.5),Tap",
                     "initialStateCheck": false
                 },
                 {
@@ -82,6 +82,24 @@
                     "name": "ADS",
                     "type": "Button",
                     "id": "e48a38ac-e443-4192-b6b4-54faa6bec1b4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "2f2bd4f0-4379-45c0-bdc3-0ea7a39c6d8d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Shop",
+                    "type": "Button",
+                    "id": "cb5e2195-27f1-4df3-9f38-2d440c5a3d4a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -269,7 +287,7 @@
                     "name": "",
                     "id": "bcacd4bf-e96f-49db-bfde-2662316cda9d",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Hold(duration=0.5),Tap",
                     "processors": "",
                     "groups": ";Keyboard and Mouse",
                     "action": "Shoot",
@@ -372,6 +390,50 @@
                     "processors": "",
                     "groups": ";Keyboard and Mouse",
                     "action": "ADS",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7342f360-fc12-4d83-9162-39e0b8f34bda",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "42a864cd-4f9f-42fc-b57b-dc89cd093c04",
+                    "path": "<Gamepad>/rightStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "85883916-0012-4419-b7fc-3bb30b15e2e2",
+                    "path": "<Keyboard>/#(`)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "928dfc08-18dc-48c6-930f-443a789cc980",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

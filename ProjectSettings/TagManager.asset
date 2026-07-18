@@ -21,6 +21,10 @@ TagManager:
   - PlayerSpawnPos
   - PlayerSpawnPoint
   - Portal
+  - LevelBuilder
+  - SniperChargePanel
+  - MiniMap
+  - NPCInteractUI
   layers:
   - Default
   - TransparentFX
@@ -32,9 +36,9 @@ TagManager:
   - Environment
   - Prop
   - Ceiling
-  - 
-  - 
-  - 
+  - Enemy
+  - Covers
+  - BossCover
   - 
   - 
   - 

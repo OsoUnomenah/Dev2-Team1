@@ -46,9 +46,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
   turnOnDebug: 1
   walkSpeed: 3
-  sprintSpeed: 3
-  sprintMultiplier: 2
   acceleration: 20
+  dashCd: 1
+  dashSpeed: 1
+  dashAttackSpeed: 1
+  dashTime: 0.05
+  dashFOVMod: 0
+  gunFreezeChance: 0.25
+  gunFreezeCooldown: 0.15
+  meleeFreezeCooldown: 3
+  defaultFreezeDuration: 2
+  chainLightning: {fileID: 0}
+  chainSpeed: 0
+  chainDmg: 1
+  crouchSpeed: 1.5
+  crouchHeight: 1
+  crouchTransitionSpeed: 10
+  ceilingCheckRadius: 0.3
+  ceilingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  isCrouching: 0
   currentMovement: {x: 0, y: 0, z: 0}
   currentSpeed: 0
   mouseSensitivity: 0.5
@@ -60,8 +78,26 @@ MonoBehaviour:
   ignoreSource:
     serializedVersion: 2
     m_Bits: 8
+  heavyAttackRadius: 4
+  aoeDelay: 0.5
+  dashAttackDelay: 0.5
+  dashAttackTriggered: 0
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isChargingShot: 0
+  currentChargeTime: 0
+  chargedShotCooldownTimer: 0
+  sniperChargePanel: {fileID: 0}
+  sniperChargeSlider: {fileID: 0}
+  sniperChargeText: {fileID: 0}
   _shoot: {fileID: 0}
   _footsteps: {fileID: 11400000, guid: 03493be87f5eab645b1caba8b7b91ca4, type: 2}
+  _dash: {fileID: 0}
+  jumpSound: {fileID: 0}
+  landSound: {fileID: 0}
+  crouchSound: {fileID: 0}
+  standSound: {fileID: 0}
   _dryFire: {fileID: 11400000, guid: afbcd5a775c6f5a4b84c01fc62726967, type: 2}
   footstepBaseInterval: 0.4
   footstepSprintInterval: 0.6
