@@ -3,6 +3,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -127,7 +129,7 @@ public class PlayerInputHandler : MonoBehaviour
     private PlayerActions playerActions; // Reference to the generated input actions class
 
     private InputAction moveAction;
-    private InputAction rotateAction;
+    public InputAction rotateAction;
     private InputAction jumpAction;
     private InputAction dashAction;
     private InputAction crouchAction;
@@ -558,6 +560,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         Physics.IgnoreLayerCollision(playerLayer, enemyLayer, false);
 
+        gameManager.instance.dashTriggered = false;
         gameManager.instance.playerCamera.fieldOfView -= dashFOVMod;
         gameManager.instance.isDashing = false;
     }
@@ -574,8 +577,6 @@ public class PlayerInputHandler : MonoBehaviour
             StartCoroutine(Dash());
             gameManager.instance.playerStatHandler.HandleStamina();
         }
-
-        gameManager.instance.dashTriggered = false;
     }
 
     private Vector3 CalculateWorldDirection()
@@ -944,6 +945,12 @@ public class PlayerInputHandler : MonoBehaviour
                             bulletEnd = hit.transform.position;
 
                             IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            
+                            if(dmg == null)
+                            {
+
+                                dmg = hit.collider.GetComponentInParent<IDamage>();
+                            }
                             if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
                                 switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
@@ -1729,12 +1736,30 @@ public class PlayerInputHandler : MonoBehaviour
 
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
+    private float crystalbaruinum;
     private void CrystalShot(IDamage dmg, RaycastHit hit)
     {
         if (dmg != null)
         {
             gameManager.instance.playerStatHandler.crystalBar += 1;
+
+            ParticleSystem crystalEffect = Instantiate(gameManager.instance.playerWeaponManager.crystalHit, hit.point, Quaternion.identity);
+            float effectScale = 0.5f;
+
+            if (gameManager.instance.playerWeaponManager.crystalHit != null && gameManager.instance.playerStatHandler.crystalBar > 9)
+            {
+                effectScale = 2f;              
+            }
+            crystalEffect.transform.localScale = Vector3.one * effectScale;
+
+            if (gameManager.instance.playerStatHandler.crystalBar > 9)
+            {
+                gameManager.instance.crystalBarUI.GetComponentInChildren<Slider>().value = 0 / 9f;
+                return;
+            }
+            gameManager.instance.crystalBarUI.GetComponentInChildren<Slider>().value = gameManager.instance.playerStatHandler.crystalBar / 9f;
         }
+
     }
     public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
     {

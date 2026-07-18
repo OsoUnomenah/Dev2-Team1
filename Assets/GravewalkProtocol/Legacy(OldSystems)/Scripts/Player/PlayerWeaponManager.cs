@@ -7,6 +7,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private WeaponData currentWeaponData;
     [SerializeField] private string currentWeaponName;
     [SerializeField] private List<string> currentWeaponMods = new List<string>();
+    [SerializeField] Collider weaponCollider;
 
     [Header("Shotgun Settings")]
     public bool UsesPellets;
@@ -55,10 +56,11 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int freezePos;
     private int magnetPos;
     private int toxicPos;
-    private int crystalPos;
+    private int crystalPos = -100;
     private int lightningPos;
     [SerializeField] public GameObject bouncePad;
     [SerializeField] public SphereCollider magnetField;
+    public ParticleSystem crystalHit;
 
     // Ability Settings
     public int fireLevel;
@@ -79,6 +81,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     void Start()
     {
         playerAnimator = gameManager.instance.playerAnimator.animator;
+        gameManager.instance.crystalBarUI.SetActive(false);
     }
 
     void Update()
@@ -255,7 +258,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         if (weaponPrefab != null && weaponHolder != null)
         {
-            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);       
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);  
+            
+            weaponCollider = weaponCurrent.GetComponentInChildren<Collider>();
+            weaponCollider.enabled = false;
 
             if (abilities != null && abilitySlot >= 0 && abilitySlot < abilities.Count)
             {
@@ -267,6 +273,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             UpgradeUI.instance.RefreshAllUI();
         }
+
 
     }
 
@@ -358,7 +365,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityModel.SetActive(false);
         }
 
-        ApplyAbilityEffectToCurrentWeapon(stats);
+       
+
+            ApplyAbilityEffectToCurrentWeapon(stats);
     }
 
     private void ApplyAbilityEffectToCurrentWeapon(AbilityStats stats)
@@ -394,6 +403,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         activeEffect.transform.localPosition = Vector3.zero;
         activeEffect.transform.localRotation = Quaternion.identity;
         activeEffect.Play();
+
+
     }
 
     void abilitySwitch()
@@ -420,6 +431,20 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             abilityEquip(abilities[3]);
             abilitySlot = 3;
+        }
+
+        if (abilities.Count <= 0)
+        {
+            return;
+        }
+
+        if (abilities[abilitySlot].abilityName == "Crystal")
+        {
+            gameManager.instance.crystalBarUI.SetActive(true);
+        }
+        else
+        {
+            gameManager.instance.crystalBarUI.SetActive(false);
         }
     }
 }

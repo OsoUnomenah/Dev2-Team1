@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e28b69a4aae81e44b6e3d580d47c794, type: 3}
+  m_Name: LightningTS
+  m_EditorClassIdentifier: Assembly-CSharp::Tileset
+  wallColor: {r: 0, g: 0, b: 0, a: 0}
+  tiles:
+  - variants:
+    - {fileID: 7789168490534836811, guid: b94e20c69ac021448a1cad4a979ecd8a, type: 3}
+  - variants:
+    - {fileID: 2627308632551542633, guid: 68e7648262bfe5c41b67a9bef14b7998, type: 3}
+  - variants:
+    - {fileID: 731177936723666269, guid: f7d29e6e155c9b5469e62adda64026c8, type: 3}
+  - variants:
+    - {fileID: 3011273507115613079, guid: bac2f1fc161e438429179e5731a3f690, type: 3}
+  - variants:
+    - {fileID: 2131981556007433304, guid: a3985631de34d7d44b768a0fb4a826f2, type: 3}
+  - variants:
+    - {fileID: 4261125625150530255, guid: c8fa428fcea830949b42f90f8556bd3a, type: 3}
+  - variants:
+    - {fileID: 8078081293530894429, guid: 1ed2d083564d90445b89a2f49a6a9a8b, type: 3}
+  - variants:
+    - {fileID: 284876653388168075, guid: d8ecfcd08e987784cbf02f844661c520, type: 3}
+  - variants:
+    - {fileID: 1938480984188380403, guid: 2da6816d9e42bd945a83a8416a92a667, type: 3}
+  - variants:
+    - {fileID: 3642764071805109764, guid: 6274cde7887774848b267c17fc15b9b1, type: 3}
+  - variants:
+    - {fileID: 3983300028738610258, guid: 2ef12c6e56f32d04a860e6da55465d81, type: 3}
+  - variants:
+    - {fileID: 604544354801811026, guid: 816a7061a31697f4d93e810bba191f63, type: 3}
+  - variants:
+    - {fileID: 5444318524681662089, guid: 95d1461474d69284d9f36a37eaa917e8, type: 3}
+  - variants:
+    - {fileID: 6250316529598319603, guid: 931dc4265367b9141a28cb232a2d812a, type: 3}
+  - variants:
+    - {fileID: 278547154481578061, guid: c02ea931e7cdfe24f8a4d041c2c95096, type: 3}
+  - variants:
+    - {fileID: 0}

@@ -46,8 +46,8 @@ public class PatternMatchingDecoratorRule : BaseDecoratorRule
         decoration.transform.eulerAngles = currentRotation + new Vector3(0, prefabRotation, 0);
         Vector3 center = new Vector3(occurrence.x + placement.Width / 2.0f, 0, occurrence.y + placement.Height / 2.0f);
         int scale = SharedLevelData.Instance.Scale;
-        decoration.transform.position = (center + new Vector3(-1, .3f, -1)) * scale;
-        decoration.transform.localScale = Vector3.one;// * scale;
+        decoration.transform.position = (center + new Vector3(-1, 0.15f, -1)) * scale;
+        decoration.transform.localScale = Vector3.one;
 
         PropVariationGenerator variationGenerator = decoration.GetComponent<PropVariationGenerator>();
         if (variationGenerator != null)

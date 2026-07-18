@@ -14,6 +14,14 @@ public class gameManager : MonoBehaviour
     public GameObject playerSpawnPos;
     public string hubLevel = "Hub";
     public string industrialLevel = "Industrial";
+    public string waterLevel = "Water";
+    public string freezeLevel = "Freeze";
+    public string fireLevel = "Fire";
+    public string lightningLevel = "Lightning";
+    public string crystalLevel = "Crystal";
+    public string toxicLevel = "Toxic";
+
+
 
 
     [SerializeField] public bool isDead = false;
@@ -65,6 +73,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
     public int levelUpSlots = 1;
+    public GameObject crystalBarUI;
 
     [Header("Run Outcome UI")]
     [SerializeField] private RunOutcomeUI runOutcomeUI;
@@ -273,6 +282,8 @@ public class gameManager : MonoBehaviour
         sniperChargeSlider = sniperChargePanel.GetComponentInChildren<Slider>();
         sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
         sniperChargePanel.SetActive(false);
+
+
 
 
 
