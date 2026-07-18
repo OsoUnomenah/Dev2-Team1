@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerAnimationStateController : MonoBehaviour
@@ -5,16 +6,22 @@ public class PlayerAnimationStateController : MonoBehaviour
     [SerializeField] public Animator animator;
 
     [Header("Animation Control")]
+    [Range(0f, 1f)][SerializeField] private float steveDisplaceTime = 0.1f;
+    [Range(0f, 1f)][SerializeField] private float steveReturnTime = 0.15f;
+    [Range(0f, 1f)][SerializeField] private float steveLeanDist = 0.01f;
     
+    [SerializeField] private Transform steve;
 
     private PlayerWeaponManager weaponManager;
 
     private int currentHits;
-    private float meleeTimer;
     private bool isRestPos;
+    private bool displacing;
+    private WeaponData currWeapon;
+
+
 
     // Hashes
-    private readonly int recoil = Animator.StringToHash("applyRecoil");
     private readonly int pistolUp = Animator.StringToHash("pistolPickedUp");
     private readonly int rifleUp = Animator.StringToHash("riflePickedUp");
     private readonly int shotgunUp = Animator.StringToHash("shotgunPickedUp");
@@ -26,6 +33,9 @@ public class PlayerAnimationStateController : MonoBehaviour
     private readonly int heavyAttackK = Animator.StringToHash("heavyHitK");
     private readonly int lightAttackH = Animator.StringToHash("isHittingH");
     private readonly int heavyAttackH = Animator.StringToHash("heavyHitH");
+    private readonly int isMoving = Animator.StringToHash("isMoving");
+    private readonly int jumped = Animator.StringToHash("jumped");
+    private readonly int pickedUp = Animator.StringToHash("pickedUp");
 
     void Start()
     {
@@ -41,9 +51,9 @@ public class PlayerAnimationStateController : MonoBehaviour
         }
 
 
-        HandleRecoil();
         HandleWeaponPickups();
         HandleLightAttackChaining();
+        HandleCharacterMovement();
     }
 
     private void OnMeleeAttackBegin()
@@ -63,72 +73,66 @@ public class PlayerAnimationStateController : MonoBehaviour
         isRestPos = true;
     }
 
-    private void HandleRecoil()
-    {
-        if (gameManager.instance.isShooting)
-        {
-            animator.SetBool(recoil, true);
-        }
-        else if(gameManager.instance.canShoot)
-        {
-            animator.SetBool(recoil, false);
-        }
-    }
-
     private void HandleWeaponPickups()
     {
-        if (weaponManager.CurrentWeaponName == "Pistol")
+        if (currWeapon == null && weaponManager.CurrentWeaponData || currWeapon != weaponManager.CurrentWeaponData)
         {
-            animator.SetBool(pistolUp, true);
-        }
-        else
-        {
-            animator.SetBool(pistolUp, false);
-        }
+            animator.SetBool(pickedUp, true);
+            currWeapon = weaponManager.CurrentWeaponData;
 
-        if (weaponManager.CurrentWeaponName == "Rifle")
-        {
-            animator.SetBool(rifleUp, true);
-        }
-        else
-        {
-            animator.SetBool(rifleUp, false);
-        }
+            if (weaponManager.CurrentWeaponName == "Pistol")
+            {
+                animator.SetBool(pistolUp, true);
+            }
+            else
+            {
+                animator.SetBool(pistolUp, false);
+            }
 
-        if (weaponManager.CurrentWeaponName == "Shotgun")
-        {
-            animator.SetBool(shotgunUp, true);
-        }
-        else
-        {
-            animator.SetBool(shotgunUp, false);
-        }
+            if (weaponManager.CurrentWeaponName == "Rifle")
+            {
+                animator.SetBool(rifleUp, true);
+            }
+            else
+            {
+                animator.SetBool(rifleUp, false);
+            }
 
-        if (weaponManager.CurrentWeaponName == "Sniper")
-        {
-            animator.SetBool(sniperUp, true);
-        }
-        else
-        {
-            animator.SetBool(sniperUp, false);
-        }
+            if (weaponManager.CurrentWeaponName == "Shotgun")
+            {
+                animator.SetBool(shotgunUp, true);
+            }
+            else
+            {
+                animator.SetBool(shotgunUp, false);
+            }
 
-        if (weaponManager.CurrentWeaponName == "Katana")
-        {
-            animator.SetBool(katanaUp, true);
-        }
-        else
-        {
-            animator.SetBool(katanaUp, false);
-        }
+            if (weaponManager.CurrentWeaponName == "Sniper")
+            {
+                animator.SetBool(sniperUp, true);
+            }
+            else
+            {
+                animator.SetBool(sniperUp, false);
+            }
 
-        if (weaponManager.CurrentWeaponName == "Hammer")
-        {
-            animator.SetBool(hammerUp, true);
-        }
-        else
-        {
-            animator.SetBool(hammerUp, false);
+            if (weaponManager.CurrentWeaponName == "Katana")
+            {
+                animator.SetBool(katanaUp, true);
+            }
+            else
+            {
+                animator.SetBool(katanaUp, false);
+            }
+
+            if (weaponManager.CurrentWeaponName == "Hammer")
+            {
+                animator.SetBool(hammerUp, true);
+            }
+            else
+            {
+                animator.SetBool(hammerUp, false);
+            }
         }
     }
 
@@ -197,5 +201,59 @@ public class PlayerAnimationStateController : MonoBehaviour
             currentHits = 0;
             animator.SetFloat(lightAttackHandler, 0);
         }
+    }
+
+    private void HandleCharacterMovement()
+    {
+
+        if (gameManager.instance.playerInputHandler.currentMovement.x != 0)
+        {
+            animator.SetBool(isMoving, true);
+        }
+        else if(gameManager.instance.playerInputHandler.currentMovement.x == 0)
+        {
+            animator.SetBool(isMoving, false);
+        }
+
+        if (gameManager.instance.playerInputHandler.currentMovement.y > 0.2f)
+        {
+            animator.SetBool(jumped, true);
+        }
+        else if(gameManager.instance.playerInputHandler.currentMovement.y < 0.2f)
+        {
+            animator.SetBool(jumped, false);
+        }
+
+        if (gameManager.instance.dashTriggered && !displacing)
+        {
+            displacing = true;
+            StartCoroutine(DashDisplacement());
+        }
+    }
+
+    IEnumerator DashDisplacement()
+    {
+        Vector3 hipOrigPos = steve.localPosition;
+        Vector3 dashDir = transform.InverseTransformDirection(gameManager.instance.playerInputHandler.currentMovement);
+        Vector3 targetPos = hipOrigPos - dashDir * steveLeanDist;
+
+        float timer = 0f;
+        while (timer < steveDisplaceTime)
+        {
+            timer += Time.deltaTime;
+            steve.localPosition = Vector3.Lerp(hipOrigPos, targetPos, timer / steveDisplaceTime);
+            yield return null;
+        }
+
+        timer = 0f;
+        while (timer < steveReturnTime)
+        {
+            timer += Time.deltaTime;
+            steve.localPosition = Vector3.Lerp(targetPos, hipOrigPos, timer / steveReturnTime);
+            yield return null;
+        }
+        
+        steve.localPosition = hipOrigPos;
+        displacing = false;
     }
 }
