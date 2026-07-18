@@ -42,11 +42,16 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     [Header("Animation")]
     [SerializeField] private Animator bossAnimator;
-    [SerializeField] private string idleState = "Idle1";
-    [SerializeField] private string flameSweepState = "attack1";
-    [SerializeField] private string magmaPodsState = "attack2";
-    [SerializeField] private string backlashState = "Rage";
-    [SerializeField] private string deathState = "Death1";
+    [SerializeField] private string idleState = "Base Layer.Idle1";
+    [SerializeField] private string moveState = "Base Layer.Run";
+    [SerializeField] private string jumpState = "Base Layer.Run";
+    [SerializeField] private string flameSweepState = "Base Layer.attack1";
+    [SerializeField] private string magmaPodsState = "Base Layer.attack2";
+    [SerializeField] private string backlashState = "Base Layer.Rage";
+    [SerializeField] private string deathState = "Base Layer.Death1";
+    [SerializeField] private string hitState = "Base Layer.gethit1";
+    [SerializeField] private float deathAnimationFallbackLength = 2.5f;
+    [SerializeField] private float deathExtraBuffer = 0.1f;
 
     [Header("Flame Sweep")]
     [SerializeField] private GameObject flameSweepPrefab;
@@ -93,7 +98,6 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
     private bool isPerformingAttack;
     private bool isInBacklash;
     private bool isFroze;
-    private bool heardNoise;
 
     private bool canAttack1 = true;
     private bool canAttack2 = true;
@@ -104,8 +108,8 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private int storedBacklashDamage;
     private float decisionTimer = 0f;
-    private Vector3 playerDir;
-    private Vector3 lastHeardPosition;
+    private bool isDying;
+    private bool attackEventFired;
 
     private enum BossState
     {
@@ -145,11 +149,8 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private void Update()
     {
-        if (currentState == BossState.Dead)
+        if (currentState == BossState.Dead || isDying)
             return;
-
-        if (gameManager.instance != null && gameManager.instance.player != null)
-            playerDir = gameManager.instance.player.transform.position - transform.position;
 
         updateHealthBar();
 
@@ -168,19 +169,15 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
                 case BossState.Rest:
                     Rest();
                     break;
-
                 case BossState.Decide:
                     Decide();
                     break;
-
                 case BossState.Attack1:
                     Attack1();
                     break;
-
                 case BossState.Attack2:
                     Attack2();
                     break;
-
                 case BossState.Attack3:
                     Attack3();
                     break;
@@ -198,14 +195,12 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private void FacePlayer()
     {
-        if (player == null)
-            return;
+        if (player == null) return;
 
         Vector3 dir = player.position - transform.position;
         dir.y = 0f;
 
-        if (dir.sqrMagnitude < 0.001f)
-            return;
+        if (dir.sqrMagnitude < 0.001f) return;
 
         Quaternion target = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, target, rotateSpeed * Time.deltaTime);
@@ -258,7 +253,6 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
             case 1:
                 StartCoroutine(Moving(transform.position, end));
                 break;
-
             case 2:
                 StartCoroutine(Jumping(transform.position, end));
                 break;
@@ -267,6 +261,8 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private IEnumerator Moving(Vector3 startPos, Vector3 endPos)
     {
+        PlayAnim(moveState);
+
         float moveTime = 2f;
         float time = 0f;
 
@@ -284,6 +280,8 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private IEnumerator Jumping(Vector3 startPos, Vector3 endPos)
     {
+        PlayAnim(jumpState);
+
         float moveTime = 2f;
         float time = 0f;
 
@@ -305,6 +303,8 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private void Rest()
     {
+        PlayAnim(idleState);
+
         if (PlayerInTrigger)
             currentState = BossState.Decide;
     }
@@ -364,8 +364,6 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private void Attack1()
     {
-        Debug.Log("Boss trying Attack1");
-
         if (flameSweepPrefab == null || flameSweepSpawnPoint == null)
         {
             Debug.LogWarning("Attack1 missing flame sweep prefab or spawn point.");
@@ -379,35 +377,54 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
             return;
         }
 
-        StartCoroutine(DoFlameSweep());
+        StartCoroutine(BeginFlameSweepAttack());
     }
 
-    private IEnumerator DoFlameSweep()
+    private IEnumerator BeginFlameSweepAttack()
     {
         isPerformingAttack = true;
+        attackEventFired = false;
         canAttack1 = false;
         allowedMovement = false;
         allowedAttack = false;
 
         FacePlayer();
         PlayAnim(flameSweepState);
-        yield return new WaitForSeconds(0.6f);
 
-        for (int i = 0; i < flameSweepCount; i++)
-        {
-            Instantiate(flameSweepPrefab, flameSweepSpawnPoint.position, transform.rotation);
-            yield return new WaitForSeconds(flameSweepSpacing);
-        }
+        yield return new WaitForSeconds(1.2f);
 
         PlayAnim(idleState);
-        yield return new WaitForSeconds(0.75f);
-
         allowedAttack = true;
         allowedMovement = true;
         currentState = BossState.Rest;
         isPerformingAttack = false;
 
         StartCoroutine(ResetAttack1Cooldown());
+    }
+
+    public void SpawnFlameSweepBurst()
+    {
+        if (attackEventFired) return;
+        attackEventFired = true;
+
+        if (flameSweepPrefab == null || flameSweepSpawnPoint == null)
+            return;
+
+        StartCoroutine(SpawnFlameSweepSequence());
+    }
+
+    private IEnumerator SpawnFlameSweepSequence()
+    {
+        for (int i = 0; i < flameSweepCount; i++)
+        {
+            GameObject wave = Instantiate(flameSweepPrefab, flameSweepSpawnPoint.position, transform.rotation);
+            FlameSweepWave waveScript = wave.GetComponent<FlameSweepWave>();
+            if (waveScript != null && player != null)
+            {
+                waveScript.SetTarget(player);
+            }
+            yield return new WaitForSeconds(flameSweepSpacing);
+        }
     }
 
     private IEnumerator ResetAttack1Cooldown()
@@ -418,8 +435,6 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private void Attack2()
     {
-        Debug.Log("Boss trying Attack2");
-
         if (magmaPodPrefab == null || podLaunchPoints == null || podLaunchPoints.Length == 0)
         {
             Debug.LogWarning("Attack2 missing magma pod prefab or launch points.");
@@ -433,12 +448,13 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
             return;
         }
 
-        StartCoroutine(DoMagmaPods());
+        StartCoroutine(BeginMagmaPodsAttack());
     }
 
-    private IEnumerator DoMagmaPods()
+    private IEnumerator BeginMagmaPodsAttack()
     {
         isPerformingAttack = true;
+        attackEventFired = false;
         canAttack2 = false;
         allowedMovement = false;
         allowedAttack = false;
@@ -446,8 +462,31 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
         FacePlayer();
         PlayAnim(magmaPodsState);
-        yield return new WaitForSeconds(0.75f);
 
+        yield return new WaitForSeconds(1.4f);
+
+        PlayAnim(idleState);
+        allowedAttack = true;
+        allowedMovement = true;
+        currentState = BossState.Rest;
+        isPerformingAttack = false;
+
+        StartCoroutine(ResetAttack2Cooldown());
+    }
+
+    public void SpawnMagmaPodVolley()
+    {
+        if (attackEventFired) return;
+        attackEventFired = true;
+
+        if (magmaPodPrefab == null || podLaunchPoints == null || podLaunchPoints.Length == 0)
+            return;
+
+        StartCoroutine(SpawnMagmaPodsSequence());
+    }
+
+    private IEnumerator SpawnMagmaPodsSequence()
+    {
         for (int i = 0; i < podCount; i++)
         {
             Transform launchPoint = podLaunchPoints[i % podLaunchPoints.Length];
@@ -456,16 +495,6 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
             yield return new WaitForSeconds(podLaunchInterval);
         }
-
-        PlayAnim(idleState);
-        yield return new WaitForSeconds(1f);
-
-        allowedAttack = true;
-        allowedMovement = true;
-        currentState = BossState.Rest;
-        isPerformingAttack = false;
-
-        StartCoroutine(ResetAttack2Cooldown());
     }
 
     private IEnumerator ResetAttack2Cooldown()
@@ -476,23 +505,19 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     private void Attack3()
     {
-        Debug.Log("Boss trying Attack3");
-
-        if (backlashShockwavePrefab == null)
-            Debug.LogWarning("Attack3 missing backlash shockwave prefab.");
-
         if (!canAttack3 || isPerformingAttack)
         {
             currentState = BossState.Decide;
             return;
         }
 
-        StartCoroutine(DoThermalBacklash());
+        StartCoroutine(BeginThermalBacklash());
     }
 
-    private IEnumerator DoThermalBacklash()
+    private IEnumerator BeginThermalBacklash()
     {
         isPerformingAttack = true;
+        attackEventFired = false;
         canAttack3 = false;
         allowedMovement = false;
         allowedAttack = false;
@@ -500,13 +525,25 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
         storedBacklashDamage = 0;
         hasUsedAttack3 = true;
 
-        PlayAnim(backlashState);
-
         if (bossWarningText != null)
+        {
+            bossWarningText.gameObject.SetActive(true);
             bossWarningText.text = "THERMAL BACKLASH - FIND COVER!";
+            bossWarningText.alpha = 1f;
+            bossWarningText.ForceMeshUpdate();
+            Canvas.ForceUpdateCanvases();
+
+            Debug.Log("Warning text set: " + bossWarningText.text);
+        }
+        else
+        {
+            Debug.LogWarning("bossWarningText is NULL on FireBossAI.");
+        }
 
         if (selfFireEffect != null)
             selfFireEffect.SetActive(true);
+
+        PlayAnim(backlashState);
 
         if (coverRocks != null)
         {
@@ -539,23 +576,29 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
         if (bossWarningText != null)
             bossWarningText.text = "";
 
-        if (backlashShockwavePrefab != null)
-        {
-            GameObject shockwave = Instantiate(backlashShockwavePrefab, transform.position, Quaternion.identity);
-            ThermalBacklashShockwave shockwaveScript = shockwave.GetComponent<ThermalBacklashShockwave>();
-            if (shockwaveScript != null)
-                shockwaveScript.SetDamage(backlashBaseDamage + storedBacklashDamage);
-        }
+        yield return new WaitForSeconds(0.6f);
 
         PlayAnim(idleState);
-        yield return new WaitForSeconds(0.5f);
-
         allowedAttack = true;
         allowedMovement = true;
         currentState = BossState.Rest;
         isPerformingAttack = false;
 
         StartCoroutine(ResetAttack3Cooldown());
+    }
+
+    public void SpawnBacklashShockwave()
+    {
+        if (attackEventFired) return;
+        attackEventFired = true;
+
+        if (backlashShockwavePrefab == null)
+            return;
+
+        GameObject shockwave = Instantiate(backlashShockwavePrefab, transform.position, Quaternion.identity);
+        ThermalBacklashShockwave shockwaveScript = shockwave.GetComponent<ThermalBacklashShockwave>();
+        if (shockwaveScript != null)
+            shockwaveScript.SetDamage(backlashBaseDamage + storedBacklashDamage);
     }
 
     private IEnumerator ResetAttack3Cooldown()
@@ -599,7 +642,7 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
     public void takeDamage(int amount)
     {
-        if (currentState == BossState.Dead)
+        if (currentState == BossState.Dead || isDying)
             return;
 
         if (gameManager.instance != null)
@@ -624,42 +667,7 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            currentState = BossState.Dead;
-            allowedAttack = false;
-            allowedMovement = false;
-            isPerformingAttack = false;
-            isInBacklash = false;
-
-            if (agent0 != null)
-                agent0.isStopped = true;
-
-            PlayAnim(deathState);
-
-            if (AudioManager.instance != null)
-                AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
-
-            if (gameManager.instance != null)
-            {
-                gameManager.instance.updateGameGoal(-1);
-                gameManager.instance.addXp(xpGive);
-
-                int currencyDrop = GetCurrencyDrop();
-                gameManager.instance.addCurrency(currencyDrop);
-            }
-
-            RecticleBehaviour.OffHover();
-            ClearAllMagmaRocks();
-
-            if (bossWarningText != null)
-                bossWarningText.text = "";
-
-            if (selfFireEffect != null)
-                selfFireEffect.SetActive(false);
-
-            if (exitPortal != null)
-                exitPortal.SetActive(true);
-
-            StartCoroutine(DestroyAfterDeath());
+            StartCoroutine(HandleDeath());
         }
         else
         {
@@ -670,10 +678,65 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
         }
     }
 
-    private IEnumerator DestroyAfterDeath()
+    private IEnumerator HandleDeath()
     {
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
+        if (isDying)
+            yield break;
+
+        isDying = true;
+        currentState = BossState.Dead;
+        allowedAttack = false;
+        allowedMovement = false;
+        isPerformingAttack = false;
+        isInBacklash = false;
+
+        if (agent0 != null)
+            agent0.isStopped = true;
+
+        if (selfFireEffect != null)
+            selfFireEffect.SetActive(false);
+
+        if (bossWarningText != null)
+            bossWarningText.text = "";
+
+        ClearAllMagmaRocks();
+        PlayAnim(deathState);
+
+        if (AudioManager.instance != null)
+            AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
+
+        if (gameManager.instance != null)
+        {
+            gameManager.instance.updateGameGoal(-1);
+            gameManager.instance.addXp(xpGive);
+            gameManager.instance.addCurrency(GetCurrencyDrop());
+        }
+
+        RecticleBehaviour.OffHover();
+
+        if (exitPortal != null)
+            exitPortal.SetActive(true);
+
+        yield return null;
+
+        float deathWait = GetAnimationClipLength("Death1");
+        if (deathWait <= 0f)
+            deathWait = deathAnimationFallbackLength;
+    }
+
+    private float GetAnimationClipLength(string clipName)
+    {
+        if (bossAnimator == null || bossAnimator.runtimeAnimatorController == null)
+            return 0f;
+
+        AnimationClip[] clips = bossAnimator.runtimeAnimatorController.animationClips;
+        foreach (AnimationClip clip in clips)
+        {
+            if (clip != null && clip.name == clipName)
+                return clip.length;
+        }
+
+        return 0f;
     }
 
     private IEnumerator flashRed()
@@ -683,16 +746,6 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
         model.material.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        model.material.color = originalColor;
-    }
-
-    private IEnumerator flashGreen()
-    {
-        if (model == null)
-            yield break;
-
-        model.material.color = Color.green;
-        yield return new WaitForSeconds(0.3f);
         model.material.color = originalColor;
     }
 
@@ -743,5 +796,13 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
             if (rock != null)
                 rock.DestroyByShockwave();
         }
+    }
+
+    public void OnDeathAnimationFinished()
+    {
+        if (!isDying || currentState != BossState.Dead)
+            return;
+
+        Destroy(gameObject);
     }
 }

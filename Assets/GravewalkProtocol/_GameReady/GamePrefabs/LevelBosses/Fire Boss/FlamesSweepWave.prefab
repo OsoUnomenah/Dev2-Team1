@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlameSweepWave
   speed: 12
   lifeTime: 3
+  turnSpeed: 180
+  homeOnPlayer: 1
 --- !u!114 &4613599890537167446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,7 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9072c04bb8a00ae42953161e798a5b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHazardDamage
-  damageAmount: 15
+  damageAmount: 5
   damageCooldown: 0.75
 --- !u!65 &2478676479648726023
 BoxCollider:
