@@ -8,7 +8,6 @@ public class WeaponPickUp : MonoBehaviour, IInteract
     [SerializeField] private Renderer model;
     private Material materialOrig;
     [SerializeField] private Material highLight;
-    [SerializeField] private Animator animator;
 
     [Header("Generated Weapon Mods")]
     [SerializeField] private bool hasGeneratedMod;
@@ -292,10 +291,9 @@ public class WeaponPickUp : MonoBehaviour, IInteract
 
     public void OnHoverEnter()
     {
-        if(weaponManager.CurrentWeaponData == null || weaponData == null)
+        if(weaponData == null)
         { return; }
-        if (weaponManager.CurrentWeaponData == weaponData)
-            return;
+ 
 
         if (model != null && highLight != null)
         {

@@ -7,6 +7,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private WeaponData currentWeaponData;
     [SerializeField] private string currentWeaponName;
     [SerializeField] private List<string> currentWeaponMods = new List<string>();
+    [SerializeField] Collider weaponCollider;
 
     [Header("Shotgun Settings")]
     public bool UsesPellets;
@@ -255,7 +256,10 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
         if (weaponPrefab != null && weaponHolder != null)
         {
-            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);       
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);  
+            
+            weaponCollider = weaponCurrent.GetComponentInChildren<Collider>();
+            weaponCollider.enabled = false;
 
             if (abilities != null && abilitySlot >= 0 && abilitySlot < abilities.Count)
             {
