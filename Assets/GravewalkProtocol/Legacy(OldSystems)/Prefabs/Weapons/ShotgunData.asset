@@ -25,7 +25,7 @@ MonoBehaviour:
   maxChargeMultiplier: 2
   criticalMultiplier: 1.5
   chargedZoomFOV: 35
-  damage: 5
+  damage: 9
   range: 10
   rate: 1
   recoil: 0.5

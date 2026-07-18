@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -351,6 +352,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
             timer = -100;
             animator.SetTrigger("Mutant Flexing Muscles");
             armor.SetActive(true);
+            StartCoroutine(ChargeUp());
             weakpoint1.SetActive(true);
             weakpoint1.GetComponent<Weakpoints>().activateWeakpoint();
 
@@ -371,6 +373,28 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
             timer = -100;
 
         }
+    }
+    public Material material;
+    IEnumerator ChargeUp()
+    {
+        material.EnableKeyword("_EMISSION");
+
+        Color emissionColor = material.GetColor("_EmissionColor");
+
+        float time = 0f;
+        float duration = 1f;
+
+        while (time < duration)
+        {
+            float intensity = Mathf.Lerp(-10f, 0f, time / duration);
+
+            material.SetColor("_EmissionColor", emissionColor * Mathf.Pow(2, intensity));
+
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        material.SetColor("_EmissionColor", emissionColor);
     }
     private void ArmorCheck()
     {
@@ -661,6 +685,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
 
         if (currentHealth <= 0)
         {
+            allowedMovement = false;
             currentState = BossState.Dead;
             if (agent0 != null)
                 agent0.isStopped = true;
@@ -683,7 +708,9 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
             {
                 laser[i].SetActive(false);
             }
-
+            animator.SetBool("Mutant Dying", true);
+            StartCoroutine(Dying());
+            canDamage = false;
         }
         else
         {
@@ -693,10 +720,21 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     }
     IEnumerator Dying()
     {
+        
+        yield return new WaitForSeconds(2f);
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + Vector3.down * 2.5f;
 
-        animator.SetBool("Mutant Dying", true);
-        yield return new WaitForSeconds(2);
+        float duration = 1f;
+        float elapsed = 0f;
 
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, elapsed / duration);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
     }
 
     IEnumerator flashRed()

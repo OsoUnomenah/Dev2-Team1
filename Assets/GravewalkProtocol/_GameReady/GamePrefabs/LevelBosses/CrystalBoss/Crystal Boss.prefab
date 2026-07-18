@@ -2633,6 +2633,7 @@ MonoBehaviour:
   Modifiers: 
   gun: {fileID: 0}
   jumpHeight: 13
+  material: {fileID: 2100000, guid: aa26c4963608ef44f9c1759a6a366c05, type: 2}
   BossRoom: {fileID: 0}
 --- !u!23 &4092078242241298771
 MeshRenderer:
@@ -10797,7 +10798,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4307357292693805003}
-  m_Mesh: {fileID: -50397647144078270, guid: 33269b2b610f4c245a712795c1927939, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &6845317951401231633
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20311,11 +20312,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.1630137
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.8591894
+      value: 8.55
       objectReference: {fileID: 0}
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalRotation.w
@@ -20348,6 +20349,10 @@ PrefabInstance:
     - target: {fileID: 9085224121494846908, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_Name
       value: DefeatedBossTeleporter
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085224121494846908, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
