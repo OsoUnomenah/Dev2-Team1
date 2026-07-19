@@ -12,6 +12,9 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         FloorSpikes
     }
 
+    [Header("Freeze Visual")]
+    [SerializeField] private FreezeVisualController freezeVisualController;
+
     [Header("Boss Stats")]
     [SerializeField] private int maxHealth = 300;
     [SerializeField] private int xpGive = 100;
@@ -86,6 +89,11 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     private void Start()
     {
         currentHealth = maxHealth;
+
+        if (freezeVisualController == null)
+        {
+            freezeVisualController = GetComponent<FreezeVisualController>();
+        }
 
         if (model != null)
         {
@@ -508,19 +516,25 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     {
         isFrozen = true;
 
-        if (model != null)
+        if (freezeVisualController != null)
         {
-            model.material.color = Color.cyan;
+            freezeVisualController.ShowFreezeEffect();
         }
 
         yield return new WaitForSeconds(bossFreezeDuration);
 
-        if (model != null)
+        if (isDead)
         {
-            model.material.color = originalColor;
+            yield break;
+        }
+
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.HideFreezeEffect();
         }
 
         isFrozen = false;
+        freezeRoutine = null;
     }
 
     private IEnumerator FreezeHandler(float duration)

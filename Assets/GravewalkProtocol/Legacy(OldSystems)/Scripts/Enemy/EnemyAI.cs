@@ -28,6 +28,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float wanderTimer = 5f;
 
+    [Header("Freeze Visual")]
+    [SerializeField] private FreezeVisualController freezeVisualController;
+
     [Header("Audio")]
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
@@ -41,6 +44,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     private float footstepTimer;
     private float gruntRate;
     private float gruntTimer;
+    private Coroutine freezeRoutine;
 
     [Header("Currency")]
     [SerializeField] private int minCurrencyDrop = 1;
@@ -81,6 +85,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         currentHealth = maxHealth;
         updateHealthBar();
 
+        if (freezeVisualController == null)
+        {
+            freezeVisualController = GetComponent<FreezeVisualController>();
+        }
 
         originalColor = model.material.color;
 
@@ -145,10 +153,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             PlayGrunt();
             HandleFootsteps();
         }
-        else
-        {
-            model.material.color = Color.blue;
-        }
+       
     }
 
     private void Wander()
@@ -320,19 +325,53 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 
     public void freeze(float duration)
     {
-        isFroze = true;
-        StartCoroutine(freezeHandler(duration));
+        if (isDead)
+        {
+            return;
+        }
+
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+        }
+
+        freezeRoutine = StartCoroutine(freezeHandler(duration));
     }
-    IEnumerator freezeHandler(float duration)
+
+    private IEnumerator freezeHandler(float duration)
     {
-        model.material.color = Color.blue;
-        agent.isStopped = true;
+        isFroze = true;
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = true;
+        }
+
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.ShowFreezeEffect();
+        }
 
         yield return new WaitForSeconds(duration);
 
-        model.material.color = originalColor;
+        if (isDead)
+        {
+            yield break;
+        }
+
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.HideFreezeEffect();
+        }
+
         isFroze = false;
-        agent.isStopped = false;
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = false;
+        }
+
+        freezeRoutine = null;
     }
 
     private int GetCurrencyDrop()
@@ -347,7 +386,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             return;
         }
 
-        Debug.Log("SHATTER CALLED ON: " + gameObject.name);
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.PlayShatterEffect();
+        }
 
         Die();
     }

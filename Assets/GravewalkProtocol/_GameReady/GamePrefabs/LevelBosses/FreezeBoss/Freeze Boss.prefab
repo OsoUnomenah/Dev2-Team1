@@ -1082,6 +1082,7 @@ GameObject:
   - component: {fileID: 661307411345048127}
   - component: {fileID: 8813764044349690688}
   - component: {fileID: 1299987439740802359}
+  - component: {fileID: 7988466439904507859}
   m_Layer: 10
   m_Name: Freeze Boss
   m_TagString: Enemy
@@ -1107,6 +1108,7 @@ Transform:
   - {fileID: 8644836933422684187}
   - {fileID: 3214418737821830227}
   - {fileID: 2677488024118863624}
+  - {fileID: 8662074391228806073}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8813764044349690688
@@ -1143,6 +1145,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossTrigger
   Boss: {fileID: 1666705403417863322}
+--- !u!114 &7988466439904507859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552161082871557743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5a6cf666e64ee459d752633293887c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FreezeVisualController
+  normalIcePrisonPrefab: {fileID: 0}
+  bossIceEffectPrefab: {fileID: 7570210545317817729, guid: 37c5aa9cf7147bd4f8dbfb4f379f9839, type: 3}
+  effectAnchor: {fileID: 8662074391228806073}
+  useBossEffect: 1
+  shatterEffectPrefab: {fileID: 0}
+  localPositionOffset: {x: 4.56, y: 0, z: 0.48}
+  localRotationOffset: {x: 0, y: 0, z: 0}
+  localScale: {x: 3, y: 3, z: 3}
 --- !u!1 &1633199056450646945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,6 +1258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea2e00fd7b41c86458f7b7695f8921b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FreezeBossAI
+  freezeVisualController: {fileID: 7988466439904507859}
   maxHealth: 300
   xpGive: 100
   minCurrencyDrop: 10
@@ -1245,7 +1268,7 @@ MonoBehaviour:
   healthText: {fileID: 8793385005982733516}
   onScreenDMG: {fileID: 213539965564390859}
   damageText: {fileID: 3309628440181829316}
-  exitPortal: {fileID: 4752457369876416285, guid: 5ad33d58a66ab154a89c9e88255601e5, type: 3}
+  exitPortal: {fileID: 0}
   hitSound: {fileID: 0}
   deadSound: {fileID: 0}
   attackWarningSound: {fileID: 0}
@@ -1283,7 +1306,7 @@ MonoBehaviour:
   turnSpeed: 8
   stopMovingWhileAttacking: 1
   bossFreezeChance: 0.25
-  bossFreezeDuration: 0.75
+  bossFreezeDuration: 2
   bossFreezeCoolDown: 5
 --- !u!23 &4092078242241298771
 MeshRenderer:
@@ -15012,6 +15035,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7843921527207444672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8662074391228806073}
+  m_Layer: 10
+  m_Name: FreezeEffectAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8662074391228806073
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7843921527207444672}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 661307411345048127}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8221381551999703622
 GameObject:
   m_ObjectHideFlags: 0

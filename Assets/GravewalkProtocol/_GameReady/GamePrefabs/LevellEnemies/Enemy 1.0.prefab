@@ -422,6 +422,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4281220192498663273
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5569544707871339267}
+  m_Layer: 10
+  m_Name: FreezeEffectAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5569544707871339267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281220192498663273}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.38, y: 0, z: 0.32}
+  m_LocalScale: {x: 1.2, y: 1.7000002, z: 1.8}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8112398099157542644}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4615732633029451724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,6 +1197,7 @@ GameObject:
   - component: {fileID: 7604649987162195448}
   - component: {fileID: 4971764561390135137}
   - component: {fileID: -1426464302266641074}
+  - component: {fileID: 2010307393772811326}
   m_Layer: 10
   m_Name: Enemy 1.0
   m_TagString: Enemy
@@ -1189,6 +1221,7 @@ Transform:
   - {fileID: 1559942487890406157}
   - {fileID: 4446749787455840186}
   - {fileID: 784604339347957579}
+  - {fileID: 5569544707871339267}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1349357132627058740
@@ -1218,6 +1251,7 @@ MonoBehaviour:
   hearingRange: 20
   wanderRadius: 10
   wanderTimer: 5
+  freezeVisualController: {fileID: 0}
   _hit: {fileID: 11400000, guid: 18d4ca4ec298ea94b829f44e15a9bedf, type: 2}
   _dead: {fileID: 11400000, guid: e0ef3512d446d98468a7bc4e82d72651, type: 2}
   _grunts: {fileID: 11400000, guid: 86634d31ce0d5634384c85d08f140eda, type: 2}
@@ -1392,6 +1426,26 @@ MonoBehaviour:
   effectAnchor: {fileID: 8112398099157542644}
   effectLocalOffset: {x: 0, y: 1, z: 0}
   fireImmune: 0
+--- !u!114 &2010307393772811326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7791680660320909169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5a6cf666e64ee459d752633293887c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FreezeVisualController
+  normalIcePrisonPrefab: {fileID: 7570210545317817729, guid: 88620e0f40852824d8e2db4c339c71a7, type: 3}
+  bossIceEffectPrefab: {fileID: 0}
+  effectAnchor: {fileID: 5569544707871339267}
+  useBossEffect: 0
+  shatterEffectPrefab: {fileID: 4542335097595047058, guid: 345fff68cc120cc4caf90f6188ed107d, type: 3}
+  localPositionOffset: {x: 0, y: 0, z: 0}
+  localRotationOffset: {x: 0, y: 0, z: 0}
+  localScale: {x: 1, y: 1, z: 1}
 --- !u!1 &8034732566599017796
 GameObject:
   m_ObjectHideFlags: 0

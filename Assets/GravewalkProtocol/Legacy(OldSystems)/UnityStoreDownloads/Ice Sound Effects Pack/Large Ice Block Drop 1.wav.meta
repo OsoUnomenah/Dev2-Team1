@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 92fb959316cc0f941a5db0c98c1f88ed
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 0
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 1
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  normalize: 1
+  preloadAudioData: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187744
+  packageName: Ice Sound Effects Pack
+  packageVersion: 1.0
+  assetPath: Assets/Ice Sound Effects Pack/Large Ice Block Drop 1.wav
+  uploadId: 768020

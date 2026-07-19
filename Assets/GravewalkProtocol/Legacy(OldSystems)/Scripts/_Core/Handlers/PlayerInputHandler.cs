@@ -946,6 +946,11 @@ public class PlayerInputHandler : MonoBehaviour
                             ~ignoreSource))
                         {
 
+                            if (TryShatterFrozenTarget(hit.collider))
+                            {
+                                continue;
+                            }
+
                             if (weaponManager.HitEffect != null)
                             {
                                 Instantiate(
@@ -1263,6 +1268,12 @@ public class PlayerInputHandler : MonoBehaviour
             weaponManager.Range,
             ~ignoreSource))
         {
+            if (TryShatterFrozenTarget(hit.collider))
+            {
+                EndChargedShot();
+                return;
+            }
+
             if (weaponManager.HitEffect != null)
             {
                 Instantiate(
