@@ -15,34 +15,35 @@ MonoBehaviour:
   wallColor: {r: 0, g: 0, b: 0, a: 0}
   tiles:
   - variants:
-    - {fileID: 5019933606295758795, guid: 3ab199c45c561634aa95101c0920883c, type: 3}
+    - {fileID: 5019933606295758795, guid: eb98ff0e70242ce4fa76ab5c068808fb, type: 3}
   - variants:
-    - {fileID: 7206549597568670568, guid: 35902fc00b19db34fad7dc44954e635d, type: 3}
+    - {fileID: 7206549597568670568, guid: 4610b325b7db49649b000c3148b2d86e, type: 3}
+    - {fileID: 7206549597568670568, guid: 1da7c5e69e4fbe149a2c65b2c7008125, type: 3}
   - variants:
-    - {fileID: 7066490118331032347, guid: 11f97e960edaa19428c46395c73f367b, type: 3}
+    - {fileID: 7066490118331032347, guid: cc9574fa4cf665a4c8a6a9b1d0823798, type: 3}
   - variants:
-    - {fileID: 8657592870024965657, guid: 573586eb66fb7d34389aebef973163c3, type: 3}
+    - {fileID: 8657592870024965657, guid: 7a1d4cccb7774594f8ec9ef5f903ef9a, type: 3}
   - variants:
-    - {fileID: 6100084805423046654, guid: d34578bc3f1117a4babab1e011eb13aa, type: 3}
+    - {fileID: 6100084805423046654, guid: 654d6de94e7213a44a5f48d4af650665, type: 3}
   - variants:
-    - {fileID: 2166452736332261840, guid: 4d67d76d1918338458feb8ababf0fd21, type: 3}
+    - {fileID: 2166452736332261840, guid: 5da9c9d1ae1445c4b9270034d709a332, type: 3}
   - variants:
-    - {fileID: 3268461135921013964, guid: d333683222e845648bfd90a3f45842ca, type: 3}
+    - {fileID: 3268461135921013964, guid: 1158ce71b08880748832531f00e759ec, type: 3}
   - variants:
-    - {fileID: 6598213586975655335, guid: 246c49bd15ae8fc4ab76408df83e9e6c, type: 3}
+    - {fileID: 6598213586975655335, guid: 6c173e560719ae94cb4bed6896ae05e8, type: 3}
   - variants:
-    - {fileID: 7735142854698351602, guid: 0a15163952682c14196961abb780d920, type: 3}
+    - {fileID: 7735142854698351602, guid: 419b80bfc064836478fa4bb2264562ef, type: 3}
   - variants:
-    - {fileID: 3160443328794428729, guid: 26ba9921836981c479cdf697251368f4, type: 3}
+    - {fileID: 3160443328794428729, guid: e9792411d39fca74986202133417e3a7, type: 3}
   - variants:
-    - {fileID: 4783727739203330622, guid: a2408bdcf35ba5b4b9d690e95beb7f6a, type: 3}
+    - {fileID: 4783727739203330622, guid: 12aa8af6f5a2ece4093de08cef531dd4, type: 3}
   - variants:
-    - {fileID: 6049261668720739068, guid: 40de9a7587ae60443a61940da192289e, type: 3}
+    - {fileID: 6049261668720739068, guid: b6b92ba618964de4fbf511cd6b2a494f, type: 3}
   - variants:
-    - {fileID: 306107742354547432, guid: a969d56bc803f17468a8f1f99316f22e, type: 3}
+    - {fileID: 306107742354547432, guid: 7ceecf4a97388874592a26cab3ee031d, type: 3}
   - variants:
-    - {fileID: 8418383878085647755, guid: e00469e7d4beb124c855c6160555f9b9, type: 3}
+    - {fileID: 8418383878085647755, guid: 64615ac737d22fa428702a069dd7e548, type: 3}
   - variants:
-    - {fileID: 9069085742423033448, guid: fab4cd519d064284484e69d57b89df68, type: 3}
+    - {fileID: 9069085742423033448, guid: 982d6e71f1ccafc4b83f3ffb4c44036a, type: 3}
   - variants:
     - {fileID: 0}
