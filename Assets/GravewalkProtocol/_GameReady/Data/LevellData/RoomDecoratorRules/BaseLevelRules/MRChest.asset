@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
-  m_Name: LightningBoss
+  m_Name: MRChest
   m_EditorClassIdentifier: 
-  roomTypes: 8
-  prefab: {fileID: 7274955273384704235, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
-  prefabRotation: 180
+  roomTypes: 131
+  prefab: {fileID: 1121786469730585824, guid: 08726de97dd99bb49865120705bac1d7, type: 3}
+  prefabRotation: 0
   placement:
     array: 02000000
     width: 1
