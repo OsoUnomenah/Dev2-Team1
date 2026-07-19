@@ -281,14 +281,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3177656267287316605, guid: 7a1e715ac56b7e447903cd01139181e4, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3177656267287316605, guid: 7a1e715ac56b7e447903cd01139181e4, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6162556330722106876, guid: 7a1e715ac56b7e447903cd01139181e4, type: 3}
       propertyPath: m_Name
       value: Updated Turret Trap
@@ -610,19 +602,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7425497078879510087, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.673
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7425497078879510087, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7791680660320909169, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
       propertyPath: m_Name
       value: Enemy 1.0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7791680660320909169, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8112398099157542644, guid: f07200c1e7570da41a4cb102a86c160b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -779,19 +767,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7390473722103788041, guid: 27f5a17175e284740b3b9fe25390b641, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.673
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7390473722103788041, guid: 27f5a17175e284740b3b9fe25390b641, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8401963849488766331, guid: 27f5a17175e284740b3b9fe25390b641, type: 3}
       propertyPath: m_Name
       value: ShooterEnemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8401963849488766331, guid: 27f5a17175e284740b3b9fe25390b641, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

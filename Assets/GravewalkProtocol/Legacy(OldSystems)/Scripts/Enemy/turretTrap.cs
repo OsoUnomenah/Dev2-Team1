@@ -35,7 +35,7 @@ public class turretTrap : MonoBehaviour, IDamage
     [Range(0.1f, 2f)][SerializeField] float shootRate;
     [Range(1, 10)][SerializeField] int gunRotateSpeed;
     [SerializeField] GameObject body;
-
+    public ParticleSystem explosion;
 
     Color originalColor;
     Vector3 playerDir;
@@ -85,12 +85,20 @@ public class turretTrap : MonoBehaviour, IDamage
 
     private void faceTarget()
     {
+        if (dead)
+        {
+            return;
+        }
         Quaternion rot = Quaternion.LookRotation(new Vector3(playerDir.x, 0, playerDir.z));
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, faceTargetSpeed * Time.deltaTime);
     }
     private bool whichgun = false;
     private void shoot()
     {
+        if (dead)
+        {
+            return;
+        }
         shootTimer = 0;
         if (whichgun)
         {
@@ -107,6 +115,10 @@ public class turretTrap : MonoBehaviour, IDamage
 
     private void rotateGun()
     {
+        if (dead)
+        {
+            return;
+        }
         Quaternion rot;
         if (whichgun)
         {
@@ -137,7 +149,7 @@ public class turretTrap : MonoBehaviour, IDamage
             model.material.color = Color.green;
 
     }
-
+    private bool dead = false;
     public void takeDamage(int amount)
     {
         gameManager.instance.playerDamageOut += amount;
@@ -148,16 +160,22 @@ public class turretTrap : MonoBehaviour, IDamage
 
         if (HP <= 0)
         {
+            dead = true;
             gameManager.instance.addXp(xpGive);
             //gameManager.instance.updateGameGoal(-1);
-            Destroy(gameObject);
+            StartCoroutine(death());
         }
         else
         {
             StartCoroutine(flashYellow());
         }
     }
-
+    IEnumerator death()
+    {
+        Instantiate(explosion, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(.5f);
+        Destroy(gameObject);
+    }
     IEnumerator flashYellow()
     {
         model.material.color = Color.yellow;

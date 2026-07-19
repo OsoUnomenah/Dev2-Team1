@@ -1129,6 +1129,7 @@ MonoBehaviour:
   shootRate: 0.58
   gunRotateSpeed: 4
   body: {fileID: 4723243255698599691}
+  explosion: {fileID: 2433282508523890284, guid: 3ef3ae421f71c5c4e97fe12dc2fc6312, type: 3}
 --- !u!33 &3510142631884880654
 MeshFilter:
   m_ObjectHideFlags: 0
