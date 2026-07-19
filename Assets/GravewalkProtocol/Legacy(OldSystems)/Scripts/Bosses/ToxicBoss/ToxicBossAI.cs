@@ -129,6 +129,15 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
     [Header("Debug")]
     [SerializeField] private bool showDebugMessages = true;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
+    private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int BasicAttackHash = Animator.StringToHash("BasicAttack");
+    private static readonly int ProjectileThrowHash = Animator.StringToHash("ProjectileThrow");
+    private static readonly int GasAttackHash = Animator.StringToHash("GasAttack");
+    private static readonly int IsDeadHash =  Animator.StringToHash("IsDead");
+
     private BossState currentState = BossState.Idle;
 
     private float currentHealth;
@@ -150,6 +159,11 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
 
     private void Awake()
     {
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
         if (agent == null)
         {
             agent = GetComponent<NavMeshAgent>();
@@ -220,6 +234,31 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
         }
 
         HandleCombat(distanceToPlayer);
+        UpdateMovementAnimation();
+    }
+
+    private void UpdateMovementAnimation()
+    {
+        if (animator == null)
+        {
+            return;
+        }
+        float movementSpeed = 0f;
+
+        if (agent != null &&
+            agent.enabled &&
+            agent.isOnNavMesh &&
+            !agent.isStopped)
+        {
+            movementSpeed = agent.velocity.magnitude;
+        }
+
+        animator.SetFloat(
+            SpeedHash,
+            movementSpeed,
+            0.1f,
+            Time.deltaTime
+        );
     }
 
     private void FindPlayer()
@@ -253,18 +292,6 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
 
     private void HandleCombat(float distanceToPlayer)
     {
-        /*
-         * Close range:
-         * - Chance to use moving gas.
-         * - Otherwise use Toxic Slam.
-         *
-         * Outside melee range:
-         * - Chance to spawn gas at the player.
-         * - Otherwise fire a toxic projectile.
-         *
-         * If attacks are cooling down:
-         * - Chase the player.
-         */
 
         if (distanceToPlayer <= meleeRadius)
         {
@@ -282,7 +309,6 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
 
         if (gasReady && Random.value <= closeGasChance)
         {
-            // False means the gas spawns at the boss and moves outward.
             StartCoroutine(PerformGasAttack(false));
             return;
         }
@@ -293,10 +319,6 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
             return;
         }
 
-        /*
-         * If melee is cooling down but gas is ready, use gas.
-         * This prevents the boss from standing inactive beside the player.
-         */
         if (gasReady)
         {
             StartCoroutine(PerformGasAttack(false));
@@ -318,7 +340,6 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
 
         if (gasReady && Random.value <= gasOnPlayerChance)
         {
-            // True means the gas spawns at the player's position.
             StartCoroutine(PerformGasAttack(true));
             return;
         }
@@ -395,6 +416,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
     private IEnumerator PerformMeleeAttack()
     {
         BeginAttack();
+        animator?.SetTrigger(BasicAttackHash);
 
         nextMeleeTime = Time.time + meleeCooldown;
 
@@ -453,6 +475,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
     private IEnumerator PerformProjectileAttack()
     {
         BeginAttack();
+        animator?.SetTrigger(ProjectileThrowHash);
 
         nextProjectileTime =
             Time.time + projectileCooldown;
@@ -521,6 +544,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
     private IEnumerator PerformGasAttack(bool spawnOnPlayer)
     {
         BeginAttack();
+        animator?.SetTrigger(GasAttackHash);
 
         nextGasTime = Time.time + gasCooldown;
 
@@ -763,6 +787,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
         }
 
         isDead = true;
+        animator?.SetBool(IsDeadHash, true);
         isAttacking = false;
         currentState = BossState.Dead;
 
@@ -804,13 +829,13 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
         }
 
         onDeath?.Invoke();
+        StartCoroutine(DeathRoutine());
+    }
 
-        if (model != null)
-        {
-            model.SetActive(false);
-        }
-
-        Destroy(gameObject, destroyDelay);
+    private IEnumerator DeathRoutine()
+    {
+        yield return new WaitForSeconds(destroyDelay);
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmosSelected()

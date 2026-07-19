@@ -2339,31 +2339,6 @@ public class PlayerInputHandler : MonoBehaviour
     {
     } //kw End
 
-    private void HandleFullAuto()
-    {
-        PlayerWeaponManager weaponManager =
-            gameManager.instance.playerWeaponManager;
-
-        if (weaponManager == null ||
-            shootAction == null ||
-            !shootAction.IsPressed() ||
-            !weaponManager.FullAuto ||
-            weaponManager.Type ||
-            weaponManager.UsesChargedShot ||
-            weaponManager.Ammo <= 0 ||
-            gameManager.instance.isReloading ||
-            gameManager.instance.isPaused ||
-            gameManager.instance.isLevelingUp)
-        {
-            return;
-        }
-
-        if (gameManager.instance.canShoot)
-        {
-            OnShootPerformed(default);
-        }
-    }
-
     public bool AddShotgunShellFromAnimation()
     {
         PlayerWeaponManager weaponManager =
