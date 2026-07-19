@@ -7872,7 +7872,7 @@ MonoBehaviour:
   responsePos:
   - {fileID: 4259756705342646251}
   - {fileID: 3809298282032694646}
-  responseButtonPrefab: {fileID: 0}
+  responseButtonPrefab: {fileID: 2633504784966163059, guid: d983d831895b75949ad234f2b0b949ff, type: 3}
   textSpeed: 0
 --- !u!222 &4002712659210372208
 CanvasRenderer:
@@ -11622,7 +11622,7 @@ GameObject:
   - component: {fileID: 4273957838495061344}
   - component: {fileID: 2466015453397778937}
   m_Layer: 5
-  m_Name: Respone Panel 1
+  m_Name: Respone Anchor 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11644,7 +11644,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 37.1}
+  m_AnchoredPosition: {x: -95.99997, y: 70.79999}
   m_SizeDelta: {x: 1150, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4273957838495061344
@@ -11668,7 +11668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.019607844}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -13547,6 +13547,7 @@ MonoBehaviour:
   playerInteract: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerMiniMap: {fileID: 0}
+  shop: {fileID: 0}
   sniperChargePanel: {fileID: 0}
   sniperChargeSlider: {fileID: 0}
   sniperChargeText: {fileID: 0}
@@ -17235,8 +17236,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278252543
+  m_fontColor: {r: 1, g: 0.9535438, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -22842,7 +22843,7 @@ GameObject:
   - component: {fileID: 2679654981173047191}
   - component: {fileID: 6860926268218047013}
   m_Layer: 5
-  m_Name: Response Panel
+  m_Name: Response Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22864,7 +22865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 75.3}
+  m_AnchoredPosition: {x: -96, y: 100}
   m_SizeDelta: {x: 1150, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2679654981173047191
@@ -22888,7 +22889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.019607844}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
