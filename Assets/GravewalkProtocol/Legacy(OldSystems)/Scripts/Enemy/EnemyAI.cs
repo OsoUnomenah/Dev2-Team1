@@ -120,6 +120,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
                     {
                         currentState = ZombieState.Chase;
                     }
+                    SpinWheels();
                     break;
 
                 case ZombieState.Chase:
@@ -129,6 +130,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
                     {
                         currentState = ZombieState.Attack;
                     }
+                    SpinWheels();
                     break;
 
                 case ZombieState.Attack:
@@ -148,6 +150,17 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         else
         {
             model.material.color = Color.blue;
+        }
+    }
+    public int spinSpeed;
+    public GameObject wheel1;
+    public GameObject wheel2;
+    private void SpinWheels()
+    {
+        if (agent.velocity.magnitude > 0.1f)
+        {
+            wheel1.transform.Rotate(Vector3.up * spinSpeed * Time.deltaTime);
+            wheel2.transform.Rotate(Vector3.down * spinSpeed * Time.deltaTime);
         }
     }
 
