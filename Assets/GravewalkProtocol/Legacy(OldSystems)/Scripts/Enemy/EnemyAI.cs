@@ -40,6 +40,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     [Range(5f, 25f)][SerializeField] float gruntRateMax;
     [Range(1f, 20f)][SerializeField] float gruntRateMin;
     [Range(0.01f, 2f)][SerializeField] float footStepInterval;
+    public GameObject explosion;
 
     private float footstepTimer;
     private float gruntRate;
@@ -128,6 +129,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
                     {
                         currentState = ZombieState.Chase;
                     }
+                    SpinWheels();
                     break;
 
                 case ZombieState.Chase:
@@ -137,6 +139,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
                     {
                         currentState = ZombieState.Attack;
                     }
+                    SpinWheels();
                     break;
 
                 case ZombieState.Attack:
@@ -154,6 +157,17 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             HandleFootsteps();
         }
        
+    }
+    public int spinSpeed;
+    public GameObject wheel1;
+    public GameObject wheel2;
+    private void SpinWheels()
+    {
+        if (agent.velocity.magnitude > 0.1f)
+        {
+            wheel1.transform.Rotate(Vector3.up * spinSpeed * Time.deltaTime);
+            wheel2.transform.Rotate(Vector3.down * spinSpeed * Time.deltaTime);
+        }
     }
 
     private void Wander()
@@ -245,6 +259,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
         {
 
             Die();
+            StartCoroutine(death());
         }
         else
         {
@@ -253,7 +268,12 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
             StartCoroutine(flashRed());
         }
     }
-
+    IEnumerator death()
+    {
+        Instantiate(explosion, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(.5f);
+        Destroy(gameObject);
+    }
     private void Die()
     {
         if (isDead)

@@ -48,7 +48,8 @@ public class Granny : MonoBehaviour, IInteract
             new DialogueResponse()
             {
                 responseText = "Yes",
-                nextNode = null
+                nextNode = null,
+                onSelected = gameManager.instance.shop.ToggleShop
             },
 
             new DialogueResponse()
@@ -63,7 +64,7 @@ public class Granny : MonoBehaviour, IInteract
             new DialogueResponse()
             {
                 responseText = "Wow that's great!",
-                nextNode = null
+                nextNode = openShop
             },
 
             new DialogueResponse()

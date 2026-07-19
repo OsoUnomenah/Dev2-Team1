@@ -1368,15 +1368,6 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
-        RaycastHit hit;
-        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
-        {
-            IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
-            if (iAct != null)
-            {
-                iAct.Interact();
-            }
-        }
         range = gameManager.instance.playerWeaponManager.Range;
         adsRecoil = gameManager.instance.playerWeaponManager.Recoil;
 
