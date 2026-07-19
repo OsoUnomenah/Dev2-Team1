@@ -114,6 +114,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] public Players playerInteract;
     [SerializeField] public PlayerAnimationStateController playerAnimator;
     [SerializeField] public GameObject playerMiniMap;
+    public UpgradeShopUI shop;
 
     [Header("Charged Shot UI")]
     [SerializeField] public GameObject sniperChargePanel;
@@ -283,7 +284,7 @@ public class gameManager : MonoBehaviour
         sniperChargeText = sniperChargePanel.GetComponentInChildren<TMP_Text>();
         sniperChargePanel.SetActive(false);
 
-
+        shop = FindAnyObjectByType<UpgradeShopUI>();
 
 
 
@@ -543,7 +544,7 @@ public class gameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        UpgradeShopUI shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
+        shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
 
         if (shop != null && shop.IsShopOpen()) //kw
         {
