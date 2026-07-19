@@ -840,10 +840,10 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         // Weapon is equipped, but ammo is already empty = dry fire.
-        if (gameManager.instance.playerWeaponManager.Ammo <= 0 && gameManager.instance.playerWeaponManager.Type == false)
+        if (gameManager.instance.playerWeaponManager.Ammo <= 0 &&
+    gameManager.instance.playerWeaponManager.Type == false)
         {
             PlayDryFireSound();
-            // Debug.Log("Out of ammo. Press reload.");
             return;
         }
 
@@ -891,6 +891,9 @@ public class PlayerInputHandler : MonoBehaviour
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
                     gameManager.instance.isShooting = true;
+
+                    weaponManager.PlayCurrentWeaponAnimation("Fire");
+
                     PlayCurrentWeaponShootSound();
                     
                     // One trigger pull consumes one shell, regardless of pellet count.
@@ -1324,6 +1327,11 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
+        if (gameManager.instance.isReloading)
+        {
+            return;
+        }
+
         RaycastHit hit;
         if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
         {
@@ -1345,6 +1353,10 @@ public class PlayerInputHandler : MonoBehaviour
             }
             gameManager.instance.playerWeaponManager.Range = range * 1.4f;
             gameManager.instance.playerWeaponManager.Recoil = adsRecoil - 0.2f;
+
+            gameManager.instance.playerWeaponManager
+    .PlayCurrentWeaponAnimation("ZoomIdle");
+
             adsInCoroutine = StartCoroutine(AdsIn());
             gameManager.instance.isAiming = true;
         }
@@ -1376,6 +1388,11 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void OnADSCanceled(InputAction.CallbackContext context)
     {
+        if (gameManager.instance.isReloading)
+        {
+            return;
+        }
+
         if (gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
         {
             if (adsInCoroutine != null)
@@ -1384,6 +1401,10 @@ public class PlayerInputHandler : MonoBehaviour
             }
             gameManager.instance.playerWeaponManager.Range = range;
             gameManager.instance.playerWeaponManager.Recoil = adsRecoil;
+
+            gameManager.instance.playerWeaponManager
+    .PlayCurrentWeaponAnimation("Idle");
+
             adsOutCoroutine = StartCoroutine(AdsOut());
 
             gameManager.instance.isAiming = false;
@@ -1511,6 +1532,9 @@ public class PlayerInputHandler : MonoBehaviour
         {
             gameManager.instance.Reload.SetActive(true);
         }
+
+        gameManager.instance.playerWeaponManager
+    .PlayCurrentWeaponAnimation("Reload");
 
         PlayCurrentWeaponReloadSound();
 

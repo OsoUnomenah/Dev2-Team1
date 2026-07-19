@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: f13008f31bcb97b449559513608938ba
+timeCreated: 1526498392
+licenseType: Store
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 221439
+  packageName: Animated Futuristic FPS Weapons
+  packageVersion: 1.0
+  assetPath: Assets/Animated Futuristic Weapons/MuzzleFlashes/Materials/GlassStainedBumpDistort.shader
+  uploadId: 497692

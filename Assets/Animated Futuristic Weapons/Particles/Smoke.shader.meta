@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 76f248f86c7a8cb449d265525abdb4ba
+timeCreated: 1525507951
+licenseType: Store
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 221439
+  packageName: Animated Futuristic FPS Weapons
+  packageVersion: 1.0
+  assetPath: Assets/Animated Futuristic Weapons/Particles/Smoke.shader
+  uploadId: 497692

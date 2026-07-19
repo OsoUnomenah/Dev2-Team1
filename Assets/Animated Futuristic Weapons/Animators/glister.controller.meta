@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ac8495139a8d2a04f9012b56867f6f7e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 221439
+  packageName: Animated Futuristic FPS Weapons
+  packageVersion: 1.0
+  assetPath: Assets/Animated Futuristic Weapons/Animators/glister.controller
+  uploadId: 497692

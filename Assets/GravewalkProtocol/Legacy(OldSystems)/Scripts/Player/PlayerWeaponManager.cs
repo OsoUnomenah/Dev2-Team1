@@ -44,7 +44,16 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] public Transform weaponHolder;
     [SerializeField] public Transform adsWeaponHolder;
     [SerializeField] public Transform nonADSWeaponHolder;
+
+    [Header("Steve Arm Visibility")]
+    [SerializeField] private SkinnedMeshRenderer steveBodyRenderer;
+    [SerializeField] private SkinnedMeshRenderer steveGlovesRenderer;
+
     private GameObject weaponCurrent;
+
+    private Animator currentWeaponAnimator;
+
+    public Animator CurrentWeaponAnimator => currentWeaponAnimator;
 
     // Ability Stuff
     [SerializeField] private GameObject abilityModel;
@@ -214,6 +223,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         float ads)
     {
         Type = type;
+        UpdateSteveArmVisibility();
         Damage = damage;
         Range = range;
         Rate = rate;
@@ -251,15 +261,13 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         HitEffect = hitEffect;
         Ads = ads;
 
-        if (weaponCurrent != null)
-        {
-            Destroy(weaponCurrent);
-        }
-
         if (weaponPrefab != null && weaponHolder != null)
         {
-            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);  
-            
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+
+            currentWeaponAnimator =
+    weaponCurrent.GetComponentInChildren<Animator>();
+
             weaponCollider = weaponCurrent.GetComponentInChildren<Collider>();
             weaponCollider.enabled = false;
 
@@ -445,6 +453,39 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         else
         {
             gameManager.instance.crystalBarUI.SetActive(false);
+        }
+    }
+
+    public void PlayCurrentWeaponAnimation(string stateName)
+    {
+        if (currentWeaponAnimator == null ||
+            !currentWeaponAnimator.isActiveAndEnabled ||
+            string.IsNullOrEmpty(stateName))
+        {
+            return;
+        }
+
+        currentWeaponAnimator.CrossFadeInFixedTime(
+            stateName,
+            0.05f,
+            0,
+            0f
+        );
+    }
+
+    private void UpdateSteveArmVisibility()
+    {
+        // Type is true for melee weapons and false for firearms.
+        bool showSteveArms = Type;
+
+        if (steveBodyRenderer != null)
+        {
+            steveBodyRenderer.enabled = showSteveArms;
+        }
+
+        if (steveGlovesRenderer != null)
+        {
+            steveGlovesRenderer.enabled = showSteveArms;
         }
     }
 }
