@@ -352,6 +352,7 @@ MonoBehaviour:
   CriticalMultiplier: 0
   ChargedZoomFOV: 0
   Type: 0
+  FullAuto: 0
   Damage: 0
   Range: 50
   Rate: 1
@@ -360,6 +361,8 @@ MonoBehaviour:
   TimerOrig: 0
   Ammo: 0
   MaxAmmo: 0
+  ReserveAmmo: 0
+  MaxReserveAmmo: 0
   BaseAmmoTimer: 0
   AmmoTimer: 0
   Ads: 0
@@ -372,6 +375,7 @@ MonoBehaviour:
   nonADSWeaponHolder: {fileID: 794901986562867875}
   steveBodyRenderer: {fileID: 3607844993882327939}
   steveGlovesRenderer: {fileID: 2028783107094622631}
+  steveTopsRenderer: {fileID: 0}
   abilityModel: {fileID: 1056700422015808697}
   effect: {fileID: 0}
   effectSocket: {fileID: 1174861366130489984}
@@ -1248,10 +1252,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1051.78
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 35
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
