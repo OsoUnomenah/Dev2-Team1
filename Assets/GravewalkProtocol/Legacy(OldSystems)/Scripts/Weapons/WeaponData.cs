@@ -61,6 +61,18 @@ public class WeaponData : ScriptableObject
     public float rate;
     public float recoil;
     public float timer;
+
+    [Header("Magazine and Reserve Ammo")]
+    [Min(1)]
+    public int magazineSize = 10;
+
+    [Min(0)]
+    public int startingReserveAmmo = 100;
+
+    [Min(0)]
+    public int maxReserveAmmo = 100;
+
+    // Legacy ammo fields — do not delete yet.
     public int ammo;
     public int maxAmmo;
     public float ammoTimer;
@@ -68,6 +80,7 @@ public class WeaponData : ScriptableObject
     [Header("Visuals")]
     public GameObject weaponPrefab;
     public GameObject hitEffect;
+    public GameObject weaponPickUp;
 
     [Header("Audio")]
     public BaseSoundSO shootSound;

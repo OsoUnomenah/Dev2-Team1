@@ -340,6 +340,7 @@ MonoBehaviour:
   currentWeaponData: {fileID: 0}
   currentWeaponName: 
   currentWeaponMods: []
+  weaponCollider: {fileID: 0}
   UsesPellets: 0
   PelletCount: 1
   HorizontalSpread: 0
@@ -351,6 +352,7 @@ MonoBehaviour:
   CriticalMultiplier: 0
   ChargedZoomFOV: 0
   Type: 0
+  FullAuto: 0
   Damage: 0
   Range: 50
   Rate: 1
@@ -359,6 +361,8 @@ MonoBehaviour:
   TimerOrig: 0
   Ammo: 0
   MaxAmmo: 0
+  ReserveAmmo: 0
+  MaxReserveAmmo: 0
   BaseAmmoTimer: 0
   AmmoTimer: 0
   Ads: 0
@@ -369,12 +373,16 @@ MonoBehaviour:
   weaponHolder: {fileID: 5263699388163223786}
   adsWeaponHolder: {fileID: 65771077528125073}
   nonADSWeaponHolder: {fileID: 794901986562867875}
+  steveBodyRenderer: {fileID: 3607844993882327939}
+  steveGlovesRenderer: {fileID: 2028783107094622631}
+  steveTopsRenderer: {fileID: 0}
   abilityModel: {fileID: 1056700422015808697}
   effect: {fileID: 0}
   effectSocket: {fileID: 1174861366130489984}
   abilities: []
   bouncePad: {fileID: 8405657338730397385, guid: 71d43a5100017964f9b53c511ccc72db, type: 3}
   magnetField: {fileID: 4573178482530213371}
+  crystalHit: {fileID: 1945907912220827488, guid: 2bbdd69c0b43cf342b807bf6c1997b61, type: 3}
   fireLevel: 0
   freezeLevel: 0
   magnetLevel: 0
@@ -604,16 +612,16 @@ MonoBehaviour:
   sniperChargeText: {fileID: 0}
   _shoot: {fileID: 11400000, guid: 521af48c921c44b4da031c5093185349, type: 2}
   _footsteps: {fileID: 11400000, guid: 03493be87f5eab645b1caba8b7b91ca4, type: 2}
-  _dash: {fileID: 0}
-  jumpSound: {fileID: 0}
+  _dash: {fileID: 11400000, guid: 14a35d654db8f744bb8252227af5e3e7, type: 2}
+  jumpSound: {fileID: 11400000, guid: 27891e2f3f3d8124c975d23ccb9589d2, type: 2}
   landSound: {fileID: 11400000, guid: 61f09600958135d4a9cf0c5a13414909, type: 2}
   crouchSound: {fileID: 11400000, guid: 6048873ea1cdbac4ea01b3d0060eb504, type: 2}
   standSound: {fileID: 0}
-  _dryFire: {fileID: 0}
+  _dryFire: {fileID: 11400000, guid: afbcd5a775c6f5a4b84c01fc62726967, type: 2}
   footstepBaseInterval: 0.5
   footstepSprintInterval: 0.6
   rotateAction:
-    m_Name: 
+    m_Name: Rotate
     m_Type: 0
     m_ExpectedControlType: 
     m_Id: d12ecaff-d32b-47f3-a4c4-9425b088d3d2
@@ -1244,10 +1252,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1051.78
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 35
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -2043,6 +2051,16 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8045951916300142840}
   m_SourcePrefab: {fileID: 100100000, guid: c356d39725bcc4ec0925ab50a3cf6a42, type: 3}
+--- !u!137 &2028783107094622631 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6043904477349503807, guid: c356d39725bcc4ec0925ab50a3cf6a42, type: 3}
+  m_PrefabInstance: {fileID: 5748823368107250328}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3607844993882327939 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 9067522367528917275, guid: c356d39725bcc4ec0925ab50a3cf6a42, type: 3}
+  m_PrefabInstance: {fileID: 5748823368107250328}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6330247465692973116 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1737935232781064868, guid: c356d39725bcc4ec0925ab50a3cf6a42, type: 3}

@@ -653,7 +653,7 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
         if (isInBacklash)
         {
-            storedBacklashDamage += amount;
+            storedBacklashDamage += 2;
 
             if (AudioManager.instance != null)
                 AudioManager.instance.PlaySoundAtPosition(_hit, gameObject);
