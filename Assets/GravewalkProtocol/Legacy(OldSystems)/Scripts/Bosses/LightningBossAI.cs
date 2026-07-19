@@ -662,7 +662,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
     public void TriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && gameObject != null)
         {
             PlayerInTrigger = true;
             // model.material.color = Color.orange;
@@ -685,7 +685,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
         timer -= 1;
 
-        if (timer < -99 && allowedAttack)
+        if (timer < -99 && allowedAttack && !dead)
         {
             phasePicker = Random.Range(1, 4);
 
