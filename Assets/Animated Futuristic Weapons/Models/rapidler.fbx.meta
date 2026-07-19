@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: d64790b5a5add694189aa47d179d7cc8
+AssetOrigin:
+  serializedVersion: 1
+  productId: 221439
+  packageName: Animated Futuristic FPS Weapons
+  packageVersion: 1.0
+  assetPath: Assets/Animated Futuristic Weapons/Models/rapidler.fbx
+  uploadId: 497692
 ModelImporter:
-  serializedVersion: 21202
+  serializedVersion: 24200
   internalIDToNameTable:
   - first:
       74: 901616958262699073
@@ -88,8 +95,6 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -317,7 +322,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -1195,6 +1200,7 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -1212,6 +1218,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -1222,6 +1231,7 @@ ModelImporter:
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -1254,14 +1264,9 @@ ModelImporter:
   humanoidOversampling: 1
   avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 221439
-  packageName: Animated Futuristic FPS Weapons
-  packageVersion: 1.0
-  assetPath: Assets/Animated Futuristic Weapons/Models/rapidler.fbx
-  uploadId: 497692

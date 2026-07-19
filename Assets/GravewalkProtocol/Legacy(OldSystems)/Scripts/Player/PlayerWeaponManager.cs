@@ -25,6 +25,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     // Weapon Settings
     public bool Type;
+    public bool FullAuto;
     public int Damage;
     public float Range;
     public float Rate;
@@ -40,6 +41,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
     public Animator playerAnimator;
+    
 
     [SerializeField] public Transform weaponHolder;
     [SerializeField] public Transform adsWeaponHolder;
@@ -48,6 +50,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [Header("Steve Arm Visibility")]
     [SerializeField] private SkinnedMeshRenderer steveBodyRenderer;
     [SerializeField] private SkinnedMeshRenderer steveGlovesRenderer;
+    [SerializeField] private SkinnedMeshRenderer steveTopsRenderer;
 
     private GameObject weaponCurrent;
 
@@ -119,6 +122,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         }
 
         currentWeaponData = weaponData;
+        FullAuto = weaponData.fullAuto;
         currentWeaponName = weaponData.weaponName;
         currentWeaponMods = CopyModList(weaponMods);
 
@@ -260,6 +264,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         ReloadSound = reloadSound;
         HitEffect = hitEffect;
         Ads = ads;
+
+        ClearHeldWeaponViewmodels();
 
         if (weaponPrefab != null && weaponHolder != null)
         {
@@ -486,6 +492,33 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         if (steveGlovesRenderer != null)
         {
             steveGlovesRenderer.enabled = showSteveArms;
+        }
+
+        if (steveTopsRenderer != null)
+        {
+            steveTopsRenderer.enabled = showSteveArms;
+        }
+    }
+
+    private void ClearHeldWeaponViewmodels()
+    {
+        currentWeaponAnimator = null;
+        activeEffect = null;
+        weaponCurrent = null;
+
+        if (weaponHolder == null)
+        {
+            return;
+        }
+
+        for (int i = weaponHolder.childCount - 1; i >= 0; i--)
+        {
+            GameObject oldViewmodel =
+                weaponHolder.GetChild(i).gameObject;
+
+            // Hide it immediately because Destroy occurs at the end of the frame.
+            oldViewmodel.SetActive(false);
+            Destroy(oldViewmodel);
         }
     }
 }

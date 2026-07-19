@@ -73,6 +73,8 @@ public class PlayerInputHandler : MonoBehaviour
     float recoil;
     float timer;
 
+ 
+
     private bool isReloading;
     private float reloadTimer;
 
@@ -217,6 +219,7 @@ public class PlayerInputHandler : MonoBehaviour
         HandleFootsteps();
         HandleJumping();
         ShootTimer();
+        HandleFullAuto();
         HandleReload();
         HandleChargedShot();
         UpdateChargedShotUI();
@@ -798,6 +801,17 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
+        if (weaponManager.Ammo <= 0)
+        {
+            PlayDryFireSound();
+            return;
+        }
+
+        if (gameManager.instance.isReloading)
+        {
+            return;
+        }
+
         BeginChargedShot();
     }
     public GameObject playerBullet;
@@ -885,7 +899,7 @@ public class PlayerInputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
+            else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction || weaponManager.FullAuto)
             {
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
@@ -1167,6 +1181,8 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
+   
+
         // cancel logic for button release if needed
 
         if (gameManager.instance.playerWeaponManager == null)
@@ -1191,6 +1207,15 @@ public class PlayerInputHandler : MonoBehaviour
     {
         PlayerWeaponManager weaponManager =
             gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.Ammo <= 0)
+        {
+            PlayDryFireSound();
+            EndChargedShot();
+            return;
+        }
+
+        weaponManager.Ammo--;
 
         float chargePercent = GetChargePercent();
 
@@ -1288,23 +1313,23 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+
+        if (Physics.Raycast(
+            interactorSource.position,
+            interactorSource.forward,
+            out hit,
+            interactRange,
+            ~ignoreSource))
         {
             IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
+
             if (iAct != null)
             {
                 iAct.Interact();
             }
         }
 
-
-        if (reloadTimer < gameManager.instance.playerWeaponManager.AmmoTimer)
-        {
-            gameManager.instance.playerWeaponManager.Ammo = 0;
-            gameManager.instance.isReloading = true;
-            StartReload();
-        }
-
+        StartReload();
     }
 
     private void OnReloadCanceled(InputAction.CallbackContext context)
@@ -1459,6 +1484,12 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (gameManager.instance.isReloading)
         {
+            if (gameManager.instance.playerWeaponManager.UsesPellets)
+            {
+                gameManager.instance.canShoot = false;
+                return;
+            }
+
             reloadTimer += Time.deltaTime;
             gameManager.instance.canShoot = false;
 
@@ -1511,34 +1542,41 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void StartReload()
     {
-        if (gameManager.instance.playerWeaponManager.MaxAmmo <= 0)
-        {
-            return;
-        }
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
 
-        if (isReloading)
+        if (weaponManager == null ||
+            weaponManager.Type ||
+            gameManager.instance.isReloading ||
+            weaponManager.Ammo >= weaponManager.MaxAmmo)
         {
             return;
         }
 
         isReloading = true;
         gameManager.instance.isReloading = true;
-        reloadTimer = 0;
+        reloadTimer = 0f;
         gameManager.instance.canShoot = false;
-
-
 
         if (gameManager.instance.Reload != null)
         {
             gameManager.instance.Reload.SetActive(true);
         }
 
-        gameManager.instance.playerWeaponManager
-    .PlayCurrentWeaponAnimation("Reload");
+        if (weaponManager.UsesPellets)
+        {
+            string shotgunReloadState =
+                weaponManager.Ammo <= 0
+                    ? "StartEmptyReload"
+                    : "StartReload";
 
+            weaponManager.PlayCurrentWeaponAnimation(shotgunReloadState);
+        }
+        else
+        {
+            weaponManager.PlayCurrentWeaponAnimation("Reload");
+        }
         PlayCurrentWeaponReloadSound();
-
-        //Debug.Log("Reloading...");
     }
 
     private void PlayCurrentWeaponShootSound()
@@ -2147,5 +2185,69 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShopCanceled(InputAction.CallbackContext context)
     {
     } //kw End
+
+    private void HandleFullAuto()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null ||
+            shootAction == null ||
+            !shootAction.IsPressed() ||
+            !weaponManager.FullAuto ||
+            weaponManager.Type ||
+            weaponManager.UsesChargedShot ||
+            weaponManager.Ammo <= 0 ||
+            gameManager.instance.isReloading ||
+            gameManager.instance.isPaused ||
+            gameManager.instance.isLevelingUp)
+        {
+            return;
+        }
+
+        if (gameManager.instance.canShoot)
+        {
+            OnShootPerformed(default);
+        }
+    }
+
+    public bool AddShotgunShellFromAnimation()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null ||
+            !weaponManager.UsesPellets ||
+            !gameManager.instance.isReloading)
+        {
+            return false;
+        }
+
+        if (weaponManager.Ammo < weaponManager.MaxAmmo)
+        {
+            weaponManager.Ammo++;
+        }
+
+        if (weaponManager.Ammo >= weaponManager.MaxAmmo)
+        {
+            FinishShotgunReload();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void FinishShotgunReload()
+    {
+        gameManager.instance.isReloading = false;
+        isReloading = false;
+        reloadTimer = 0f;
+        gameManager.instance.canShoot = true;
+
+        if (gameManager.instance.Reload != null)
+        {
+            gameManager.instance.Reload.SetActive(false);
+        }
+    }
 
 }
