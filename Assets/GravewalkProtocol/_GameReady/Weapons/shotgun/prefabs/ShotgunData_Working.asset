@@ -30,6 +30,9 @@ MonoBehaviour:
   rate: 1
   recoil: 0.5
   timer: 1
+  magazineSize: 6
+  startingReserveAmmo: 60
+  maxReserveAmmo: 60
   ammo: 6
   maxAmmo: 6
   ammoTimer: 2

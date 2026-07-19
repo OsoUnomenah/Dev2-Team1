@@ -34,7 +34,12 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float TimerOrig;
     public int Ammo;
     public int MaxAmmo;
-    public float BaseAmmoTimer; //kw
+
+    [Header("Reserve Ammo")]
+    public int ReserveAmmo;
+    public int MaxReserveAmmo;
+
+    public float BaseAmmoTimer;
     public float AmmoTimer;
     public float Ads;
     public BaseSoundSO ShootSound;
@@ -241,14 +246,38 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         Timer = timer;
         TimerOrig = timer;
 
-        int bonusMaxAmmo = 0; //kw Start here
-        if (gameManager.instance != null)
+        // Ammo and MaxAmmo now represent the current magazine.
+        if (!Type && currentWeaponData != null)
         {
-            bonusMaxAmmo = gameManager.instance.BonusMaxAmmo;
-        }
+            // Magazine values now come from the new WeaponData fields.
+            MaxAmmo = Mathf.Max(1, currentWeaponData.magazineSize);
+            Ammo = MaxAmmo;
 
-        MaxAmmo = maxAmmo + bonusMaxAmmo;
-        Ammo = Mathf.Min(ammo + bonusMaxAmmo, MaxAmmo);
+            int bonusReserveAmmo = 0;
+
+            if (gameManager.instance != null)
+            {
+                bonusReserveAmmo = gameManager.instance.BonusMaxAmmo;
+            }
+
+            MaxReserveAmmo = Mathf.Max(
+                0,
+                currentWeaponData.maxReserveAmmo + bonusReserveAmmo
+            );
+
+            ReserveAmmo = Mathf.Clamp(
+                currentWeaponData.startingReserveAmmo,
+                0,
+                MaxReserveAmmo
+            );
+        }
+        else
+        {
+            Ammo = 0;
+            MaxAmmo = 0;
+            ReserveAmmo = 0;
+            MaxReserveAmmo = 0;
+        }
 
         BaseAmmoTimer = ammoTimer;
 

@@ -30,8 +30,11 @@ MonoBehaviour:
   rate: 0
   recoil: 0.3
   timer: 0.15
+  magazineSize: 10
+  startingReserveAmmo: 150
+  maxReserveAmmo: 150
   ammo: 10
-  maxAmmo: 10
+  maxAmmo: 1000
   ammoTimer: 2
   ads: 20
   weaponPrefab: {fileID: 38890664691828372, guid: e4382c031e1075342b61c1d909e29f68, type: 3}

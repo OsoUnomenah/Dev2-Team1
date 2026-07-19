@@ -1484,7 +1484,11 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (gameManager.instance.isReloading)
         {
-            if (gameManager.instance.playerWeaponManager.UsesPellets)
+            PlayerWeaponManager weaponManager =
+                gameManager.instance.playerWeaponManager;
+
+            // Shotguns reload shell-by-shell through animation events.
+            if (weaponManager.UsesPellets)
             {
                 gameManager.instance.canShoot = false;
                 return;
@@ -1493,15 +1497,27 @@ public class PlayerInputHandler : MonoBehaviour
             reloadTimer += Time.deltaTime;
             gameManager.instance.canShoot = false;
 
-            if (reloadTimer >= gameManager.instance.playerWeaponManager.AmmoTimer)
+            if (reloadTimer >= weaponManager.AmmoTimer)
             {
-                gameManager.instance.playerWeaponManager.Ammo = gameManager.instance.playerWeaponManager.MaxAmmo;
+                int roundsNeeded =
+                    weaponManager.MaxAmmo - weaponManager.Ammo;
+
+                int roundsLoaded =
+                    Mathf.Min(roundsNeeded, weaponManager.ReserveAmmo);
+
+                weaponManager.Ammo += roundsLoaded;
+                weaponManager.ReserveAmmo -= roundsLoaded;
+
                 gameManager.instance.isReloading = false;
                 isReloading = false;
-                gameManager.instance.Reload.SetActive(false);
-                reloadTimer = 0;
-                gameManager.instance.canShoot = true;
 
+                if (gameManager.instance.Reload != null)
+                {
+                    gameManager.instance.Reload.SetActive(false);
+                }
+
+                reloadTimer = 0f;
+                gameManager.instance.canShoot = true;
 
                 // Debug.Log("Reload complete!");
             }
@@ -1548,7 +1564,8 @@ public class PlayerInputHandler : MonoBehaviour
         if (weaponManager == null ||
             weaponManager.Type ||
             gameManager.instance.isReloading ||
-            weaponManager.Ammo >= weaponManager.MaxAmmo)
+            weaponManager.Ammo >= weaponManager.MaxAmmo ||
+            weaponManager.ReserveAmmo <= 0)
         {
             return;
         }
@@ -2223,12 +2240,21 @@ public class PlayerInputHandler : MonoBehaviour
             return false;
         }
 
-        if (weaponManager.Ammo < weaponManager.MaxAmmo)
+        // Stop if the magazine is full or no reserve shells remain.
+        if (weaponManager.Ammo >= weaponManager.MaxAmmo ||
+            weaponManager.ReserveAmmo <= 0)
         {
-            weaponManager.Ammo++;
+            FinishShotgunReload();
+            return false;
         }
 
-        if (weaponManager.Ammo >= weaponManager.MaxAmmo)
+        // Insert one shell and remove one shell from reserve.
+        weaponManager.Ammo++;
+        weaponManager.ReserveAmmo--;
+
+        // End after filling the magazine or exhausting reserve ammo.
+        if (weaponManager.Ammo >= weaponManager.MaxAmmo ||
+            weaponManager.ReserveAmmo <= 0)
         {
             FinishShotgunReload();
             return false;

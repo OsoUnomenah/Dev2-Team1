@@ -777,9 +777,25 @@ public class gameManager : MonoBehaviour
     }
 
 
-    public void AddMaxAmmoBonus(int amount) //kw
+    public void AddMaxAmmoBonus(int amount)
     {
+        // Permanent reserve-capacity upgrade.
         bonusMaxAmmo += amount;
+
+        PlayerWeaponManager weaponManager = playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.Type)
+        {
+            return;
+        }
+
+        weaponManager.MaxReserveAmmo += amount;
+
+        // Grant the newly added reserve space immediately.
+        weaponManager.ReserveAmmo = Mathf.Min(
+            weaponManager.ReserveAmmo + amount,
+            weaponManager.MaxReserveAmmo
+        );
     }
 
     public void DisableMiniMap()

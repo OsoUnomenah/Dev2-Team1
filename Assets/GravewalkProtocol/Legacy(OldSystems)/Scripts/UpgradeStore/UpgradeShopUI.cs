@@ -133,15 +133,6 @@ public class UpgradeShopUI : MonoBehaviour
 
             case UpgradeType.MaxAmmoIncrease:
                 gameManager.instance.AddMaxAmmoBonus(maxAmmoIncreaseAmount);
-
-                if (weaponManager != null)
-                {
-                    weaponManager.MaxAmmo += maxAmmoIncreaseAmount;
-                    weaponManager.Ammo = Mathf.Min(
-                        weaponManager.Ammo + maxAmmoIncreaseAmount,
-                        weaponManager.MaxAmmo
-                    );
-                }
                 break;
 
             case UpgradeType.MaxHealthIncrease:
