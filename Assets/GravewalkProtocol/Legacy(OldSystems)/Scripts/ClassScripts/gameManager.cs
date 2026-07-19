@@ -73,6 +73,7 @@ public class gameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuSettings;
     public int levelUpSlots = 1;
+    public GameObject crystalBarUI;
 
     [Header("Run Outcome UI")]
     [SerializeField] private RunOutcomeUI runOutcomeUI;
@@ -348,7 +349,7 @@ public class gameManager : MonoBehaviour
     public void slotFiller()
     {
         //fills the slots list that remembers where each bullet type is in
-        if (instance.playerWeaponManager.abilities.Count == 4)
+        if (instance.playerWeaponManager.abilities.Count >= 6)
         {
             // Debug.LogError("Does not Run");
             return;
@@ -419,6 +420,13 @@ public class gameManager : MonoBehaviour
             case 3:
                 abilityUI.grey4.SetActive(true);
                 break;
+            case 4:
+                abilityUI.grey5.SetActive(true);
+                break;
+
+            case 5:
+                abilityUI.grey6.SetActive(true);
+                break;
         }
 
         yield return new WaitForSeconds(cd);
@@ -436,6 +444,13 @@ public class gameManager : MonoBehaviour
                 break;
             case 3:
                 abilityUI.grey4.SetActive(false);
+                break;
+            case 4:
+                abilityUI.grey5.SetActive(false);
+                break;
+
+            case 5:
+                abilityUI.grey6.SetActive(false);
                 break;
         }
 
@@ -762,9 +777,25 @@ public class gameManager : MonoBehaviour
     }
 
 
-    public void AddMaxAmmoBonus(int amount) //kw
+    public void AddMaxAmmoBonus(int amount)
     {
+        // Permanent reserve-capacity upgrade.
         bonusMaxAmmo += amount;
+
+        PlayerWeaponManager weaponManager = playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.Type)
+        {
+            return;
+        }
+
+        weaponManager.MaxReserveAmmo += amount;
+
+        // Grant the newly added reserve space immediately.
+        weaponManager.ReserveAmmo = Mathf.Min(
+            weaponManager.ReserveAmmo + amount,
+            weaponManager.MaxReserveAmmo
+        );
     }
 
     public void DisableMiniMap()

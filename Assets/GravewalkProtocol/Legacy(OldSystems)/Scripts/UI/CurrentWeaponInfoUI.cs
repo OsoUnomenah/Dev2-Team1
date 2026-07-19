@@ -4,10 +4,14 @@ using UnityEngine;
 public class CurrentWeaponInfoUI : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject upgradeModPanel;
     [SerializeField] private TMP_Text infoText;
-    public  TMP_Text infoText2 => infoText;
     [SerializeField] private PlayerWeaponManager weaponManager;
-    private bool tabHeld = false;
+
+    public TMP_Text infoText2 => infoText;
+
+    private bool tabHeld;
+
     private void Start()
     {
         if (weaponManager == null)
@@ -15,10 +19,7 @@ public class CurrentWeaponInfoUI : MonoBehaviour
             weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
         }
 
-        if (panel != null)
-        {
-            panel.SetActive(false);
-        }
+        SetPanelsActive(false);
     }
 
     private void Update()
@@ -31,13 +32,26 @@ public class CurrentWeaponInfoUI : MonoBehaviour
         if (Input.GetKey(KeyCode.Tab))
         {
             infoText.text = weaponManager.GetCurrentWeaponInfoText();
-            panel.SetActive(true);
+            SetPanelsActive(true);
             tabHeld = true;
         }
-        else if (tabHeld == true)
+        else if (tabHeld)
         {
-            panel.SetActive(false);
+            SetPanelsActive(false);
             tabHeld = false;
+        }
+    }
+
+    private void SetPanelsActive(bool isActive)
+    {
+        if (panel != null)
+        {
+            panel.SetActive(isActive);
+        }
+
+        if (upgradeModPanel != null)
+        {
+            upgradeModPanel.SetActive(isActive);
         }
     }
 }

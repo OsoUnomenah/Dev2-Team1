@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -72,6 +73,8 @@ public class PlayerInputHandler : MonoBehaviour
     private float verticalRotation;
     float recoil;
     float timer;
+
+ 
 
     private bool isReloading;
     private float reloadTimer;
@@ -862,6 +865,17 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
+        if (weaponManager.Ammo <= 0)
+        {
+            PlayDryFireSound();
+            return;
+        }
+
+        if (gameManager.instance.isReloading)
+        {
+            return;
+        }
+
         BeginChargedShot();
     }
     public GameObject playerBullet;
@@ -903,10 +917,10 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         // Weapon is equipped, but ammo is already empty = dry fire.
-        if (gameManager.instance.playerWeaponManager.Ammo <= 0 && gameManager.instance.playerWeaponManager.Type == false)
+        if (gameManager.instance.playerWeaponManager.Ammo <= 0 &&
+    gameManager.instance.playerWeaponManager.Type == false)
         {
             PlayDryFireSound();
-            // Debug.Log("Out of ammo. Press reload.");
             return;
         }
 
@@ -956,8 +970,11 @@ public class PlayerInputHandler : MonoBehaviour
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
                     gameManager.instance.isShooting = true;
+
+                    weaponManager.PlayCurrentWeaponAnimation("Fire");
+
                     PlayCurrentWeaponShootSound();
-                    
+
                     // One trigger pull consumes one shell, regardless of pellet count.
                     gameManager.instance.playerWeaponManager.Ammo--;
                     _ =
@@ -1015,6 +1032,12 @@ public class PlayerInputHandler : MonoBehaviour
                             IToxic toxicTarget = FindToxicTarget(hit.collider);
                             bool applyToxicAfterDamage = false;
 
+
+                            if (dmg == null)
+                            {
+
+                                dmg = hit.collider.GetComponentInParent<IDamage>();
+                            }
                             if (gameManager.instance.playerWeaponManager.abilities.Count > 0)
                             {
                                 switch (gameManager.instance.playerWeaponManager.abilities[gameManager.instance.playerWeaponManager.abilitySlot].abilityType)
@@ -1025,7 +1048,7 @@ public class PlayerInputHandler : MonoBehaviour
                                     //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
                                     //personally I'll 
                                     case AbilityStats.ability.fire:
-                                        //probably use a IFire interface that works like IDamage but makes them set fire
+                                        TryApplyWeaponFire(hit.collider);
                                         break;
                                     case AbilityStats.ability.freeze:
                                         TryApplyWeaponFreeze(hit.collider, false);
@@ -1246,6 +1269,8 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void OnShootCanceled(InputAction.CallbackContext context)
     {
+   
+
         // cancel logic for button release if needed
         shootHeld = false;
 
@@ -1271,6 +1296,15 @@ public class PlayerInputHandler : MonoBehaviour
     {
         PlayerWeaponManager weaponManager =
             gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.Ammo <= 0)
+        {
+            PlayDryFireSound();
+            EndChargedShot();
+            return;
+        }
+
+        weaponManager.Ammo--;
 
         float chargePercent = GetChargePercent();
 
@@ -1327,6 +1361,7 @@ public class PlayerInputHandler : MonoBehaviour
                 );
             }
 
+            TryApplyWeaponFire(hit.collider);
             TryApplyWeaponFreeze(hit.collider, false);
 
             IDamage damageTarget =
@@ -1367,23 +1402,23 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         RaycastHit hit;
-        if (Physics.Raycast(interactorSource.position, interactorSource.forward, out hit, interactRange, ~ignoreSource))
+
+        if (Physics.Raycast(
+            interactorSource.position,
+            interactorSource.forward,
+            out hit,
+            interactRange,
+            ~ignoreSource))
         {
             IInteract iAct = hit.collider.GetComponentInParent<IInteract>();
+
             if (iAct != null)
             {
                 iAct.Interact();
             }
         }
 
-
-        if (reloadTimer < gameManager.instance.playerWeaponManager.AmmoTimer)
-        {
-            gameManager.instance.playerWeaponManager.Ammo = 0;
-            gameManager.instance.isReloading = true;
-            StartReload();
-        }
-
+        StartReload();
     }
 
     private void OnReloadCanceled(InputAction.CallbackContext context)
@@ -1402,6 +1437,11 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnADSPerformed(InputAction.CallbackContext context)
     {
         if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        if (gameManager.instance.isReloading)
         {
             return;
         }
@@ -1427,6 +1467,10 @@ public class PlayerInputHandler : MonoBehaviour
             }
             gameManager.instance.playerWeaponManager.Range = range * 1.4f;
             gameManager.instance.playerWeaponManager.Recoil = adsRecoil - 0.2f;
+
+            gameManager.instance.playerWeaponManager
+    .PlayCurrentWeaponAnimation("ZoomIdle");
+
             adsInCoroutine = StartCoroutine(AdsIn());
             gameManager.instance.isAiming = true;
         }
@@ -1458,6 +1502,11 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void OnADSCanceled(InputAction.CallbackContext context)
     {
+        if (gameManager.instance.isReloading)
+        {
+            return;
+        }
+
         if (gameManager.instance.isAiming && !gameManager.instance.playerWeaponManager.Type)
         {
             if (adsInCoroutine != null)
@@ -1466,6 +1515,10 @@ public class PlayerInputHandler : MonoBehaviour
             }
             gameManager.instance.playerWeaponManager.Range = range;
             gameManager.instance.playerWeaponManager.Recoil = adsRecoil;
+
+            gameManager.instance.playerWeaponManager
+    .PlayCurrentWeaponAnimation("Idle");
+
             adsOutCoroutine = StartCoroutine(AdsOut());
 
             gameManager.instance.isAiming = false;
@@ -1520,18 +1573,40 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (gameManager.instance.isReloading)
         {
+            PlayerWeaponManager weaponManager =
+                gameManager.instance.playerWeaponManager;
+
+            // Shotguns reload shell-by-shell through animation events.
+            if (weaponManager.UsesPellets)
+            {
+                gameManager.instance.canShoot = false;
+                return;
+            }
+
             reloadTimer += Time.deltaTime;
             gameManager.instance.canShoot = false;
 
-            if (reloadTimer >= gameManager.instance.playerWeaponManager.AmmoTimer)
+            if (reloadTimer >= weaponManager.AmmoTimer)
             {
-                gameManager.instance.playerWeaponManager.Ammo = gameManager.instance.playerWeaponManager.MaxAmmo;
+                int roundsNeeded =
+                    weaponManager.MaxAmmo - weaponManager.Ammo;
+
+                int roundsLoaded =
+                    Mathf.Min(roundsNeeded, weaponManager.ReserveAmmo);
+
+                weaponManager.Ammo += roundsLoaded;
+                weaponManager.ReserveAmmo -= roundsLoaded;
+
                 gameManager.instance.isReloading = false;
                 isReloading = false;
-                gameManager.instance.Reload.SetActive(false);
-                reloadTimer = 0;
-                gameManager.instance.canShoot = true;
 
+                if (gameManager.instance.Reload != null)
+                {
+                    gameManager.instance.Reload.SetActive(false);
+                }
+
+                reloadTimer = 0f;
+                gameManager.instance.canShoot = true;
 
                 // Debug.Log("Reload complete!");
             }
@@ -1572,31 +1647,42 @@ public class PlayerInputHandler : MonoBehaviour
     }
     private void StartReload()
     {
-        if (gameManager.instance.playerWeaponManager.MaxAmmo <= 0)
-        {
-            return;
-        }
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
 
-        if (isReloading)
+        if (weaponManager == null ||
+            weaponManager.Type ||
+            gameManager.instance.isReloading ||
+            weaponManager.Ammo >= weaponManager.MaxAmmo ||
+            weaponManager.ReserveAmmo <= 0)
         {
             return;
         }
 
         isReloading = true;
         gameManager.instance.isReloading = true;
-        reloadTimer = 0;
+        reloadTimer = 0f;
         gameManager.instance.canShoot = false;
-
-
 
         if (gameManager.instance.Reload != null)
         {
             gameManager.instance.Reload.SetActive(true);
         }
 
-        PlayCurrentWeaponReloadSound();
+        if (weaponManager.UsesPellets)
+        {
+            string shotgunReloadState =
+                weaponManager.Ammo <= 0
+                    ? "StartEmptyReload"
+                    : "StartReload";
 
-        //Debug.Log("Reloading...");
+            weaponManager.PlayCurrentWeaponAnimation(shotgunReloadState);
+        }
+        else
+        {
+            weaponManager.PlayCurrentWeaponAnimation("Reload");
+        }
+        PlayCurrentWeaponReloadSound();
     }
 
     private void PlayCurrentWeaponShootSound()
@@ -1781,6 +1867,34 @@ public class PlayerInputHandler : MonoBehaviour
         return freezeStats.abilityType == AbilityStats.ability.freeze;
     }
 
+    private bool CurrentAbilityIsFire(out AbilityStats fireStats)
+    {
+        fireStats = null;
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.abilities == null)
+        {
+            return false;
+        }
+
+        if (weaponManager.abilitySlot < 0 || weaponManager.abilitySlot >= weaponManager.abilities.Count)
+        {
+            return false;
+        }
+
+        fireStats = weaponManager.abilities[weaponManager.abilitySlot];
+
+        if (fireStats == null)
+        {
+            return false;
+        }
+
+        return fireStats.abilityType == AbilityStats.ability.fire;
+    }
+
+
+
     private IFreeze FindFreezeTarget(Collider hitCollider)
     {
         IFreeze freezeTarget = hitCollider.GetComponent<IFreeze>();
@@ -1818,12 +1932,30 @@ public class PlayerInputHandler : MonoBehaviour
 
         return hitCollider.GetComponentInChildren<IShatterable>();
     }
+    private float crystalbaruinum;
     private void CrystalShot(IDamage dmg, RaycastHit hit)
     {
         if (dmg != null)
         {
             gameManager.instance.playerStatHandler.crystalBar += 1;
+
+            ParticleSystem crystalEffect = Instantiate(gameManager.instance.playerWeaponManager.crystalHit, hit.point, Quaternion.identity);
+            float effectScale = 0.5f;
+
+            if (gameManager.instance.playerWeaponManager.crystalHit != null && gameManager.instance.playerStatHandler.crystalBar > 9)
+            {
+                effectScale = 2f;
+            }
+            crystalEffect.transform.localScale = Vector3.one * effectScale;
+
+            if (gameManager.instance.playerStatHandler.crystalBar > 9)
+            {
+                gameManager.instance.crystalBarUI.GetComponentInChildren<Slider>().value = 0 / 9f;
+                return;
+            }
+            gameManager.instance.crystalBarUI.GetComponentInChildren<Slider>().value = gameManager.instance.playerStatHandler.crystalBar / 9f;
         }
+
     }
     public void TryApplyWeaponCrystal(Collider hitCollider, ref int multiplier)
     {
@@ -1885,6 +2017,54 @@ public class PlayerInputHandler : MonoBehaviour
         {
             freezeTarget.freeze(freezeDuration);
         }
+    }
+
+    private void TryApplyWeaponFire(Collider hitCollider)
+    {
+        if (hitCollider == null)
+        {
+            return;
+        }
+
+        if (!CurrentAbilityIsFire(out AbilityStats fireStats))
+        {
+            return;
+        }
+
+        if (!RollAbilityProc())
+        {
+            return;
+        }
+
+        BurnDOT burnTarget = hitCollider.GetComponent<BurnDOT>();
+
+        if (burnTarget == null)
+        {
+            burnTarget = hitCollider.GetComponentInParent<BurnDOT>();
+        }
+
+        if (burnTarget == null)
+        {
+            burnTarget = hitCollider.GetComponentInChildren<BurnDOT>();
+        }
+
+        if (burnTarget == null)
+        {
+            Component damageComponent = hitCollider.GetComponentInParent<IDamage>() as Component;
+
+            GameObject burnHost = damageComponent != null
+                ? damageComponent.gameObject
+                : hitCollider.gameObject;
+
+            burnTarget = burnHost.GetComponent<BurnDOT>();
+
+            if (burnTarget == null)
+            {
+                burnTarget = burnHost.AddComponent<BurnDOT>();
+            }
+        }
+
+        burnTarget.ApplyBurn(3, 1f, 1, 5, fireStats.loopedEffect);
     }
 
     public bool TryShatterFrozenTarget(Collider hitCollider)
@@ -2158,5 +2338,78 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShopCanceled(InputAction.CallbackContext context)
     {
     } //kw End
+
+    private void HandleFullAuto()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null ||
+            shootAction == null ||
+            !shootAction.IsPressed() ||
+            !weaponManager.FullAuto ||
+            weaponManager.Type ||
+            weaponManager.UsesChargedShot ||
+            weaponManager.Ammo <= 0 ||
+            gameManager.instance.isReloading ||
+            gameManager.instance.isPaused ||
+            gameManager.instance.isLevelingUp)
+        {
+            return;
+        }
+
+        if (gameManager.instance.canShoot)
+        {
+            OnShootPerformed(default);
+        }
+    }
+
+    public bool AddShotgunShellFromAnimation()
+    {
+        PlayerWeaponManager weaponManager =
+            gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null ||
+            !weaponManager.UsesPellets ||
+            !gameManager.instance.isReloading)
+        {
+            return false;
+        }
+
+        // Stop if the magazine is full or no reserve shells remain.
+        if (weaponManager.Ammo >= weaponManager.MaxAmmo ||
+            weaponManager.ReserveAmmo <= 0)
+        {
+            FinishShotgunReload();
+            return false;
+        }
+
+        // Insert one shell and remove one shell from reserve.
+        weaponManager.Ammo++;
+        weaponManager.ReserveAmmo--;
+
+        // End after filling the magazine or exhausting reserve ammo.
+        if (weaponManager.Ammo >= weaponManager.MaxAmmo ||
+            weaponManager.ReserveAmmo <= 0)
+        {
+            FinishShotgunReload();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void FinishShotgunReload()
+    {
+        gameManager.instance.isReloading = false;
+        isReloading = false;
+        reloadTimer = 0f;
+        gameManager.instance.canShoot = true;
+
+        if (gameManager.instance.Reload != null)
+        {
+            gameManager.instance.Reload.SetActive(false);
+        }
+    }
 
 }

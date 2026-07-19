@@ -134,7 +134,8 @@ public class UpgradeUI : MonoBehaviour
         weaponStatsText.text =
             "Weapon Stats\n" +
             "DMG: " + weaponManager.Damage + "\n" +
-            "Ammo: " + weaponManager.Ammo + " / " + weaponManager.MaxAmmo + "\n" +
+            "Ammo: " + weaponManager.Ammo + " / " + weaponManager.ReserveAmmo + "\n" +
+            "Reserve Capacity: " + weaponManager.MaxReserveAmmo + "\n" +
             "Reload Time: " + weaponManager.AmmoTimer.ToString("0.00") + "s";
     }
 

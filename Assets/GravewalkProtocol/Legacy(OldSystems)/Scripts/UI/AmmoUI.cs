@@ -26,14 +26,19 @@ public class AmmoUI : MonoBehaviour
     private void UpdateAmmoText()
     {
         if (ammoText == null || weaponManager == null)
-            return;
-
-        if(weaponManager.MaxAmmo <= 0)
         {
-            ammoText.text = "Ammo: -- / --";
             return;
         }
 
-        ammoText.text = "Ammo: " + weaponManager.Ammo + " / " + weaponManager.MaxAmmo;
+        if (weaponManager.Type || weaponManager.MaxAmmo <= 0)
+        {
+            ammoText.text = "-- / --";
+            return;
+        }
+
+        ammoText.text =
+            weaponManager.Ammo +
+            " / " +
+            weaponManager.ReserveAmmo;
     }
 }

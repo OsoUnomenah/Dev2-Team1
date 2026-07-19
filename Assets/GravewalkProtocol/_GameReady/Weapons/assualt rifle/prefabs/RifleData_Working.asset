@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caec2ee46b2365f4b9098ae065941701, type: 3}
+  m_Name: RifleData_Working
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  weaponName: Rifle
+  weaponType: 0
+  fullAuto: 1
+  usesPellets: 0
+  pelletCount: 8
+  horizontalSpread: 15
+  verticalSpread: 1
+  usesChargedShot: 0
+  chargeTime: 2
+  chargeCooldown: 2
+  maxChargeMultiplier: 2
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 35
+  damage: 10
+  range: 75
+  rate: 150
+  recoil: 0.3
+  timer: 0.1
+  magazineSize: 30
+  startingReserveAmmo: 120
+  maxReserveAmmo: 120
+  ammo: 30
+  maxAmmo: 30
+  ammoTimer: 2
+  ads: 15
+  weaponPrefab: {fileID: 6486055502005504945, guid: 0a5d899edb90bb5449ad2461e5065972, type: 3}
+  hitEffect: {fileID: 8497891991718266384, guid: 04264d13aec6db845a2e76eb12909f92, type: 3}
+  shootSound: {fileID: 11400000, guid: a81a8565f0a59f64297e962b8c8dba03, type: 2}
+  reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
+  weaponPickupSound: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}

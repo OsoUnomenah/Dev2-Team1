@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 0caab31041a890a43a3164468f46ad89
+timeCreated: 1525772641
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 221439
+  packageName: Animated Futuristic FPS Weapons
+  packageVersion: 1.0
+  assetPath: Assets/Animated Futuristic Weapons/Particles/WeaponSmoke.mat
+  uploadId: 497692

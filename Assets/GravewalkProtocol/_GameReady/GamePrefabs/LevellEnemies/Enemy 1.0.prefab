@@ -1165,6 +1165,7 @@ GameObject:
   - component: {fileID: -2838318328245437893}
   - component: {fileID: 7604649987162195448}
   - component: {fileID: 4971764561390135137}
+  - component: {fileID: -1426464302266641074}
   m_Layer: 10
   m_Name: Enemy 1.0
   m_TagString: Enemy
@@ -1373,6 +1374,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-1426464302266641074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7791680660320909169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce990a022e19cce44aa8f11b113573d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BurnDOT
+  targetRenderer: {fileID: 6515721808002073225}
+  burnTint: {r: 1, g: 0.45, b: 0.1, a: 1}
+  tintWhileBurning: 1
+  effectAnchor: {fileID: 8112398099157542644}
+  effectLocalOffset: {x: 0, y: 1, z: 0}
+  fireImmune: 0
 --- !u!1 &8034732566599017796
 GameObject:
   m_ObjectHideFlags: 0

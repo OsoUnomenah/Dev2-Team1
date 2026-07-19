@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a217f32cd7765344bb5c38420b2dde70, type: 2}
+  - {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9072c04bb8a00ae42953161e798a5b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHazardDamage
-  damageAmount: 10
+  damageAmount: 5
   damageCooldown: 1
 --- !u!135 &6246918203096914161
 SphereCollider:

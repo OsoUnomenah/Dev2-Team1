@@ -55,10 +55,10 @@ MonoBehaviour:
   openSpeed: 2
   resetTimer: 10
   weaponRewards:
-  - {fileID: 11400000, guid: 45e39cd3c8b267949a54254cd5571768, type: 2}
+  - {fileID: 11400000, guid: 92eddea7fd08fca41944bed8fa19cbd2, type: 2}
   - {fileID: 11400000, guid: 9e0cd63104dfe464fab06b4ed9a38cde, type: 2}
   - {fileID: 11400000, guid: 1f66b9b2ee407154a8d96812546de532, type: 2}
-  - {fileID: 11400000, guid: 15100f8710ae92e4bbef7747dfe54c72, type: 2}
+  - {fileID: 11400000, guid: c6e3fe41c171fa445be2f22494894ce4, type: 2}
   canGiveMaxAmmo: 0
   enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 2611424284473155684}

@@ -7,6 +7,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     [SerializeField] private WeaponData currentWeaponData;
     [SerializeField] private string currentWeaponName;
     [SerializeField] private List<string> currentWeaponMods = new List<string>();
+    [SerializeField] Collider weaponCollider;
 
     [Header("Shotgun Settings")]
     public bool UsesPellets;
@@ -33,18 +34,34 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public float TimerOrig;
     public int Ammo;
     public int MaxAmmo;
-    public float BaseAmmoTimer; //kw
+
+    [Header("Reserve Ammo")]
+    public int ReserveAmmo;
+    public int MaxReserveAmmo;
+
+    public float BaseAmmoTimer;
     public float AmmoTimer;
     public float Ads;
     public BaseSoundSO ShootSound;
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
     public Animator playerAnimator;
+    
 
     [SerializeField] public Transform weaponHolder;
     [SerializeField] public Transform adsWeaponHolder;
     [SerializeField] public Transform nonADSWeaponHolder;
+
+    [Header("Steve Arm Visibility")]
+    [SerializeField] private SkinnedMeshRenderer steveBodyRenderer;
+    [SerializeField] private SkinnedMeshRenderer steveGlovesRenderer;
+    [SerializeField] private SkinnedMeshRenderer steveTopsRenderer;
+
     private GameObject weaponCurrent;
+
+    private Animator currentWeaponAnimator;
+
+    public Animator CurrentWeaponAnimator => currentWeaponAnimator;
 
     // Ability Stuff
     [SerializeField] private GameObject abilityModel;
@@ -56,10 +73,11 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     private int freezePos;
     private int magnetPos;
     private int toxicPos;
-    private int crystalPos;
+    private int crystalPos = -100;
     private int lightningPos;
     [SerializeField] public GameObject bouncePad;
     [SerializeField] public SphereCollider magnetField;
+    public ParticleSystem crystalHit;
 
     // Ability Settings
     public int fireLevel;
@@ -80,6 +98,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     void Start()
     {
         playerAnimator = gameManager.instance.playerAnimator.animator;
+        gameManager.instance.crystalBarUI.SetActive(false);
     }
 
     void Update()
@@ -108,6 +127,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         }
 
         currentWeaponData = weaponData;
+        FullAuto = weaponData.fullAuto;
         currentWeaponName = weaponData.weaponName;
         currentWeaponMods = CopyModList(weaponMods);
 
@@ -214,6 +234,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         float ads)
     {
         Type = type;
+        UpdateSteveArmVisibility();
         Damage = damage;
         Range = range;
         Rate = rate;
@@ -227,14 +248,38 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         Timer = timer;
         TimerOrig = timer;
 
-        int bonusMaxAmmo = 0; //kw Start here
-        if (gameManager.instance != null)
+        // Ammo and MaxAmmo now represent the current magazine.
+        if (!Type && currentWeaponData != null)
         {
-            bonusMaxAmmo = gameManager.instance.BonusMaxAmmo;
-        }
+            // Magazine values now come from the new WeaponData fields.
+            MaxAmmo = Mathf.Max(1, currentWeaponData.magazineSize);
+            Ammo = MaxAmmo;
 
-        MaxAmmo = maxAmmo + bonusMaxAmmo;
-        Ammo = Mathf.Min(ammo + bonusMaxAmmo, MaxAmmo);
+            int bonusReserveAmmo = 0;
+
+            if (gameManager.instance != null)
+            {
+                bonusReserveAmmo = gameManager.instance.BonusMaxAmmo;
+            }
+
+            MaxReserveAmmo = Mathf.Max(
+                0,
+                currentWeaponData.maxReserveAmmo + bonusReserveAmmo
+            );
+
+            ReserveAmmo = Mathf.Clamp(
+                currentWeaponData.startingReserveAmmo,
+                0,
+                MaxReserveAmmo
+            );
+        }
+        else
+        {
+            Ammo = 0;
+            MaxAmmo = 0;
+            ReserveAmmo = 0;
+            MaxReserveAmmo = 0;
+        }
 
         BaseAmmoTimer = ammoTimer;
 
@@ -251,14 +296,17 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         HitEffect = hitEffect;
         Ads = ads;
 
-        if (weaponCurrent != null)
-        {
-            Destroy(weaponCurrent);
-        }
+        ClearHeldWeaponViewmodels();
 
         if (weaponPrefab != null && weaponHolder != null)
         {
-            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);       
+            weaponCurrent = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+
+            currentWeaponAnimator =
+    weaponCurrent.GetComponentInChildren<Animator>();
+
+            weaponCollider = weaponCurrent.GetComponentInChildren<Collider>();
+            weaponCollider.enabled = false;
 
             if (abilities != null && abilitySlot >= 0 && abilitySlot < abilities.Count)
             {
@@ -270,6 +318,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             UpgradeUI.instance.RefreshAllUI();
         }
+
 
     }
 
@@ -361,7 +410,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityModel.SetActive(false);
         }
 
-        ApplyAbilityEffectToCurrentWeapon(stats);
+       
+
+            ApplyAbilityEffectToCurrentWeapon(stats);
     }
 
     private void ApplyAbilityEffectToCurrentWeapon(AbilityStats stats)
@@ -397,6 +448,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         activeEffect.transform.localPosition = Vector3.zero;
         activeEffect.transform.localRotation = Quaternion.identity;
         activeEffect.Play();
+
+
     }
 
     void abilitySwitch()
@@ -423,6 +476,80 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         {
             abilityEquip(abilities[3]);
             abilitySlot = 3;
+        }
+
+        if (abilities.Count <= 0)
+        {
+            return;
+        }
+
+        if (abilities[abilitySlot].abilityName == "Crystal")
+        {
+            gameManager.instance.crystalBarUI.SetActive(true);
+        }
+        else
+        {
+            gameManager.instance.crystalBarUI.SetActive(false);
+        }
+    }
+
+    public void PlayCurrentWeaponAnimation(string stateName)
+    {
+        if (currentWeaponAnimator == null ||
+            !currentWeaponAnimator.isActiveAndEnabled ||
+            string.IsNullOrEmpty(stateName))
+        {
+            return;
+        }
+
+        currentWeaponAnimator.CrossFadeInFixedTime(
+            stateName,
+            0.05f,
+            0,
+            0f
+        );
+    }
+
+    private void UpdateSteveArmVisibility()
+    {
+        // Type is true for melee weapons and false for firearms.
+        bool showSteveArms = Type;
+
+        if (steveBodyRenderer != null)
+        {
+            steveBodyRenderer.enabled = showSteveArms;
+        }
+
+        if (steveGlovesRenderer != null)
+        {
+            steveGlovesRenderer.enabled = showSteveArms;
+        }
+
+        if (steveTopsRenderer != null)
+        {
+            steveTopsRenderer.enabled = showSteveArms;
+        }
+    }
+
+    private void ClearHeldWeaponViewmodels()
+    {
+        currentWeaponAnimator = null;
+        activeEffect = null;
+        weaponCurrent = null;
+
+        if (weaponHolder == null)
+        {
+            return;
+        }
+
+        for (int i = weaponHolder.childCount - 1; i >= 0; i--)
+        {
+            GameObject oldViewmodel =
+                weaponHolder.GetChild(i).gameObject;
+
+            // Hide it immediately because Destroy occurs at the end of the frame.
+            oldViewmodel.SetActive(false);
+            Destroy(oldViewmodel);
         }
     }
 }

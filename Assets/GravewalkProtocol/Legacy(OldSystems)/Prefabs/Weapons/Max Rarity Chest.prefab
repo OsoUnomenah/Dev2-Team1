@@ -229,10 +229,10 @@ MonoBehaviour:
   openSpeed: 2
   resetTimer: 10
   weaponRewards:
-  - {fileID: 11400000, guid: 74841c93784515d41961d9ebc7778146, type: 2}
-  - {fileID: 11400000, guid: 45e39cd3c8b267949a54254cd5571768, type: 2}
-  - {fileID: 11400000, guid: 5d66c170606ea3241964d40d5cab7420, type: 2}
-  - {fileID: 11400000, guid: 15100f8710ae92e4bbef7747dfe54c72, type: 2}
+  - {fileID: 11400000, guid: 7a4c14cd192c66e4188e24bb9bc0dba2, type: 2}
+  - {fileID: 11400000, guid: 92eddea7fd08fca41944bed8fa19cbd2, type: 2}
+  - {fileID: 11400000, guid: b9933201c88dc114caeba7049deb25bc, type: 2}
+  - {fileID: 11400000, guid: c6e3fe41c171fa445be2f22494894ce4, type: 2}
   - {fileID: 11400000, guid: 9e0cd63104dfe464fab06b4ed9a38cde, type: 2}
   - {fileID: 11400000, guid: 1f66b9b2ee407154a8d96812546de532, type: 2}
   canGiveMaxAmmo: 0

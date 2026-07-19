@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityStats
   abilityName: Fire
   model: {fileID: 8869053030028166981, guid: c125db30a259be84d8eea7fdfa0396d0, type: 3}
-  throwSound: {fileID: 11400000, guid: 0c452ca0e546cbe448856fe03a59ff70, type: 2}
+  throwSound: {fileID: 0}
   abilityType: 0
   shootDistance: 4
   shootCooldown: 20.9
   effectTimer: 12
-  loopedEffect: {fileID: 1489387594953262563, guid: c4fd024e20532754485f995531afe0ef, type: 3}
+  loopedEffect: {fileID: 1255053967005034565, guid: 858e79faf6de940498a11b25374053d0, type: 3}
   level: 1

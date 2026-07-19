@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caec2ee46b2365f4b9098ae065941701, type: 3}
+  m_Name: ChargeSniperData_Working
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  weaponName: Sniper
+  weaponType: 0
+  fullAuto: 0
+  usesPellets: 0
+  pelletCount: 1
+  horizontalSpread: 0
+  verticalSpread: 0
+  usesChargedShot: 1
+  chargeTime: 2
+  chargeCooldown: 5
+  maxChargeMultiplier: 3.57
+  criticalMultiplier: 1.5
+  chargedZoomFOV: 10
+  damage: 10
+  range: 150
+  rate: 1
+  recoil: 1
+  timer: 1
+  magazineSize: 5
+  startingReserveAmmo: 30
+  maxReserveAmmo: 30
+  ammo: 5
+  maxAmmo: 5
+  ammoTimer: 2
+  ads: 40
+  weaponPrefab: {fileID: 3329529930087950654, guid: 128842bc7a4e02a4291bc439b042815f, type: 3}
+  hitEffect: {fileID: 8497891991718266384, guid: 57847e55802ea1a49ac22c1cb192b52b, type: 3}
+  shootSound: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
+  reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
+  weaponPickupSound: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}
