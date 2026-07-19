@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 //Steps to use
 //1. Setup bindings in Unity Editor using PlayerInputHandler ActionMap
@@ -895,7 +894,7 @@ public class PlayerInputHandler : MonoBehaviour
                     weaponManager.PlayCurrentWeaponAnimation("Fire");
 
                     PlayCurrentWeaponShootSound();
-                    
+
                     // One trigger pull consumes one shell, regardless of pellet count.
                     gameManager.instance.playerWeaponManager.Ammo--;
                     _ =
@@ -948,8 +947,8 @@ public class PlayerInputHandler : MonoBehaviour
                             bulletEnd = hit.transform.position;
 
                             IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
-                            
-                            if(dmg == null)
+
+                            if (dmg == null)
                             {
 
                                 dmg = hit.collider.GetComponentInParent<IDamage>();
@@ -964,7 +963,7 @@ public class PlayerInputHandler : MonoBehaviour
                                     //Also, melee weapons call their stuff in their own methods, so you'll need to go into them and just make sure they're working
                                     //personally I'll 
                                     case AbilityStats.ability.fire:
-                                        //probably use a IFire interface that works like IDamage but makes them set fire
+                                        TryApplyWeaponFire(hit.collider);
                                         break;
                                     case AbilityStats.ability.freeze:
                                         TryApplyWeaponFreeze(hit.collider, false);
@@ -1248,6 +1247,7 @@ public class PlayerInputHandler : MonoBehaviour
                 );
             }
 
+            TryApplyWeaponFire(hit.collider);
             TryApplyWeaponFreeze(hit.collider, false);
 
             IDamage damageTarget =
@@ -1723,6 +1723,34 @@ public class PlayerInputHandler : MonoBehaviour
         return freezeStats.abilityType == AbilityStats.ability.freeze;
     }
 
+    private bool CurrentAbilityIsFire(out AbilityStats fireStats)
+    {
+        fireStats = null;
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null || weaponManager.abilities == null)
+        {
+            return false;
+        }
+
+        if (weaponManager.abilitySlot < 0 || weaponManager.abilitySlot >= weaponManager.abilities.Count)
+        {
+            return false;
+        }
+
+        fireStats = weaponManager.abilities[weaponManager.abilitySlot];
+
+        if (fireStats == null)
+        {
+            return false;
+        }
+
+        return fireStats.abilityType == AbilityStats.ability.fire;
+    }
+
+
+
     private IFreeze FindFreezeTarget(Collider hitCollider)
     {
         IFreeze freezeTarget = hitCollider.GetComponent<IFreeze>();
@@ -1772,7 +1800,7 @@ public class PlayerInputHandler : MonoBehaviour
 
             if (gameManager.instance.playerWeaponManager.crystalHit != null && gameManager.instance.playerStatHandler.crystalBar > 9)
             {
-                effectScale = 2f;              
+                effectScale = 2f;
             }
             crystalEffect.transform.localScale = Vector3.one * effectScale;
 
@@ -1845,6 +1873,54 @@ public class PlayerInputHandler : MonoBehaviour
         {
             freezeTarget.freeze(freezeDuration);
         }
+    }
+
+    private void TryApplyWeaponFire(Collider hitCollider)
+    {
+        if (hitCollider == null)
+        {
+            return;
+        }
+
+        if (!CurrentAbilityIsFire(out AbilityStats fireStats))
+        {
+            return;
+        }
+
+        if (!RollAbilityProc())
+        {
+            return;
+        }
+
+        BurnDOT burnTarget = hitCollider.GetComponent<BurnDOT>();
+
+        if (burnTarget == null)
+        {
+            burnTarget = hitCollider.GetComponentInParent<BurnDOT>();
+        }
+
+        if (burnTarget == null)
+        {
+            burnTarget = hitCollider.GetComponentInChildren<BurnDOT>();
+        }
+
+        if (burnTarget == null)
+        {
+            Component damageComponent = hitCollider.GetComponentInParent<IDamage>() as Component;
+
+            GameObject burnHost = damageComponent != null
+                ? damageComponent.gameObject
+                : hitCollider.gameObject;
+
+            burnTarget = burnHost.GetComponent<BurnDOT>();
+
+            if (burnTarget == null)
+            {
+                burnTarget = burnHost.AddComponent<BurnDOT>();
+            }
+        }
+
+        burnTarget.ApplyBurn(3, 1f, 1, 5, fireStats.loopedEffect);
     }
 
     public bool TryShatterFrozenTarget(Collider hitCollider)

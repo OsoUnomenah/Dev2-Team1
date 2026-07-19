@@ -506,7 +506,7 @@ Transform:
   m_GameObject: {fileID: 551024305684921416}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 29.5, y: 0, z: 8.25}
+  m_LocalPosition: {x: 13.25, y: 0, z: -10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -542,7 +542,7 @@ Transform:
   m_GameObject: {fileID: 776863648630004732}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.63414, y: 3.16, z: 24.995926}
+  m_LocalPosition: {x: 0, y: 3.16, z: 0}
   m_LocalScale: {x: 3.0700002, y: 3.0700002, z: 3.0700002}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -10872,7 +10872,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6411697587907617444
 Transform:
   m_ObjectHideFlags: 0
@@ -10882,7 +10882,7 @@ Transform:
   m_GameObject: {fileID: 1623159374461833146}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071065, z: -0, w: 0.7071071}
-  m_LocalPosition: {x: 23.659943, y: 5.410001, z: 28.84298}
+  m_LocalPosition: {x: 8.159964, y: 5.410001, z: 5.092966}
   m_LocalScale: {x: 28.97, y: 28.97, z: 28.97}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -11986,7 +11986,7 @@ Transform:
   m_GameObject: {fileID: 2889737059929180426}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 11}
+  m_LocalPosition: {x: -13.25, y: 0, z: -12.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23438,7 +23438,7 @@ Transform:
   m_GameObject: {fileID: 5676006834270541167}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28, y: 0, z: 36.25}
+  m_LocalPosition: {x: 8.25, y: 0, z: 11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -28575,6 +28575,7 @@ GameObject:
   - component: {fileID: 1119009734916936967}
   - component: {fileID: 7993828124831359043}
   - component: {fileID: 2523981484494821123}
+  - component: {fileID: 5120589018097994347}
   m_Layer: 0
   m_Name: Fire Boss
   m_TagString: Untagged
@@ -28639,6 +28640,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossTrigger
   Boss: {fileID: 776863648630004732}
+--- !u!114 &5120589018097994347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6128773021732797744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce990a022e19cce44aa8f11b113573d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BurnDOT
+  targetRenderer: {fileID: 0}
+  burnTint: {r: 1, g: 0.45, b: 0.1, a: 1}
+  tintWhileBurning: 0
+  effectAnchor: {fileID: 0}
+  effectLocalOffset: {x: 0, y: 1, z: 0}
+  fireImmune: 1
 --- !u!1 &6167940340674716932
 GameObject:
   m_ObjectHideFlags: 0
@@ -53758,7 +53777,7 @@ Transform:
   m_GameObject: {fileID: 7810232174695738439}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.25, y: 0, z: 39}
+  m_LocalPosition: {x: -14.75, y: 0, z: 10.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -59256,9 +59275,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9085224121494846908}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.549548, y: 2, z: 19.96595}
-  m_LocalScale: {x: 1.5038, y: 1.5038, z: 1.5038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7411850398885756877}
