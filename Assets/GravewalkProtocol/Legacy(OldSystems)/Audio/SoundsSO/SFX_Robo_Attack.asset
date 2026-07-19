@@ -10,19 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eee50487d35164c448ebd6537353de66, type: 3}
-  m_Name: SFX_Zombie_Grunts
+  m_Name: SFX_Robo_Attack
   m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
   soundType: 0
   clips:
-  - {fileID: 8300000, guid: fd62eeb0d0ca5d24ebf4611739244ca3, type: 3}
-  - {fileID: 8300000, guid: 116f210518e8e5d418bb253677f837f5, type: 3}
-  - {fileID: 8300000, guid: 17cdca5e1e15c744bbb9fd553c5309f1, type: 3}
-  - {fileID: 8300000, guid: d3e3c5af37ad7be448f1a67890aed13c, type: 3}
-  - {fileID: 8300000, guid: 8783384ed10038f4588f081398b4f8d9, type: 3}
+  - {fileID: 8300000, guid: d621ff9612e9cec48810e374489120f9, type: 3}
+  - {fileID: 8300000, guid: bbd4d457b09ba3e448faaf52d3e91e6c, type: 3}
+  - {fileID: 8300000, guid: e21396a3dd1c81f48a48f8e83594693e, type: 3}
   loop: 0
   randomizePitch: 1
   randomPitchRangeMod: 0.1
   volume: 1
   pitch: 1
-  fallOffDistMin: 3
-  fallOffDistMax: 15
+  fallOffDistMin: 2
+  fallOffDistMax: 20
