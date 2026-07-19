@@ -39,7 +39,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     [SerializeField] BaseSoundSO _footsteps;
     [Range(5f, 25f)][SerializeField] float gruntRateMax;
     [Range(1f, 20f)][SerializeField] float gruntRateMin;
-    [Range(0.01f, 2f)][SerializeField] float footStepInterval;
+    [SerializeField] private AudioSource audioSource;
     public GameObject explosion;
 
     private float footstepTimer;
@@ -427,20 +427,11 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 
     private void HandleFootsteps()
     {
-        if (currentState != ZombieState.Chase && currentState != ZombieState.Wander)
-        {
-            footstepTimer = 0;
-            return;
-        }
-
-
-        footstepTimer += Time.deltaTime;
-
-        if (footstepTimer >= footStepInterval)
+        if (agent.velocity.magnitude > 0 && !audioSource.isPlaying)
         {
             AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
-            footstepTimer = 0;
         }
+
 
     }
 }
