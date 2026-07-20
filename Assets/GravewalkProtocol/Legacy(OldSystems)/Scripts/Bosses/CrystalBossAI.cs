@@ -683,6 +683,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
 
         if (currentHealth <= 0)
         {
+            gameManager.instance.BossDie();
             allowedMovement = false;
             currentState = BossState.Dead;
             if (agent0 != null)

@@ -666,6 +666,7 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
         if (currentHealth <= 0)
         {
+            gameManager.instance.BossDie();
             currentHealth = 0;
             StartCoroutine(HandleDeath());
         }

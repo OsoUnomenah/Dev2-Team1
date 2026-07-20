@@ -61,7 +61,8 @@ public class StatHandler : MonoBehaviour, IDamage
     [SerializeField] private float deathMenuDelay = 2.5f;
     [SerializeField] private float deathTiltAngle = 75f;
     [SerializeField] private Vector3 deathCameraDrop = new Vector3(0f, -0.6f, 0f);
-
+    [SerializeField] public int bosses;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

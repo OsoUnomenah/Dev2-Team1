@@ -14634,6 +14634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e561a3ff77f15a24bb1a1d9b9a07de91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Portal
+  sceneLoader: {fileID: 6864204962653069021, guid: 9113397a8ca496d42a86608490d1d2db, type: 3}
   nextSceneName: Hub
 --- !u!198 &4864976105087318493
 ParticleSystem:

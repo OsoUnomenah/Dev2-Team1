@@ -777,6 +777,7 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         }
 
         isDead = true;
+        gameManager.instance.BossDie();
         if (BackgroundMusic.Instance != null)
         {
             BackgroundMusic.Instance.RestorePreviousMusic();

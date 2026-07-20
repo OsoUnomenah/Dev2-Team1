@@ -787,6 +787,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
         }
 
         isDead = true;
+        gameManager.instance.BossDie();
         animator?.SetBool(IsDeadHash, true);
         isAttacking = false;
         currentState = BossState.Dead;

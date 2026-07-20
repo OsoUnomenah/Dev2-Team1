@@ -194,6 +194,10 @@ public class gameManager : MonoBehaviour
         FindGrannies();
         runStartTime = Time.time;
     }
+    public void BossDie()
+    {
+        instance.playerStatHandler.bosses -= 1;
+    }
     void FindGrannies()
     {
         grannyNPC = GameObject.FindGameObjectWithTag("Granny");
@@ -201,6 +205,7 @@ public class gameManager : MonoBehaviour
     }
     private void Start()
     {
+        bossesNeededToWinRun = instance.playerStatHandler.bosses;
         playerInputHandler.enabled = true;
         if (nextLevelButton != null)
         {

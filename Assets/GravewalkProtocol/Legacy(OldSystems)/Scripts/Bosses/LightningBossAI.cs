@@ -741,6 +741,7 @@ public class LightningBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBoss
 
         if (currentHealth <= 0 && !dead)
         {
+            gameManager.instance.BossDie();
             dead = true;
             currentState = BossState.Dead;
             if (agent0 != null)

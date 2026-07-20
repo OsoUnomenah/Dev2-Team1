@@ -638,7 +638,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             {
                 exitPortal.SetActive(true);
             }
-
+            gameManager.instance.WinGame();
             Destroy(gameObject);
         }
         else

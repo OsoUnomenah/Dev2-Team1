@@ -113,7 +113,7 @@ public class RunOutcomeUI : MonoBehaviour
 
         if (titleText != null)
         {
-            titleText.text = wonRun ? winTitle : lossTitle;
+            titleText.text = wonRun ? "RUN CLEARED" : "RUN FAILED";
         }
 
         if (statsText != null && gameManager.instance != null)
