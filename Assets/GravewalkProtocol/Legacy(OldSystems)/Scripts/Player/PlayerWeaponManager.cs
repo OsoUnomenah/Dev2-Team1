@@ -145,6 +145,8 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
         CriticalMultiplier = weaponData.criticalMultiplier;
         ChargedZoomFOV = weaponData.chargedZoomFOV;
 
+        FullAuto = weaponData.fullAuto;
+
         Equip(
             weaponData.weaponType,
             damage,
