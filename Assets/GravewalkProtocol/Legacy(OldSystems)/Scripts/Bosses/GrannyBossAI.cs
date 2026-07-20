@@ -94,8 +94,8 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
     private void Start()
     {
-        exitPortal = GameObject.FindGameObjectWithTag("Portal");
-        exitPortal.SetActive(false);
+       // exitPortal = GameObject.FindGameObjectWithTag("Portal");
+        //exitPortal.SetActive(false);
 
 
         currentHealth = maxHealth;
@@ -368,7 +368,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
         yield return new WaitForSeconds(0.2f);
         Vector3 ranPos = transform.position + Random.insideUnitSphere * strikesAttackArea;
-        ranPos.y = transform.position.y + 10f;
+        ranPos.y = transform.position.y;
 
         if (Physics.Raycast(ranPos, Vector3.down, out RaycastHit hit, 100f))
         {
@@ -565,8 +565,8 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
 
         if (timer < 0)
         {
-            //phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
-            phasePicker = 3;
+            phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
+            //phasePicker = 1;
         }
 
 
@@ -602,6 +602,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         onScreenDMG.SetActive(false);
     }
     public bool isInBacklash = false;
+    public GameObject explotion;
     public void takeDamage(int amount)
     {
         if (isInBacklash)
@@ -625,7 +626,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
                 agent0.isStopped = true;
 
             AudioManager.instance.PlaySoundAtPosition(_dead, gameObject);
-
+            Instantiate(explotion,transform.position, Quaternion.identity);
             gameManager.instance.updateGameGoal(-1);
             gameManager.instance.addXp(xpGive);
             RecticleBehaviour.OffHover();

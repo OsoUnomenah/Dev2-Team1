@@ -17,8 +17,10 @@ public class buttonFunctions : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(gameManager.instance.hubLevel);
             gameManager.instance.stateUnpause();
+            gameManager.instance.respawnPlayer();
+            SceneManager.LoadScene(gameManager.instance.hubLevel);
+            
         }
     }
 

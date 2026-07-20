@@ -13519,7 +13519,7 @@ MonoBehaviour:
   levelUpSlots: 1
   crystalBarUI: {fileID: 1358599472817454113}
   runOutcomeUI: {fileID: 3664572134299677240}
-  bossesNeededToWinRun: 0
+  bossesNeededToWinRun: 3
   finalBossDefeated: 0
   playerDamageFlash: {fileID: 159723826231913781}
   playerHealFlash: {fileID: 8394997536159876327}
@@ -13581,7 +13581,7 @@ MonoBehaviour:
   animIsMeleeing: 0
   animIsBlocking: 0
   runZone: 1
-  isProceduralLevel: 0
+  isProceduralLevel: 1
   nextLevelButton: {fileID: 0}
   Modifiers: 
   grannyNPC: {fileID: 0}

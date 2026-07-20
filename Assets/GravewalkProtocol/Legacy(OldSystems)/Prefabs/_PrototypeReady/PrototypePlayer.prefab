@@ -254,6 +254,7 @@ GameObject:
   - component: {fileID: 8468469391232614050}
   - component: {fileID: 7566815013392129164}
   - component: {fileID: 4573178482530213371}
+  - component: {fileID: 4749793023137522778}
   m_Layer: 3
   m_Name: PrototypePlayer
   m_TagString: Player
@@ -413,6 +414,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 12.32
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4749793023137522778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086633954956767422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf9d4974efcd48d43aeab83c48a6c2b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveData
+  objectIndex: 1
 --- !u!1 &2256589803575194123
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,7 +633,7 @@ MonoBehaviour:
   jumpSound: {fileID: 11400000, guid: 27891e2f3f3d8124c975d23ccb9589d2, type: 2}
   landSound: {fileID: 11400000, guid: 61f09600958135d4a9cf0c5a13414909, type: 2}
   crouchSound: {fileID: 11400000, guid: 6048873ea1cdbac4ea01b3d0060eb504, type: 2}
-  standSound: {fileID: 0}
+  standSound: {fileID: 11400000, guid: be4025b019625b64ca2db975a19e1c81, type: 2}
   _dryFire: {fileID: 11400000, guid: afbcd5a775c6f5a4b84c01fc62726967, type: 2}
   footstepBaseInterval: 0.5
   footstepSprintInterval: 0.6
@@ -1309,7 +1323,7 @@ Camera:
   far clip plane: 1051.78
   field of view: 60
   orthographic: 1
-  orthographic size: 35
+  orthographic size: 30
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

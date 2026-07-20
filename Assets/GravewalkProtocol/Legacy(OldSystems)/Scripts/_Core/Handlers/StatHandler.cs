@@ -58,7 +58,7 @@ public class StatHandler : MonoBehaviour, IDamage
     [SerializeField] private Transform playerBody;
     [SerializeField] private Transform playerCamera;
     [SerializeField] private float deathFallDuration = 1f;
-    [SerializeField] private float deathMenuDelay = 1.5f;
+    [SerializeField] private float deathMenuDelay = 2.5f;
     [SerializeField] private float deathTiltAngle = 75f;
     [SerializeField] private Vector3 deathCameraDrop = new Vector3(0f, -0.6f, 0f);
 
@@ -260,7 +260,7 @@ public class StatHandler : MonoBehaviour, IDamage
         yield return StartCoroutine(DeathFallPresentation());
 
         yield return new WaitForSeconds(deathMenuDelay);
-
+        playerBody.rotation = Quaternion.identity;
         gameManager.instance.youLose();
     }
 

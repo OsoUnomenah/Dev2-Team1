@@ -201,7 +201,7 @@ public class gameManager : MonoBehaviour
     }
     private void Start()
     {
-
+        playerInputHandler.enabled = true;
         if (nextLevelButton != null)
         {
             nextLevelButton.onClick.AddListener(NextLevel);
@@ -682,6 +682,7 @@ public class gameManager : MonoBehaviour
 
     public void respawnPlayer()
     {
+        characterController.enabled = true;
         isDead = false;
         player.transform.position = playerSpawnPos.transform.position;
         playerInputHandler.enabled = true;

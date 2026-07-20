@@ -427,7 +427,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 
     private void HandleFootsteps()
     {
-        if (agent.velocity.magnitude > 0 && !audioSource.isPlaying)
+        if (agent.velocity.magnitude > 0) //&& !audioSource.isPlaying)
         {
             AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
         }
