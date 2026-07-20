@@ -11,6 +11,10 @@ public class LoadingScreen : MonoBehaviour
     [SerializeField] private TMP_Text percentageText;
     [SerializeField] private GameObject loadingCanvas;
 
+    [Header("Loading Settings")]
+    [Min(0f)]
+    [SerializeField] private float minimumLoadingTime = 2f;
+
     private void Start()
     {
         if (progressBar != null)
@@ -48,28 +52,50 @@ public class LoadingScreen : MonoBehaviour
 
         if (loadingOperation == null)
         {
+            Debug.LogError(
+                $"LoadingScreen: Failed to load scene '{sceneName}'."
+            );
+
             yield break;
         }
 
         loadingOperation.allowSceneActivation = false;
 
+        float timer = 0f;
+
         while (!loadingOperation.isDone)
         {
-            float progress =
+            timer += Time.unscaledDeltaTime;
+
+            float realProgress =
                 Mathf.Clamp01(loadingOperation.progress / 0.9f);
+
+            float timedProgress =
+                minimumLoadingTime <= 0f
+                    ? 1f
+                    : Mathf.Clamp01(timer / minimumLoadingTime);
+
+            float displayedProgress =
+                Mathf.Min(realProgress, timedProgress);
 
             if (progressBar != null)
             {
-                progressBar.value = progress;
+                progressBar.value = displayedProgress;
             }
 
             if (percentageText != null)
             {
                 percentageText.text =
-                    Mathf.RoundToInt(progress * 100f) + "%";
+                    Mathf.RoundToInt(displayedProgress * 100f) + "%";
             }
 
-            if (loadingOperation.progress >= 0.9f)
+            bool sceneReady =
+                loadingOperation.progress >= 0.9f;
+
+            bool minimumTimePassed =
+                timer >= minimumLoadingTime;
+
+            if (sceneReady && minimumTimePassed)
             {
                 if (progressBar != null)
                 {
@@ -81,7 +107,7 @@ public class LoadingScreen : MonoBehaviour
                     percentageText.text = "100%";
                 }
 
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.2f);
 
                 if (loadingCanvas != null)
                 {

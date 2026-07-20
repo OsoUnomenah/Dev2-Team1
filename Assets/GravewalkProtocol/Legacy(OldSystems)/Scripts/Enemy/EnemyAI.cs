@@ -161,7 +161,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
                     }
                     break;
             }
-            PlayGrunt();
+            //PlayGrunt();
             HandleFootsteps();
         }
        
@@ -422,16 +422,16 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
         Die();
     }
 
-    private void PlayGrunt()
-    {
-        gruntTimer += Time.deltaTime;
-
-        if (gruntTimer > gruntRate)
-        {
-            gruntTimer = 0;
-            AudioManager.instance.PlaySoundFollowPosition(_grunts, gameObject);
-        }
-    }
+   // private void PlayGrunt()
+   // {
+    //    gruntTimer += Time.deltaTime;
+    
+       // if (gruntTimer > gruntRate)
+       // {
+       //     gruntTimer = 0;
+        //    AudioManager.instance.PlaySoundFollowPosition(_grunts, gameObject);
+       // }
+    //}
 
     private void HandleFootsteps()
     {
