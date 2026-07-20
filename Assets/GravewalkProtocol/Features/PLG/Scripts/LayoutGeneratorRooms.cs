@@ -115,7 +115,7 @@ public class LayoutGeneratorRooms : MonoBehaviour
     }
 
     
-    void DrawLayout(Hallway selectedEntryway = null, RectInt roomCandidateRect = new RectInt(), bool isDebug = true) {
+    void DrawLayout(Hallway selectedEntryway = null, RectInt roomCandidateRect = new RectInt(), bool isDebug = false) {
         Renderer renderer = levelLayoutDisplay.GetComponent<Renderer>();
 
         Texture2D layoutTexture = (Texture2D) renderer.sharedMaterial.mainTexture;

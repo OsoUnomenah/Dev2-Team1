@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LightningBoss
   m_EditorClassIdentifier: 
   roomTypes: 8
-  prefab: {fileID: 3862249865332310405, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
+  prefab: {fileID: 7274955273384704235, guid: e5e539e615c7e6b458e014441e20192d, type: 3}
   prefabRotation: 180
   placement:
     array: 02000000
