@@ -423,6 +423,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         canAttack2 = false;
         allowedMovement = false;
         allowedAttack = false;
+        isInBacklash = true;
 
         //Play Start-Up animation
         
@@ -456,6 +457,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         allowedAttack = true;
         allowedMovement = true;
         currentState = BossState.Rest;
+        isInBacklash = false;
         SpawnBacklashShockwave();
         StartCoroutine(attack2Cooldown());
     }
@@ -557,9 +559,14 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         yield return new WaitForSeconds(0.3f);
         onScreenDMG.SetActive(false);
     }
-
+    public bool isInBacklash = false;
     public void takeDamage(int amount)
     {
+        if (isInBacklash)
+        {
+            storedBacklashDamage += 2;
+        }
+            PlayerInTrigger = true;
         //Set the damage to display on the damage text
         gameManager.instance.playerDamageOut = amount;
 
