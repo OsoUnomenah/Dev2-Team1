@@ -293,9 +293,10 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
     bool canAttack3 = true;
     IEnumerator attack3Cooldown()
     {
+        timer = -100;
         allowedMovement = true;
-        yield return new WaitForSeconds(18f);
-        canAttack3 = true;
+        yield return new WaitForSeconds(16f);
+        canBomb = true;
 
     }
     bool isAttack1 = false;
@@ -479,33 +480,74 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
             shockwaveScript.SetDamage(backlashBaseDamage + storedBacklashDamage);
     }
     bool isAttack3 = false;
+    bool attacking = true;
+    bool isBombing = false;
     private void Attack3()
     {
-        Debug.Log("Attack 3");
         if (!canAttack3)
         {
             currentState = BossState.Decide;
             return;
         }
-        if (!isAttack3)
+        if (attacking)
         {
-            timer = Random.Range(500, 1000);
-            isAttack3 = true;
+            if (!isBombing)
+            {
+               
+                allowedMovement = false;
+                isBombing = true;
+                StartCoroutine(BombPlacer());
+
+            }
+            timer -= Time.deltaTime;
+            // Debug.Log("Timer: " + timer);
+
         }
+        else
+        {
+            attacking = true;
+            timer = Random.Range(5f, 10f);
+        }
+        Debug.Log("Attack 1");
 
 
-        if (timer < 0)
+        if (!PlayerInTrigger)
         {
             currentState = BossState.Rest;
-            timer = -100;
-            isAttack3 = false;
-            StartCoroutine(attack3Cooldown());
         }
-
-
-        timer--;
+        if (timer <= 0f)
+        {
+            // Debug.Log("Timer: " + timer);
+            attacking = false;
+            timer = -100;
+            canBomb = false;
+            StartCoroutine(attack3Cooldown());
+            currentState = BossState.Decide;
+        }
     }
-   
+    bool canBomb = true;
+    [SerializeField] BoxCollider bombSpawnArea;
+    [SerializeField] GameObject bomb;
+    IEnumerator BombPlacer()
+    {
+
+        //place a bomb
+        Bounds bounds = bombSpawnArea.bounds;
+
+        float x = Random.Range(bounds.min.x, bounds.max.x);
+        float y = Random.Range(bounds.max.y, bounds.min.y);
+        float z = Random.Range(bounds.max.z, bounds.min.z);
+        UnityEngine.Vector3 vec = new UnityEngine.Vector3(x, y, z);
+
+        UnityEngine.Quaternion rot = UnityEngine.Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+
+        Instantiate(bomb, vec, rot);
+        float rand = Random.Range(1f, 2f);
+        yield return new WaitForSeconds(rand);
+
+        isBombing = false;
+
+    }
 
 
     private void Decide()
@@ -524,7 +566,7 @@ public class GrannyBossAI : MonoBehaviour, IDamage, IInteract, IFreeze
         if (timer < 0)
         {
             //phasePicker = Random.Range(1, 4);// picks from a range of 1 2 or 3
-            phasePicker = 2;
+            phasePicker = 3;
         }
 
 

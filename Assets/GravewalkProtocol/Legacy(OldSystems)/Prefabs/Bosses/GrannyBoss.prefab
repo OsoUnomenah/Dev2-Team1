@@ -21152,6 +21152,9 @@ MonoBehaviour:
   backlashCooldown: 18
   selfFireEffect: {fileID: 1703012024251116830}
   backlashShockwavePrefab: {fileID: 8316448476528047074, guid: 9d347d4913deec24290d5d31f22bc677, type: 3}
+  bombSpawnArea: {fileID: 633243837867285018}
+  bomb: {fileID: 4579968672421019847, guid: 4b36170d8e4e36f458e977fdc6d33d3d, type: 3}
+  isInBacklash: 0
 --- !u!136 &3013863683681949909
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -27053,6 +27056,7 @@ Transform:
   m_Children:
   - {fileID: 6949496394675310955}
   - {fileID: 2173846871999548174}
+  - {fileID: 748252594081626962}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4816698070082631539
@@ -32473,6 +32477,59 @@ Transform:
   - {fileID: 7181765097205327094}
   m_Father: {fileID: 5280723473002895601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6307561560667276748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 748252594081626962}
+  - component: {fileID: 633243837867285018}
+  m_Layer: 0
+  m_Name: bomb spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &748252594081626962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6307561560667276748}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 13.67938, y: -4, z: 25.29431}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5224359992867342691}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &633243837867285018
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6307561560667276748}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 50.076252, y: 3.7801127, z: 20.375471}
+  m_Center: {x: 0.75, y: -1.97, z: 4.32}
 --- !u!1 &6336939647901581828
 GameObject:
   m_ObjectHideFlags: 0

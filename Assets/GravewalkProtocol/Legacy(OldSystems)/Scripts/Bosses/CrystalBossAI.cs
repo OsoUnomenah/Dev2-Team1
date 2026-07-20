@@ -377,18 +377,18 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
     public Material material;
     IEnumerator ChargeUp()
     {
-        material.EnableKeyword("_EMISSION");
+       // material.EnableKeyword("_EMISSION");
 
-        Color color = Color.white;
+        //Color color = Color.white;
 
         float time = 0f;
         float duration = 1f;
 
         while (time < duration)
         {
-            float intensity = Mathf.Lerp(0f, 10f, time / duration);
+            //float intensity = Mathf.Lerp(0f, 4f, time / duration);
 
-            material.SetColor("_EmissionColor", color * intensity);
+            //material.SetColor("_EmissionColor", color * intensity);
 
             time += Time.deltaTime;
             yield return null;
