@@ -124,12 +124,12 @@ GameObject:
   - component: {fileID: 7259173846300487345}
   - component: {fileID: 4103582072935012949}
   m_Layer: 0
-  m_Name: ThermalBacklashShockwave
+  m_Name: ThermalBacklashShockwave 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3247757880912672145
 Transform:
   m_ObjectHideFlags: 0

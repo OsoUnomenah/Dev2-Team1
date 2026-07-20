@@ -25,6 +25,8 @@ TagManager:
   - SniperChargePanel
   - MiniMap
   - NPCInteractUI
+  - Granny
+  - GrannyBoss
   layers:
   - Default
   - TransparentFX

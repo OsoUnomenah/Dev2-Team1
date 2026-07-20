@@ -20,6 +20,12 @@ public class Granny : MonoBehaviour, IInteract
             npcName = "Granny",
             dialogue = "Are you in the mood for some shopping?"
         };
+        
+        DialogueNode jerk = new DialogueNode()
+        {
+            npcName = "Granny",
+            dialogue = "That's all you got to say? Be nicer next time jerk and maybe I'll let you buy something."
+        };
 
         DialogueNode dance = new DialogueNode()
         {
@@ -42,6 +48,7 @@ public class Granny : MonoBehaviour, IInteract
                 nextNode = dance
             }
         };
+        
 
         openShop.responses = new List<DialogueResponse>()
         {
@@ -55,8 +62,21 @@ public class Granny : MonoBehaviour, IInteract
             new DialogueResponse()
             {
                 responseText = "No",
-                nextNode = null
+                nextNode = null,
+                onSelected = gameManager.instance.stateUnpause
             }
+        };
+
+        jerk.responses = new List<DialogueResponse>()
+        {
+            new DialogueResponse()
+            {
+                responseText = "Jeez, okay then...",
+                nextNode = null,
+                onSelected = gameManager.instance.stateUnpause
+            },
+
+           
         };
 
         dance.responses = new List<DialogueResponse>()
@@ -69,8 +89,8 @@ public class Granny : MonoBehaviour, IInteract
 
             new DialogueResponse()
             {
-                responseText = "Ok...",
-                nextNode = null
+                responseText = "Okay...",
+                nextNode = jerk
             }
         };
     }
@@ -79,7 +99,7 @@ public class Granny : MonoBehaviour, IInteract
     {
         if (greeting == null)
             return;
-
+        gameManager.instance.statePause();
         NPCInteractionsUI.instance.StartDialogue(greeting);
     }
 

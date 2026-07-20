@@ -174,6 +174,8 @@ public class gameManager : MonoBehaviour
 
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
+    public GameObject grannyNPC;
+    public GameObject grannyBoss;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -189,10 +191,14 @@ public class gameManager : MonoBehaviour
         {
             InitLevelBuilder();
         }
-
+        FindGrannies();
         runStartTime = Time.time;
     }
-
+    void FindGrannies()
+    {
+        grannyNPC = GameObject.FindGameObjectWithTag("Granny");
+        grannyBoss = GameObject.FindGameObjectWithTag("GrannyBoss");
+    }
     private void Start()
     {
 
@@ -205,6 +211,15 @@ public class gameManager : MonoBehaviour
 
         ChooseLevel();
 
+        if(instance.bossesNeededToWinRun == 0)
+        {
+            Destroy(grannyNPC);
+           
+        }
+        else
+        {
+            Destroy(grannyBoss);
+        }
     }
 
     public void InitLevelBuilder()
