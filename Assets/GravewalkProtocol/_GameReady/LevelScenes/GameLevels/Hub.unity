@@ -11774,6 +11774,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 978272326602891856, guid: 5c7bb200bc45dfd4a9bb7faf8d890366, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0b0cea34434ae634da9459377f96b87a, type: 2}
+    - target: {fileID: 2836945149269815846, guid: 5c7bb200bc45dfd4a9bb7faf8d890366, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0b0cea34434ae634da9459377f96b87a, type: 2}
+    - target: {fileID: 3590848380870861236, guid: 5c7bb200bc45dfd4a9bb7faf8d890366, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0b0cea34434ae634da9459377f96b87a, type: 2}
     - target: {fileID: 3649798542709529551, guid: 5c7bb200bc45dfd4a9bb7faf8d890366, type: 3}
       propertyPath: m_LocalPosition.x
       value: 74.27227
@@ -11818,6 +11830,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'FreezeLevelTeleporter '
       objectReference: {fileID: 0}
+    - target: {fileID: 4328743863932231336, guid: 5c7bb200bc45dfd4a9bb7faf8d890366, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0b0cea34434ae634da9459377f96b87a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20854,10 +20870,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 10803112548826963, guid: e631a65c517e6bc499e9cacb311d38a2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b7ba4c96310cdc74f9f458b9c074bd4e, type: 2}
     - target: {fileID: 2619325955741612715, guid: e631a65c517e6bc499e9cacb311d38a2, type: 3}
       propertyPath: m_Name
       value: 'ToxicLevelTeleporter '
       objectReference: {fileID: 0}
+    - target: {fileID: 3518699399740417854, guid: e631a65c517e6bc499e9cacb311d38a2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b7ba4c96310cdc74f9f458b9c074bd4e, type: 2}
     - target: {fileID: 6596147941186889722, guid: e631a65c517e6bc499e9cacb311d38a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 56.04775
@@ -20898,6 +20922,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7914121526365976936, guid: e631a65c517e6bc499e9cacb311d38a2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b7ba4c96310cdc74f9f458b9c074bd4e, type: 2}
+    - target: {fileID: 8027744073394406689, guid: e631a65c517e6bc499e9cacb311d38a2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b7ba4c96310cdc74f9f458b9c074bd4e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -82216,6 +82248,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2486496487545811395, guid: 6a9abb03a015d4146b3360aa190815f8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cf2e201248f000e41a229f2998f9dc49, type: 2}
+    - target: {fileID: 3761592787312448981, guid: 6a9abb03a015d4146b3360aa190815f8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cf2e201248f000e41a229f2998f9dc49, type: 2}
+    - target: {fileID: 4543032976231197514, guid: 6a9abb03a015d4146b3360aa190815f8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cf2e201248f000e41a229f2998f9dc49, type: 2}
+    - target: {fileID: 5653168118842631632, guid: 6a9abb03a015d4146b3360aa190815f8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cf2e201248f000e41a229f2998f9dc49, type: 2}
     - target: {fileID: 5876174604052715107, guid: 6a9abb03a015d4146b3360aa190815f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 68.60149
@@ -90060,10 +90108,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2781061739213361069, guid: 787bc872fae0bc449a60024e5ba8f194, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a6d7409d377c04e418081d6f0ac1a369, type: 2}
+    - target: {fileID: 3520037828831583806, guid: 787bc872fae0bc449a60024e5ba8f194, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a6d7409d377c04e418081d6f0ac1a369, type: 2}
     - target: {fileID: 5460186196798806298, guid: 787bc872fae0bc449a60024e5ba8f194, type: 3}
       propertyPath: m_Name
       value: 'LightningLevelTeleporter '
       objectReference: {fileID: 0}
+    - target: {fileID: 5947879797149801684, guid: 787bc872fae0bc449a60024e5ba8f194, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a6d7409d377c04e418081d6f0ac1a369, type: 2}
+    - target: {fileID: 6474079893875621616, guid: 787bc872fae0bc449a60024e5ba8f194, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a6d7409d377c04e418081d6f0ac1a369, type: 2}
     - target: {fileID: 7264340801475250885, guid: 787bc872fae0bc449a60024e5ba8f194, type: 3}
       propertyPath: m_LocalPosition.x
       value: 62.895164
@@ -144159,6 +144223,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'FireLevelTeleporter '
       objectReference: {fileID: 0}
+    - target: {fileID: 1810341096280827577, guid: 67852fceb259b054b85374c166b778aa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 04f93303d6a249645b7ed2139b3673d1, type: 2}
     - target: {fileID: 5129905174643886437, guid: 67852fceb259b054b85374c166b778aa, type: 3}
       propertyPath: m_LocalPosition.x
       value: 80.84977
@@ -144199,6 +144267,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7575227396602374553, guid: 67852fceb259b054b85374c166b778aa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 04f93303d6a249645b7ed2139b3673d1, type: 2}
+    - target: {fileID: 8194265619545686196, guid: 67852fceb259b054b85374c166b778aa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 04f93303d6a249645b7ed2139b3673d1, type: 2}
+    - target: {fileID: 8438216480533206848, guid: 67852fceb259b054b85374c166b778aa, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 04f93303d6a249645b7ed2139b3673d1, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -154762,6 +154842,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: CrystalLevelTeleporter
       objectReference: {fileID: 0}
+    - target: {fileID: 2544756946240252596, guid: 7a6fa9e8c40729a4b932ca40bb4875d0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 98e02bcb82a321146928f1daba23a872, type: 2}
+    - target: {fileID: 2913241051578725925, guid: 7a6fa9e8c40729a4b932ca40bb4875d0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 98e02bcb82a321146928f1daba23a872, type: 2}
+    - target: {fileID: 3261797651731714029, guid: 7a6fa9e8c40729a4b932ca40bb4875d0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 98e02bcb82a321146928f1daba23a872, type: 2}
     - target: {fileID: 4393572148884808284, guid: 7a6fa9e8c40729a4b932ca40bb4875d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 88.38267
