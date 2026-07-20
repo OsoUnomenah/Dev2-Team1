@@ -12,18 +12,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         FloorSpikes
     }
 
-    [Header("Boss Animation")]
-    [SerializeField] private Animator bossAnimator;
-
-    [Header("Hit Reaction")]
-    [SerializeField] private float baseHitReactionThreshold = 75f;
-    [SerializeField] private float thresholdIncreasePerPlayerLevel = 8f;
-    [SerializeField] private float hitReactionCooldown = 2.5f;
-
-    private float damageSinceLastReaction;
-    private float nextHitReactionTime;
-
-
     [Header("Freeze Visual")]
     [SerializeField] private FreezeVisualController freezeVisualController;
 
@@ -47,15 +35,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     [SerializeField] private BaseSoundSO hitSound;
     [SerializeField] private BaseSoundSO deadSound;
     [SerializeField] private BaseSoundSO attackWarningSound;
-    [SerializeField] private BaseSoundSO iceLaunchSound;
-    [SerializeField] private BaseSoundSO spikeShatterSound;
-    [SerializeField] private BaseSoundSO groundPoundSound;
-    [SerializeField] private BaseSoundSO frostArcSound;
-    [SerializeField] private BaseSoundSO frostPoolImpactSound;
-    [SerializeField] private BaseSoundSO icicleRiseSound;
-    [SerializeField] private BaseSoundSO bossFreezeSound;
-
-    [SerializeField] private AudioClip bossMusic;
 
     [Header("Pattern Settings")]
     [SerializeField] private float timeBetweenAttacks = 2f;
@@ -64,36 +43,21 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
 
     [Header("Wall Smash Attack")]
     [SerializeField] private Transform[] spikeWalls;
-    [SerializeField] private Transform leftSpikeCastOrigin;
-    [SerializeField] private Transform rightSpikeCastOrigin;
-    
-    [SerializeField] private float firstPunchDelay = 0.35f;
-    [SerializeField] private float secondPunchDelay = 0.55f;
-    [SerializeField] private ParticleSystem spikeWallShatterEffectPrefab;
-    [SerializeField] private float spikeHomingSpeed = 14f;
-    [SerializeField] private float spikeTargetHeight = 1.2f;
-    [SerializeField] private float spikeMaxFlightTime = 2f;
+    [SerializeField] private float wallMoveDistance = 8f;
+    [SerializeField] private float wallMoveTime = 0.75f;
+    [SerializeField] private float wallHoldTime = 1f;
 
     [Header("Freeze Zone Attack")]
+    [SerializeField] private GameObject[] freezeZones;
+    [SerializeField] private Transform[] freezeZonePoints;
+    [SerializeField] private int freezeZonesToUse = 2;
     [SerializeField] private float freezeZoneActiveTime = 4f;
-    [SerializeField] private float groundPoundImpactDelay = 1.1f;
-    [SerializeField] private float frostWaveTravelTime = 0.65f;
-    
-
-    [SerializeField] private Transform groundPoundImpactOrigin;
-    [SerializeField] private ParticleSystem groundPoundImpactEffectPrefab;
-    [SerializeField] private GameObject frostArcProjectilePrefab;
-    [SerializeField] private float frostArcHeight = 4f;
-
-    [SerializeField] private GameObject bossFrostPoolZonePrefab;
 
     [Header("Floor Spike Attack")]
+    [SerializeField] private Transform[] floorSpikes;
+    [SerializeField] private float spikeRiseHeight = 4f;
     [SerializeField] private float spikeMoveTime = 0.5f;
-    [SerializeField] private GameObject icicleTrailSegmentPrefab;
-    [SerializeField] private int icicleTrailSegmentCount = 8;
-    [SerializeField] private float icicleTrailSpawnInterval = 0.2f;
-    [SerializeField] private float icicleTrailSegmentLifetime = 2f;
-    [SerializeField] private float icicleTrailBuriedDepth = 2.5f;
+    [SerializeField] private float spikeHoldTime = 1.5f;
 
     [Header("Movement / Tracking")]
     [SerializeField] private bool followPlayer = true;
@@ -125,11 +89,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     private void Start()
     {
         currentHealth = maxHealth;
-
-        if (bossAnimator == null)
-        {
-            bossAnimator = GetComponentInChildren<Animator>();
-        }
 
         if (freezeVisualController == null)
         {
@@ -165,8 +124,7 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
             }
         }
 
-       
-        HideSpikeWalls();
+        HideFreezeZones();
         UpdateHealthBar();
 
         gameManager.instance.updateGameGoal(1);
@@ -174,15 +132,8 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
 
     private void Update()
     {
-        bool shouldMove = false;
-
         if (isDead || isFrozen || !playerInTrigger || player == null)
         {
-            if (bossAnimator != null)
-            {
-                bossAnimator.SetBool("IsMoving", false);
-            }
-
             return;
         }
 
@@ -190,24 +141,12 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
 
         if (followPlayer)
         {
-            bool movementBlocked =
-                stopMovingWhileAttacking && isPerformingAttack;
-
-            float distance =
-                Vector3.Distance(transform.position, player.position);
-
-            shouldMove =
-                !movementBlocked && distance > stopDistance;
-
-            if (shouldMove)
+            if (stopMovingWhileAttacking && isPerformingAttack)
             {
-                MoveTowardPlayer();
+                return;
             }
-        }
 
-        if (bossAnimator != null)
-        {
-            bossAnimator.SetBool("IsMoving", shouldMove);
+            MoveTowardPlayer();
         }
     }
 
@@ -219,7 +158,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         }
 
         playerInTrigger = true;
-        StartBossMusic();
 
         if (bossLoopRoutine == null)
         {
@@ -305,368 +243,112 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
 
     private IEnumerator WallSmashAttack()
     {
-        if (spikeWalls == null
-            || spikeWalls.Length < 2
-            || player == null
-            || leftSpikeCastOrigin == null
-            || rightSpikeCastOrigin == null)
+        if (spikeWalls == null || spikeWalls.Length == 0 || player == null)
         {
             yield break;
         }
 
-        if (bossAnimator != null)
+        Transform wall = spikeWalls[0];
+        float closestDistance = Vector3.Distance(wall.position, player.position);
+
+        for (int i = 1; i < spikeWalls.Length; i++)
         {
-            bossAnimator.SetBool("IsMoving", false);
-            bossAnimator.SetTrigger("WallSpikeAttack");
-        }
+            float distance = Vector3.Distance(spikeWalls[i].position, player.position);
 
-        yield return new WaitForSeconds(firstPunchDelay);
-
-        Coroutine firstWallRoutine = StartCoroutine(
-            LaunchSpikeWall(
-                spikeWalls[0],
-                leftSpikeCastOrigin
-            )
-        );
-
-        yield return new WaitForSeconds(secondPunchDelay);
-
-        Coroutine secondWallRoutine = StartCoroutine(
-            LaunchSpikeWall(
-                spikeWalls[1],
-                rightSpikeCastOrigin
-            )
-        );
-
-        yield return firstWallRoutine;
-        yield return secondWallRoutine;
-    }
-
-    private IEnumerator LaunchSpikeWall(
-    Transform wall,
-    Transform castOrigin
-)
-    {
-        if (wall == null || castOrigin == null || player == null)
-        {
-            yield break;
-        }
-
-        wall.position = castOrigin.position;
-        wall.gameObject.SetActive(true);
-
-        if (iceLaunchSound != null && AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySoundAtPosition(
-                iceLaunchSound,
-                wall.gameObject
-            );
-        }
-
-        float flightTimer = 0f;
-
-        while (flightTimer < spikeMaxFlightTime
-               && player != null
-               && !isDead)
-        {
-            flightTimer += Time.deltaTime;
-
-            Vector3 targetPosition =
-                player.position + Vector3.up * spikeTargetHeight;
-
-            Vector3 direction =
-                targetPosition - wall.position;
-
-            // The spike has reached the player's body area.
-            if (direction.sqrMagnitude <= 0.36f)
+            if (distance < closestDistance)
             {
-                break;
+                closestDistance = distance;
+                wall = spikeWalls[i];
             }
-
-            direction.Normalize();
-
-            // Continuously face the player's current position.
-            wall.rotation = Quaternion.LookRotation(direction);
-
-            // Continuously move toward the player's current position.
-            wall.position = Vector3.MoveTowards(
-                wall.position,
-                targetPosition,
-                spikeHomingSpeed * Time.deltaTime
-            );
-
-            yield return null;
         }
 
-        if (spikeShatterSound != null && AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySoundAtPosition(
-                spikeShatterSound,
-                wall.gameObject
-            );
-        }
+        Vector3 startPos = wall.position;
 
-        if (spikeWallShatterEffectPrefab != null)
-        {
-            ParticleSystem shatterEffect = Instantiate(
-                spikeWallShatterEffectPrefab,
-                wall.position,
-                wall.rotation
-            );
+        Vector3 moveDirection = player.position - wall.position;
+        moveDirection.y = 0f;
+        moveDirection.Normalize();
 
-            shatterEffect.Play();
-        }
+        Vector3 endPos = startPos + moveDirection * wallMoveDistance;
 
-        wall.gameObject.SetActive(false);
-        wall.position = castOrigin.position;
+        yield return StartCoroutine(MoveTransform(wall, startPos, endPos, wallMoveTime));
+
+        yield return new WaitForSeconds(wallHoldTime);
+
+        yield return StartCoroutine(MoveTransform(wall, endPos, startPos, wallMoveTime));
     }
 
     private IEnumerator FreezeZoneAttack()
     {
-        if (player == null
-            || groundPoundImpactOrigin == null
-            || frostArcProjectilePrefab == null
-            || bossFrostPoolZonePrefab == null)
+        if (freezeZones == null || freezeZones.Length == 0 || player == null)
         {
             yield break;
         }
 
-        if (bossAnimator != null)
+        HideFreezeZones();
+
+        int amount = Mathf.Clamp(freezeZonesToUse, 1, freezeZones.Length);
+        Vector3 playerPos = player.position;
+
+        for (int i = 0; i < amount; i++)
         {
-            bossAnimator.SetBool("IsMoving", false);
-            bossAnimator.SetTrigger("GroundPoundAttack");
-        }
+            GameObject zone = freezeZones[i];
 
-        // Wait until the boss's hands strike the ground.
-        yield return new WaitForSeconds(groundPoundImpactDelay);
+            if (zone == null)
+            {
+                continue;
+            }
 
-        if (groundPoundSound != null && AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySoundAtPosition(
-                groundPoundSound,
-                groundPoundImpactOrigin.gameObject
-            );
-        }
+            Vector3 offset = Vector3.zero;
 
-        if (groundPoundImpactEffectPrefab != null)
-        {
-            ParticleSystem impactEffect = Instantiate(
-                groundPoundImpactEffectPrefab,
-                groundPoundImpactOrigin.position,
-                groundPoundImpactOrigin.rotation
-            );
+            if (i == 1)
+            {
+                offset = player.right * 4f;
+            }
+            else if (i == 2)
+            {
+                offset = -player.right * 4f;
+            }
 
-            impactEffect.Play();
-        }
-
-        GameObject frostProjectile = Instantiate(
-            frostArcProjectilePrefab,
-            groundPoundImpactOrigin.position,
-            Quaternion.identity
-        );
-
-        if (frostArcSound != null && AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySoundAtPosition(
-                frostArcSound,
-                frostProjectile
-            );
-        }
-
-        Vector3 startPosition = groundPoundImpactOrigin.position;
-        Vector3 landingPosition = player.position;
-        landingPosition.y = groundPoundImpactOrigin.position.y;
-
-        float timer = 0f;
-
-        while (timer < frostWaveTravelTime
-               && player != null
-               && !isDead)
-        {
-            timer += Time.deltaTime;
-
-            float percent = Mathf.Clamp01(
-                timer / frostWaveTravelTime
+            zone.transform.position = new Vector3(
+                playerPos.x + offset.x,
+                zone.transform.position.y,
+                playerPos.z + offset.z
             );
 
-            // Continue aiming toward the player's moving position.
-            landingPosition = player.position;
-            landingPosition.y = groundPoundImpactOrigin.position.y;
-
-            Vector3 controlPoint =
-                Vector3.Lerp(
-                    startPosition,
-                    landingPosition,
-                    0.5f
-                )
-                + Vector3.up * frostArcHeight;
-
-            float inversePercent = 1f - percent;
-
-            frostProjectile.transform.position =
-                inversePercent * inversePercent * startPosition
-                + 2f * inversePercent * percent * controlPoint
-                + percent * percent * landingPosition;
-
-            yield return null;
-        }
-
-        Destroy(frostProjectile);
-
-        GameObject frostPool = Instantiate(
-            bossFrostPoolZonePrefab,
-            landingPosition,
-            Quaternion.Euler(
-                0f,
-                Random.Range(0f, 360f),
-                0f
-            )
-        );
-
-        if (frostPoolImpactSound != null && AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySoundAtPosition(
-                frostPoolImpactSound,
-                frostPool
-            );
+            zone.SetActive(true);
         }
 
         yield return new WaitForSeconds(freezeZoneActiveTime);
 
-        if (frostPool != null)
-        {
-            Destroy(frostPool);
-        }
+        HideFreezeZones();
     }
-
-    
 
     private IEnumerator FloorSpikeAttack()
     {
-        if (icicleTrailSegmentPrefab == null || player == null)
+        if (floorSpikes == null || floorSpikes.Length == 0 || player == null)
         {
             yield break;
         }
 
-        if (bossAnimator != null)
-        {
-            bossAnimator.SetBool("IsMoving", false);
-            bossAnimator.SetTrigger("IcicleSweepAttack");
-        }
+        Transform spike = floorSpikes[Random.Range(0, floorSpikes.Length)];
 
-        float groundHeight =
-            groundPoundImpactOrigin != null
-                ? groundPoundImpactOrigin.position.y
-                : transform.position.y;
+        Vector3 playerPos = player.position;
 
-        Vector3 trailPosition = transform.position;
-        trailPosition.y = groundHeight;
-
-        int segmentCount = Mathf.Max(1, icicleTrailSegmentCount);
-
-        for (int i = 0; i < segmentCount; i++)
-        {
-            if (player == null || isDead)
-            {
-                yield break;
-            }
-
-            Vector3 targetPosition = player.position;
-            targetPosition.y = groundHeight;
-
-            int remainingSegments = segmentCount - i;
-
-            Vector3 nextPosition = Vector3.Lerp(
-                trailPosition,
-                targetPosition,
-                1f / remainingSegments
-            );
-
-            Vector3 direction = targetPosition - trailPosition;
-            direction.y = 0f;
-
-            Quaternion segmentRotation =
-                direction.sqrMagnitude > 0.01f
-                    ? Quaternion.LookRotation(direction)
-                    : transform.rotation;
-
-            Vector3 buriedPosition =
-                nextPosition + Vector3.down * icicleTrailBuriedDepth;
-
-            GameObject segment = Instantiate(
-                icicleTrailSegmentPrefab,
-                buriedPosition,
-                segmentRotation
-            );
-
-            StartCoroutine(
-                RaiseIcicleTrailSegment(
-                    segment,
-                    nextPosition
-                )
-            );
-
-            // Play on alternating segments to avoid excessive overlapping audio.
-            if (i % 2 == 0
-                && icicleRiseSound != null
-                && AudioManager.instance != null)
-            {
-                AudioManager.instance.PlaySoundAtPosition(
-                    icicleRiseSound,
-                    segment
-                );
-            }
-
-            trailPosition = nextPosition;
-
-            yield return new WaitForSeconds(
-                icicleTrailSpawnInterval
-            );
-        }
-    }
-
-    private IEnumerator RaiseIcicleTrailSegment(
-    GameObject segment,
-    Vector3 surfacePosition
-)
-    {
-        if (segment == null)
-        {
-            yield break;
-        }
-
-        Collider damageCollider =
-            segment.GetComponent<Collider>();
-
-        if (damageCollider != null)
-        {
-            damageCollider.enabled = false;
-        }
-
-        Vector3 buriedPosition = segment.transform.position;
-
-        yield return StartCoroutine(
-            MoveTransform(
-                segment.transform,
-                buriedPosition,
-                surfacePosition,
-                spikeMoveTime
-            )
+        Vector3 startPos = new Vector3(
+            playerPos.x,
+            spike.position.y,
+            playerPos.z
         );
 
-        if (damageCollider != null)
-        {
-            damageCollider.enabled = true;
-        }
+        spike.position = startPos;
 
-        yield return new WaitForSeconds(
-            icicleTrailSegmentLifetime
-        );
+        Vector3 endPos = startPos + Vector3.up * spikeRiseHeight;
 
-        if (segment != null)
-        {
-            Destroy(segment);
-        }
+        yield return StartCoroutine(MoveTransform(spike, startPos, endPos, spikeMoveTime));
+
+        yield return new WaitForSeconds(spikeHoldTime);
+
+        yield return StartCoroutine(MoveTransform(spike, endPos, startPos, spikeMoveTime));
     }
 
     private IEnumerator MoveTransform(Transform obj, Vector3 start, Vector3 end, float moveTime)
@@ -687,19 +369,18 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         obj.position = end;
     }
 
-
-    private void HideSpikeWalls()
+    private void HideFreezeZones()
     {
-        if (spikeWalls == null)
+        if (freezeZones == null)
         {
             return;
         }
 
-        for (int i = 0; i < spikeWalls.Length; i++)
+        for (int i = 0; i < freezeZones.Length; i++)
         {
-            if (spikeWalls[i] != null)
+            if (freezeZones[i] != null)
             {
-                spikeWalls[i].gameObject.SetActive(false);
+                freezeZones[i].SetActive(false);
             }
         }
     }
@@ -711,14 +392,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
             return;
         }
 
-        playerInTrigger = true;
-        StartBossMusic();
-
-        if (bossLoopRoutine == null)
-        {
-            bossLoopRoutine = StartCoroutine(BossAttackLoop());
-        }
-
         gameManager.instance.playerDamageOut = amount;
 
         if (damageText != null)
@@ -727,7 +400,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         }
 
         currentHealth -= amount;
-        damageSinceLastReaction += amount;
         UpdateHealthBar();
 
         if (currentHealth <= 0)
@@ -736,30 +408,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         }
         else
         {
-            float playerLevel = 1f;
-
-            if (gameManager.instance != null)
-            {
-                playerLevel = Mathf.Max(1f, gameManager.instance.level);
-            }
-
-            float currentHitReactionThreshold =
-                baseHitReactionThreshold
-                + ((playerLevel - 1f) * thresholdIncreasePerPlayerLevel);
-
-            if (damageSinceLastReaction >= currentHitReactionThreshold
-                && Time.time >= nextHitReactionTime
-                && !isPerformingAttack
-                && !isFrozen
-                && bossAnimator != null)
-            {
-                damageSinceLastReaction = 0f;
-                nextHitReactionTime = Time.time + hitReactionCooldown;
-
-                bossAnimator.SetBool("IsMoving", false);
-                bossAnimator.SetTrigger("HitReaction");
-            }
-
             if (AudioManager.instance != null && hitSound != null)
             {
                 AudioManager.instance.PlaySoundAtPosition(hitSound, gameObject);
@@ -771,33 +419,7 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
 
     private void Die()
     {
-        if (isDead)
-        {
-            return;
-        }
-
         isDead = true;
-        if (BackgroundMusic.Instance != null)
-        {
-            BackgroundMusic.Instance.RestorePreviousMusic();
-        }
-        isPerformingAttack = false;
-
-        StopAllCoroutines();
-     
-
-        if (bossAnimator != null)
-        {
-            bossAnimator.speed = 1f;
-            bossAnimator.SetBool("IsMoving", false);
-            bossAnimator.SetTrigger("Death");
-        }
-        Collider[] bossColliders = GetComponentsInChildren<Collider>();
-
-        for (int i = 0; i < bossColliders.Length; i++)
-        {
-            bossColliders[i].enabled = false;
-        }
 
         if (deadSound != null && AudioManager.instance != null)
         {
@@ -816,7 +438,9 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
             exitPortal.SetActive(true);
         }
 
-        
+        HideFreezeZones();
+
+        Destroy(gameObject);
     }
 
     private void UpdateHealthBar()
@@ -892,20 +516,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
     {
         isFrozen = true;
 
-        if (bossFreezeSound != null && AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySoundAtPosition(
-                bossFreezeSound,
-                gameObject
-            );
-        }
-
-        if (bossAnimator != null)
-        {
-            bossAnimator.SetBool("IsMoving", false);
-            bossAnimator.speed = 0f;
-        }
-
         if (freezeVisualController != null)
         {
             freezeVisualController.ShowFreezeEffect();
@@ -921,11 +531,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         if (freezeVisualController != null)
         {
             freezeVisualController.HideFreezeEffect();
-        }
-
-        if (bossAnimator != null)
-        {
-            bossAnimator.speed = 1f;
         }
 
         isFrozen = false;
@@ -982,14 +587,6 @@ public class FreezeBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTri
         direction.Normalize();
 
         transform.position += direction * moveSpeed * Time.deltaTime;
-    }
-
-    private void StartBossMusic()
-    {
-        if (bossMusic != null && BackgroundMusic.Instance != null)
-        {
-            BackgroundMusic.Instance.PlayBossMusic(bossMusic);
-        }
     }
 
     public void Interact()

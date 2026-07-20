@@ -45,8 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbd269d978d1191479970fd4acf8ab24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BackgroundMusic
-  audioSource: {fileID: 5751747567777949119}
-  fadeDuration: 0.5
 --- !u!1 &5715826811710062227
 GameObject:
   m_ObjectHideFlags: 0
