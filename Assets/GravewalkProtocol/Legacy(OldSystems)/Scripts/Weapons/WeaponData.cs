@@ -80,6 +80,7 @@ public class WeaponData : ScriptableObject
     [Header("Visuals")]
     public GameObject weaponPrefab;
     public GameObject hitEffect;
+    public GameObject weaponPickUp;
 
     [Header("Audio")]
     public BaseSoundSO shootSound;

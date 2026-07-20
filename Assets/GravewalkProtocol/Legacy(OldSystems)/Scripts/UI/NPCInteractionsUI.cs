@@ -123,15 +123,20 @@ public class NPCInteractionsUI : MonoBehaviour
         }
         else
         {
-            CloseDialogue();
+            CloseDialogue(response);
         }
     }
 
-    public void CloseDialogue()
+    public void CloseDialogue(DialogueResponse response)
     {
         gameObject.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+
+        if (response.responseText != "Yes")
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
         gameManager.instance.playerInputHandler.rotateAction.Enable();
     }
 

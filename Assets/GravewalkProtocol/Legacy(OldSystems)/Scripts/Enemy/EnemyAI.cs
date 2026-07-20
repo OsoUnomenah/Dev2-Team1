@@ -27,6 +27,9 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
     [SerializeField] private float wanderRadius = 10f;
     [SerializeField] private float wanderTimer = 5f;
 
+    [Header("Freeze Visual")]
+    [SerializeField] private FreezeVisualController freezeVisualController;
+
     [Header("Audio")]
     [SerializeField] BaseSoundSO _hit;
     [SerializeField] BaseSoundSO _dead;
@@ -35,11 +38,13 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
     [SerializeField] BaseSoundSO _footsteps;
     [Range(5f, 25f)][SerializeField] float gruntRateMax;
     [Range(1f, 20f)][SerializeField] float gruntRateMin;
-    [Range(0.01f, 2f)][SerializeField] float footStepInterval;
+    [SerializeField] private AudioSource audioSource;
+    public GameObject explosion;
 
     private float footstepTimer;
     private float gruntRate;
     private float gruntTimer;
+    private Coroutine freezeRoutine;
 
     [Header("Currency")]
     [SerializeField] private int minCurrencyDrop = 1;
@@ -89,6 +94,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
         currentHealth = maxHealth;
         updateHealthBar();
 
+        if (freezeVisualController == null)
+        {
+            freezeVisualController = GetComponent<FreezeVisualController>();
+        }
 
         originalColor = model.material.color;
 
@@ -128,6 +137,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
                     {
                         currentState = ZombieState.Chase;
                     }
+                    SpinWheels();
                     break;
 
                 case ZombieState.Chase:
@@ -137,6 +147,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
                     {
                         currentState = ZombieState.Attack;
                     }
+                    SpinWheels();
                     break;
 
                 case ZombieState.Attack:
@@ -153,9 +164,17 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
             PlayGrunt();
             HandleFootsteps();
         }
-        else
+       
+    }
+    public int spinSpeed;
+    public GameObject wheel1;
+    public GameObject wheel2;
+    private void SpinWheels()
+    {
+        if (agent.velocity.magnitude > 0.1f)
         {
-            model.material.color = Color.blue;
+            wheel1.transform.Rotate(Vector3.up * spinSpeed * Time.deltaTime);
+            wheel2.transform.Rotate(Vector3.down * spinSpeed * Time.deltaTime);
         }
     }
 
@@ -248,6 +267,7 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
         {
 
             Die();
+            StartCoroutine(death());
         }
         else
         {
@@ -256,7 +276,12 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
             StartCoroutine(flashRed());
         }
     }
-
+    IEnumerator death()
+    {
+        Instantiate(explosion, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(.5f);
+        Destroy(gameObject);
+    }
     private void Die()
     {
         if (isDead)
@@ -328,19 +353,53 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
 
     public void freeze(float duration)
     {
-        isFroze = true;
-        StartCoroutine(freezeHandler(duration));
+        if (isDead)
+        {
+            return;
+        }
+
+        if (freezeRoutine != null)
+        {
+            StopCoroutine(freezeRoutine);
+        }
+
+        freezeRoutine = StartCoroutine(freezeHandler(duration));
     }
-    IEnumerator freezeHandler(float duration)
+
+    private IEnumerator freezeHandler(float duration)
     {
-        model.material.color = Color.blue;
-        agent.isStopped = true;
+        isFroze = true;
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = true;
+        }
+
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.ShowFreezeEffect();
+        }
 
         yield return new WaitForSeconds(duration);
 
-        model.material.color = originalColor;
+        if (isDead)
+        {
+            yield break;
+        }
+
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.HideFreezeEffect();
+        }
+
         isFroze = false;
-        agent.isStopped = false;
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = false;
+        }
+
+        freezeRoutine = null;
     }
 
     private int GetCurrencyDrop()
@@ -355,7 +414,10 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
             return;
         }
 
-        Debug.Log("SHATTER CALLED ON: " + gameObject.name);
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.PlayShatterEffect();
+        }
 
         Die();
     }
@@ -373,20 +435,11 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
 
     private void HandleFootsteps()
     {
-        if (currentState != ZombieState.Chase && currentState != ZombieState.Wander)
-        {
-            footstepTimer = 0;
-            return;
-        }
-
-
-        footstepTimer += Time.deltaTime;
-
-        if (footstepTimer >= footStepInterval)
+        if (agent.velocity.magnitude > 0 && !audioSource.isPlaying)
         {
             AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
-            footstepTimer = 0;
         }
+
 
     }
 

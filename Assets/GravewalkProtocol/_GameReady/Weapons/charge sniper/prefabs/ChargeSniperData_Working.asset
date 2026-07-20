@@ -39,6 +39,7 @@ MonoBehaviour:
   ads: 40
   weaponPrefab: {fileID: 3329529930087950654, guid: 128842bc7a4e02a4291bc439b042815f, type: 3}
   hitEffect: {fileID: 8497891991718266384, guid: 57847e55802ea1a49ac22c1cb192b52b, type: 3}
+  weaponPickUp: {fileID: 3824886265503906123, guid: 9f27493453ba5ec4dbf5aaf98f63758a, type: 3}
   shootSound: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
   reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
   weaponPickupSound: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}

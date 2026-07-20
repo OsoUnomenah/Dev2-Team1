@@ -278,6 +278,7 @@ Transform:
   - {fileID: 7212523732217168816}
   - {fileID: 6426361489846499038}
   - {fileID: 6392162926015098052}
+  - {fileID: 5693637533190133471}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &1971929291372803691
@@ -352,6 +353,7 @@ MonoBehaviour:
   CriticalMultiplier: 0
   ChargedZoomFOV: 0
   Type: 0
+  FullAuto: 0
   Damage: 0
   Range: 50
   Rate: 1
@@ -360,6 +362,8 @@ MonoBehaviour:
   TimerOrig: 0
   Ammo: 0
   MaxAmmo: 0
+  ReserveAmmo: 0
+  MaxReserveAmmo: 0
   BaseAmmoTimer: 0
   AmmoTimer: 0
   Ads: 0
@@ -372,6 +376,7 @@ MonoBehaviour:
   nonADSWeaponHolder: {fileID: 794901986562867875}
   steveBodyRenderer: {fileID: 3607844993882327939}
   steveGlovesRenderer: {fileID: 2028783107094622631}
+  steveTopsRenderer: {fileID: 2070454802336397639}
   abilityModel: {fileID: 1056700422015808697}
   effect: {fileID: 0}
   effectSocket: {fileID: 1174861366130489984}
@@ -524,6 +529,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7212523732217168816}
   - component: {fileID: 2835635450443743724}
+  - component: {fileID: 4322900410716772926}
   m_Layer: 0
   m_Name: PlayerInputHandler
   m_TagString: PlayerInputHandler
@@ -571,6 +577,7 @@ MonoBehaviour:
   gunFreezeCooldown: 0.15
   meleeFreezeCooldown: 3
   defaultFreezeDuration: 2
+  freezeVisualController: {fileID: 0}
   chainLightning: {fileID: 9018446454268854427, guid: edd3aafdae35ab149b46d71136812874, type: 3}
   chainSpeed: 1
   chainDmg: 11
@@ -633,6 +640,26 @@ MonoBehaviour:
   playerBullet: {fileID: 0}
   curveTime: 0.3
   bullet: {fileID: 4379999179939547814}
+--- !u!114 &4322900410716772926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3511939119937712091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5a6cf666e64ee459d752633293887c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FreezeVisualController
+  normalIcePrisonPrefab: {fileID: 7570210545317817729, guid: 88620e0f40852824d8e2db4c339c71a7, type: 3}
+  bossIceEffectPrefab: {fileID: 0}
+  effectAnchor: {fileID: 5693637533190133471}
+  useBossEffect: 0
+  shatterEffectPrefab: {fileID: 0}
+  localPositionOffset: {x: 0, y: 0, z: 0}
+  localRotationOffset: {x: 0, y: 0, z: 0}
+  localScale: {x: 1, y: 1, z: 1}
 --- !u!1 &3633417161319764735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,6 +1177,37 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &6988700020238070912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5693637533190133471}
+  m_Layer: 3
+  m_Name: PlayerFreezeEffectAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5693637533190133471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6988700020238070912}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.35, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 218993249406925033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6993921827910696796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1248,10 +1306,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1051.78
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 35
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -2050,6 +2108,11 @@ PrefabInstance:
 --- !u!137 &2028783107094622631 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6043904477349503807, guid: c356d39725bcc4ec0925ab50a3cf6a42, type: 3}
+  m_PrefabInstance: {fileID: 5748823368107250328}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &2070454802336397639 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6015779724213382111, guid: c356d39725bcc4ec0925ab50a3cf6a42, type: 3}
   m_PrefabInstance: {fileID: 5748823368107250328}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &3607844993882327939 stripped

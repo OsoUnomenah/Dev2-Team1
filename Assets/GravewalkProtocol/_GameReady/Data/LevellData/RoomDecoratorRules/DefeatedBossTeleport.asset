@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefeatedBossTeleport
   m_EditorClassIdentifier: 
   roomTypes: 8
-  prefab: {fileID: 9085224121494846908, guid: ab35a9e2e9b7ad64483372825967e665, type: 3}
+  prefab: {fileID: 9085224121494846908, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
   prefabRotation: 0
   placement:
     array: 02000000

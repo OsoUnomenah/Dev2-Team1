@@ -48,9 +48,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2360835024921214856, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_Size.x
+      value: 0.14196014
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360835024921214856, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_Size.y
+      value: 0.36956656
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360835024921214856, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_Size.z
+      value: 0.534359
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360835024921214856, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_Center.x
+      value: 0.1571083
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360835024921214856, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_Center.y
+      value: -0.1559118
+      objectReference: {fileID: 0}
+    - target: {fileID: 2360835024921214856, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_Center.z
+      value: -0.013432503
+      objectReference: {fileID: 0}
     - target: {fileID: 4881830232455317032, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_Name
       value: PistolPickup_Working
+      objectReference: {fileID: 0}
+    - target: {fileID: 5063107184834124999, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalScale.x
@@ -66,15 +94,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.152124
+      value: 237.73042
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.804
+      value: -0.780787
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 43.81
+      value: 22.975761
       objectReference: {fileID: 0}
     - target: {fileID: 8632643586795008714, guid: ffbda7181942d2f43859e63718c1b0ec, type: 3}
       propertyPath: m_LocalRotation.w

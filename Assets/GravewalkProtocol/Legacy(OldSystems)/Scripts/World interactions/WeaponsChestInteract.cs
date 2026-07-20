@@ -174,7 +174,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
 
         WeaponData reward = weaponRewards[rewardRoll];
 
-        if (reward.weaponPrefab == null)
+        if (reward.weaponPickUp == null)
         {
             Debug.LogWarning("Weapon reward is missing a pickup prefab.");
             return;
@@ -183,7 +183,7 @@ public class WeaponsChestInteract : MonoBehaviour, IInteract
         Transform dropPoint = weaponDropPoint != null ? weaponDropPoint : transform;
 
         spawnedWeapon = Instantiate(
-        reward.weaponPrefab,
+        reward.weaponPickUp,
         dropPoint.position,
         dropPoint.rotation
         );

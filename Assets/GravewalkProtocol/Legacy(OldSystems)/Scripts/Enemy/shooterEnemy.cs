@@ -17,7 +17,8 @@ public class shooterEnemy : MonoBehaviour
     [Header("Weapon")]
     [SerializeField] GameObject bullet;
     [SerializeField] Transform gunPivot;
-    [SerializeField] Transform shootPos;
+    [SerializeField] Transform shootPos1;
+    [SerializeField] Transform shootPos2;
     [Range(0.1f, 2f)][SerializeField]float shootRate;
     [Range(1, 10)][SerializeField] int gunRotateSpeed;
 
@@ -58,17 +59,36 @@ public class shooterEnemy : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(new Vector3(playerDir.x, 0 , playerDir.z));
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, faceTargetSpeed * Time.deltaTime);
     }
-
+    private bool whichgun = false;
     private void shoot()
     {
             shootTimer = 0;
-            Instantiate(bullet, shootPos.position, gunPivot.rotation);
-            PlayEnemyShootSound();
+        if (whichgun)
+        {
+            Instantiate(bullet, shootPos1.position, gunPivot.rotation);
+            whichgun = false;
+        }
+        else
+        {
+            Instantiate(bullet, shootPos2.position, gunPivot.rotation);
+            whichgun= true;
+        }
+        PlayEnemyShootSound();
     }
     
      private void rotateGun()
     {
-        Quaternion rot = Quaternion.LookRotation(playerDir);
+        Quaternion rot;
+        if (whichgun)
+        {
+            rot = Quaternion.LookRotation(playerDir);
+            rot *= Quaternion.Euler(0f, -5f, 0f);
+        }
+        else
+        {
+            rot = Quaternion.LookRotation(playerDir);
+            rot *= Quaternion.Euler(0f, 5f, 0f);
+        }
         gunPivot.rotation = Quaternion.Lerp(gunPivot.rotation, rot, faceTargetSpeed * Time.deltaTime * gunRotateSpeed);
 
     }

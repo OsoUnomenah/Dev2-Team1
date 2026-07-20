@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee50487d35164c448ebd6537353de66, type: 3}
+  m_Name: SFX_Robo_Attack
+  m_EditorClassIdentifier: Assembly-CSharp::BaseSoundSO
+  soundType: 0
+  clips:
+  - {fileID: 8300000, guid: d621ff9612e9cec48810e374489120f9, type: 3}
+  - {fileID: 8300000, guid: bbd4d457b09ba3e448faaf52d3e91e6c, type: 3}
+  - {fileID: 8300000, guid: e21396a3dd1c81f48a48f8e83594693e, type: 3}
+  loop: 0
+  randomizePitch: 1
+  randomPitchRangeMod: 0.1
+  volume: 1
+  pitch: 1
+  fallOffDistMin: 2
+  fallOffDistMax: 20

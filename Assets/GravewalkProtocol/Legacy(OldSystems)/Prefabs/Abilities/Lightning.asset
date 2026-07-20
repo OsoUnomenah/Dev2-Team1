@@ -19,5 +19,5 @@ MonoBehaviour:
   shootDistance: 4
   shootCooldown: 0.1
   effectTimer: 5
-  loopedEffect: {fileID: 1489387594953262563, guid: bb51ae100c5328143b54b11a593b519d, type: 3}
+  loopedEffect: {fileID: 2047465260132162693, guid: aa33d8db08e2c3a41abfbf7cce5ed7c6, type: 3}
   level: 1
