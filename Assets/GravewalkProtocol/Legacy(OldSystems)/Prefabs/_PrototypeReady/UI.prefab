@@ -13519,7 +13519,7 @@ MonoBehaviour:
   levelUpSlots: 1
   crystalBarUI: {fileID: 1358599472817454113}
   runOutcomeUI: {fileID: 3664572134299677240}
-  bossesNeededToWinRun: 7
+  bossesNeededToWinRun: 0
   finalBossDefeated: 0
   playerDamageFlash: {fileID: 159723826231913781}
   playerHealFlash: {fileID: 8394997536159876327}
@@ -13584,6 +13584,8 @@ MonoBehaviour:
   isProceduralLevel: 0
   nextLevelButton: {fileID: 0}
   Modifiers: 
+  grannyNPC: {fileID: 0}
+  grannyBoss: {fileID: 0}
 --- !u!1 &4218951249394865469
 GameObject:
   m_ObjectHideFlags: 0
@@ -22560,7 +22562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1771971722582438958
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22580,7 +22582,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 959.99994, y: 426.65268}
+  m_AnchoredPosition: {x: 959.99994, y: 603.34}
   m_SizeDelta: {x: 1014, y: 574}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &548933303637695886
