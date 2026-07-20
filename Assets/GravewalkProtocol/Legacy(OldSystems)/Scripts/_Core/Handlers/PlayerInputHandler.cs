@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -125,6 +126,9 @@ public class PlayerInputHandler : MonoBehaviour
     private StatHandler playerStats;
     private bool isFrozenByBoss;
     private Coroutine freezeRoutine;
+
+    private bool shootHeld;
+    private bool fullAutoShotRequested;
 
 
     // [Header("Combat Settings")] //Changed these to be exclusively tied to the WeaponManager values. 
@@ -302,6 +306,9 @@ public class PlayerInputHandler : MonoBehaviour
 
         shopAction.performed -= OnShopPerformed; //kw
         shopAction.canceled -= OnShopCanceled; //kw
+
+        shootHeld = false;
+        fullAutoShotRequested = false;
 
     }
 
@@ -778,8 +785,65 @@ public class PlayerInputHandler : MonoBehaviour
         // }
     }
 
+    private void HandleFullAuto()
+    {
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+
+        if (weaponManager == null )
+        {
+            shootHeld = false;
+            return;
+        }
+
+        if (!weaponManager.FullAuto)
+        {
+            return;
+        }
+
+        if (!shootAction.IsPressed())
+        {
+            shootHeld = false;
+            return;
+        }
+
+        if (weaponManager.Type)
+        {
+            return;
+        }
+
+        if (weaponManager.UsesChargedShot)
+        {
+            return;
+        }
+
+        if (isFrozenByBoss)
+        {
+            return;
+        }
+
+        if (gameManager.instance.isPaused ||
+            gameManager.instance.isLevelingUp ||
+            gameManager.instance.isReloading)
+        {
+            return;
+        }
+
+        if (!gameManager.instance.canShoot)
+        {
+            return;
+        }
+
+        fullAutoShotRequested = true;
+
+        OnShootPerformed(default);
+
+        fullAutoShotRequested = false;
+    }
+
     private void OnShootStarted(InputAction.CallbackContext context)
     {
+        shootHeld = true;
+
         if (isFrozenByBoss)
         {
             return;
@@ -907,7 +971,9 @@ public class PlayerInputHandler : MonoBehaviour
                     }
                 }
             }
-            else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction || weaponManager.FullAuto)
+            else if (context.interaction is UnityEngine.InputSystem.Interactions.TapInteraction
+                     && !gameManager.instance.playerWeaponManager.FullAuto
+                     || fullAutoShotRequested)
             {
                 if (gameManager.instance.playerWeaponManager.Type == false)
                 {
@@ -933,6 +999,8 @@ public class PlayerInputHandler : MonoBehaviour
                             " | Vertical: " + weaponManager.VerticalSpread
                             );
 
+                    HashSet<IToxic> toxicTargetsHitThisShot = new HashSet<IToxic>();
+ 
                     for (int pelletIndex = 0; pelletIndex < pelletCount; pelletIndex++)
                     {
 
@@ -974,6 +1042,9 @@ public class PlayerInputHandler : MonoBehaviour
                             bulletEnd = hit.transform.position;
 
                             IDamage dmg = hit.collider.GetComponentInChildren<IDamage>();
+                            IToxic toxicTarget = FindToxicTarget(hit.collider);
+                            bool applyToxicAfterDamage = false;
+
 
                             if (dmg == null)
                             {
@@ -996,7 +1067,7 @@ public class PlayerInputHandler : MonoBehaviour
                                         TryApplyWeaponFreeze(hit.collider, false);
                                         break;
                                     case AbilityStats.ability.toxic:
-                                        //probably use a IToxic interface that works like IDamage but makes them become toxic
+                                        applyToxicAfterDamage = true;
                                         break;
                                     case AbilityStats.ability.crystal:
                                         CrystalShot(dmg, hit);
@@ -1028,6 +1099,11 @@ public class PlayerInputHandler : MonoBehaviour
                                 finalDamage *= 3;
                             }
 
+                            if (toxicTarget != null && toxicTarget.IsToxic)
+                            {
+                                finalDamage = Mathf.RoundToInt(finalDamage * toxicTarget.ToxicDamageMultiplier);
+                            }
+
                             // if (turnOnDebug)
                             //  {
                             //     Debug.Log("Weapon Damage: " + gameManager.instance.playerWeaponManager.Damage + " + Bonus Damage: " + bonusDamage + " = " + finalDamage);
@@ -1048,7 +1124,19 @@ public class PlayerInputHandler : MonoBehaviour
                             else if (dmg != null && gameManager.instance.playerWeaponManager.Damage != 0)
                             {
                                 dmg.takeDamage(finalDamage);
+                                if (applyToxicAfterDamage && toxicTarget != null)
+                                {
+                                    toxicTargetsHitThisShot.Add(toxicTarget);
+                                }
                             }
+                        }
+                    }
+
+                    foreach (IToxic toxicTargetToApply in toxicTargetsHitThisShot)
+                    {
+                        if (toxicTargetToApply != null)
+                        {
+                            toxicTargetToApply.TryApplyToxic();
                         }
                     }
                 }
@@ -1197,6 +1285,7 @@ public class PlayerInputHandler : MonoBehaviour
    
 
         // cancel logic for button release if needed
+        shootHeld = false;
 
         if (gameManager.instance.playerWeaponManager == null)
         {
@@ -2017,6 +2106,53 @@ public class PlayerInputHandler : MonoBehaviour
         freezeRoutine = null;
     }
 
+    private bool currentAbilityToxic(out AbilityStats toxicStats)
+    {
+        toxicStats = null;
+        if (gameManager.instance = null)
+        {
+            return false;
+        }
+
+        PlayerWeaponManager weaponManager = gameManager.instance.playerWeaponManager;
+        if (weaponManager == null)
+        {
+            return false;
+        }
+        else if (weaponManager.abilities == null || weaponManager.abilities.Count == 0)
+        {
+            return false;
+        }
+        
+        toxicStats = weaponManager.abilities[weaponManager.abilitySlot];
+        return toxicStats != null && toxicStats.abilityType == AbilityStats.ability.toxic;
+    }
+
+    private IToxic FindToxicTarget(Collider hitCollider)
+    {
+        if (hitCollider == null)
+        {
+            return null;
+        }
+        
+        IToxic toxicTarget = hitCollider.GetComponent<IToxic>();
+        if (toxicTarget != null)
+        {
+            return toxicTarget;
+        }
+        return hitCollider.GetComponentInParent<IToxic>();
+    }
+
+    public void TryApplyWeaponToxic(Collider hitCollider)
+    {
+        IToxic toxicTarget = FindToxicTarget(hitCollider);
+        if (toxicTarget == null)
+        {
+            return;
+        }
+        toxicTarget.TryApplyToxic();
+    }
+
     private void HandleChargedShot()
     {
         PlayerWeaponManager weaponManager =
@@ -2208,31 +2344,6 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnShopCanceled(InputAction.CallbackContext context)
     {
     } //kw End
-
-    private void HandleFullAuto()
-    {
-        PlayerWeaponManager weaponManager =
-            gameManager.instance.playerWeaponManager;
-
-        if (weaponManager == null ||
-            shootAction == null ||
-            !shootAction.IsPressed() ||
-            !weaponManager.FullAuto ||
-            weaponManager.Type ||
-            weaponManager.UsesChargedShot ||
-            weaponManager.Ammo <= 0 ||
-            gameManager.instance.isReloading ||
-            gameManager.instance.isPaused ||
-            gameManager.instance.isLevelingUp)
-        {
-            return;
-        }
-
-        if (gameManager.instance.canShoot)
-        {
-            OnShootPerformed(default);
-        }
-    }
 
     public bool AddShotgunShellFromAnimation()
     {

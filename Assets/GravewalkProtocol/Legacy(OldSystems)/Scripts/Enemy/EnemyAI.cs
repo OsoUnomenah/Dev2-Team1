@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
+public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable, IToxic
 {
 
     [SerializeField] private int maxHealth = 100;
@@ -19,7 +19,6 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     public GameObject onScreenDMG;
     public TMP_Text damageText;
     [SerializeField] private int currentHealth;
-
     [SerializeField] private float sightRange = 15f;
     [SerializeField] private float attackRange = 2f;
     [SerializeField] private float hearingRange = 20f;
@@ -51,6 +50,13 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     [SerializeField] private int minCurrencyDrop = 1;
     [SerializeField] private int maxCurrencyDrop = 3;
 
+    [Header("Toxic ability settings")]
+    [SerializeField] private float toxicDuration = 5f;
+    [SerializeField] private float toxicDamageMultiplier = 1.5f;
+
+    public bool IsToxic {  get; private set; }
+    private float ToxicDamageMultiplier => toxicDamageMultiplier;
+
     [Header("Don't touch unles debugging")]
     [SerializeField] List<int> Modifiers;
 
@@ -79,6 +85,8 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
     {
         get { return isFroze; }
     }
+
+    float IToxic.ToxicDamageMultiplier => ToxicDamageMultiplier;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -427,11 +435,35 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable
 
     private void HandleFootsteps()
     {
-        if (agent.velocity.magnitude > 0 && !audioSource.isPlaying)
+        if (agent.velocity.magnitude > 0)// && !audioSource.isPlaying)
         {
             AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
         }
 
 
+    }
+
+    public bool TryApplyToxic()
+    {
+        if (IsToxic)
+        {
+            return false;
+        }
+
+        StartCoroutine(ToxicTimer());
+        return true;
+    }
+
+    private IEnumerator ToxicTimer()
+    {
+        IsToxic = true;
+
+        model.material.color = Color.magenta;
+
+        yield return new WaitForSeconds(toxicDuration);
+
+        IsToxic = false;
+
+        model.material.color = originalColor;
     }
 }

@@ -10393,9 +10393,9 @@ MonoBehaviour:
     m_Bits: 8
   meleeCooldown: 3
   projectileCooldown: 2.5
-  toxicProjectilePrefab: {fileID: 5378530853273428501, guid: df1c9ee2fb212d945abfb5cdb3061beb, type: 3}
+  toxicProjectilePrefab: {fileID: 7822026921092119707, guid: 27385882bc178b14e9ecdca95c40de1b, type: 3}
   projectileSpawnPoint: {fileID: 6899375341168381925}
-  toxicGasCloudPrefab: {fileID: 1814014512655336279, guid: d2a24a1389bb9614ebe7bfdb05655faf, type: 3}
+  toxicGasCloudPrefab: {fileID: 9025435444988080512, guid: b8d76a38415b8324d8b9eba544990b9a, type: 3}
   gasSpawnPoint: {fileID: 6122896798915710062}
   gasCooldown: 10
   closeGasChance: 0.35

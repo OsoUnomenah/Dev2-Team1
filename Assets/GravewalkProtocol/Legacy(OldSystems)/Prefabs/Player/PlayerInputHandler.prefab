@@ -101,8 +101,20 @@ MonoBehaviour:
   _dryFire: {fileID: 11400000, guid: afbcd5a775c6f5a4b84c01fc62726967, type: 2}
   footstepBaseInterval: 0.4
   footstepSprintInterval: 0.6
+  rotateAction:
+    m_Name: Rotate
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e04b8e61-306f-47d9-a1b8-0be2e7a0610a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   jumpForce: 5
   gravityMultiplier: 1
   jumpMax: 1
   jumpCount: 0
   canJump: 0
+  playerBullet: {fileID: 0}
+  curveTime: 0
+  bullet: {fileID: 0}
