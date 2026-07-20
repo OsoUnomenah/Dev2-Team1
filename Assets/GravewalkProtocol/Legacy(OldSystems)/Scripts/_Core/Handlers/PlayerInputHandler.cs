@@ -36,6 +36,9 @@ public class PlayerInputHandler : MonoBehaviour
     private float nextGunFreezeTime;
     private float nextMeleeFreezeTime;
 
+    [Header("Freeze Visual")]
+    [SerializeField] private FreezeVisualController freezeVisualController;
+
     [Header("Lightning Weapon Effect")]
     [SerializeField] private GameObject chainLightning;
     [Range(0f, 1f)][SerializeField] private float chainSpeed;
@@ -150,6 +153,11 @@ public class PlayerInputHandler : MonoBehaviour
     void Awake()
     {
         playerActions = new PlayerActions();
+
+        if (freezeVisualController == null)
+        {
+            freezeVisualController = GetComponent<FreezeVisualController>();
+        }
 
         moveAction = playerActions.PlayerInput.Movement;
         rotateAction = playerActions.PlayerInput.Rotate;
@@ -946,6 +954,11 @@ public class PlayerInputHandler : MonoBehaviour
                             ~ignoreSource))
                         {
 
+                            if (TryShatterFrozenTarget(hit.collider))
+                            {
+                                continue;
+                            }
+
                             if (weaponManager.HitEffect != null)
                             {
                                 Instantiate(
@@ -1263,6 +1276,12 @@ public class PlayerInputHandler : MonoBehaviour
             weaponManager.Range,
             ~ignoreSource))
         {
+            if (TryShatterFrozenTarget(hit.collider))
+            {
+                EndChargedShot();
+                return;
+            }
+
             if (weaponManager.HitEffect != null)
             {
                 Instantiate(
@@ -1982,9 +2001,20 @@ public class PlayerInputHandler : MonoBehaviour
     {
         isFrozenByBoss = true;
 
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.ShowFreezeEffect();
+        }
+
         yield return new WaitForSeconds(duration);
 
+        if (freezeVisualController != null)
+        {
+            freezeVisualController.HideFreezeEffect();
+        }
+
         isFrozenByBoss = false;
+        freezeRoutine = null;
     }
 
     private void HandleChargedShot()
