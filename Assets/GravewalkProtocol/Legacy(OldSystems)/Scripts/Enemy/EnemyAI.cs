@@ -435,9 +435,17 @@ public class enemyAI : MonoBehaviour, IDamage, IInteract, IFreeze, IShatterable,
 
     private void HandleFootsteps()
     {
-        if (agent.velocity.magnitude > 0)// && !audioSource.isPlaying)
+        float clipLength = .5f;
+        if (audioSource.clip != null)
+             clipLength = audioSource.clip.length;
+
+        footstepTimer += Time.deltaTime;
+       
+
+        if (agent.velocity.magnitude > 0.2f && footstepTimer >= clipLength - 0.05f)
         {
-            AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
+            footstepTimer = 0;
+           AudioManager.instance.PlaySoundFromSource(_footsteps, gameObject);
         }
 
 
