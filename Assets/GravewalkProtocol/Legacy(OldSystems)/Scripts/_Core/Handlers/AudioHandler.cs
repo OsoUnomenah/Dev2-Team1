@@ -143,7 +143,8 @@ public class AudioManager : MonoBehaviour
             audioSource.Play();
         }
 
-        Destroy(soundObject, currSound.length);
+        if(soundObject != null && audioSource.clip != null)
+            Destroy(soundObject, currSound.length);
     }
 
     public void PlaySoundFollowPosition(BaseSoundSO sound, GameObject noiseMaker, float duration = 0.1f)
