@@ -21,6 +21,7 @@ public class gameManager : MonoBehaviour
     public string crystalLevel = "Crystal";
     public string toxicLevel = "Toxic";
 
+    [SerializeField] public SaveData saveData;
 
 
 
@@ -225,6 +226,15 @@ public class gameManager : MonoBehaviour
         {
             Destroy(grannyBoss);
         }
+
+        InvokeRepeating("SaveCurrentCurrency", 1f, 1f);
+    }
+
+    private void SaveCurrentCurrency()
+    {
+        currentCurrency = saveData.wallet;
+        UpdateCurrencyUI();
+
     }
 
     public void InitLevelBuilder()
@@ -305,6 +315,11 @@ public class gameManager : MonoBehaviour
         sniperChargePanel.SetActive(false);
 
         shop = FindAnyObjectByType<UpgradeShopUI>();
+
+        if (saveData == null)
+        {
+            saveData = GameObject.FindGameObjectWithTag("SaveData").GetComponent<SaveData>();
+        }
 
 
 
@@ -713,16 +728,16 @@ public class gameManager : MonoBehaviour
     public void addCurrency(int amount)
     {
         runCurrencyEarned = +amount;
-        currentCurrency += amount;
+        saveData.wallet += amount;
         UpdateCurrencyUI();
     }
 
     public bool SpendCurrency(int amount) //kw
     {
-        if (currentCurrency < amount)
+        if ( saveData.wallet < amount)
             return false;
 
-        currentCurrency -= amount;
+        saveData.wallet -= amount;
         UpdateCurrencyUI();
         return true;
     }
@@ -731,7 +746,7 @@ public class gameManager : MonoBehaviour
     {
         if (currencyText != null)
         {
-            currencyText.text = "Currency: " + currentCurrency;
+            currencyText.text = "Currency: " + saveData.wallet;
         }
     }
 

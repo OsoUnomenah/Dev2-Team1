@@ -1,9 +1,13 @@
+using System.Data;
 using UnityEngine;
 
 public class SaveData : MonoBehaviour
 {
     private static GameObject[] persistentObjects = new GameObject[10];
     public int objectIndex;
+
+    public int currency;
+    public int wallet;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -17,5 +21,11 @@ public class SaveData : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        currency = gameManager.instance.CurrentCurrency;
+        wallet = currency;
+
     }
+
+
 }
