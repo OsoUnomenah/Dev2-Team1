@@ -584,6 +584,9 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void HandleDash()
     {
+        if (gameManager.instance.isPaused)
+            return;
+
         dashTimer += Time.deltaTime;
 
         if ((dashAction.WasPressedThisFrame() || dashAttackTriggered) && dashTimer > dashCd && gameManager.instance.canDash)
