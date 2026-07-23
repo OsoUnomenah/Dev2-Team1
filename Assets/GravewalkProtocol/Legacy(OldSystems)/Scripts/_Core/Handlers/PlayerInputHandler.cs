@@ -589,7 +589,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         dashTimer += Time.deltaTime;
 
-        if ((dashAction.WasPressedThisFrame() || dashAttackTriggered) && dashTimer > dashCd && gameManager.instance.canDash)
+        if (((dashAction.WasPressedThisFrame() && currentMovement.x != 0) || dashAttackTriggered) && dashTimer > dashCd && gameManager.instance.canDash)
         {
             AudioManager.instance.PlaySoundFromSource(_dash, gameObject);
             gameManager.instance.isDashing = true;
