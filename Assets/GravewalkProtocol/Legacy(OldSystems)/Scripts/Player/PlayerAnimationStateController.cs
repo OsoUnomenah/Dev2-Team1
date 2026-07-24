@@ -130,6 +130,8 @@ public class PlayerAnimationStateController : MonoBehaviour
             else
             {
                 animator.SetBool(katanaUp, false);
+                animator.SetBool(lightAttackK, false);
+                animator.SetBool(heavyAttackK, false);
             }
 
             if (weaponManager.CurrentWeaponName == "Hammer")
@@ -139,6 +141,8 @@ public class PlayerAnimationStateController : MonoBehaviour
             else
             {
                 animator.SetBool(hammerUp, false);
+                animator.SetBool(lightAttackH, false);
+                animator.SetBool(heavyAttackH, false);
             }
         }
     }
