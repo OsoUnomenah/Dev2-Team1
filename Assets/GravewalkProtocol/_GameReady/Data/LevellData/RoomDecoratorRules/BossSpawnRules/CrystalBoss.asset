@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
   m_Name: CrystalBoss
   m_EditorClassIdentifier: 
-  roomTypes: 16
+  roomTypes: 8
   prefab: {fileID: 1552161082871557743, guid: 590122574980cdc42a16e82510e8d67a, type: 3}
   prefabRotation: 180
   placement:
