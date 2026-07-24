@@ -66,9 +66,9 @@ MonoBehaviour:
     layoutTexture: {fileID: 0}
   - name: Boss Room
     numberOfRooms: 1
-    roomWidthMin: 10
+    roomWidthMin: 15
     roomWidthMax: 15
-    roomLengthMin: 10
+    roomLengthMin: 15
     roomLengthMax: 15
     layoutTexture: {fileID: 0}
   doorDistanceFromEdge: 1
