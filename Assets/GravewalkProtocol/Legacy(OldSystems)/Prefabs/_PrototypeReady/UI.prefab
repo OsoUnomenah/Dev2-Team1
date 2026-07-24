@@ -13486,6 +13486,7 @@ MonoBehaviour:
   lightningLevel: Lightning
   crystalLevel: Crystal
   toxicLevel: Toxic
+  saveData: {fileID: 0}
   isDead: 0
   gameDebug: 0
   objectiveText: {fileID: 8203471958382140970}
@@ -13563,7 +13564,7 @@ MonoBehaviour:
   toxicPos: -1
   crystalPos: -1
   lightningPos: -1
-  currentCurrency: 10000
+  currentCurrency: 1000
   currencyText: {fileID: 5878694392611118221}
   runKills: 0
   runBossesDefeated: 0

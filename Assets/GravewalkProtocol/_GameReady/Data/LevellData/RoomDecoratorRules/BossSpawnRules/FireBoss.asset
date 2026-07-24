@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
   m_Name: FireBoss
   m_EditorClassIdentifier: 
-  roomTypes: 8
+  roomTypes: 16
   prefab: {fileID: 6128773021732797744, guid: 95203f19349b1cd42bce632d651fccfa, type: 3}
   prefabRotation: 180
   placement:

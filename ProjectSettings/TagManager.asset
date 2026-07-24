@@ -27,6 +27,7 @@ TagManager:
   - NPCInteractUI
   - Granny
   - GrannyBoss
+  - SaveData
   layers:
   - Default
   - TransparentFX

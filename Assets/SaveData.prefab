@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3203002249803097855}
   m_Layer: 0
   m_Name: SaveData
-  m_TagString: Untagged
+  m_TagString: SaveData
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,4 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf9d4974efcd48d43aeab83c48a6c2b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveData
-  objectIndex: 2
+  objectIndex: 0
+  currency: 0
+  wallet: 0

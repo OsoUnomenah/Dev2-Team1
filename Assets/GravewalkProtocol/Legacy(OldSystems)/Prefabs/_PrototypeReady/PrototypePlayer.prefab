@@ -427,6 +427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveData
   objectIndex: 1
+  currency: 0
+  wallet: 0
 --- !u!1 &2256589803575194123
 GameObject:
   m_ObjectHideFlags: 0
@@ -814,6 +816,7 @@ MonoBehaviour:
   deathMenuDelay: 1.5
   deathTiltAngle: 75
   deathCameraDrop: {x: 0, y: -0.6, z: 0}
+  bosses: 0
 --- !u!114 &4929087400861406900
 MonoBehaviour:
   m_ObjectHideFlags: 0
