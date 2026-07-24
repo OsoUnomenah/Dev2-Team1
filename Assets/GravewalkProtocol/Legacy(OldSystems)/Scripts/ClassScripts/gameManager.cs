@@ -615,6 +615,12 @@ public class gameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
 
+
+        if (playerInputHandler != null && playerInputHandler.interactAction.enabled)
+        {
+            playerInputHandler.interactAction.Disable();
+        }
+
     }
 
     public void stateUnpause()
@@ -628,6 +634,11 @@ public class gameManager : MonoBehaviour
             menuActive.SetActive(false);
         }
         menuActive = null;
+
+        if (playerInputHandler != null && !playerInputHandler.interactAction.enabled)
+        {
+            playerInputHandler.interactAction.Enable();
+        }
     }
 
     public void WinGame()

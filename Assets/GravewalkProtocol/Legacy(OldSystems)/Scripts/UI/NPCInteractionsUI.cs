@@ -50,12 +50,6 @@ public class NPCInteractionsUI : MonoBehaviour
         npcDialogue.text = string.Empty;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void StartDialogue(DialogueNode dialogue)
     {
         if (dialogue == null)
