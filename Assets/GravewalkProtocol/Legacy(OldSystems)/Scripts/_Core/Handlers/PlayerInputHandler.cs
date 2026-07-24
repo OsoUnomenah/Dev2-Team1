@@ -141,7 +141,7 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction jumpAction;
     private InputAction dashAction;
     private InputAction crouchAction;
-    private InputAction interactAction;
+    public InputAction interactAction;
     private InputAction shootAction;
     private InputAction reloadAction;
     private InputAction adsAction;
