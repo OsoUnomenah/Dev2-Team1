@@ -219,6 +219,8 @@ public class StatHandler : MonoBehaviour, IDamage
             {
                 GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
             }
+            
+            gameManager.instance.playerMiniMap.transform.SetParent(null, true);
 
             StartCoroutine(PlayerDeathRoutine());
         }
