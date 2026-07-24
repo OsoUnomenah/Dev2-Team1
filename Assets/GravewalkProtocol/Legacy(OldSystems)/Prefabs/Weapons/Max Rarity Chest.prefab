@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1920549043802529643}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.395, y: 0.18542491, z: -0.4180626}
+  m_LocalPosition: {x: -0.787, y: 0.18542491, z: -2.006}
   m_LocalScale: {x: 0.38074932, y: 0.38074932, z: 0.38074932}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 4259163303033098688}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.94, y: 0.26043254, z: -0.646}
+  m_LocalPosition: {x: -0.998, y: 0.597, z: -1.808}
   m_LocalScale: {x: 0.38074934, y: 0.38074932, z: 0.38074934}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -91,7 +91,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
   m_LocalPosition: {x: -0.9556787, y: 0.015991447, z: -0.0028656707}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 291299174351378166}
@@ -200,8 +200,8 @@ Transform:
   m_GameObject: {fileID: 7350631433751974806}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.000034922778, z: 0, w: 1}
-  m_LocalPosition: {x: 249.70995, y: -1.331, z: 26.541105}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3223685140568035807}
@@ -230,11 +230,7 @@ MonoBehaviour:
   resetTimer: 10
   weaponRewards:
   - {fileID: 11400000, guid: 7a4c14cd192c66e4188e24bb9bc0dba2, type: 2}
-  - {fileID: 11400000, guid: 92eddea7fd08fca41944bed8fa19cbd2, type: 2}
   - {fileID: 11400000, guid: b9933201c88dc114caeba7049deb25bc, type: 2}
-  - {fileID: 11400000, guid: c6e3fe41c171fa445be2f22494894ce4, type: 2}
-  - {fileID: 11400000, guid: 9e0cd63104dfe464fab06b4ed9a38cde, type: 2}
-  - {fileID: 11400000, guid: 1f66b9b2ee407154a8d96812546de532, type: 2}
   canGiveMaxAmmo: 0
   enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 7859410530300645425}
@@ -283,8 +279,8 @@ Transform:
   m_GameObject: {fileID: 7682104833167516141}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -0.956, y: 1.019, z: 0.716}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalPosition: {x: -0.956, y: 0.841, z: 0.533}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 291299174351378166}
