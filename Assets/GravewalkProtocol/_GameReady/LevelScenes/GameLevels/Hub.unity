@@ -234829,7 +234829,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4440024719995205927, guid: 33d1d4e172fefb24abab801aa040ac97, type: 3}
       propertyPath: bosses
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

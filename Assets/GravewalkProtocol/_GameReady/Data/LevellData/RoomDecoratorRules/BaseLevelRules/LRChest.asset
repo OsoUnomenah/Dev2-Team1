@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
   m_Name: LRChest
   m_EditorClassIdentifier: 
-  roomTypes: 130
+  roomTypes: 2
   prefab: {fileID: 3194415891124631242, guid: c68c1ffbc618e4a49b169d1caaf7b4b2, type: 3}
   prefabRotation: 0
   placement:

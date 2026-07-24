@@ -648,6 +648,15 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  interactAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 1dab3d25-4dd4-4e73-a251-e386edb7328a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   jumpForce: 5
   gravityMultiplier: 1
   jumpMax: 1
@@ -816,7 +825,7 @@ MonoBehaviour:
   deathMenuDelay: 1.5
   deathTiltAngle: 75
   deathCameraDrop: {x: 0, y: -0.6, z: 0}
-  bosses: 0
+  bosses: 3
 --- !u!114 &4929087400861406900
 MonoBehaviour:
   m_ObjectHideFlags: 0

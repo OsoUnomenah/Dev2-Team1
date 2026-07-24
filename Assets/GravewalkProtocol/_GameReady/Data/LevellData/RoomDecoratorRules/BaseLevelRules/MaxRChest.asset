@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
   m_Name: MaxRChest
   m_EditorClassIdentifier: 
-  roomTypes: 161
+  roomTypes: 160
   prefab: {fileID: 7350631433751974806, guid: 97c62bb4882ea254e92b37126cc3be87, type: 3}
   prefabRotation: 0
   placement:
