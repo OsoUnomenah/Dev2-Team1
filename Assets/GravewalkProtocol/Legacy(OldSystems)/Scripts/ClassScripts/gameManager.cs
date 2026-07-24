@@ -117,6 +117,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public GameObject playerMiniMap;
     public UpgradeShopUI shop;
 
+    private float minimapHeight = 1000f;
+
     [Header("Charged Shot UI")]
     [SerializeField] public GameObject sniperChargePanel;
     [SerializeField] public Slider sniperChargeSlider;
@@ -573,7 +575,7 @@ public class gameManager : MonoBehaviour
 
         if (gameGoalCount <= 0)
         {
-            Debug.Log("Boss Degeated - Open Portal");
+            Debug.Log("Boss Defeated - Open Portal");
         }
     }
 
@@ -717,6 +719,13 @@ public class gameManager : MonoBehaviour
         isDead = false;
         player.transform.position = playerSpawnPos.transform.position;
         playerInputHandler.enabled = true;
+
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.transform.position = new Vector3(player.transform.position.x, minimapHeight, player.transform.position.z);
+            playerMiniMap.transform.rotation = Quaternion.Euler(90, player.transform.rotation.y, player.transform.rotation.z);
+            playerMiniMap.transform.SetParent(player.transform, true);
+        }
 
         Physics.SyncTransforms();
         updatePlayerUI();
