@@ -20,6 +20,7 @@ public class gameManager : MonoBehaviour
     public string lightningLevel = "Lightning";
     public string crystalLevel = "Crystal";
     public string toxicLevel = "Toxic";
+    public string loadingScreen = "LoadingScreen";
 
     [SerializeField] public SaveData saveData;
 
@@ -590,6 +591,11 @@ public class gameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        if (SceneManager.GetActiveScene().name == loadingScreen)
+        {
+            return;
+        }
+
         shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
 
         if (shop != null && shop.IsShopOpen()) //kw
