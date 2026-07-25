@@ -820,7 +820,7 @@ PrefabInstance:
     - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: availableRules.Array.data[5].rule
       value: 
-      objectReference: {fileID: 11400000, guid: bc8b05a3168919b418b9cf7f2a8f9c55, type: 2}
+      objectReference: {fileID: 11400000, guid: 699a29d1469bb424d9ed553f75ef85f9, type: 2}
     - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: availableRules.Array.data[0].maxAvailability
       value: 10
@@ -839,11 +839,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: availableRules.Array.data[4].maxAvailability
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1349699105245018119, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: availableRules.Array.data[5].maxAvailability
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3780697596442776125, guid: 0b827219b25312f4995ad4ca6d3b2827, type: 3}
       propertyPath: tileset
