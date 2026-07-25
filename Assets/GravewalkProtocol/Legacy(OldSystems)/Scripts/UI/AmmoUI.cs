@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 public class AmmoUI : MonoBehaviour
 {
 
@@ -9,9 +9,9 @@ public class AmmoUI : MonoBehaviour
 
     private void Start()
     {
-        if(weaponManager == null)
+        if (weaponManager == null)
         {
-            weaponManager = FindAnyObjectByType<PlayerWeaponManager>();
+            weaponManager = gameManager.instance.playerWeaponManager;
         }
 
         UpdateAmmoText();

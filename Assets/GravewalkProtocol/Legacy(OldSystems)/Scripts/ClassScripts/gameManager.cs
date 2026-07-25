@@ -219,10 +219,10 @@ public class gameManager : MonoBehaviour
 
         ChooseLevel();
 
-        if(instance.bossesNeededToWinRun == 0)
+        if (instance.bossesNeededToWinRun == 0)
         {
             Destroy(grannyNPC);
-           
+
         }
         else
         {
@@ -356,6 +356,8 @@ public class gameManager : MonoBehaviour
             instance.reticle.SetActive(true);
             instance.shotgunReticle.SetActive(false);
         }
+
+        UpdateObjectiveTextUI();
     }
 
     private bool isRecharging = false;
@@ -563,8 +565,15 @@ public class gameManager : MonoBehaviour
 
     private void UpdateObjectiveTextUI()
     {
-        //Objective text update
-        objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
+        if (SceneManager.GetActiveScene().name == hubLevel)
+        {
+            objectiveText.text = "Bosses need to clear run: " + playerStatHandler.bosses;
+        }
+        else
+        {
+            //Objective text update
+            objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
+        }
     }
 
     public void updateGameGoal(int amount)
@@ -754,7 +763,7 @@ public class gameManager : MonoBehaviour
 
     public bool SpendCurrency(int amount) //kw
     {
-        if ( saveData.wallet < amount)
+        if (saveData.wallet < amount)
             return false;
 
         saveData.wallet -= amount;

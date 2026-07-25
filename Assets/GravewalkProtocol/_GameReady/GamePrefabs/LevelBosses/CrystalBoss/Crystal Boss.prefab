@@ -2328,6 +2328,7 @@ Transform:
   - {fileID: 5161723011544352508}
   - {fileID: 6113152665181182273}
   - {fileID: 7070981812676850999}
+  - {fileID: 8432501985095801087}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8813764044349690688
@@ -2507,7 +2508,6 @@ Transform:
   m_LocalScale: {x: 3.65, y: 3.65, z: 3.65}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 2899503724161287193}
   - {fileID: 7352546123556426538}
   - {fileID: 1342433173651782661}
   - {fileID: 1300355220213295166}
@@ -20298,25 +20298,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1195483283804448508}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &5422210004428766819
+--- !u!1001 &1586630342078145157
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2838126521481745015}
+    m_TransformParent: {fileID: 661307411345048127}
     m_Modifications:
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3894804
+      value: 0.24
       objectReference: {fileID: 0}
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 2.96
       objectReference: {fileID: 0}
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.55
+      value: -3.42
       objectReference: {fileID: 0}
     - target: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
       propertyPath: m_LocalRotation.w
@@ -20350,17 +20350,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: DefeatedBossTeleporter
       objectReference: {fileID: 0}
-    - target: {fileID: 9085224121494846908, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
---- !u!4 &2899503724161287193 stripped
+--- !u!4 &8432501985095801087 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7134427500381600378, guid: f8fd6a653ed6a4b4d893459f535b8d46, type: 3}
-  m_PrefabInstance: {fileID: 5422210004428766819}
+  m_PrefabInstance: {fileID: 1586630342078145157}
   m_PrefabAsset: {fileID: 0}

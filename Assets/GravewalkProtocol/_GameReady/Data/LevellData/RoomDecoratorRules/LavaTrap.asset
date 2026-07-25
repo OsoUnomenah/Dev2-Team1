@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd946f92371755745a92507bd1ff5abe, type: 3}
   m_Name: LavaTrap
   m_EditorClassIdentifier: 
-  roomTypes: 112
+  roomTypes: 32
   prefab: {fileID: 875739960101877139, guid: 80053e78e8d7f594da8249987c839ef8, type: 3}
   prefabRotation: 0
   placement:

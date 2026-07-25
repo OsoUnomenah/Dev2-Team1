@@ -13498,7 +13498,7 @@ MonoBehaviour:
   reloadBar: {fileID: 120962437934777994}
   xpText: {fileID: 9075911796597115538}
   xpBoostText: {fileID: 8307172491120128288}
-  level: 20
+  level: 1
   maxLevel: 1000
   xp: 1
   currentXP: 0
