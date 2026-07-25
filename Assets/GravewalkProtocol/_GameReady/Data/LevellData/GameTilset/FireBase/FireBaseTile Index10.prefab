@@ -89,7 +89,7 @@ PrefabInstance:
     - target: {fileID: 8452472620898506247, guid: 8913591918e07e84697a37e0a233dc3a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: f3e3172fc5cf97746804d538f155bc0d, type: 2}
+      objectReference: {fileID: 2100000, guid: 25f45178a601f0d41882581ebd162df0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -151,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 4346171700554746280, guid: d2d7d0c58fd21f84cb51bb4857108f85, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d29c3e373841f2c43b5b6b73de18046b, type: 2}
+      objectReference: {fileID: 2100000, guid: 712a0ac09b24d6b4485b3a3544c6f620, type: 2}
     - target: {fileID: 8520991439028056486, guid: d2d7d0c58fd21f84cb51bb4857108f85, type: 3}
       propertyPath: m_Name
       value: HalfTop
@@ -221,7 +221,7 @@ PrefabInstance:
     - target: {fileID: 8756868207304441080, guid: 424683b3d5db0a14194379b1f0922423, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: d29c3e373841f2c43b5b6b73de18046b, type: 2}
+      objectReference: {fileID: 2100000, guid: 712a0ac09b24d6b4485b3a3544c6f620, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

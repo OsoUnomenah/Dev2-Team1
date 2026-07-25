@@ -564,7 +564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb59bb7fd4dfa2e43a7bfb9fba8fe9d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FireBossAI
-  maxHealth: 1000
+  maxHealth: 500
   attackDamage: 10
   xpGive: 100
   model: {fileID: 7857756012557240307}
@@ -10872,7 +10872,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6411697587907617444
 Transform:
   m_ObjectHideFlags: 0
