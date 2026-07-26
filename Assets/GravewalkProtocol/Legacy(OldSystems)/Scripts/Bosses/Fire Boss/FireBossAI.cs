@@ -668,7 +668,7 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
         {
             gameManager.instance.BossDie();
             currentHealth = 0;
-            StartCoroutine(HandleDeath());
+            StartDeath();
         }
         else
         {
@@ -686,13 +686,20 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
 
         isDying = true;
         currentState = BossState.Dead;
+
+        StopAllCoroutines();
+
         allowedAttack = false;
         allowedMovement = false;
         isPerformingAttack = false;
         isInBacklash = false;
+        attackEventFired = true;
 
         if (agent0 != null)
+        {
             agent0.isStopped = true;
+            agent0.enabled = false;
+        }
 
         if (selfFireEffect != null)
             selfFireEffect.SetActive(false);
@@ -718,11 +725,14 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
         if (exitPortal != null)
             exitPortal.SetActive(true);
 
-        yield return null;
-
         float deathWait = GetAnimationClipLength("Death1");
         if (deathWait <= 0f)
             deathWait = deathAnimationFallbackLength;
+
+        yield return new WaitForSeconds(deathWait + deathExtraBuffer);
+
+        if (this != null && gameObject != null)
+            Destroy(gameObject);
     }
 
     private float GetAnimationClipLength(string clipName)
@@ -805,5 +815,13 @@ public class FireBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTrigg
             return;
 
         Destroy(gameObject);
+    }
+
+    private void StartDeath()
+    {
+        if (isDying)
+            return;
+
+        StartCoroutine(HandleDeath());
     }
 }

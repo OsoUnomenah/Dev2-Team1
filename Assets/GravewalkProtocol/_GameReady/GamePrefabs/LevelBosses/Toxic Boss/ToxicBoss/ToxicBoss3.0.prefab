@@ -542,7 +542,7 @@ GameObject:
   - component: {fileID: 2444690852122638926}
   - component: {fileID: 6377414269814177337}
   - component: {fileID: 2171276064417174153}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ToxicBoss3.0
   m_TagString: Enemy
   m_Icon: {fileID: 0}

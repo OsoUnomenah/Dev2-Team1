@@ -230,7 +230,6 @@ MonoBehaviour:
   resetTimer: 10
   weaponRewards:
   - {fileID: 11400000, guid: 7a4c14cd192c66e4188e24bb9bc0dba2, type: 2}
-  - {fileID: 11400000, guid: b9933201c88dc114caeba7049deb25bc, type: 2}
   canGiveMaxAmmo: 0
   enemyPrefab: {fileID: 8445165310664096854, guid: 9c024ab678b537d40a4d873278969856, type: 3}
   enemySpawnPoint: {fileID: 7859410530300645425}

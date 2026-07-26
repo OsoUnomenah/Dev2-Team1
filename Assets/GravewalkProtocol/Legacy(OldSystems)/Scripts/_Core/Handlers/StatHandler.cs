@@ -62,7 +62,7 @@ public class StatHandler : MonoBehaviour, IDamage
     [SerializeField] private float deathTiltAngle = 75f;
     [SerializeField] private Vector3 deathCameraDrop = new Vector3(0f, -0.6f, 0f);
     [SerializeField] public int bosses;
-    
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -153,7 +153,7 @@ public class StatHandler : MonoBehaviour, IDamage
                 gameManager.instance.canMelee = false;
             }
         }
-        else if (!gameManager.instance.isDashing && !gameManager.instance.isMeleeing)
+        else if (!gameManager.instance.isDashing && !gameManager.instance.isMeleeing && !gameManager.instance.isPaused)
         {
             currentStamina += staminaRegen;
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
@@ -219,6 +219,8 @@ public class StatHandler : MonoBehaviour, IDamage
             {
                 GE_OnPlayerHealthChanged.Raise(this, gameManager.instance.playerStatHandler);
             }
+
+            gameManager.instance.playerMiniMap.transform.SetParent(null, true);
 
             StartCoroutine(PlayerDeathRoutine());
         }

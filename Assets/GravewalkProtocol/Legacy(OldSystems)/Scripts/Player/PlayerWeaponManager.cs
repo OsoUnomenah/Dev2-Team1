@@ -46,7 +46,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
     public BaseSoundSO ReloadSound;
     public GameObject HitEffect;
     public Animator playerAnimator;
-    
+
 
     [SerializeField] public Transform weaponHolder;
     [SerializeField] public Transform adsWeaponHolder;
@@ -103,7 +103,7 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
 
     void Update()
     {
-        abilitySwitch();
+        //abilitySwitch();
     }
 
     public bool EquipPickedUpWeapon(
@@ -410,9 +410,9 @@ public class PlayerWeaponManager : MonoBehaviour, IPickupAbilities
             abilityModel.SetActive(false);
         }
 
-       
 
-            ApplyAbilityEffectToCurrentWeapon(stats);
+
+        ApplyAbilityEffectToCurrentWeapon(stats);
     }
 
     private void ApplyAbilityEffectToCurrentWeapon(AbilityStats stats)

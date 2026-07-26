@@ -20,6 +20,7 @@ public class gameManager : MonoBehaviour
     public string lightningLevel = "Lightning";
     public string crystalLevel = "Crystal";
     public string toxicLevel = "Toxic";
+    public string loadingScreen = "LoadingScreen";
 
     [SerializeField] public SaveData saveData;
 
@@ -116,6 +117,8 @@ public class gameManager : MonoBehaviour
     [SerializeField] public PlayerAnimationStateController playerAnimator;
     [SerializeField] public GameObject playerMiniMap;
     public UpgradeShopUI shop;
+
+    private float minimapHeight = 1000f;
 
     [Header("Charged Shot UI")]
     [SerializeField] public GameObject sniperChargePanel;
@@ -217,10 +220,10 @@ public class gameManager : MonoBehaviour
 
         ChooseLevel();
 
-        if(instance.bossesNeededToWinRun == 0)
+        if (instance.bossesNeededToWinRun == 0)
         {
             Destroy(grannyNPC);
-           
+
         }
         else
         {
@@ -358,6 +361,8 @@ public class gameManager : MonoBehaviour
             instance.reticle.SetActive(true);
             instance.shotgunReticle.SetActive(false);
         }
+
+        UpdateObjectiveTextUI();
     }
 
     private bool isRecharging = false;
@@ -565,8 +570,15 @@ public class gameManager : MonoBehaviour
 
     private void UpdateObjectiveTextUI()
     {
-        //Objective text update
-        objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
+        if (SceneManager.GetActiveScene().name == hubLevel)
+        {
+            objectiveText.text = "Bosses need to clear run: " + playerStatHandler.bosses;
+        }
+        else
+        {
+            //Objective text update
+            objectiveText.text = "Objective:\nKill the BOSS: " + gameGoalCount;
+        }
     }
 
     public void updateGameGoal(int amount)
@@ -577,12 +589,17 @@ public class gameManager : MonoBehaviour
 
         if (gameGoalCount <= 0)
         {
-            Debug.Log("Boss Degeated - Open Portal");
+            Debug.Log("Boss Defeated - Open Portal");
         }
     }
 
     public void PauseGame()
     {
+        if (SceneManager.GetActiveScene().name == loadingScreen)
+        {
+            return;
+        }
+
         shop = FindAnyObjectByType<UpgradeShopUI>(); //kw
 
         if (shop != null && shop.IsShopOpen()) //kw
@@ -619,6 +636,13 @@ public class gameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
         instance.crystalBarUI.SetActive(false);
+
+
+        if (playerInputHandler != null && playerInputHandler.interactAction.enabled)
+        {
+            playerInputHandler.interactAction.Disable();
+        }
+
     }
 
     public void stateUnpause()
@@ -635,6 +659,10 @@ public class gameManager : MonoBehaviour
         if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
         {
             instance.crystalBarUI.SetActive(true);
+
+        if (playerInputHandler != null && !playerInputHandler.interactAction.enabled)
+        {
+            playerInputHandler.interactAction.Enable();
         }
     }
 
@@ -715,6 +743,13 @@ public class gameManager : MonoBehaviour
         player.transform.position = playerSpawnPos.transform.position;
         playerInputHandler.enabled = true;
 
+        if (playerMiniMap != null)
+        {
+            playerMiniMap.transform.position = new Vector3(player.transform.position.x, minimapHeight, player.transform.position.z);
+            playerMiniMap.transform.rotation = Quaternion.Euler(90, player.transform.rotation.y, player.transform.rotation.z);
+            playerMiniMap.transform.SetParent(player.transform, true);
+        }
+
         Physics.SyncTransforms();
         updatePlayerUI();
         onPlayerHealthChange.Raise(this, this);
@@ -742,7 +777,7 @@ public class gameManager : MonoBehaviour
 
     public bool SpendCurrency(int amount) //kw
     {
-        if ( saveData.wallet < amount)
+        if (saveData.wallet < amount)
             return false;
 
         saveData.wallet -= amount;

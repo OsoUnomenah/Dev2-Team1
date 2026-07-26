@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ToxicBoss
   m_EditorClassIdentifier: 
   roomTypes: 8
-  prefab: {fileID: 749273210973258661, guid: 8b997537085dff246ad44cf06b17f997, type: 3}
+  prefab: {fileID: 8505805943992962215, guid: e603f8534b092b6458d1c742236f4cd2, type: 3}
   prefabRotation: 180
   placement:
     array: 02000000

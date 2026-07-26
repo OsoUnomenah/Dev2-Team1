@@ -136,7 +136,7 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
     private static readonly int BasicAttackHash = Animator.StringToHash("BasicAttack");
     private static readonly int ProjectileThrowHash = Animator.StringToHash("ProjectileThrow");
     private static readonly int GasAttackHash = Animator.StringToHash("GasAttack");
-    private static readonly int IsDeadHash =  Animator.StringToHash("IsDead");
+    private static readonly int IsDeadHash = Animator.StringToHash("IsDead");
 
     private BossState currentState = BossState.Idle;
 
@@ -157,8 +157,53 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
     public int AttackDamage => attackDamage;
     public int XPGive => xpGive;
 
-    private void Awake()
+    //private void Awake()
+    //{
+    //    if (animator == null)
+    //    {
+    //        animator = GetComponentInChildren<Animator>();
+    //    }
+
+    //    if (agent == null)
+    //    {
+    //        agent = GetComponent<NavMeshAgent>();
+    //    }
+
+    //    if (agent == null)
+    //    {
+    //        Debug.LogError(
+    //            "ToxicBossAI requires a NavMeshAgent component.",
+    //            gameObject
+    //        );
+
+    //        enabled = false;
+    //        return;
+    //    }
+
+    //    agent.stoppingDistance = stoppingDistance;
+    //}
+
+    private void Start()
     {
+        currentHealth = maxHealth;
+
+        FindPlayer();
+        InitializeUI();
+
+        nextMeleeTime = Time.time;
+        nextProjectileTime = Time.time;
+
+        // Prevent the boss from starting the fight with gas.
+        nextGasTime = Time.time + gasCooldown;
+
+        if (exitPortal != null)
+        {
+            exitPortal.SetActive(false);
+        }
+
+        if (gameManager.instance != null)
+            gameManager.instance.updateGameGoal(1);
+
         if (animator == null)
         {
             animator = GetComponentInChildren<Animator>();
@@ -181,25 +226,6 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
         }
 
         agent.stoppingDistance = stoppingDistance;
-    }
-
-    private void Start()
-    {
-        currentHealth = maxHealth;
-
-        FindPlayer();
-        InitializeUI();
-
-        nextMeleeTime = Time.time;
-        nextProjectileTime = Time.time;
-
-        // Prevent the boss from starting the fight with gas.
-        nextGasTime = Time.time + gasCooldown;
-
-        if (exitPortal != null)
-        {
-            exitPortal.SetActive(false);
-        }
     }
 
     private void Update()
@@ -711,6 +737,11 @@ public class ToxicBossAI : MonoBehaviour, IDamage, IBossTrigger
 
         if (currentHealth <= 0f)
         {
+            if (gameManager.instance != null)
+            {
+                gameManager.instance.updateGameGoal(-1);
+                gameManager.instance.addXp(XPGive);
+            }
             Die();
         }
     }
