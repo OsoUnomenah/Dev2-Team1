@@ -13565,7 +13565,7 @@ MonoBehaviour:
   toxicPos: -1
   crystalPos: -1
   lightningPos: -1
-  currentCurrency: 1000
+  currentCurrency: 60
   currencyText: {fileID: 5878694392611118221}
   runKills: 0
   runBossesDefeated: 0
@@ -19818,7 +19818,7 @@ MonoBehaviour:
   fadeGroup: {fileID: 8673126621146973832}
   fadeDuration: 1
   outcomePanel: {fileID: 3899813623850020775}
-  titleText: {fileID: 0}
+  titleText: {fileID: 1624570787682803058}
   statsText: {fileID: 6716478907512910510}
   lossActionMenuPanel: {fileID: 1600532809158565194}
   winActionMenuPanel: {fileID: 61036712125164126}

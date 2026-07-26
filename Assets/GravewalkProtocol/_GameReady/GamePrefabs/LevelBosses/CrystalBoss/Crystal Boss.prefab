@@ -1524,7 +1524,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4446139360566860818
 Transform:
   m_ObjectHideFlags: 0
@@ -2534,7 +2534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eefc724a6c9845840bed3356c811aa41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CrystalBossAI
-  maxHealth: 100
+  maxHealth: 1000
   attackDamage: 10
   xpGive: 100
   minCurrencyDrop: 10

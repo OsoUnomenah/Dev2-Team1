@@ -829,6 +829,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4093566895648202763, guid: 501e99588fda17541b8be5316e03c78e, type: 3}
+      propertyPath: availableRules.Array.data[0].maxAvailability
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093566895648202763, guid: 501e99588fda17541b8be5316e03c78e, type: 3}
+      propertyPath: availableRules.Array.data[1].maxAvailability
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093566895648202763, guid: 501e99588fda17541b8be5316e03c78e, type: 3}
+      propertyPath: availableRules.Array.data[2].maxAvailability
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093566895648202763, guid: 501e99588fda17541b8be5316e03c78e, type: 3}
+      propertyPath: availableRules.Array.data[3].maxAvailability
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093566895648202763, guid: 501e99588fda17541b8be5316e03c78e, type: 3}
+      propertyPath: availableRules.Array.data[4].maxAvailability
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5890410214662285203, guid: 501e99588fda17541b8be5316e03c78e, type: 3}
       propertyPath: m_Name
       value: ToxicLevelBuilder

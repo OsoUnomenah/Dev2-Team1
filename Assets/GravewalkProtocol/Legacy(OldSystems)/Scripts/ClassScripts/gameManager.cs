@@ -656,10 +656,10 @@ public class gameManager : MonoBehaviour
             menuActive.SetActive(false);
         }
         menuActive = null;
-        if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
-        {
-            instance.crystalBarUI.SetActive(true);
-        }
+        //if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
+        //{
+        //    instance.crystalBarUI.SetActive(true);
+        //}
         if (playerInputHandler != null && !playerInputHandler.interactAction.enabled)
         {
             playerInputHandler.interactAction.Enable();

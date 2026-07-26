@@ -38279,6 +38279,14 @@ PrefabInstance:
       propertyPath: playerSpawnPos
       value: 
       objectReference: {fileID: 2083614763}
+    - target: {fileID: 3566715782566199599, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
+      propertyPath: currentCurrency
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3566715782566199599, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
+      propertyPath: bossesNeededToWinRun
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3657402138390543207, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -38287,6 +38295,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3664572134299677240, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
+      propertyPath: titleText
+      value: 
+      objectReference: {fileID: 1770188521}
+    - target: {fileID: 3664572134299677240, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
+      propertyPath: outcomePanel
+      value: 
+      objectReference: {fileID: 1659261941}
     - target: {fileID: 5109788134024012168, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -64148,6 +64164,11 @@ Transform:
   - {fileID: 271256224}
   m_Father: {fileID: 701530728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1659261941 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3899813623850020775, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
+  m_PrefabInstance: {fileID: 907887391}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1660368869
 GameObject:
   m_ObjectHideFlags: 0
@@ -68812,6 +68833,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1767523446}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1770188521 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1624570787682803058, guid: 40885c500cf4ac64796af697dc0aa186, type: 3}
+  m_PrefabInstance: {fileID: 907887391}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1771177292
 GameObject:
   m_ObjectHideFlags: 0
