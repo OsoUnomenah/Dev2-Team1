@@ -30,12 +30,16 @@ MonoBehaviour:
   rate: 1
   recoil: 1
   timer: 1
-  ammo: 5
+  magazineSize: 10
+  startingReserveAmmo: 100
+  maxReserveAmmo: 100
+  ammo: 1
   maxAmmo: 5
   ammoTimer: 2
   ads: 40
   weaponPrefab: {fileID: 3329529930087950654, guid: 77801c1ab8db9ee4a9b884f228727443, type: 3}
   hitEffect: {fileID: 0}
+  weaponPickUp: {fileID: 0}
   shootSound: {fileID: 11400000, guid: 975297e6d323ae5468399bdfd5bf36fd, type: 2}
   reloadSound: {fileID: 11400000, guid: 5694af983872ada4793df925999ae03c, type: 2}
   weaponPickupSound: {fileID: 11400000, guid: d2433031721b1ba43ba16df058974e2c, type: 2}

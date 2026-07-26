@@ -276,7 +276,7 @@ public class gameManager : MonoBehaviour
                 playerSpawnPos.transform.position = lb.GetStartRoomCenterPos();
                 player.transform.position = playerSpawnPos.transform.position;
             }
-            if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
+            if (instance.playerWeaponManager.abilities.Count > 0 && instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
             {
                 instance.crystalBarUI.SetActive(true);
             }
@@ -659,7 +659,7 @@ public class gameManager : MonoBehaviour
         if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
         {
             instance.crystalBarUI.SetActive(true);
-
+        }
         if (playerInputHandler != null && !playerInputHandler.interactAction.enabled)
         {
             playerInputHandler.interactAction.Enable();
