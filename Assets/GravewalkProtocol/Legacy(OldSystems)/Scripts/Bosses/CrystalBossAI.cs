@@ -248,7 +248,7 @@ public class CrystalBossAI : MonoBehaviour, IDamage, IInteract, IFreeze, IBossTr
         UnityEngine.Vector3 end;
 
         end = movementPos[pathPicker].transform.position;
-        end.y = 2f;
+        
 
 
         int willJump = Random.Range(1, 3);

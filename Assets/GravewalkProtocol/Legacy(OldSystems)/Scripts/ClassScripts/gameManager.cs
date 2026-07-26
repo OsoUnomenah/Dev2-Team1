@@ -273,6 +273,10 @@ public class gameManager : MonoBehaviour
                 playerSpawnPos.transform.position = lb.GetStartRoomCenterPos();
                 player.transform.position = playerSpawnPos.transform.position;
             }
+            if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
+            {
+                instance.crystalBarUI.SetActive(true);
+            }
         }
     }
 
@@ -614,7 +618,7 @@ public class gameManager : MonoBehaviour
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-
+        instance.crystalBarUI.SetActive(false);
     }
 
     public void stateUnpause()
@@ -628,6 +632,10 @@ public class gameManager : MonoBehaviour
             menuActive.SetActive(false);
         }
         menuActive = null;
+        if (instance.playerWeaponManager.abilities[instance.playerWeaponManager.abilitySlot].abilityType == AbilityStats.ability.crystal)
+        {
+            instance.crystalBarUI.SetActive(true);
+        }
     }
 
     public void WinGame()

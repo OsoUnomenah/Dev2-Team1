@@ -17,7 +17,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/GravewalkProtocol/_GameReady/LevelScenes/LoadingScreen.unity
     guid: f140854703f1d38488363691d51bef0a
-  - enabled: 1
+  - enabled: 0
     path: Assets/GravewalkProtocol/_GameReady/LevelScenes/GameLevels/Industrial.unity
     guid: cb438051603df264e952ee79088d7f5e
   - enabled: 0
